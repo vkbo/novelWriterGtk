@@ -20,6 +20,12 @@ class GUI(gtk.Window):
         self.guiScroll.add(self.guiEditor)
         self.guiScroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
-        self.guiLayout = gtk.VBox()
-        self.guiLayout.pack_start(self.guiScroll, True, True)
-        self.add(self.guiLayout)
+        self.guiTreeData = gtk.TreeStore(str)
+        self.guiTreeView = gtk.TreeView(model=self.guiTreeData)
+
+        self.guiVBox = gtk.VBox()
+        self.guiHBox = gtk.HBox()
+        self.guiHBox.pack_start(self.guiTreeView, True, True)
+        self.guiHBox.pack_start(self.guiScroll, True, True)
+        self.guiVBox.pack_start(self.guiHBox, True, True)
+        self.add(self.guiVBox)
