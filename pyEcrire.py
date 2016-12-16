@@ -10,11 +10,22 @@
 #  By: Veronica Berglyd Olsen
 ##
 
-import gtk
-import pyecrire
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
+import pyecrire
 from pyecrire.gui import GUI
 
-ecr = GUI()
-ecr.show_all()
-gtk.main()
+#win = GUI()
+#win.show_all()
+
+guiBuilder = Gtk.Builder()
+guiBuilder.add_from_file("pyecrire/gui.glade")
+#builder.connect_signals(Handler())
+
+mainWin = guiBuilder.get_object("mainWin")
+mainWin.show_all()
+mainWin.connect("destroy", Gtk.main_quit)
+
+Gtk.main()
