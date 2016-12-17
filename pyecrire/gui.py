@@ -2,36 +2,44 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('WebKit', '3.0')
 from gi.repository import Gtk
+from gi.repository import WebKit
+from pyecrire.editor import Editor
 
-#import webkit
 import os
 
-class GUI(Gtk.Window):
+#class GUI(Gtk.Window):
+class GUI():
 
     def __init__(self):
-        Gtk.Window.__init__(self)
-        self.set_title("pyÉcrire")
-        self.connect("destroy", Gtk.main_quit)
-        self.resize(1200, 800)
 
-        self.VBox = Gtk.Box
-        print(dir(self.VBox))
+        self.guiBuilder = Gtk.Builder()
+        self.guiBuilder.add_from_file("pyecrire/winMain.glade")
+        self.getObject = self.guiBuilder.get_object
 
-        #self.guiEditor = webkit.WebView()
-        #self.guiEditor.set_editable(True)
-        #self.guiEditor.load_html_string("Hello Kitty", "file:///")
+        self.webEditor = Editor()
+        self.winMain   = self.getObject("winMain")
 
-        #self.guiScroll = gtk.ScrolledWindow()
-        #self.guiScroll.add(self.guiEditor)
-        #self.guiScroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        guiHandlers = {
+            "onDestroyWindow"          : self.guiDestroy,
+            "onClickEditBold"          : self.webEditor.onEditAction,
+            "onClickEditItalic"        : self.webEditor.onEditAction,
+            "onClickEditUnderline"     : self.webEditor.onEditAction,
+            "onClickEditStrikeThrough" : self.webEditor.onEditAction,
+        }
+        self.guiBuilder.connect_signals(guiHandlers)
 
-        #self.guiTreeData = gtk.TreeStore(str)
-        #self.guiTreeView = gtk.TreeView(model=self.guiTreeData)
+        self.scrollEditor = self.guiBuilder.get_object("scrollEditor")
+        self.scrollEditor.add(self.webEditor)
 
-        #self.guiVBox = gtk.VBox()
-        #self.guiHBox = gtk.HBox()
-        #self.guiHBox.pack_start(self.guiTreeView, True, True)
-        #self.guiHBox.pack_start(self.guiScroll, True, True)
-        #self.guiVBox.pack_start(self.guiHBox, True, True)
-        #self.add(self.guiVBox)
+        self.winMain.resize(1000,700)
+        self.winMain.show_all()
+
+    def guiDestroy(self, guiObject):
+        print("Exiting")
+        Gtk.main_quit()
+
+
+
+

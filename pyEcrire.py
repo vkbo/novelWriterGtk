@@ -17,16 +17,18 @@ from gi.repository import Gtk
 import pyecrire
 from pyecrire.gui import GUI
 
-#win = GUI()
-#win.show_all()
+if __name__ == "__main__":
+    #win = GUI()
+    #win.show_all()
 
-guiBuilder = Gtk.Builder()
-guiBuilder.add_from_file("pyecrire/gui.glade")
-#builder.connect_signals(Handler())
+    #guiBuilder = Gtk.Builder()
+    #guiBuilder.add_from_file("pyecrire/gui.glade")
+    #builder.connect_signals(Handler())
 
-mainWin = guiBuilder.get_object("mainWin")
-mainWin.show_all()
-mainWin.connect("destroy", Gtk.main_quit)
-mainWin.resize(1000,700)
+    mainWin = GUI()
+    #mainWin = GUI(guiBuilder.get_object("mainWin"))
+    #mainWin.show_all()
+    #mainWin.connect("destroy", Gtk.main_quit)
+    #mainWin.resize(1000,700)
 
-Gtk.main()
+    Gtk.main()
