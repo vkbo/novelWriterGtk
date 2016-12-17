@@ -27,5 +27,6 @@ guiBuilder.add_from_file("pyecrire/gui.glade")
 mainWin = guiBuilder.get_object("mainWin")
 mainWin.show_all()
 mainWin.connect("destroy", Gtk.main_quit)
+mainWin.resize(1000,700)
 
 Gtk.main()
