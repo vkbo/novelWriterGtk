@@ -17,9 +17,8 @@ class GUI():
         self.guiBuilder = Gtk.Builder()
         self.guiBuilder.add_from_file("pyecrire/winMain.glade")
         self.getObject = self.guiBuilder.get_object
-
-        self.webEditor = Editor()
         self.winMain   = self.getObject("winMain")
+        self.webEditor = Editor(self.winMain)
 
         guiHandlers = {
             "onDestroyWindow"          : self.guiDestroy,
@@ -27,6 +26,8 @@ class GUI():
             "onClickEditItalic"        : self.webEditor.onEditAction,
             "onClickEditUnderline"     : self.webEditor.onEditAction,
             "onClickEditStrikeThrough" : self.webEditor.onEditAction,
+            "onClickEditColour"        : self.webEditor.onEditColour,
+            "onSwitchPageMainNoteBook" : self.tabChange,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
@@ -40,6 +41,15 @@ class GUI():
         print("Exiting")
         Gtk.main_quit()
 
-
+    def tabChange(self, guiObject, guiChild, tabIdx):
+        print("Tab Change")
+        if tabIdx == 2:
+            print("Source View")
+            strSource = self.webEditor.getHtml()
+            bufferSource = Gtk.TextBuffer()
+            bufferSource.set_text(strSource)
+            textSource = self.getObject("textSource")
+            textSource.set_buffer(bufferSource)
+            print(strSource)
 
 

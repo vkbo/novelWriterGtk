@@ -250,6 +250,7 @@
                   <object class="GtkNotebook" id="mainNoteBook">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="switch-page" handler="onSwitchPageMainNoteBook" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="editBox">
                         <property name="visible">True</property>
@@ -331,12 +332,13 @@
                             </child>
                             <child>
                               <object class="GtkToolButton" id="btnEditColour">
+                                <property name="name">colour</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="action_name">onEditColour</property>
                                 <property name="label" translatable="yes">Colour</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-select-color</property>
+                                <signal name="clicked" handler="onClickEditColour" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -464,19 +466,26 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFixed" id="fixed3">
+                      <object class="GtkScrolledWindow" id="scrollSource">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTextView" id="textSource">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="position">2</property>
                       </packing>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lblTabStuff">
+                      <object class="GtkLabel" id="lblTabSource">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Stuff</property>
+                        <property name="label" translatable="yes">Source</property>
                       </object>
                       <packing>
                         <property name="position">2</property>
