@@ -10,6 +10,10 @@ class Universe():
         self.univName   = ""
         self.univHandle = ""
 
+    def setName(name):
+
+        self.univName = name
+
 
 
 

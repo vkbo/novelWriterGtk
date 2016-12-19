@@ -16,6 +16,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository   import Gtk
 
 # pyÉcrire classes
+from pyecrire.functions import *
 from pyecrire.gui       import GUI
 from pyecrire.config    import Config
 from pyecrire.datastore import Universe
