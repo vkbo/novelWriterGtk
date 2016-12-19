@@ -1,16 +1,24 @@
 # -*- coding: utf-8 -*
 
+#
+# Strips string of all non-English characters
+#
+
 def simplifyString(inStr):
 
-    inStr  = inStr.lower()
-    outStr = ""
+    tmpStr = inStr.lower()
+    outStr = tmpStr
 
     return outStr
 
 
+#
+# Creates a file handle from a string
+#
 
 def makeHandle(inStr):
 
-    outStr = ""
+    tmpStr = simplifyString(inStr)
+    outStr = tmpStr
 
     return outStr
