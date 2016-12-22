@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*
 
+import logging as logger
+import os
+
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
@@ -7,7 +10,6 @@ from gi.repository import Gtk
 from gi.repository import WebKit
 from pyecrire.editor import Editor
 
-import os
 
 #class GUI(Gtk.Window):
 class GUI():
@@ -38,11 +40,11 @@ class GUI():
         self.winMain.show_all()
 
     def guiDestroy(self, guiObject):
-        print("Exiting")
+        logger.debug("Exiting")
         Gtk.main_quit()
 
     def tabChange(self, guiObject, guiChild, tabIdx):
-        print("Tab Change")
+        logger.debug("Tab change")
         if tabIdx == 2:
             print("Source View")
             strSource = self.webEditor.getHtml()

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*
 
+import logging as logger
+
 #
 # Strips string of all non-English characters
 #

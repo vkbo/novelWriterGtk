@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*
 
+import logging as logger
+
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
@@ -18,7 +20,7 @@ class Editor(WebKit.WebView):
         self.load_html_string("<p>Hello Kitty</p>", "file:///")
 
     def onEditAction(self, guiObject):
-        print("Action: %s" % guiObject.get_name())
+        logger.debug("Editor action %s" % guiObject.get_name())
         self.execute_script("document.execCommand('%s', false, false);" % guiObject.get_name())
 
     def onEditColour(self, guiObject):
