@@ -28,8 +28,8 @@ def main():
     logger.basicConfig(format="%(levelname)s: %(message)s",level=logger.DEBUG)
 
     # Set up main window
-    mainWin      = GUI()
     mainConf     = Config()
+    mainWin      = GUI(mainConf)
     dataUniverse = Universe(mainConf)
 
     # Run main gtk loop

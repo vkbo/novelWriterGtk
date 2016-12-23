@@ -10,12 +10,13 @@ class Config:
 
     def __init__(self):
 
-        self.appName   = "pyÉcrire"
-        self.appHandle = "pyecrire"
+        self.appName     = "pyÉcrire"
+        self.appNameSafe = "pyEcrire"
+        self.appHandle   = "pyecrire"
 
-        self.confPath  = user_config_dir(self.appHandle)
-        self.confFile  = self.appHandle+".conf"
-        self.homePath  = home = path.expanduser("~")
+        self.confPath    = user_config_dir(self.appHandle)
+        self.confFile    = self.appHandle+".conf"
+        self.homePath    = path.expanduser("~")
 
         # If config folder does not exist, make it.
         # This assumes that the os config folder itself exists.
@@ -25,7 +26,7 @@ class Config:
         # Set default values
 
         ## General
-        self.dataPath      = "Test"
+        self.dataPath      = path.join(self.homePath, self.appNameSafe)
 
         ## Editor
         self.editAutoSave  = 10
@@ -37,11 +38,11 @@ class Config:
         if path.isfile(path.join(self.confPath,self.confFile)):
             self.loadConfig()
 
-        # Always save config after load in case of new values
-        self.saveConfig()
-
         # Validate config
         self.validateConfig()
+
+        # Always save config after load in case of new values
+        self.saveConfig()
 
 
     def loadConfig(self):
@@ -92,4 +93,7 @@ class Config:
 
         if not path.isdir(self.dataPath):
             logger.debug("Data path does not exist")
+            self.dataPath = path.join(self.homePath, self.appNameSafe)
+            mkdir(self.dataPath)
+            logger.debug("Created folder %s" % self.dataPath)
 

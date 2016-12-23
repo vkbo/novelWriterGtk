@@ -14,7 +14,7 @@ from pyecrire.editor import Editor
 #class GUI(Gtk.Window):
 class GUI():
 
-    def __init__(self):
+    def __init__(self,config):
 
         self.guiBuilder = Gtk.Builder()
         self.guiBuilder.add_from_file("pyecrire/winMain.glade")
@@ -36,6 +36,7 @@ class GUI():
         self.scrollEditor = self.guiBuilder.get_object("scrollEditor")
         self.scrollEditor.add(self.webEditor)
 
+        self.winMain.set_title(config.appName)
         self.winMain.resize(1000,700)
         self.winMain.show_all()
 
