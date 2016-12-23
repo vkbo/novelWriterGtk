@@ -4,7 +4,9 @@
   <requires lib="gtk+" version="3.12"/>
   <object class="GtkWindow" id="winMain">
     <property name="can_focus">False</property>
-    <property name="type_hint">dialog</property>
+    <property name="hide_titlebar_when_maximized">True</property>
+    <property name="has_resize_grip">True</property>
+    <signal name="configure-event" handler="onEventWinChange" swapped="no"/>
     <signal name="destroy" handler="onDestroyWindow" swapped="no"/>
     <signal name="key-press-event" handler="onEventKeyPress" swapped="no"/>
     <child>
@@ -813,9 +815,19 @@
             <property name="margin_end">10</property>
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">2</property>
             <property name="baseline_position">bottom</property>
+            <child>
+              <object class="GtkProgressBar" id="progressStatus">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>

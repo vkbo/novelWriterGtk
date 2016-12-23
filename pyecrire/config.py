@@ -24,9 +24,12 @@ class Config:
             mkdir(self.confPath)
 
         # Set default values
+        self.confChanged   = False
 
         ## General
         self.dataPath      = path.join(self.homePath, self.appNameSafe)
+        self.winWidth      = 1000
+        self.winHeight     = 700
 
         ## Editor
         self.editAutoSave  = 10
@@ -44,6 +47,12 @@ class Config:
         # Always save config after load in case of new values
         self.saveConfig()
 
+        return
+
+
+    ##
+    #  Actions
+    ##
 
     def loadConfig(self):
 
@@ -54,16 +63,23 @@ class Config:
         # Get options
 
         ## Main
-        if confParser.has_section("Main"):
-            self.dataPath = confParser.get("Main","dataPath")
+        cnfSec = "Main"
+        if confParser.has_section(cnfSec):
+            if confParser.has_option(cnfSec,"dataPath"):  self.dataPath      = confParser.get("Main","dataPath")
+            if confParser.has_option(cnfSec,"winWidth"):  self.winWidth      = confParser.getint("Main","winWidth")
+            if confParser.has_option(cnfSec,"winHeight"): self.winHeight     = confParser.getint("Main","winHeight")
 
         ## Editor
-        if confParser.has_section("Editor"):
-            self.editAutoSave = confParser.getint("Editor","AutoSave")
+        cnfSec = "Editor"
+        if confParser.has_section(cnfSec):
+            if confParser.has_option(cnfSec,"AutoSave"):  self.editAutoSave  = confParser.getint("Editor","AutoSave")
 
         ## Timer
-        if confParser.has_section("Timer"):
-            self.timeAutoPause = confParser.getint("Timer","AutoPause")
+        cnfSec = "Timer"
+        if confParser.has_section(cnfSec):
+            if confParser.has_option(cnfSec,"AutoPause"): self.timeAutoPause = confParser.getint("Timer","AutoPause")
+
+        return
 
 
     def saveConfig(self):
@@ -75,7 +91,9 @@ class Config:
 
         ## Main
         confParser.add_section("Main")
-        confParser.set("Main","dataPath",self.dataPath)
+        confParser.set("Main","dataPath",  self.dataPath)
+        confParser.set("Main","winWidth",  str(self.winWidth))
+        confParser.set("Main","winHeight", str(self.winHeight))
 
         ## Editor
         confParser.add_section("Editor")
@@ -87,13 +105,38 @@ class Config:
 
         # Write config file
         confParser.write(open(path.join(self.confPath,self.confFile),"w"))
+        self.confChanged = False
+
+        return
 
 
     def validateConfig(self):
-
         if not path.isdir(self.dataPath):
             logger.debug("Data path does not exist")
             self.dataPath = path.join(self.homePath, self.appNameSafe)
             mkdir(self.dataPath)
             logger.debug("Created folder %s" % self.dataPath)
+        return
+
+
+    def autoSaveConfig(self):
+        if self.confChanged:
+            logger.debug("Auto-saving config")
+            self.saveConfig()
+        return
+
+
+    ##
+    #  Setters
+    ##
+
+    def setWinSize(self, width, height):
+        if width != self.winWidth or height != self.winHeight:
+            logger.debug("Window size changed")
+            self.winWidth  = width
+            self.winHeight = height
+            self.confChanged = True
+        return
+
+
 
