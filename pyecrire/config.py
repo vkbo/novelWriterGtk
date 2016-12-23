@@ -30,6 +30,7 @@ class Config:
         self.dataPath      = path.join(self.homePath, self.appNameSafe)
         self.winWidth      = 1000
         self.winHeight     = 700
+        self.winPane       = 200
 
         ## Editor
         self.editAutoSave  = 10
@@ -68,6 +69,7 @@ class Config:
             if confParser.has_option(cnfSec,"dataPath"):  self.dataPath      = confParser.get("Main","dataPath")
             if confParser.has_option(cnfSec,"winWidth"):  self.winWidth      = confParser.getint("Main","winWidth")
             if confParser.has_option(cnfSec,"winHeight"): self.winHeight     = confParser.getint("Main","winHeight")
+            if confParser.has_option(cnfSec,"winPane"):   self.winPane       = confParser.getint("Main","winPane")
 
         ## Editor
         cnfSec = "Editor"
@@ -94,6 +96,7 @@ class Config:
         confParser.set("Main","dataPath",  self.dataPath)
         confParser.set("Main","winWidth",  str(self.winWidth))
         confParser.set("Main","winHeight", str(self.winHeight))
+        confParser.set("Main","winPane",   str(self.winPane))
 
         ## Editor
         confParser.add_section("Editor")
@@ -139,4 +142,10 @@ class Config:
         return
 
 
+    def setWinPane(self, width):
+        if width != self.winPane:
+            logger.debug("Pane size changed")
+            self.winPane = width
+            self.confChanged = True
+        return
 

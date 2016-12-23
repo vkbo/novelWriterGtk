@@ -2,6 +2,20 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
+  <object class="GtkListStore" id="listMainTree">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Words -->
+      <column type="gint"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0">Main</col>
+        <col id="1">0</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkWindow" id="winMain">
     <property name="can_focus">False</property>
     <property name="hide_titlebar_when_maximized">True</property>
@@ -231,14 +245,45 @@
                   <object class="GtkListBox" id="mainList">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="selection_mode">none</property>
                     <child>
-                      <object class="GtkListBoxRow" id="listboxrow1">
+                      <object class="GtkListBoxRow" id="listRowTree">
                         <property name="width_request">100</property>
-                        <property name="height_request">80</property>
+                        <property name="height_request">200</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="selectable">False</property>
                         <child>
-                          <placeholder/>
+                          <object class="GtkTreeView" id="treeMain">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="vexpand">True</property>
+                            <property name="model">listMainTree</property>
+                            <property name="expander_column">treeMainName</property>
+                            <property name="enable_search">False</property>
+                            <property name="search_column">0</property>
+                            <property name="level_indentation">10</property>
+                            <property name="enable_grid_lines">both</property>
+                            <property name="enable_tree_lines">True</property>
+                            <property name="tooltip_column">0</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection" id="treeMainSelect"/>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="treeMainName">
+                                <property name="resizable">True</property>
+                                <property name="title" translatable="yes">Name</property>
+                                <property name="expand">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="treeMainWords">
+                                <property name="resizable">True</property>
+                                <property name="title" translatable="yes">Words</property>
+                              </object>
+                            </child>
+                          </object>
                         </child>
                       </object>
                     </child>

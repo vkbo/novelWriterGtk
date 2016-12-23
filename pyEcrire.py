@@ -18,9 +18,10 @@ from gi.repository   import Gtk
 
 # pyÉcrire classes
 from pyecrire.functions import *
-from pyecrire.gui       import GUI
-from pyecrire.config    import Config
-from pyecrire.datastore import Universe
+from pyecrire.gui       import *
+from pyecrire.config    import *
+from pyecrire.structure import *
+from pyecrire.datastore import *
 
 def main():
 
@@ -30,7 +31,7 @@ def main():
     # Set up main window
     mainConf     = Config()
     mainWin      = GUI(mainConf)
-    dataUniverse = Universe(mainConf)
+    projData     = DataStruct(mainConf)
 
     # Run main gtk loop
     Gtk.main()

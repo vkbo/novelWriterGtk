@@ -49,6 +49,10 @@ class GUI():
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
+        # Prepare Panes
+        self.guiPaned     = self.getObject("innerPaned")
+        self.guiPaned.set_position(self.mainConf.winPane)
+
         # Prepare Editor
         self.scrollEditor = self.getObject("scrollEditor")
         self.scrollEditor.add(self.webEditor)
@@ -74,6 +78,7 @@ class GUI():
     # Close Program
     def guiDestroy(self, guiObject):
         logger.debug("Exiting")
+        self.mainConf.setWinPane(self.guiPaned.get_position())
         self.mainConf.autoSaveConfig()
         Gtk.main_quit()
         return
@@ -108,7 +113,6 @@ class GUI():
     def eventWinChange(self, guiObject, guiEvent):
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
-
 
 
 
