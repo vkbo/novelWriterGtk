@@ -9,6 +9,7 @@ gi.require_version('WebKit', '3.0')
 from gi.repository import Gtk
 from gi.repository import WebKit
 from pyecrire.editor import Editor
+from pyecrire.timer  import Timer
 
 
 #class GUI(Gtk.Window):
@@ -21,15 +22,21 @@ class GUI():
         self.getObject = self.guiBuilder.get_object
         self.winMain   = self.getObject("winMain")
         self.webEditor = Editor(self.winMain)
+        self.guiTimer  = Timer()
 
         guiHandlers = {
             "onDestroyWindow"          : self.guiDestroy,
+            "onSwitchPageMainNoteBook" : self.tabChange,
             "onClickEditBold"          : self.webEditor.onEditAction,
             "onClickEditItalic"        : self.webEditor.onEditAction,
             "onClickEditUnderline"     : self.webEditor.onEditAction,
             "onClickEditStrikeThrough" : self.webEditor.onEditAction,
             "onClickEditColour"        : self.webEditor.onEditColour,
-            "onSwitchPageMainNoteBook" : self.tabChange,
+            "onClickTimerStart"        : self.guiTimer.onTimerSave,
+            "onClickTimerPause"        : self.guiTimer.onTimerPause,
+            "onClickTimerStop"         : self.guiTimer.onTimerStop,
+            "onClickTimerSave"         : self.guiTimer.onTimerSave,
+            "onClickTimerDiscard"      : self.guiTimer.onTimerDiscard,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 

@@ -542,6 +542,10 @@
                                     <property name="label" translatable="yes">00:00:00</property>
                                     <property name="ellipsize">middle</property>
                                     <property name="lines">1</property>
+                                    <attributes>
+                                      <attribute name="weight" value="medium"/>
+                                      <attribute name="scale" value="2"/>
+                                    </attributes>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -561,35 +565,77 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButtonBox" id="bboxTimer">
+                                  <object class="GtkToolbar" id="timerToolBar">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="layout_style">start</property>
                                     <child>
-                                      <object class="GtkButton" id="btnTimeStartPause">
-                                        <property name="label" translatable="yes">Start</property>
+                                      <object class="GtkToolButton" id="btnTimerStart">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="yalign">0.54000002145767212</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Start</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-media-play</property>
+                                        <signal name="clicked" handler="onClickTimerStart" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
+                                        <property name="homogeneous">True</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="btnTimeStopSave">
-                                        <property name="label" translatable="yes">Stop</property>
+                                      <object class="GtkToolButton" id="btnTimerPause">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Pause</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-media-pause</property>
+                                        <signal name="clicked" handler="onClickTimerPause" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
+                                        <property name="homogeneous">True</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToolButton" id="btnTimerStop">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Stop</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-media-stop</property>
+                                        <signal name="clicked" handler="onClickTimerStop" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="homogeneous">True</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToolButton" id="btnTimerSave">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Save</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-yes</property>
+                                        <signal name="clicked" handler="onClickTimerSave" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="homogeneous">True</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToolButton" id="btnTimerDiscard">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Discard</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-cancel</property>
+                                        <signal name="clicked" handler="onClickTimerDiscard" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="homogeneous">True</property>
                                       </packing>
                                     </child>
                                   </object>
