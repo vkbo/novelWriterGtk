@@ -6,6 +6,7 @@
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <signal name="destroy" handler="onDestroyWindow" swapped="no"/>
+    <signal name="key-press-event" handler="onEventKeyPress" swapped="no"/>
     <child>
       <object class="GtkBox" id="outerBox">
         <property name="visible">True</property>
@@ -610,34 +611,6 @@
                                         <property name="homogeneous">True</property>
                                       </packing>
                                     </child>
-                                    <child>
-                                      <object class="GtkToolButton" id="btnTimerSave">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Save</property>
-                                        <property name="use_underline">True</property>
-                                        <property name="stock_id">gtk-yes</property>
-                                        <signal name="clicked" handler="onClickTimerSave" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="homogeneous">True</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkToolButton" id="btnTimerDiscard">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Discard</property>
-                                        <property name="use_underline">True</property>
-                                        <property name="stock_id">gtk-cancel</property>
-                                        <signal name="clicked" handler="onClickTimerDiscard" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="homogeneous">True</property>
-                                      </packing>
-                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -653,7 +626,7 @@
                           <object class="GtkLabel" id="lblTimer">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Timer</property>
+                            <property name="label" translatable="yes">Session Timer</property>
                           </object>
                         </child>
                       </object>
