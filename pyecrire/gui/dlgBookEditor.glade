@@ -91,7 +91,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Project Status</property>
-                <property name="ellipsize">start</property>
                 <property name="xalign">0</property>
               </object>
               <packing>

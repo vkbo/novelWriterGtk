@@ -27,7 +27,7 @@ class GUI():
 
         # Initialise GUI
         self.guiBuilder = Gtk.Builder()
-        self.guiBuilder.add_from_file("pyecrire/winMain.glade")
+        self.guiBuilder.add_from_file("pyecrire/gui/winMain.glade")
 
         self.getObject  = self.guiBuilder.get_object
         self.winMain    = self.getObject("winMain")
