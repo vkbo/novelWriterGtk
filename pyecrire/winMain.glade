@@ -2,20 +2,6 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
-  <object class="GtkListStore" id="listMainTree">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-      <!-- column-name Words -->
-      <column type="gint"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">Main</col>
-        <col id="1">0</col>
-      </row>
-    </data>
-  </object>
   <object class="GtkWindow" id="winMain">
     <property name="can_focus">False</property>
     <property name="hide_titlebar_when_maximized">True</property>
@@ -177,52 +163,179 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToolbar" id="mainToolBar">
+          <object class="GtkBox" id="boxHeader">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_top">2</property>
+            <property name="margin_bottom">2</property>
             <child>
-              <object class="GtkToolButton" id="tbNew">
+              <object class="GtkLabel" id="lblBookTitle">
+                <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">New Project</property>
-                <property name="action_name">onTBarNew</property>
-                <property name="label" translatable="yes">New</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-new</property>
+                <property name="margin_left">4</property>
+                <property name="margin_right">8</property>
+                <property name="label" translatable="yes">New Book</property>
+                <property name="ellipsize">end</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="medium"/>
+                  <attribute name="scale" value="2"/>
+                  <attribute name="underline" value="True"/>
+                </attributes>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="homogeneous">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="tbOpen">
+              <object class="GtkToolbar" id="mainToolBar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Open Project</property>
-                <property name="action_name">onTBarOpen</property>
-                <property name="label" translatable="yes">Open</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-open</property>
+                <property name="margin_left">1</property>
+                <property name="margin_right">1</property>
+                <property name="margin_top">1</property>
+                <property name="margin_bottom">1</property>
+                <child>
+                  <object class="GtkSeparatorToolItem" id="sepMain1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnNewBook">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">New Book Project</property>
+                    <property name="label" translatable="yes">New</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-new</property>
+                    <signal name="clicked" handler="onClickNewBook" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnSaveBook">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Save Book Project</property>
+                    <property name="label" translatable="yes">Save</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-save</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnSaveBookAs">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Save Book Project as New Book</property>
+                    <property name="label" translatable="yes">Save As</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-save-as</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnEditBook">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Edit Book Project</property>
+                    <property name="label" translatable="yes">Edit</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-edit</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnConvertBook">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Convert Book Project</property>
+                    <property name="label" translatable="yes">Convert</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-convert</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnDeleteBook">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Delete Book Project</property>
+                    <property name="label" translatable="yes">Delete</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-delete</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparatorToolItem" id="sepMain2">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnPageSetup">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Editor Setup</property>
+                    <property name="label" translatable="yes">Page Setup</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-page-setup</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="btnMainProperties">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">pyÉcrire Properties</property>
+                    <property name="label" translatable="yes">Properties</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-preferences</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="tbSave">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Save Project</property>
-                <property name="action_name">onTBarSave</property>
-                <property name="label" translatable="yes">Save</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-save</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
@@ -240,52 +353,291 @@
               <object class="GtkPaned" id="innerPaned">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin_left">4</property>
                 <property name="wide_handle">True</property>
                 <child>
-                  <object class="GtkListBox" id="mainList">
+                  <object class="GtkNotebook" id="sideNoteBook">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="selection_mode">none</property>
+                    <property name="can_focus">True</property>
                     <child>
-                      <object class="GtkListBoxRow" id="listRowTree">
-                        <property name="width_request">100</property>
-                        <property name="height_request">200</property>
+                      <object class="GtkBox" id="booksBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="vexpand">True</property>
-                        <property name="selectable">False</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkTreeView" id="treeMain">
+                          <object class="GtkToolbar" id="booksToolBar">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <child>
+                              <object class="GtkToolButton" id="btnBooksMoveUp">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Move Up</property>
+                                <property name="label" translatable="yes">Up</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-go-up</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkToolButton" id="btnBooksMoveDown">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Move Down</property>
+                                <property name="label" translatable="yes">Down</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-go-down</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="scrollBooks">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="vexpand">True</property>
-                            <property name="model">listMainTree</property>
-                            <property name="expander_column">treeMainName</property>
-                            <property name="enable_search">False</property>
-                            <property name="search_column">0</property>
-                            <property name="level_indentation">10</property>
-                            <property name="enable_grid_lines">both</property>
-                            <property name="enable_tree_lines">True</property>
-                            <property name="tooltip_column">0</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection" id="treeMainSelect"/>
-                            </child>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkTreeViewColumn" id="treeMainName">
-                                <property name="resizable">True</property>
-                                <property name="title" translatable="yes">Name</property>
-                                <property name="expand">True</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="treeMainWords">
-                                <property name="resizable">True</property>
-                                <property name="title" translatable="yes">Words</property>
+                              <object class="GtkTreeView" id="treeBooks">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection" id="treeBooksSelect"/>
+                                </child>
+                                <child>
+                                  <object class="GtkTreeViewColumn" id="treeBooksTitle">
+                                    <property name="resizable">True</property>
+                                    <property name="title" translatable="yes">Title</property>
+                                    <property name="expand">True</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkTreeViewColumn" id="treeBooksStatus">
+                                    <property name="title" translatable="yes">Status</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="frameBookInfo">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">none</property>
+                            <child>
+                              <object class="GtkAlignment" id="alignBookInfo">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="left_padding">12</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="lblBookInfo">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Details</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
                         </child>
                       </object>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="lblTabBooks">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Books</property>
+                      </object>
+                      <packing>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="filesBox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkToolbar" id="filesToolBar">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <child>
+                              <object class="GtkToolButton" id="btnFilesAddDoc">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">New Document</property>
+                                <property name="label" translatable="yes">Add</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-add</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkToolButton" id="btnFilesDeleteDoc">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Delete Document</property>
+                                <property name="label" translatable="yes">Delete</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-remove</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="scrollFiles">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkTreeView" id="treeMain">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="vexpand">True</property>
+                                <property name="expander_column">treeMainName</property>
+                                <property name="enable_search">False</property>
+                                <property name="search_column">0</property>
+                                <property name="level_indentation">10</property>
+                                <property name="enable_tree_lines">True</property>
+                                <property name="tooltip_column">0</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection" id="treeMainSelect"/>
+                                </child>
+                                <child>
+                                  <object class="GtkTreeViewColumn" id="treeMainName">
+                                    <property name="resizable">True</property>
+                                    <property name="title" translatable="yes">Name</property>
+                                    <property name="expand">True</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkTreeViewColumn" id="treeMainWords">
+                                    <property name="resizable">True</property>
+                                    <property name="title" translatable="yes">Words</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="frameDocInfo">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkAlignment" id="alignDocInfo">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="left_padding">12</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="lblDocInfo">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Details</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="lblTabFiles">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Files</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFixed" id="fixed1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="lblEmpty3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Empty</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
@@ -307,6 +659,10 @@
                           <object class="GtkToolbar" id="editToolBar">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
                             <child>
                               <object class="GtkToolButton" id="btnEditBold">
                                 <property name="name">bold</property>
@@ -558,6 +914,20 @@
                 <property name="can_focus">False</property>
                 <property name="selection_mode">none</property>
                 <property name="activate_on_single_click">False</property>
+                <child>
+                  <object class="GtkListBoxRow" id="listRowSpacer">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="activatable">False</property>
+                    <property name="selectable">False</property>
+                    <child>
+                      <object class="GtkLabel" id="lblSpacer">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
                 <child>
                   <object class="GtkListBoxRow" id="listRowTimer">
                     <property name="width_request">100</property>

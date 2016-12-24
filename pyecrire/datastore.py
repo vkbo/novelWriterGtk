@@ -18,7 +18,7 @@ class Universe():
 
 
 
-class Project():
+class Book():
 
     def __init__(self, config, universe):
 

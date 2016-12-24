@@ -14,14 +14,12 @@ import logging as logger
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository   import Gtk
+from gi.repository      import Gtk
 
 # pyÉcrire classes
 from pyecrire.functions import *
 from pyecrire.gui       import *
 from pyecrire.config    import *
-from pyecrire.structure import *
-from pyecrire.datastore import *
 
 def main():
 
@@ -29,9 +27,8 @@ def main():
     logger.basicConfig(format="%(levelname)s: %(message)s",level=logger.DEBUG)
 
     # Set up main window
-    mainConf     = Config()
-    mainWin      = GUI(mainConf)
-    projData     = DataStruct(mainConf)
+    mainConf = Config()
+    mainWin  = GUI(mainConf)
 
     # Run main gtk loop
     Gtk.main()

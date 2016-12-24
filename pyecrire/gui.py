@@ -10,18 +10,22 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 
-from gi.repository   import Gtk, GLib, WebKit
-from time            import sleep
-from pyecrire.editor import Editor
-from pyecrire.timer  import Timer
+from gi.repository      import Gtk, GLib, WebKit
+from time               import sleep
+from pyecrire.editor    import Editor
+from pyecrire.timer     import Timer
+from pyecrire.project   import *
+from pyecrire.datastore import *
 
 class GUI():
 
-    def __init__(self,config):
+    def __init__(self, config):
+
+        # Define Core Objects
+        self.mainConf   = config
+        self.projData   = Project(self.mainConf)
 
         # Initialise GUI
-        self.mainConf   = config
-
         self.guiBuilder = Gtk.Builder()
         self.guiBuilder.add_from_file("pyecrire/winMain.glade")
 
@@ -38,6 +42,7 @@ class GUI():
             "onEventKeyPress"          : self.eventWinKeyPress,
             "onEventWinChange"         : self.eventWinChange,
             "onSwitchPageMainNoteBook" : self.eventTabChange,
+            "onClickNewBook"           : self.projData.newProject,
             "onClickEditBold"          : self.webEditor.onEditAction,
             "onClickEditItalic"        : self.webEditor.onEditAction,
             "onClickEditUnderline"     : self.webEditor.onEditAction,
@@ -63,8 +68,25 @@ class GUI():
         self.progStatus = self.getObject("progressStatus")
 
         # Set Up Timers
-        self.timerID    = GLib.timeout_add_seconds(1, self.guiTimer.onTick)
+        self.timerID    = GLib.timeout_add(200, self.guiTimer.onTick)
         self.autoTaskID = GLib.timeout_add_seconds(30,self.autoTasks)
+
+        # Prepare TreeView
+        self.treeMain   = self.getObject("treeMain")
+        self.treeData   = Gtk.TreeStore(str,int)
+        self.treeData   = Gtk.TreeStore(str,int)
+        self.treeMain.set_model(self.treeData)
+
+        self.treeMainName  = self.treeMain.get_column(0)
+        self.treeMainWords = self.treeMain.get_column(1)
+        self.cellMainName  = Gtk.CellRendererText()
+        self.cellMainWords = Gtk.CellRendererText()
+        self.treeMainName.pack_start(self.cellMainName, True)
+        self.treeMainWords.pack_start(self.cellMainWords, False)
+        self.treeMainName.add_attribute(self.cellMainName, "text", 0)
+        self.treeMainWords.add_attribute(self.cellMainWords, "text", 1)
+
+        self.treeData.append(None,["New",0])
 
         # Prepare Main Window
         self.winMain.set_title(self.mainConf.appName)
