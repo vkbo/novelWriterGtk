@@ -51,6 +51,8 @@ class GUI():
             "onClickTimerStart"        : self.guiTimer.onTimerStart,
             "onClickTimerPause"        : self.guiTimer.onTimerPause,
             "onClickTimerStop"         : self.guiTimer.onTimerStop,
+            "onMenuActionHelpAbout"    : self.onActionShowAbout,
+            "onMenuActionFileQuit"     : self.guiDestroy,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
@@ -110,6 +112,21 @@ class GUI():
     def autoTasks(self):
         self.mainConf.autoSaveConfig()
         return True
+
+    ##
+    #  Actions
+    ##
+
+    def onActionShowAbout(self, guiObject):
+
+        dlgAbout = Gtk.AboutDialog()
+        dlgAbout.set_transient_for(self.winMain)
+        dlgAbout.set_program_name(self.mainConf.appName)
+        dlgAbout.set_version(self.mainConf.appVersion)
+        dlgAbout.set_website(self.mainConf.appURL)
+        dlgAbout.run()
+        dlgAbout.destroy()
+        return
 
 
     ##

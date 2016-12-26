@@ -13,6 +13,8 @@ class Config:
         self.appName     = "pyÉcrire"
         self.appNameSafe = "pyEcrire"
         self.appHandle   = "pyecrire"
+        self.appVersion  = "0.1"
+        self.appURL      = "https://github.com/Jadzia626/pyEcrire"
 
         self.confPath    = user_config_dir(self.appHandle)
         self.confFile    = self.appHandle+".conf"
