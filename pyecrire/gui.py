@@ -60,6 +60,12 @@ class GUI():
         self.guiPaned     = self.getObject("innerPaned")
         self.guiPaned.set_position(self.mainConf.winPane)
 
+        # Prepare Details Pane and Default Document Type
+        self.detailsPane  = self.getObject("detailsNoteBook")
+        self.detailsTitle = self.getObject("lblDetailsSettings")
+        self.detailsPane.set_show_tabs(False)
+        self.detailsPane.set_current_page(1)
+
         # Prepare Editor
         self.scrollEditor = self.getObject("scrollEditor")
         self.scrollEditor.add(self.webEditor)

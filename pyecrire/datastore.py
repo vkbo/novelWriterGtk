@@ -3,39 +3,36 @@
 import logging as logger
 import configparser
 
-class Universe():
+class DataWrapper():
 
-    def __init__(self, config):
+    def __init__(self,config,docType):
 
-        self.mainConf   = config
-        self.univName   = ""
-        self.univHandle = ""
+        self.mainConf  = config
+        self.docType   = docType
+        self.docTitle  = ""
+        self.docName   = ""
+        self.docHandle = ""
 
-    def setName(name):
-
-        self.univName = name
-
-
+        return
 
 
-class Book():
+class Universe(DataWrapper):
 
-    def __init__(self, config, universe):
+    def __init__(self,config):
 
-        self.mainConf   = config
-        self.objUniv    = universe
-        self.projName   = ""
-        self.projHandle = ""
+        return
 
 
+class Book(DataWrapper):
+
+    def __init__(self,config):
+
+        return
 
 
-class Character():
+class Character(DataWrapper):
 
-    def __init__(self, config, universe):
+    def __init__(self,config):
 
-        self.mainConf   = config
-        self.objUniv    = universe
-        self.charName   = ""
-        self.charHandle = ""
+        return
 
