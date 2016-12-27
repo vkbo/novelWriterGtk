@@ -53,6 +53,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="onMenuActionFileSave" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -202,14 +203,14 @@
                 <property name="margin_top">1</property>
                 <property name="margin_bottom">1</property>
                 <child>
-                  <object class="GtkToolButton" id="btnNewBook">
+                  <object class="GtkToolButton" id="btnNew">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">New Book Project</property>
                     <property name="label" translatable="yes">New</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-new</property>
-                    <signal name="clicked" handler="onClickNewBook" swapped="no"/>
+                    <signal name="clicked" handler="onClickNew" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -217,13 +218,14 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolButton" id="btnSaveBook">
+                  <object class="GtkToolButton" id="btnSave">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Save Book Project</property>
                     <property name="label" translatable="yes">Save</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-save</property>
+                    <signal name="clicked" handler="onClickSave" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -231,7 +233,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolButton" id="btnEditBook">
+                  <object class="GtkToolButton" id="btnEdit">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Edit Book Project</property>
@@ -348,6 +350,7 @@
                   <object class="GtkNotebook" id="sideNoteBook">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="switch-page" handler="onSwitchPageSideNoteBook" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="booksBox">
                         <property name="visible">True</property>
@@ -894,18 +897,6 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkComboBoxText" id="cmbDetailsBookUniverse">
-                                        <property name="width_request">400</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="halign">start</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="top_attach">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
                                       <object class="GtkCheckButton" id="chkNewUniverse">
                                         <property name="label" translatable="yes">Create New</property>
                                         <property name="visible">True</property>
@@ -913,6 +904,7 @@
                                         <property name="receives_default">False</property>
                                         <property name="xalign">0</property>
                                         <property name="draw_indicator">True</property>
+                                        <signal name="toggled" handler="onToggleNewUniverse" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="left_attach">2</property>
@@ -941,6 +933,25 @@
                                       <packing>
                                         <property name="left_attach">1</property>
                                         <property name="top_attach">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkComboBoxText" id="cmbDetailsBookUniverse">
+                                        <property name="width_request">400</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="has_entry">True</property>
+                                        <child internal-child="entry">
+                                          <object class="GtkEntry" id="entryDetailsBookUniverse">
+                                            <property name="can_focus">False</property>
+                                            <property name="placeholder_text" translatable="yes">New Universe</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="top_attach">1</property>
                                       </packing>
                                     </child>
                                     <child>

@@ -21,6 +21,13 @@ class GUI():
 
     def __init__(self, config):
 
+        # Constants
+        self.EDIT_FILE      = 0
+        self.EDIT_BOOK      = 1
+        self.EDIT_SCENE     = 2
+        self.EDIT_UNIVERSE  = 3
+        self.EDIT_CHARACTER = 4
+
         # Define Core Objects
         self.mainConf   = config
         self.projData   = Project(self.mainConf)
@@ -42,7 +49,9 @@ class GUI():
             "onEventKeyPress"          : self.eventWinKeyPress,
             "onEventWinChange"         : self.eventWinChange,
             "onSwitchPageMainNoteBook" : self.eventTabChange,
-            "onClickNewBook"           : self.projData.newProject,
+            "onSwitchPageSideNoteBook" : self.eventTreeChange,
+            "onClickNew"               : self.projData.newProject,
+            "onClickSave"              : self.onFileSave,
             "onClickEditBold"          : self.webEditor.onEditAction,
             "onClickEditItalic"        : self.webEditor.onEditAction,
             "onClickEditUnderline"     : self.webEditor.onEditAction,
@@ -51,7 +60,9 @@ class GUI():
             "onClickTimerStart"        : self.guiTimer.onTimerStart,
             "onClickTimerPause"        : self.guiTimer.onTimerPause,
             "onClickTimerStop"         : self.guiTimer.onTimerStop,
+            "onToggleNewUniverse"      : self.onToggleNewUniverse,
             "onMenuActionHelpAbout"    : self.onActionShowAbout,
+            "onMenuActionFileSave"     : self.onFileSave,
             "onMenuActionFileQuit"     : self.guiDestroy,
         }
         self.guiBuilder.connect_signals(guiHandlers)
@@ -62,9 +73,17 @@ class GUI():
 
         # Prepare Details Pane and Default Document Type
         self.detailsPane  = self.getObject("detailsNoteBook")
-        self.detailsTitle = self.getObject("lblDetailsSettings")
         self.detailsPane.set_show_tabs(False)
         self.detailsPane.set_current_page(1)
+
+        # Book Details
+        self.bookUniverse    = self.getObject("cmbDetailsBookUniverse")
+        self.bookUniverseNew = self.getObject("entryDetailsBookUniverse")
+        self.listUniverse    = Gtk.ListStore(str)
+        self.cellUniverse    = Gtk.CellRendererText()
+        self.bookUniverse.set_model(self.listUniverse)
+        self.bookUniverse.pack_start(self.cellUniverse, True)
+        self.bookUniverse.add_attribute(self.cellUniverse, "text", 0)
 
         # Prepare Editor
         self.scrollEditor = self.getObject("scrollEditor")
@@ -96,6 +115,9 @@ class GUI():
 
         self.treeData.append(None,["New",0])
 
+        # Default Values
+        self.editType = self.EDIT_BOOK
+
         # Prepare Main Window
         self.winMain.set_title(self.mainConf.appName)
         self.winMain.resize(self.mainConf.winWidth,self.mainConf.winHeight)
@@ -119,9 +141,18 @@ class GUI():
         self.mainConf.autoSaveConfig()
         return True
 
+
     ##
     #  Actions
     ##
+
+    def onFileSave(self, guiObject):
+        logger.debug("Saving")
+        if self.editType == self.EDIT_BOOK:
+            self.projData.setBookTitle(self.getObject("entryDetailsBookTitle").get_text())
+        self.projData.saveProject()
+        return
+
 
     def onActionShowAbout(self, guiObject):
 
@@ -151,6 +182,16 @@ class GUI():
             print(strSource)
         return
 
+    def eventTreeChange(self, guiObject, guiChild, tabIdx):
+        logger.debug("Tree tab change")
+        if tabIdx == 0:
+            self.editType = EDIT_BOOK
+        if tabIdx == 1:
+            self.editType = EDIT_FILE
+        if tabIdx == 1:
+            self.editType = EDIT_CHARACTER
+        return
+
     def eventWinKeyPress(self, guiObject, guiEvent):
         self.guiTimer.resetAutoPause()
         return
@@ -159,5 +200,11 @@ class GUI():
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
 
+    def onToggleNewUniverse(self, guiObject):
+        if guiObject.get_active():
+            self.bookUniverseNew.set_can_focus(True)
+        else:
+            self.bookUniverseNew.set_can_focus(False)
+        return
 
 

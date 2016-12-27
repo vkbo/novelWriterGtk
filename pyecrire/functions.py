@@ -13,7 +13,7 @@ from unicodedata import normalize
 def simplifyString(inStr):
 
     outStr = normalize("NFKD",inStr.decode("utf-8")).encode("ASCII","ignore").lower()
-    outStr = sub("[^a-z0-9 \n\.]","",outStr)
+    outStr = sub("[^a-z0-9\.]","",outStr)
 
     return outStr
 

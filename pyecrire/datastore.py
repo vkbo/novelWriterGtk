@@ -5,34 +5,38 @@ import configparser
 
 class DataWrapper():
 
-    def __init__(self,config,docType):
+    def __init__(self, dataType):
 
-        self.mainConf  = config
-        self.docType   = docType
-        self.docTitle  = ""
-        self.docName   = ""
-        self.docHandle = ""
+        self.dataType     = dataType
+        self.dataPath     = ""
+        self.fileTitle    = ""
+        self.dateOriginal = 0
+        self.dateFile     = 0
+        self.fileNotes    = ""
+        self.fileText     = ""
 
         return
 
 
 class Universe(DataWrapper):
 
-    def __init__(self,config):
+    def __init__(self):
+
+        DataWrapper.__init__(self,"Universe")
 
         return
 
 
 class Book(DataWrapper):
 
-    def __init__(self,config):
+    def __init__(self):
 
         return
 
 
 class Character(DataWrapper):
 
-    def __init__(self,config):
+    def __init__(self):
 
         return
 
