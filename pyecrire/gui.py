@@ -16,6 +16,7 @@ from pyecrire.editor    import Editor
 from pyecrire.timer     import Timer
 from pyecrire.project   import *
 from pyecrire.datastore import *
+from pyecrire.datalist  import *
 
 class GUI():
 
@@ -77,6 +78,8 @@ class GUI():
         self.detailsPane.set_current_page(1)
 
         # Book Details
+        self.allBooks        = DataList(self.mainConf.dataPath,"Book")
+        self.allUniverses    = DataList(self.mainConf.dataPath,"Universe")
         self.bookUniverse    = self.getObject("cmbDetailsBookUniverse")
         self.bookUniverseNew = self.getObject("entryDetailsBookUniverse")
         self.listUniverse    = Gtk.ListStore(str)
@@ -126,6 +129,11 @@ class GUI():
 
         return
 
+
+    def loadProjects(self):
+
+
+        return
 
     # Close Program
     def guiDestroy(self, guiObject):

@@ -12,7 +12,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository      import Gtk
 from os                 import path, mkdir, rename
 from pyecrire.functions import *
-
+from pyecrire.datastore import *
 
 class Project():
 
@@ -20,16 +20,25 @@ class Project():
 
         self.mainConf = config
 
+        # The Book
+        self.theBook        = Book()
         self.bookTitle      = "New Book"
         self.bookName       = simplifyString(self.bookTitle)
         self.bookHandle     = makeHandle(self.bookTitle)
         self.bookFolder     = ""
         self.bookPath       = ""
+
+        # The Universe
+        self.theUniverse    = Universe()
         self.universeTitle  = "New Universe"
         self.universeName   = simplifyString(self.universeTitle)
         self.universeHandle = makeHandle(self.universeTitle)
         self.universeFolder = ""
         self.universePath   = ""
+
+        # Set Other Defaults
+        self.theBook.setTitle("New Book")
+        self.theUniverse.setTitle("New Universe")
 
         return
 
@@ -39,19 +48,20 @@ class Project():
         bookFolder = "B-"+self.bookHandle+"-"+self.bookName
 
         if bookFolder != self.bookFolder:
-            pathOld = path.join(self.mainConf.dataPath,self.bookFolder)
-            pathNew = path.join(self.mainConf.dataPath,bookFolder)
+            oldPath = path.join(self.mainConf.dataPath,self.bookFolder)
+            newPath = path.join(self.mainConf.dataPath,bookFolder)
 
             if self.bookFolder == "":
-                mkdir(pathNew)
+                mkdir(newPath)
             else:
-                if path.isdir(pathOld):
-                    rename(pathOld,pathNew)
+                if path.isdir(oldPath):
+                    rename(oldPath,newPath)
                 else:
-                    mkdir(pathNew)
+                    mkdir(newPath)
 
             self.bookFolder = bookFolder
-            self.bookPath   = pathNew
+            self.bookPath   = newPath
+            self.theBook.setDataPath(newPath)
 
         return
 
@@ -61,19 +71,20 @@ class Project():
         universeFolder = "U-"+self.universeHandle+"-"+self.universeName
 
         if universeFolder != self.universeFolder:
-            pathOld = path.join(self.mainConf.dataPath,self.universeFolder)
-            pathNew = path.join(self.mainConf.dataPath,universeFolder)
+            oldPath = path.join(self.mainConf.dataPath,self.universeFolder)
+            newPath = path.join(self.mainConf.dataPath,universeFolder)
 
             if self.universeFolder == "":
-                mkdir(pathNew)
+                mkdir(newPath)
             else:
-                if path.isdir(pathOld):
-                    rename(pathOld,pathNew)
+                if path.isdir(oldPath):
+                    rename(oldPath,newPath)
                 else:
-                    mkdir(pathNew)
+                    mkdir(newPath)
 
             self.universeFolder = universeFolder
-            self.universePath   = pathNew
+            self.universePath   = newPath
+            self.theUniverse.setDataPath(newPath)
 
         return
 
@@ -89,6 +100,7 @@ class Project():
             self.bookTitle  = bookTitle
             self.bookName   = bookName
             self.bookHandle = makeHandle(bookTitle)
+            self.theBook.setTitle(bookTitle)
 
         logger.debug("Book Title:  %s" % self.bookTitle)
         logger.debug("Book Name:   %s" % self.bookName)
@@ -104,6 +116,7 @@ class Project():
             self.universeTitle  = universeTitle
             self.universeName   = universeName
             self.universeHandle = makeHandle(universeTitle)
+            self.theUniverse.setTitle(universeTitle)
 
         logger.debug("Universe Title:  %s" % self.universeTitle)
         logger.debug("Universe Name:   %s" % self.universeName)
@@ -135,8 +148,13 @@ class Project():
 
     def saveProject(self):
 
+        # Book
         self.updateBookFolder()
+        self.theBook.saveDetails()
+
+        # Universe
         self.updateUniverseFolder()
+        self.theUniverse.saveDetails()
 
         return
 
