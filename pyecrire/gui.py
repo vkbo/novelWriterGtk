@@ -116,6 +116,8 @@ class GUI():
         self.treeMainName.add_attribute(self.cellMainName, "text", 0)
         self.treeMainWords.add_attribute(self.cellMainWords, "text", 1)
 
+        self.loadProjects()
+
         self.treeData.append(None,["New",0])
 
         # Default Values
@@ -131,7 +133,7 @@ class GUI():
 
 
     def loadProjects(self):
-
+        self.allBooks.makeList()
 
         return
 

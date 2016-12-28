@@ -9,17 +9,24 @@ class DataList():
     def __init__(self, dataPath, listType):
 
         self.dataPath = dataPath
+        self.dataList = {}
 
         return
 
 
-    def updateList(self):
+    def makeList(self):
 
         if path.isdir(self.dataPath):
             dirContent = listdir(self.dataPath)
 
             for listItem in dirContent:
-                print(listItem)
+                itemPath = path.join(self.dataPath,listItem)
+                if path.isdir(itemPath):
+                    itemType   = listItem[0:1]
+                    itemHandle = listItem[2:12]
+                    print(itemType+" "+itemHandle)
+        else:
+            logger.error("Path not found: %s" % self.dataPath)
 
         return
 

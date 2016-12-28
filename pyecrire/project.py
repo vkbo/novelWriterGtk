@@ -21,7 +21,7 @@ class Project():
         self.mainConf = config
 
         # The Book
-        self.theBook        = Book()
+        self.theBook        = DataWrapper("Book")
         self.bookTitle      = "New Book"
         self.bookName       = simplifyString(self.bookTitle)
         self.bookHandle     = makeHandle(self.bookTitle)
@@ -29,7 +29,7 @@ class Project():
         self.bookPath       = ""
 
         # The Universe
-        self.theUniverse    = Universe()
+        self.theUniverse    = DataWrapper("Universe")
         self.universeTitle  = "New Universe"
         self.universeName   = simplifyString(self.universeTitle)
         self.universeHandle = makeHandle(self.universeTitle)

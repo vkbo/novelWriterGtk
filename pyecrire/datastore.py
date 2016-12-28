@@ -9,6 +9,13 @@ class DataWrapper():
 
     def __init__(self, dataType):
 
+        # Constants
+        self.TYPE_BOOK     = "Book"
+        self.PREF_BOOK     = "B"
+        self.TYPE_UNIVERSE = "Universe"
+        self.PREF_UNIVERSE = "U"
+
+        # Default Values
         self.dataType = dataType
         self.dataPath = ""
         self.title    = ""
@@ -59,35 +66,8 @@ class DataWrapper():
         if path.isdir(newPath):
             self.dataPath = newPath
         else:
-            logger.error("Path '%s'  not found." % newPath)
+            logger.error("Path not found: %s" % newPath)
         return
 
 # End Class DataWrapper
-
-
-class Universe(DataWrapper):
-
-    def __init__(self):
-
-        DataWrapper.__init__(self,"Universe")
-
-        return
-
-
-class Book(DataWrapper):
-
-    def __init__(self):
-
-        DataWrapper.__init__(self,"Book")
-
-        return
-
-
-class Character(DataWrapper):
-
-    def __init__(self):
-
-        DataWrapper.__init__(self,"Character")
-
-        return
 
