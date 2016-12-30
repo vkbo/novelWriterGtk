@@ -77,17 +77,6 @@ class GUI():
         self.detailsPane.set_show_tabs(False)
         self.detailsPane.set_current_page(1)
 
-        # Book Details
-        self.allBooks        = DataList(self.mainConf.dataPath,"Book")
-        self.allUniverses    = DataList(self.mainConf.dataPath,"Universe")
-        self.bookUniverse    = self.getObject("cmbDetailsBookUniverse")
-        self.bookUniverseNew = self.getObject("entryDetailsBookUniverse")
-        self.listUniverse    = Gtk.ListStore(str)
-        self.cellUniverse    = Gtk.CellRendererText()
-        self.bookUniverse.set_model(self.listUniverse)
-        self.bookUniverse.pack_start(self.cellUniverse, True)
-        self.bookUniverse.add_attribute(self.cellUniverse, "text", 0)
-
         # Prepare Editor
         self.scrollEditor = self.getObject("scrollEditor")
         self.scrollEditor.add(self.webEditor)
@@ -101,24 +90,68 @@ class GUI():
         self.timerID    = GLib.timeout_add(200, self.guiTimer.onTick)
         self.autoTaskID = GLib.timeout_add_seconds(30,self.autoTasks)
 
-        # Prepare TreeView
-        self.treeMain   = self.getObject("treeMain")
-        self.treeData   = Gtk.TreeStore(str,int)
-        self.treeData   = Gtk.TreeStore(str,int)
-        self.treeMain.set_model(self.treeData)
+        ##
+        #  Content
+        ##
 
-        self.treeMainName  = self.treeMain.get_column(0)
-        self.treeMainWords = self.treeMain.get_column(1)
-        self.cellMainName  = Gtk.CellRendererText()
-        self.cellMainWords = Gtk.CellRendererText()
-        self.treeMainName.pack_start(self.cellMainName, True)
-        self.treeMainWords.pack_start(self.cellMainWords, False)
-        self.treeMainName.add_attribute(self.cellMainName, "text", 0)
-        self.treeMainWords.add_attribute(self.cellMainWords, "text", 1)
+        # Data Lists
+        self.allBooks      = DataList(self.mainConf.dataPath,"Book")
+        self.allUniverses  = DataList(self.mainConf.dataPath,"Universe")
+        self.allCharacters = DataList(self.mainConf.dataPath,"Characters")
 
+        # Handle to List Item Map
+        self.mapBookStore = {}
+        self.mapUnivStore = {}
+
+        # Gtk ListStore and TreeStore
+        self.bookStore = Gtk.TreeStore(str,str,str)
+        self.fileStore = Gtk.TreeStore(str,int,str)
+        self.univStore = Gtk.TreeStore(str,int,str)
+        self.univList  = Gtk.ListStore(str,str)
+
+        ## Books Tree
+        treeBooks     = self.getObject("treeBooks")
+        treeBooks.set_model(self.bookStore)
+        cellBooksCol0 = Gtk.CellRendererText()
+        cellBooksCol1 = Gtk.CellRendererText()
+        treeBooksCol0 = treeBooks.get_column(0)
+        treeBooksCol1 = treeBooks.get_column(1)
+        treeBooksCol0.pack_start(cellBooksCol0,True)
+        treeBooksCol1.pack_start(cellBooksCol1,False)
+        treeBooksCol0.add_attribute(cellBooksCol0,"text",0)
+        treeBooksCol1.add_attribute(cellBooksCol1,"text",1)
+        treeBooksCol0.set_attributes(cellBooksCol0,markup=0)
+
+        ## Files Tree
+        treeMain     = self.getObject("treeMain")
+        treeMain.set_model(self.fileStore)
+        cellMainCol0 = Gtk.CellRendererText()
+        cellMainCol1 = Gtk.CellRendererText()
+        treeMainCol0 = treeMain.get_column(0)
+        treeMainCol1 = treeMain.get_column(1)
+        treeMainCol0.pack_start(cellMainCol0,True)
+        treeMainCol1.pack_start(cellMainCol1,False)
+        treeMainCol0.add_attribute(cellMainCol0,"text",0)
+        treeMainCol1.add_attribute(cellMainCol1,"text",1)
+
+        ## Universe Files Tree
+        treeUniv     = self.getObject("treeUniverse")
+        treeUniv.set_model(self.univStore)
+        cellUnivCol0 = Gtk.CellRendererText()
+        cellUnivCol1 = Gtk.CellRendererText()
+        treeUnivCol0 = treeUniv.get_column(0)
+        treeUnivCol1 = treeUniv.get_column(1)
+        treeUnivCol0.pack_start(cellUnivCol0,True)
+        treeUnivCol1.pack_start(cellUnivCol1,False)
+        treeUnivCol0.add_attribute(cellUnivCol0,"text",0)
+        treeUnivCol1.add_attribute(cellUnivCol1,"text",1)
+
+        ## Book Details Universe List
+        cmbDetailsBookUniverse  = self.getObject("cmbDetailsBookUniverse")
+        cmbDetailsBookUniverse.set_model(self.univList)
+
+        # Load Project Data
         self.loadProjects()
-
-        self.treeData.append(None,["New",0])
 
         # Default Values
         self.editType = self.EDIT_BOOK
@@ -133,9 +166,33 @@ class GUI():
 
 
     def loadProjects(self):
+
         self.allBooks.makeList()
+        self.allUniverses.makeList()
+
+        self.mapBookStore = {}
+        self.mapUnivStore = {}
+
+        tmpItem = DataWrapper("Universe")
+        for itemHandle in self.allUniverses.dataList.keys():
+            tmpItem.setDataPath(self.allUniverses.dataList[itemHandle])
+            tmpItem.loadDetails()
+            tmpIter = self.bookStore.append(None,["<b>"+tmpItem.title+"</b>",None,itemHandle])
+            self.mapUnivStore[itemHandle] = tmpIter
+            self.univList.append([tmpItem.title,itemHandle])
+
+        tmpItem = DataWrapper("Book")
+        for itemHandle in self.allBooks.dataList.keys():
+            tmpItem.setDataPath(self.allBooks.dataList[itemHandle])
+            tmpItem.loadDetails()
+            if self.mapUnivStore.has_key(tmpItem.parent):
+                tmpIter = self.bookStore.append(self.mapUnivStore[tmpItem.parent],[tmpItem.title,None,itemHandle])
+            else:
+                logger.error("Orphanded book found with title '%s'." % tmpItem.title)
+            self.mapBookStore[itemHandle] = tmpIter
 
         return
+
 
     # Close Program
     def guiDestroy(self, guiObject):
@@ -158,9 +215,24 @@ class GUI():
 
     def onFileSave(self, guiObject):
         logger.debug("Saving")
+
         if self.editType == self.EDIT_BOOK:
-            self.projData.setBookTitle(self.getObject("entryDetailsBookTitle").get_text())
+
+            bookTitle      = self.getObject("entryDetailsBookTitle").get_text()
+            chkNewUniverse = self.getObject("chkNewUniverse")
+
+            self.projData.createBook(bookTitle)
+
+            if chkNewUniverse.get_active():
+                universeTitle = self.getObject("entryDetailsBookUniverse").get_text()
+                self.projData.createUniverse(universeTitle)
+            else:
+                univIdx  = self.getObject("cmbDetailsBookUniverse").get_active()
+                univItem = self.univList[univIdx]
+                self.projData.setUniverse(univItem[1],self.allUniverses.getItem(univItem[1]))
+
         self.projData.saveProject()
+
         return
 
 
@@ -195,11 +267,11 @@ class GUI():
     def eventTreeChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tree tab change")
         if tabIdx == 0:
-            self.editType = EDIT_BOOK
+            self.editType = self.EDIT_BOOK
         if tabIdx == 1:
-            self.editType = EDIT_FILE
+            self.editType = self.EDIT_FILE
         if tabIdx == 1:
-            self.editType = EDIT_CHARACTER
+            self.editType = self.EDIT_CHARACTER
         return
 
     def eventWinKeyPress(self, guiObject, guiEvent):

@@ -42,6 +42,9 @@ class Project():
 
         return
 
+    ##
+    #  Updaters
+    ##
 
     def updateBookFolder(self):
 
@@ -88,18 +91,18 @@ class Project():
 
         return
 
-
     ##
-    #  Setters
+    #  Creators
     ##
 
-    def setBookTitle(self, bookTitle):
+    def createBook(self, bookTitle):
         bookName = simplifyString(bookTitle)
 
         if len(bookTitle) > 0 and len(bookName) > 0:
             self.bookTitle  = bookTitle
             self.bookName   = bookName
-            self.bookHandle = makeHandle(bookTitle)
+            if self.bookHandle == "":
+                self.bookHandle = makeHandle(bookTitle)
             self.theBook.setTitle(bookTitle)
 
         logger.debug("Book Title:  %s" % self.bookTitle)
@@ -109,14 +112,16 @@ class Project():
         return
 
 
-    def setUniverseTitle(self, universeTitle):
+    def createUniverse(self, universeTitle):
         universeName = simplifyString(universeTitle)
 
         if len(universeTitle) > 0 and len(universeName) > 0:
             self.universeTitle  = universeTitle
             self.universeName   = universeName
-            self.universeHandle = makeHandle(universeTitle)
+            if self.universeHandle == "":
+                self.universeHandle = makeHandle(universeTitle)
             self.theUniverse.setTitle(universeTitle)
+            self.theBook.setParent(self.universeHandle)
 
         logger.debug("Universe Title:  %s" % self.universeTitle)
         logger.debug("Universe Name:   %s" % self.universeName)
@@ -126,7 +131,27 @@ class Project():
 
 
     ##
-    #  Actions
+    #  Setters
+    ##
+
+    def setUniverse(self, universeHandle, universePath):
+
+        self.theUniverse.setDataPath(universePath)
+        self.theUniverse.loadDetails()
+
+        self.universeTitle  = self.theUniverse.title
+        self.universeName   = simplifyString(self.universeTitle)
+        self.universeHandle = universeHandle
+        self.universeFolder = "U-"+self.universeHandle+"-"+self.universeName
+        self.universePath   = universePath
+
+        self.theBook.parent = universeHandle
+
+        return
+
+
+    ##
+    #  Other Actions
     ##
 
     def newProject(self, guiObject):
