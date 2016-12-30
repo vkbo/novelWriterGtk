@@ -171,6 +171,30 @@ class Project():
         return
 
 
+    def loadProject(self, bookPath, bookHandle, universePath, universeHandle):
+        logger.debug("Loading project")
+
+        self.theBook.setDataPath(bookPath)
+        self.theBook.loadDetails()
+
+        self.bookTitle  = self.theBook.title
+        self.bookName   = simplifyString(self.bookTitle)
+        self.bookHandle = bookHandle
+        self.bookFolder = "B-"+self.bookHandle+"-"+self.bookName
+        self.bookPath   = bookPath
+
+        self.theUniverse.setDataPath(universePath)
+        self.theUniverse.loadDetails()
+
+        self.universeTitle  = self.theUniverse.title
+        self.universeName   = simplifyString(self.universeTitle)
+        self.universeHandle = universeHandle
+        self.universeFolder = "U-"+self.universeHandle+"-"+self.universeName
+        self.universePath   = universePath
+
+        return
+
+
     def saveProject(self):
 
         # Book
@@ -183,3 +207,5 @@ class Project():
 
         return
 
+
+# End Class Project

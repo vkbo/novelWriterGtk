@@ -12,8 +12,8 @@ gi.require_version('WebKit', '3.0')
 
 from gi.repository      import Gtk, GLib, WebKit
 from time               import sleep
-from pyecrire.editor    import Editor
-from pyecrire.timer     import Timer
+from pyecrire.editor    import *
+from pyecrire.timer     import *
 from pyecrire.project   import *
 from pyecrire.datastore import *
 from pyecrire.datalist  import *
@@ -21,6 +21,8 @@ from pyecrire.datalist  import *
 class GUI():
 
     def __init__(self, config):
+
+        self.guiLoaded = False
 
         # Constants
         self.EDIT_FILE      = 0
@@ -51,6 +53,7 @@ class GUI():
             "onEventWinChange"         : self.eventWinChange,
             "onSwitchPageMainNoteBook" : self.eventTabChange,
             "onSwitchPageSideNoteBook" : self.eventTreeChange,
+            "onChangeTreeBooks"        : self.onSelectBook,
             "onClickNew"               : self.projData.newProject,
             "onClickSave"              : self.onFileSave,
             "onClickEditBold"          : self.webEditor.onEditAction,
@@ -99,15 +102,17 @@ class GUI():
         self.allUniverses  = DataList(self.mainConf.dataPath,"Universe")
         self.allCharacters = DataList(self.mainConf.dataPath,"Characters")
 
-        # Handle to List Item Map
-        self.mapBookStore = {}
-        self.mapUnivStore = {}
-
         # Gtk ListStore and TreeStore
         self.bookStore = Gtk.TreeStore(str,str,str)
         self.fileStore = Gtk.TreeStore(str,int,str)
         self.univStore = Gtk.TreeStore(str,int,str)
         self.univList  = Gtk.ListStore(str,str)
+        self.bookType  = Gtk.ListStore(str)
+
+        # Handle to List Item Map
+        self.mapBookStore = {}
+        self.mapUnivStore = {}
+        self.mapUnivList  = {}
 
         ## Books Tree
         treeBooks     = self.getObject("treeBooks")
@@ -162,6 +167,8 @@ class GUI():
         self.winMain.set_position(Gtk.WindowPosition.CENTER)
         self.winMain.show_all()
 
+        self.guiLoaded = True
+
         return
 
 
@@ -172,6 +179,7 @@ class GUI():
 
         self.mapBookStore = {}
         self.mapUnivStore = {}
+        self.mapUnivList  = {}
 
         tmpItem = DataWrapper("Universe")
         for itemHandle in self.allUniverses.dataList.keys():
@@ -179,7 +187,8 @@ class GUI():
             tmpItem.loadDetails()
             tmpIter = self.bookStore.append(None,["<b>"+tmpItem.title+"</b>",None,itemHandle])
             self.mapUnivStore[itemHandle] = tmpIter
-            self.univList.append([tmpItem.title,itemHandle])
+            tmpIter = self.univList.append([tmpItem.title,itemHandle])
+            self.mapUnivList[itemHandle]  = tmpIter
 
         tmpItem = DataWrapper("Book")
         for itemHandle in self.allBooks.dataList.keys():
@@ -190,6 +199,14 @@ class GUI():
             else:
                 logger.error("Orphanded book found with title '%s'." % tmpItem.title)
             self.mapBookStore[itemHandle] = tmpIter
+
+        return
+
+
+    def displayBook(self):
+
+        self.getObject("entryDetailsBookTitle").set_text(self.projData.bookTitle)
+        self.getObject("cmbDetailsBookUniverse").set_active_iter(self.mapUnivList[self.projData.theBook.parent])
 
         return
 
@@ -212,6 +229,30 @@ class GUI():
     ##
     #  Actions
     ##
+
+    def onSelectBook(self, guiObject):
+
+        logger.debug("Select Book")
+        if not self.guiLoaded: return
+
+        (listModel, pathList) = guiObject.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,2)
+
+        if len(pathItem) == 1:
+            self.getObject("treeBooks").expand_row(pathItem,False)
+
+        if len(pathItem) == 2:
+            parIter   = listModel.get_iter(pathItem[0])
+            parHandle = listModel.get_value(parIter,2)
+            itemPath  = self.allBooks.getItem(itemHandle)
+            parPath   = self.allUniverses.getItem(parHandle)
+            self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
+            self.displayBook()
+
+        return
+
 
     def onFileSave(self, guiObject):
         logger.debug("Saving")
@@ -245,6 +286,7 @@ class GUI():
         dlgAbout.set_website(self.mainConf.appURL)
         dlgAbout.run()
         dlgAbout.destroy()
+
         return
 
 
@@ -264,6 +306,7 @@ class GUI():
             print(strSource)
         return
 
+
     def eventTreeChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tree tab change")
         if tabIdx == 0:
@@ -274,13 +317,16 @@ class GUI():
             self.editType = self.EDIT_CHARACTER
         return
 
+
     def eventWinKeyPress(self, guiObject, guiEvent):
         self.guiTimer.resetAutoPause()
         return
 
+
     def eventWinChange(self, guiObject, guiEvent):
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
+
 
     def onToggleNewUniverse(self, guiObject):
         if guiObject.get_active():
@@ -290,3 +336,4 @@ class GUI():
         return
 
 
+# End Class GUI
