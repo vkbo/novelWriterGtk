@@ -9,10 +9,10 @@ import logging as logger
 import gi
 gi.require_version('Gtk', '3.0')
 
-from gi.repository      import Gtk
-from os                 import path, mkdir, rename
-from pyecrire.functions import *
-from pyecrire.datastore import *
+from gi.repository             import Gtk
+from os                        import path, mkdir, rename
+from pyecrire.functions        import *
+from pyecrire.data.datawrapper import DataWrapper
 
 class Project():
 

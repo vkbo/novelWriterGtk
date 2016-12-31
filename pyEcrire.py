@@ -10,6 +10,9 @@
 #  By: Veronica Berglyd Olsen
 ##
 
+__version__ = "0.1"
+__author__  = "Veronica Berglyd Olsen"
+
 import logging as logger
 
 import gi
@@ -18,8 +21,8 @@ from gi.repository      import Gtk
 
 # pyÉcrire classes
 from pyecrire.functions import *
-from pyecrire.gui       import *
-from pyecrire.config    import *
+from pyecrire.gui       import GUI
+from pyecrire.config    import Config
 
 def main():
 

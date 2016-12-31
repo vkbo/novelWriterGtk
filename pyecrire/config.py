@@ -4,7 +4,7 @@ import logging as logger
 import configparser
 
 from os      import path, mkdir
-from appdirs import *
+from appdirs import user_config_dir
 
 class Config:
 

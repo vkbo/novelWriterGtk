@@ -10,13 +10,13 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 
-from gi.repository      import Gtk, GLib, WebKit
-from time               import sleep
-from pyecrire.editor    import *
-from pyecrire.timer     import *
-from pyecrire.project   import *
-from pyecrire.datastore import *
-from pyecrire.datalist  import *
+from gi.repository             import Gtk, GLib, WebKit
+from time                      import sleep
+from pyecrire.editor           import Editor
+from pyecrire.timer            import Timer
+from pyecrire.data.project     import Project
+from pyecrire.data.datalist    import DataList
+from pyecrire.data.datawrapper import DataWrapper
 
 class GUI():
 
