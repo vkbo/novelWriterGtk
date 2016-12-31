@@ -64,6 +64,10 @@ class GUI():
             "onClickTimerStart"        : self.guiTimer.onTimerStart,
             "onClickTimerPause"        : self.guiTimer.onTimerPause,
             "onClickTimerStop"         : self.guiTimer.onTimerStop,
+            "onClickSceneAdd"          : self.onSceneAdd,
+            "onClickSceneRemove"       : self.onSceneRemove,
+            "onClickSceneUp"           : self.onSceneUp,
+            "onClickSceneDown"         : self.onSceneDown,
             "onToggleNewUniverse"      : self.onToggleNewUniverse,
             "onMenuActionHelpAbout"    : self.onActionShowAbout,
             "onMenuActionFileSave"     : self.onFileSave,
@@ -76,9 +80,9 @@ class GUI():
         self.guiPaned.set_position(self.mainConf.winPane)
 
         # Prepare Details Pane and Default Document Type
-        self.detailsPane  = self.getObject("detailsNoteBook")
-        self.detailsPane.set_show_tabs(False)
-        self.detailsPane.set_current_page(1)
+        #self.detailsPane  = self.getObject("detailsNoteBook")
+        #self.detailsPane.set_show_tabs(False)
+        #self.detailsPane.set_current_page(1)
 
         # Prepare Editor
         self.scrollEditor = self.getObject("scrollEditor")
@@ -101,13 +105,15 @@ class GUI():
         self.allBooks      = DataList(self.mainConf.dataPath,"Book")
         self.allUniverses  = DataList(self.mainConf.dataPath,"Universe")
         self.allCharacters = DataList(self.mainConf.dataPath,"Characters")
+        self.allScenes     = DataList(self.mainConf.dataPath,"Scenes")
 
         # Gtk ListStore and TreeStore
-        self.bookStore = Gtk.TreeStore(str,str,str)
-        self.fileStore = Gtk.TreeStore(str,int,str)
-        self.univStore = Gtk.TreeStore(str,int,str)
-        self.univList  = Gtk.ListStore(str,str)
-        self.bookType  = Gtk.ListStore(str)
+        self.bookStore  = Gtk.TreeStore(str,str,str)
+        self.fileStore  = Gtk.TreeStore(str,int,str)
+        self.univStore  = Gtk.TreeStore(str,int,str)
+        self.sceneStore = Gtk.TreeStore(str,int,str,int,str)
+        self.univList   = Gtk.ListStore(str,str)
+        self.bookType   = Gtk.ListStore(str)
 
         # Handle to List Item Map
         self.mapBookStore = {}
@@ -138,6 +144,7 @@ class GUI():
         treeMainCol1.pack_start(cellMainCol1,False)
         treeMainCol0.add_attribute(cellMainCol0,"text",0)
         treeMainCol1.add_attribute(cellMainCol1,"text",1)
+        treeMainCol0.set_attributes(cellMainCol0,markup=0)
 
         ## Universe Files Tree
         treeUniv     = self.getObject("treeUniverse")
@@ -150,13 +157,37 @@ class GUI():
         treeUnivCol1.pack_start(cellUnivCol1,False)
         treeUnivCol0.add_attribute(cellUnivCol0,"text",0)
         treeUnivCol1.add_attribute(cellUnivCol1,"text",1)
+        treeUnivCol0.set_attributes(cellUnivCol0,markup=0)
+
+        ## Scenes Tree
+        treeScene     = self.getObject("treeScenes")
+        treeScene.set_model(self.sceneStore)
+        cellSceneCol0 = Gtk.CellRendererText()
+        cellSceneCol1 = Gtk.CellRendererText()
+        cellSceneCol2 = Gtk.CellRendererText()
+        cellSceneCol3 = Gtk.CellRendererText()
+        treeSceneCol0 = treeScene.get_column(0)
+        treeSceneCol1 = treeScene.get_column(1)
+        treeSceneCol2 = treeScene.get_column(2)
+        treeSceneCol3 = treeScene.get_column(3)
+        treeSceneCol0.pack_start(cellSceneCol0,True)
+        treeSceneCol1.pack_start(cellSceneCol1,False)
+        treeSceneCol2.pack_start(cellSceneCol2,False)
+        treeSceneCol3.pack_start(cellSceneCol3,False)
+        treeSceneCol0.add_attribute(cellSceneCol0,"text",0)
+        treeSceneCol1.add_attribute(cellSceneCol1,"text",1)
+        treeSceneCol2.add_attribute(cellSceneCol2,"text",2)
+        treeSceneCol3.add_attribute(cellSceneCol3,"text",3)
+        treeSceneCol0.set_attributes(cellSceneCol0,markup=0)
 
         ## Book Details Universe List
-        cmbDetailsBookUniverse  = self.getObject("cmbDetailsBookUniverse")
+        cmbDetailsBookUniverse  = self.getObject("cmbBookUniverse")
         cmbDetailsBookUniverse.set_model(self.univList)
 
         # Load Project Data
         self.loadProjects()
+        self.loadBookFiles()
+        self.loadUnivFiles()
 
         # Default Values
         self.editType = self.EDIT_BOOK
@@ -203,10 +234,44 @@ class GUI():
         return
 
 
+    def loadScenes(self):
+
+        if self.projData.bookHandle == "": return
+
+        bookPath = self.allBooks.getItem(self.projData.bookHandle)
+
+        self.allScenes.setDataPath(bookPath)
+        self.allScenes.makeList()
+
+        return
+
+
+    def loadBookFiles(self, bookHandle = ""):
+
+        self.fileStore.clear()
+        self.fileStore.append(None,["<b>Files</b>",0,""])
+        self.fileStore.append(None,["<b>Scenes</b>",0,""])
+
+        if bookHandle == "": return
+
+        return
+
+
+    def loadUnivFiles(self, universeHandle = ""):
+
+        self.univStore.clear()
+        self.univStore.append(None,["<b>Files</b>",0,""])
+        self.univStore.append(None,["<b>Characters</b>",0,""])
+
+        if universeHandle == "": return
+
+        return
+
+
     def displayBook(self):
 
-        self.getObject("entryDetailsBookTitle").set_text(self.projData.bookTitle)
-        self.getObject("cmbDetailsBookUniverse").set_active_iter(self.mapUnivList[self.projData.theBook.parent])
+        self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
+        self.getObject("cmbBookUniverse").set_active_iter(self.mapUnivList[self.projData.theBook.parent])
 
         return
 
@@ -250,6 +315,7 @@ class GUI():
             parPath   = self.allUniverses.getItem(parHandle)
             self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
             self.displayBook()
+            self.loadScenes()
 
         return
 
@@ -259,16 +325,16 @@ class GUI():
 
         if self.editType == self.EDIT_BOOK:
 
-            bookTitle      = self.getObject("entryDetailsBookTitle").get_text()
+            bookTitle      = self.getObject("entryBookTitle").get_text()
             chkNewUniverse = self.getObject("chkNewUniverse")
 
             self.projData.createBook(bookTitle)
 
             if chkNewUniverse.get_active():
-                universeTitle = self.getObject("entryDetailsBookUniverse").get_text()
+                universeTitle = self.getObject("entryBookUniverse").get_text()
                 self.projData.createUniverse(universeTitle)
             else:
-                univIdx  = self.getObject("cmbDetailsBookUniverse").get_active()
+                univIdx  = self.getObject("cmbBookUniverse").get_active()
                 univItem = self.univList[univIdx]
                 self.projData.setUniverse(univItem[1],self.allUniverses.getItem(univItem[1]))
 
@@ -287,6 +353,28 @@ class GUI():
         dlgAbout.run()
         dlgAbout.destroy()
 
+        return
+
+
+    def onSceneAdd(self, guiObject):
+
+        if self.projData.bookHandle == "": return
+
+        sceneNum = self.allScenes.dataLen + 1
+        self.sceneStore.append(None,["New Scene",sceneNum,"",0,""])
+
+        return
+
+
+    def onSceneRemove(self, guiObject):
+        return
+
+
+    def onSceneUp(self, guiObject):
+        return
+
+
+    def onSceneDown(self, guiObject):
         return
 
 
@@ -330,9 +418,9 @@ class GUI():
 
     def onToggleNewUniverse(self, guiObject):
         if guiObject.get_active():
-            self.bookUniverseNew.set_can_focus(True)
+            self.getObject("entryBookUniverse").set_can_focus(True)
         else:
-            self.bookUniverseNew.set_can_focus(False)
+            self.getObject("entryBookUniverse").set_can_focus(False)
         return
 
 

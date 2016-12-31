@@ -16,11 +16,16 @@ class DataWrapper():
         self.parent   = ""
         self.created  = 0
         self.date     = 0
-        self.notes    = ""
-        self.hasNotes = False
-        self.text     = ""
-        self.hasText  = False
-        self.words    = 0
+
+        if self.dataType == "Scene":
+            self.notes    = ""
+            self.hasNotes = False
+            self.text     = ""
+            self.hasText  = False
+            self.words    = 0
+            self.number   = 0
+            self.section  = 0
+            self.chapter  = 0
 
         return
 
@@ -37,9 +42,13 @@ class DataWrapper():
         confParser.set(cnfSec,"Parent", str(self.parent))
         confParser.set(cnfSec,"Created",str(self.created))
         confParser.set(cnfSec,"Date",   str(self.date))
-        confParser.set(cnfSec,"Notes",  str(self.hasNotes))
-        confParser.set(cnfSec,"Text",   str(self.hasText))
-        confParser.set(cnfSec,"Words",  str(self.words))
+        if self.dataType == "Scene":
+            confParser.set(cnfSec,"Notes",   str(self.hasNotes))
+            confParser.set(cnfSec,"Text",    str(self.hasText))
+            confParser.set(cnfSec,"Words",   str(self.words))
+            confParser.set(cnfSec,"Number",  str(self.number))
+            confParser.set(cnfSec,"Section", str(self.section))
+            confParser.set(cnfSec,"Chapter", str(self.chapter))
 
         # Write File
         confParser.write(open(path.join(self.dataPath,"details.txt"),"w"))
@@ -63,6 +72,9 @@ class DataWrapper():
             if confParser.has_option(cnfSec,"Notes"):   self.hasNotes = confParser.getboolean(cnfSec,"Notes")
             if confParser.has_option(cnfSec,"Text"):    self.hasText  = confParser.getboolean(cnfSec,"Text")
             if confParser.has_option(cnfSec,"Words"):   self.words    = confParser.getint(cnfSec,"Words")
+            if confParser.has_option(cnfSec,"Number"):  self.number   = confParser.getint(cnfSec,"Number")
+            if confParser.has_option(cnfSec,"Section"): self.section  = confParser.getint(cnfSec,"Section")
+            if confParser.has_option(cnfSec,"Chapter"): self.chapter  = confParser.getint(cnfSec,"Chapter")
 
         return
 
@@ -91,5 +103,5 @@ class DataWrapper():
         self.parent = newParent
         return
 
-# End Class DataWrapper
 
+# End Class DataWrapper

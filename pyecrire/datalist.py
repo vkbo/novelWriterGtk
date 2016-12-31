@@ -39,8 +39,15 @@ class DataList():
 
         return
 
-    def getItem(self,itemHandle):
+
+    def getItem(self, itemHandle):
         return self.dataList[itemHandle]
+
+
+    def setDataPath(self, newPath):
+        if path.isdir(newPath):
+            self.dataPath = newPath
+        return
 
 
 # End Class DataList

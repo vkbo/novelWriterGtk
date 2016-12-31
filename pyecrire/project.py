@@ -24,7 +24,7 @@ class Project():
         self.theBook        = DataWrapper("Book")
         self.bookTitle      = "New Book"
         self.bookName       = simplifyString(self.bookTitle)
-        self.bookHandle     = makeHandle(self.bookTitle)
+        self.bookHandle     = ""
         self.bookFolder     = ""
         self.bookPath       = ""
 
@@ -32,7 +32,7 @@ class Project():
         self.theUniverse    = DataWrapper("Universe")
         self.universeTitle  = "New Universe"
         self.universeName   = simplifyString(self.universeTitle)
-        self.universeHandle = makeHandle(self.universeTitle)
+        self.universeHandle = ""
         self.universeFolder = ""
         self.universePath   = ""
 
@@ -154,20 +154,24 @@ class Project():
     #  Other Actions
     ##
 
-    def newProject(self, guiObject):
+    def newProject(self, guiObject=None):
 
         self.bookTitle      = "New Book"
         self.bookName       = simplifyString(self.bookTitle)
-        self.bookHandle     = makeHandle(self.bookTitle)
+        self.bookHandle     = ""
         self.bookFolder     = ""
         self.bookPath       = ""
 
         self.universeTitle  = "New Universe"
         self.universeName   = simplifyString(self.universeTitle)
-        self.universeHandle = makeHandle(self.universeTitle)
+        self.universeHandle = ""
         self.universeFolder = ""
         self.universePath   = ""
 
+        return
+
+
+    def newScene(self):
         return
 
 
