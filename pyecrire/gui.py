@@ -10,13 +10,13 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 
-from gi.repository             import Gtk, GLib, WebKit
-from time                      import sleep
-from pyecrire.editor           import Editor
-from pyecrire.timer            import Timer
-from pyecrire.data.project     import Project
-from pyecrire.data.datalist    import DataList
-from pyecrire.data.datawrapper import DataWrapper
+from gi.repository        import Gtk, GLib, WebKit
+from time                 import sleep
+from pyecrire.editor      import Editor
+from pyecrire.timer       import Timer
+from pyecrire.project     import Project
+from pyecrire.datalist    import DataList
+from pyecrire.datawrapper import DataWrapper
 
 class GUI():
 
@@ -202,7 +202,6 @@ class GUI():
 
         return
 
-
     def loadProjects(self):
 
         self.allBooks.makeList()
@@ -233,7 +232,6 @@ class GUI():
 
         return
 
-
     def loadScenes(self):
 
         if self.projData.bookHandle == "": return
@@ -245,7 +243,6 @@ class GUI():
 
         return
 
-
     def loadBookFiles(self, bookHandle = ""):
 
         self.fileStore.clear()
@@ -255,7 +252,6 @@ class GUI():
         if bookHandle == "": return
 
         return
-
 
     def loadUnivFiles(self, universeHandle = ""):
 
@@ -267,14 +263,12 @@ class GUI():
 
         return
 
-
     def displayBook(self):
 
         self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
         self.getObject("cmbBookUniverse").set_active_iter(self.mapUnivList[self.projData.theBook.parent])
 
         return
-
 
     # Close Program
     def guiDestroy(self, guiObject):
@@ -284,12 +278,10 @@ class GUI():
         Gtk.main_quit()
         return
 
-
     # Automated Tasks
     def autoTasks(self):
         self.mainConf.autoSaveConfig()
         return True
-
 
     ##
     #  Actions
@@ -319,7 +311,6 @@ class GUI():
 
         return
 
-
     def onFileSave(self, guiObject):
         logger.debug("Saving")
 
@@ -342,7 +333,6 @@ class GUI():
 
         return
 
-
     def onActionShowAbout(self, guiObject):
 
         dlgAbout = Gtk.AboutDialog()
@@ -355,7 +345,6 @@ class GUI():
 
         return
 
-
     def onSceneAdd(self, guiObject):
 
         if self.projData.bookHandle == "": return
@@ -365,18 +354,14 @@ class GUI():
 
         return
 
-
     def onSceneRemove(self, guiObject):
         return
-
 
     def onSceneUp(self, guiObject):
         return
 
-
     def onSceneDown(self, guiObject):
         return
-
 
     ##
     #  Events
@@ -394,7 +379,6 @@ class GUI():
             print(strSource)
         return
 
-
     def eventTreeChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tree tab change")
         if tabIdx == 0:
@@ -405,16 +389,13 @@ class GUI():
             self.editType = self.EDIT_CHARACTER
         return
 
-
     def eventWinKeyPress(self, guiObject, guiEvent):
         self.guiTimer.resetAutoPause()
         return
 
-
     def eventWinChange(self, guiObject, guiEvent):
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
-
 
     def onToggleNewUniverse(self, guiObject):
         if guiObject.get_active():
@@ -422,6 +403,5 @@ class GUI():
         else:
             self.getObject("entryBookUniverse").set_can_focus(False)
         return
-
 
 # End Class GUI
