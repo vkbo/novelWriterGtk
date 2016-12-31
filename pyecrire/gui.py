@@ -352,6 +352,11 @@ class GUI():
         sceneNum = self.allScenes.dataLen + 1
         self.sceneStore.append(None,["New Scene",sceneNum,"",0,""])
 
+        self.projData.newFile("Scene")
+        self.projData.createFile("New Scene")
+        self.projData.setFileParent("Book")
+        self.projData.saveFile()
+
         return
 
     def onSceneRemove(self, guiObject):

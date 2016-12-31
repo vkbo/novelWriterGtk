@@ -3,7 +3,8 @@
 import logging as logger
 import configparser
 
-from os import path
+from os                 import path
+from pyecrire.functions import makeTimeStamp
 
 class DataWrapper():
 
@@ -20,16 +21,15 @@ class DataWrapper():
         elif dataType == "History":
             self.dataGroup = "File"
         else:
-            logger.error("Unknown datawrapper data type.")
-            return
+            self.dataGroup = ""
 
         # Default Values
         self.dataType = dataType
         self.dataPath = ""
         self.title    = ""
         self.parent   = ""
-        self.created  = 0
-        self.date     = 0
+        self.created  = ""
+        self.date     = ""
 
         # File Specific Values
         self.notes    = ""
@@ -54,13 +54,19 @@ class DataWrapper():
         logger.debug("Saving data details")
         confParser = configparser.ConfigParser()
 
+        # Set or Update TimeStamps
+        if self.created == "":
+            self.created = makeTimeStamp(3)
+        self.date = makeTimeStamp(3)
+
         # Set Variables
         cnfSec = self.dataType
         confParser.add_section(cnfSec)
         confParser.set(cnfSec,"Title",   str(self.title))
-        confParser.set(cnfSec,"Parent",  str(self.parent))
         confParser.set(cnfSec,"Created", str(self.created))
         confParser.set(cnfSec,"Date",    str(self.date))
+        if self.dataType != "Universe":
+            confParser.set(cnfSec,"Parent",  str(self.parent))
         if self.dataGroup == "File":
             confParser.set(cnfSec,"Notes",    str(self.hasNotes))
             confParser.set(cnfSec,"Text",     str(self.hasText))
@@ -88,17 +94,17 @@ class DataWrapper():
         cnfSec = self.dataType
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"Title"):    self.title    = confParser.get(cnfSec,"Title")
+            if confParser.has_option(cnfSec,"Created"):  self.created  = confParser.get(cnfSec,"Created")
+            if confParser.has_option(cnfSec,"Date"):     self.date     = confParser.get(cnfSec,"Date")
             if confParser.has_option(cnfSec,"Parent"):   self.parent   = confParser.get(cnfSec,"Parent")
-            if confParser.has_option(cnfSec,"Created"):  self.created  = confParser.getint(cnfSec,"Created")
-            if confParser.has_option(cnfSec,"Date"):     self.date     = confParser.getint(cnfSec,"Date")
             if confParser.has_option(cnfSec,"Notes"):    self.hasNotes = confParser.getboolean(cnfSec,"Notes")
             if confParser.has_option(cnfSec,"Text"):     self.hasText  = confParser.getboolean(cnfSec,"Text")
             if confParser.has_option(cnfSec,"Words"):    self.words    = confParser.getint(cnfSec,"Words")
             if confParser.has_option(cnfSec,"Number"):   self.number   = confParser.getint(cnfSec,"Number")
             if confParser.has_option(cnfSec,"Section"):  self.section  = confParser.getint(cnfSec,"Section")
             if confParser.has_option(cnfSec,"Chapter"):  self.chapter  = confParser.getint(cnfSec,"Chapter")
-            if confParser.has_option(cnfSec,"Category"): self.category = confParser.getint(cnfSec,"Category")
-            if confParser.has_option(cnfSec,"Status"):   self.status   = confParser.getint(cnfSec,"Status")
+            if confParser.has_option(cnfSec,"Category"): self.category = confParser.get(cnfSec,"Category")
+            if confParser.has_option(cnfSec,"Status"):   self.status   = confParser.get(cnfSec,"Status")
 
         return
 

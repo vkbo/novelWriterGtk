@@ -47,8 +47,10 @@ def makeTimeStamp(stringFormat=0, timeStamp=None):
         return "{:%Y%m%d-%H%M%S}".format(timeStamp)
     elif stringFormat == 2:
         return "{:%Y-%m-%d %H:%M:%S}".format(timeStamp)
+    elif stringFormat == 3:
+        return "{:%d/%m/%Y %H:%M:%S}".format(timeStamp)
     else:
-        return "{:%Y-%m-%d %H:%M:%S}".format(timeStamp)
+        return "{:%Y.%m.%d %H:%M:%S}".format(timeStamp)
 
     return ""
 

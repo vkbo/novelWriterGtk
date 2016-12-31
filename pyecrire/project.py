@@ -7,7 +7,7 @@
 import logging as logger
 
 from os                   import path, mkdir, rename
-from pyecrire.functions   import *
+from pyecrire.functions   import simplifyString, makeHandle
 from pyecrire.datawrapper import DataWrapper
 
 class Project():
@@ -99,6 +99,7 @@ class Project():
             if self.fileHandle == "":
                 self.fileHandle = makeHandle(fileTitle)
             self.theFile.setTitle(fileTitle)
+            self.theFile.setDataType(self.fileType)
 
         logger.debug("File Title:  %s" % self.fileTitle)
         logger.debug("File Name:   %s" % self.fileName)
@@ -189,6 +190,7 @@ class Project():
 
             self.fileFolder = fileFolder
             self.filePath   = newPath
+            self.theFile.setDataPath(newPath)
 
         return
 
@@ -211,11 +213,14 @@ class Project():
 
         return
 
-    def setFileParent(self, parentHandle, parentType):
+    def setFileParent(self, parentType):
 
-        if parentType == "Book" or parentType == "Universe":
+        if   parentType == "Book":
             self.fileParent     = parentType
-            self.theFile.parent = parentHandle
+            self.theFile.parent = self.bookHandle
+        elif parentType == "Universe":
+            self.fileParent     = parentType
+            self.theFile.parent = self.universeHandle
         else:
             logger.error("File parent type must be Book or Universe.")
 
@@ -295,6 +300,13 @@ class Project():
         # Universe
         self.updateUniverseFolder()
         self.theUniverse.saveDetails()
+
+        return
+
+    def saveFile(self):
+
+        self.updateFileFolder()
+        self.theFile.saveDetails()
 
         return
 
