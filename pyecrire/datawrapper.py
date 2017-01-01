@@ -18,6 +18,8 @@ class DataWrapper():
             self.dataGroup = "File"
         elif dataType == "Plot":
             self.dataGroup = "File"
+        elif dataType == "Character":
+            self.dataGroup = "File"
         elif dataType == "History":
             self.dataGroup = "File"
         else:
@@ -27,9 +29,9 @@ class DataWrapper():
         self.dataType = dataType
         self.dataPath = ""
         self.title    = ""
-        self.parent   = ""
         self.created  = ""
         self.date     = ""
+        self.parent   = ""
 
         # File Specific Values
         self.notes    = ""
@@ -42,6 +44,7 @@ class DataWrapper():
         # Scene Specific Values
         self.section  = 0
         self.chapter  = 0
+        self.pov      = ""
 
         # Book Specific Values
         self.category = ""
@@ -66,7 +69,7 @@ class DataWrapper():
         confParser.set(cnfSec,"Created", str(self.created))
         confParser.set(cnfSec,"Date",    str(self.date))
         if self.dataType != "Universe":
-            confParser.set(cnfSec,"Parent",  str(self.parent))
+            confParser.set(cnfSec,"Parent",   str(self.parent))
         if self.dataGroup == "File":
             confParser.set(cnfSec,"Notes",    str(self.hasNotes))
             confParser.set(cnfSec,"Text",     str(self.hasText))
@@ -75,6 +78,7 @@ class DataWrapper():
         if self.dataType == "Scene":
             confParser.set(cnfSec,"Section",  str(self.section))
             confParser.set(cnfSec,"Chapter",  str(self.chapter))
+            confParser.set(cnfSec,"POV",      str(self.pov))
         if self.dataType == "Book":
             confParser.set(cnfSec,"Category", str(self.category))
             confParser.set(cnfSec,"Status",   str(self.status))
@@ -103,6 +107,7 @@ class DataWrapper():
             if confParser.has_option(cnfSec,"Number"):   self.number   = confParser.getint(cnfSec,"Number")
             if confParser.has_option(cnfSec,"Section"):  self.section  = confParser.getint(cnfSec,"Section")
             if confParser.has_option(cnfSec,"Chapter"):  self.chapter  = confParser.getint(cnfSec,"Chapter")
+            if confParser.has_option(cnfSec,"POV"):      self.pov      = confParser.get(cnfSec,"POV")
             if confParser.has_option(cnfSec,"Category"): self.category = confParser.get(cnfSec,"Category")
             if confParser.has_option(cnfSec,"Status"):   self.status   = confParser.get(cnfSec,"Status")
 
@@ -112,11 +117,8 @@ class DataWrapper():
     #  Setters
     ##
 
-    def setTitle(self, newTitle):
-        if len(newTitle) > 0:
-            self.title = newTitle
-        else:
-            logger.error("Setting %s title failed." % lower(self.dataType))
+    def setDataType(self, dataType):
+        self.dataType = dataType
         return
 
     def setDataPath(self, newPath):
@@ -126,12 +128,38 @@ class DataWrapper():
             logger.error("Path not found: %s" % newPath)
         return
 
-    def setDataType(self, dataType):
-        self.dataType = dataType
+    def setTitle(self, newTitle):
+        if len(newTitle) > 0:
+            self.title = newTitle
+        else:
+            logger.error("Setting %s title failed." % lower(self.dataType))
         return
 
     def setParent(self, newParent):
         self.parent = newParent
+        return
+
+    def setNumber(self, newNumber):
+        if newNumber < 0:   newNumber = 0
+        if newNumber > 999: newNumber = 999
+        self.number = newNumber
+        print(newNumber)
+        return
+
+    def setSection(self, newSection):
+        if newSection < 0: newSection = 0
+        if newSection > 3: newSection = 3
+        self.section = newSection
+        return
+
+    def setChapter(self, newChapter):
+        if newChapter < 0:  newChapter = 0
+        if newChapter > 99: newChapter = 99
+        self.chapter = newChapter
+        return
+
+    def setPOV(self, charHandle):
+        self.pov = charHandle
         return
 
 # End Class DataWrapper

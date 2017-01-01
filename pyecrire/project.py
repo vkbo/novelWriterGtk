@@ -226,6 +226,22 @@ class Project():
 
         return
 
+    def setFileNumber(self, newNumber):
+        self.theFile.setNumber(newNumber)
+        return
+
+    def setSceneSettings(self, scnTitle, scnSection, scnChapter, scnPOV, scnTime):
+
+        if self.theFile.dataType == "Scene":
+            self.fileTitle = scnTitle
+            self.fileName  = simplifyString(scnTitle)
+            self.theFile.setTitle(scnTitle)
+            self.theFile.setSection(scnSection)
+            self.theFile.setChapter(int(scnChapter))
+            self.theFile.setPOV(scnPOV)
+
+        return
+
     ##
     #  New, Load and Save
     ##
@@ -256,7 +272,7 @@ class Project():
     def newFile(self, fileType):
 
         # The File
-        self.theFile        = DataWrapper("File")
+        self.theFile        = DataWrapper(fileType)
         self.fileType       = fileType
         self.fileCode       = fileType[0:1]
         self.fileTitle      = ""
@@ -288,6 +304,32 @@ class Project():
         self.universeHandle = universeHandle
         self.universeFolder = "U-"+self.universeHandle+"-"+self.universeName
         self.universePath   = universePath
+
+        return
+
+    def loadFile(self, filePath, fileHandle):
+
+        logger.debug("Loading file")
+
+        self.theFile.setDataPath(filePath)
+        self.theFile.loadDetails()
+
+        self.fileTitle  = self.theFile.title
+        self.fileName   = simplifyString(self.fileTitle)
+        self.fileHandle = fileHandle
+        self.fileFolder = self.fileCode+"-"+self.fileHandle+"-"+self.fileName
+        self.filePath   = filePath
+
+        if   self.theFile.dataType == "Scene":
+            self.fileParent = "Book"
+        elif self.theFile.dataType == "Plot":
+            self.fileParent = "Book"
+        elif self.theFile.dataType == "Character":
+            self.fileParent = "Universe"
+        elif self.theFile.dataType == "History":
+            self.fileParent = "Universe"
+        else:
+            self.fileParent = ""
 
         return
 

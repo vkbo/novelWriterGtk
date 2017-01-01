@@ -54,5 +54,17 @@ def makeTimeStamp(stringFormat=0, timeStamp=None):
 
     return ""
 
+#
+# Create Scene Number
+#
 
+def makeSceneNumber(section,chapter,number):
 
+    if section == 0: return "A00.%03d" % number
+    if section == 1: return "B00.%03d" % number
+    if section == 2: return "C%02d.%03d" % (chapter,number)
+    if section == 3: return "D00.%03d" % number
+
+    return
+
+# End Functions

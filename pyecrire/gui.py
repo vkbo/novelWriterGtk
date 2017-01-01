@@ -17,6 +17,7 @@ from pyecrire.timer       import Timer
 from pyecrire.project     import Project
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
+from pyecrire.functions   import makeSceneNumber
 
 class GUI():
 
@@ -68,6 +69,8 @@ class GUI():
             "onClickSceneRemove"       : self.onSceneRemove,
             "onClickSceneUp"           : self.onSceneUp,
             "onClickSceneDown"         : self.onSceneDown,
+            "onClickSceneSave"         : self.onSceneSave,
+            "onChangeTreeScenes"       : self.onSelectScene,
             "onToggleNewUniverse"      : self.onToggleNewUniverse,
             "onMenuActionHelpAbout"    : self.onActionShowAbout,
             "onMenuActionFileSave"     : self.onFileSave,
@@ -111,14 +114,16 @@ class GUI():
         self.bookStore  = Gtk.TreeStore(str,str,str)
         self.fileStore  = Gtk.TreeStore(str,int,str)
         self.univStore  = Gtk.TreeStore(str,int,str)
-        self.sceneStore = Gtk.TreeStore(str,int,str,int,str)
+        self.sceneStore = Gtk.TreeStore(str,str,str,int,str)
         self.univList   = Gtk.ListStore(str,str)
         self.bookType   = Gtk.ListStore(str)
 
         # Handle to List Item Map
-        self.mapBookStore = {}
-        self.mapUnivStore = {}
-        self.mapUnivList  = {}
+        self.mapBookStore  = {}
+        self.mapUnivStore  = {}
+        self.mapSceneStore = {}
+        self.mapUnivList   = {}
+        self.mapChapters   = {}
 
         ## Books Tree
         treeBooks     = self.getObject("treeBooks")
@@ -161,7 +166,9 @@ class GUI():
 
         ## Scenes Tree
         treeScene     = self.getObject("treeScenes")
-        treeScene.set_model(self.sceneStore)
+        sortScene     = Gtk.TreeModelSort(model=self.sceneStore)
+        sortScene.set_sort_column_id(1,Gtk.SortType.ASCENDING)
+        treeScene.set_model(sortScene)
         cellSceneCol0 = Gtk.CellRendererText()
         cellSceneCol1 = Gtk.CellRendererText()
         cellSceneCol2 = Gtk.CellRendererText()
@@ -179,6 +186,11 @@ class GUI():
         treeSceneCol2.add_attribute(cellSceneCol2,"text",2)
         treeSceneCol3.add_attribute(cellSceneCol3,"text",3)
         treeSceneCol0.set_attributes(cellSceneCol0,markup=0)
+
+        ## Scenes Chapter Selector
+        adjScene = Gtk.Adjustment(1,0,100,1,1,1)
+        numSceneChapter = self.getObject("numSceneChapter")
+        numSceneChapter.configure(adjScene,1,0)
 
         ## Book Details Universe List
         cmbDetailsBookUniverse  = self.getObject("cmbBookUniverse")
@@ -241,12 +253,41 @@ class GUI():
         self.allScenes.setDataPath(bookPath)
         self.allScenes.makeList()
 
+        self.mapSceneStore = {}
+        self.mapChapters   = {}
+
+        self.sceneStore.clear()
+        tmpItem = DataWrapper("Scene")
+        for itemHandle in self.allScenes.dataList.keys():
+            tmpItem.setDataPath(self.allScenes.dataList[itemHandle])
+            tmpItem.loadDetails()
+
+            scnNum = makeSceneNumber(tmpItem.section,tmpItem.chapter,tmpItem.number)
+
+            if tmpItem.section == 0:
+                parIter = None
+            else:
+                scnSec = scnNum[:3]
+                if scnSec in self.mapChapters:
+                    parIter = self.mapChapters[scnSec]
+                else:
+                    if tmpItem.section == 1: scnChapter = "<b>Prologue</b>"
+                    if tmpItem.section == 2: scnChapter = "<b>Chapter %d</b>" % tmpItem.chapter
+                    if tmpItem.section == 3: scnChapter = "<b>Epilogue</b>"
+                    parIter = self.sceneStore.append(None,[scnChapter,scnSec,None,None,None])
+                    self.mapChapters[scnSec] = parIter
+
+            tmpIter = self.sceneStore.append(parIter,[tmpItem.title,scnNum,tmpItem.pov,tmpItem.words,itemHandle])
+            self.mapSceneStore[itemHandle] = tmpIter
+
+        self.getObject("treeScenes").expand_all()
+
         return
 
     def loadBookFiles(self, bookHandle = ""):
 
         self.fileStore.clear()
-        self.fileStore.append(None,["<b>Files</b>",0,""])
+        self.fileStore.append(None,["<b>Plot</b>",0,""])
         self.fileStore.append(None,["<b>Scenes</b>",0,""])
 
         if bookHandle == "": return
@@ -256,7 +297,7 @@ class GUI():
     def loadUnivFiles(self, universeHandle = ""):
 
         self.univStore.clear()
-        self.univStore.append(None,["<b>Files</b>",0,""])
+        self.univStore.append(None,["<b>History</b>",0,""])
         self.univStore.append(None,["<b>Characters</b>",0,""])
 
         if universeHandle == "": return
@@ -267,6 +308,14 @@ class GUI():
 
         self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
         self.getObject("cmbBookUniverse").set_active_iter(self.mapUnivList[self.projData.theBook.parent])
+
+        return
+
+    def updateSceneDetails(self):
+
+        self.getObject("entrySceneTitle").set_text(self.projData.fileTitle)
+        self.getObject("cmbSceneSection").set_active(self.projData.theFile.section)
+        self.getObject("numSceneChapter").set_value(self.projData.theFile.chapter)
 
         return
 
@@ -284,7 +333,7 @@ class GUI():
         return True
 
     ##
-    #  Actions
+    #  Tree Selection Actions
     ##
 
     def onSelectBook(self, guiObject):
@@ -310,6 +359,30 @@ class GUI():
             self.loadScenes()
 
         return
+
+    def onSelectScene(self, guiObject):
+
+        logger.debug("Select Scene")
+        if not self.guiLoaded: return
+
+        itemHandle = ""
+
+        (listModel, pathList) = guiObject.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,4)
+
+        if itemHandle != "":
+            itemPath  = self.allScenes.getItem(itemHandle)
+            self.projData.newFile("Scene")
+            self.projData.loadFile(itemPath,itemHandle)
+            self.updateSceneDetails()
+
+        return
+
+    ##
+    #  Button Actions
+    ##
 
     def onFileSave(self, guiObject):
         logger.debug("Saving")
@@ -345,17 +418,23 @@ class GUI():
 
         return
 
+    ##
+    #  Scene Settings Action Buttons
+    ##
+
     def onSceneAdd(self, guiObject):
 
         if self.projData.bookHandle == "": return
 
         sceneNum = self.allScenes.dataLen + 1
-        self.sceneStore.append(None,["New Scene",sceneNum,"",0,""])
 
         self.projData.newFile("Scene")
         self.projData.createFile("New Scene")
         self.projData.setFileParent("Book")
+        self.projData.setFileNumber(sceneNum)
         self.projData.saveFile()
+
+        self.loadScenes()
 
         return
 
@@ -368,8 +447,24 @@ class GUI():
     def onSceneDown(self, guiObject):
         return
 
+    def onSceneSave(self, guiObject):
+
+        logger.debug("Scene save clicked")
+
+        scnTitle   = self.getObject("entrySceneTitle").get_text()
+        scnSection = self.getObject("cmbSceneSection").get_active()
+        scnChapter = self.getObject("numSceneChapter").get_value()
+        scnPOV     = self.getObject("cmbSceneCharacter").get_active_text()
+
+        self.projData.setSceneSettings(scnTitle,scnSection,scnChapter,scnPOV,"")
+        self.projData.saveFile()
+
+        self.loadScenes()
+
+        return
+
     ##
-    #  Events
+    #  Main Window Events
     ##
 
     def eventTabChange(self, guiObject, guiChild, tabIdx):

@@ -970,7 +970,9 @@
                                     <property name="can_focus">True</property>
                                     <property name="hexpand">True</property>
                                     <child internal-child="selection">
-                                      <object class="GtkTreeSelection" id="treeScenesSelect"/>
+                                      <object class="GtkTreeSelection" id="treeScenesSelect">
+                                        <signal name="changed" handler="onChangeTreeScenes" swapped="no"/>
+                                      </object>
                                     </child>
                                     <child>
                                       <object class="GtkTreeViewColumn" id="treeScenesTitle">
@@ -1186,8 +1188,10 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="halign">start</property>
+                                        <property name="climb_rate">1</property>
                                         <property name="numeric">True</property>
                                         <property name="update_policy">if-valid</property>
+                                        <property name="value">1</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
@@ -1211,12 +1215,13 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="halign">start</property>
-                                        <property name="active">1</property>
+                                        <property name="active">0</property>
                                         <property name="has_entry">True</property>
                                         <items>
-                                          <item id="0" translatable="yes">Front Matter</item>
-                                          <item id="1" translatable="yes">Chapter</item>
-                                          <item id="2" translatable="yes">End Matter</item>
+                                          <item id="0" translatable="yes">None</item>
+                                          <item id="1" translatable="yes">Prologue</item>
+                                          <item id="2" translatable="yes">Chapter</item>
+                                          <item id="3" translatable="yes">Epilogue</item>
                                         </items>
                                         <child internal-child="entry">
                                           <object class="GtkEntry" id="comboboxtext-entry">
@@ -1229,6 +1234,25 @@
                                         <property name="left_attach">1</property>
                                         <property name="top_attach">1</property>
                                       </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="btnSceneSave">
+                                        <property name="label" translatable="yes">Save</property>
+                                        <property name="width_request">80</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                        <property name="halign">end</property>
+                                        <property name="always_show_image">True</property>
+                                        <signal name="clicked" handler="onClickSceneSave" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="top_attach">5</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
                                     </child>
                                   </object>
                                   <packing>
@@ -1243,7 +1267,7 @@
                                     <property name="can_focus">False</property>
                                     <property name="margin_top">8</property>
                                     <property name="margin_bottom">8</property>
-                                    <property name="label" translatable="yes">Notes</property>
+                                    <property name="label" translatable="yes">Summary</property>
                                     <property name="ellipsize">start</property>
                                     <property name="xalign">0</property>
                                     <attributes>
