@@ -55,8 +55,10 @@ class GUI():
             "onSwitchPageMainNoteBook" : self.eventTabChange,
             "onSwitchPageSideNoteBook" : self.eventTreeChange,
             "onChangeTreeBooks"        : self.onSelectBook,
+            "onChangeTreeMain"         : self.onSelectFile,
             "onClickNew"               : self.projData.newProject,
             "onClickSave"              : self.onFileSave,
+            "onToggleEditable"         : self.webEditor.onToggleEditable,
             "onClickEditBold"          : self.webEditor.onEditAction,
             "onClickEditItalic"        : self.webEditor.onEditAction,
             "onClickEditUnderline"     : self.webEditor.onEditAction,
@@ -82,11 +84,6 @@ class GUI():
         self.guiPaned     = self.getObject("innerPaned")
         self.guiPaned.set_position(self.mainConf.winPane)
 
-        # Prepare Details Pane and Default Document Type
-        #self.detailsPane  = self.getObject("detailsNoteBook")
-        #self.detailsPane.set_show_tabs(False)
-        #self.detailsPane.set_current_page(1)
-
         # Prepare Editor
         self.scrollEditor = self.getObject("scrollEditor")
         self.scrollEditor.add(self.webEditor)
@@ -97,7 +94,7 @@ class GUI():
         self.progStatus = self.getObject("progressStatus")
 
         # Set Up Timers
-        self.timerID    = GLib.timeout_add(200, self.guiTimer.onTick)
+        self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
         self.autoTaskID = GLib.timeout_add_seconds(30,self.autoTasks)
 
         ##
@@ -111,21 +108,25 @@ class GUI():
         self.allScenes     = DataList(self.mainConf.dataPath,"Scenes")
 
         # Gtk ListStore and TreeStore
-        self.bookStore  = Gtk.TreeStore(str,str,str)
-        self.fileStore  = Gtk.TreeStore(str,int,str)
-        self.univStore  = Gtk.TreeStore(str,int,str)
-        self.sceneStore = Gtk.TreeStore(str,str,str,int,str)
+        self.bookStore  = Gtk.TreeStore(str,str,str,str)
+        self.fileStore  = Gtk.TreeStore(str,int,str,str)
+        self.univStore  = Gtk.TreeStore(str,int,str,str)
+        self.sceneStore = Gtk.TreeStore(str,str,str,int,str,str)
         self.univList   = Gtk.ListStore(str,str)
         self.bookType   = Gtk.ListStore(str)
 
         # Handle to List Item Map
         self.mapBookStore  = {}
         self.mapUnivStore  = {}
+        self.mapFilesStore = {}
         self.mapSceneStore = {}
         self.mapUnivList   = {}
         self.mapChapters   = {}
 
-        ## Books Tree
+        # Other List Maps
+        self.chapterCount  = {}
+
+        # Books Tree
         treeBooks     = self.getObject("treeBooks")
         treeBooks.set_model(self.bookStore)
         cellBooksCol0 = Gtk.CellRendererText()
@@ -138,20 +139,27 @@ class GUI():
         treeBooksCol1.add_attribute(cellBooksCol1,"text",1)
         treeBooksCol0.set_attributes(cellBooksCol0,markup=0)
 
-        ## Files Tree
+        # Files Tree
         treeMain     = self.getObject("treeMain")
-        treeMain.set_model(self.fileStore)
+        sortMain     = Gtk.TreeModelSort(model=self.fileStore)
+        sortMain.set_sort_column_id(2,Gtk.SortType.ASCENDING)
+        treeMain.set_model(sortMain)
         cellMainCol0 = Gtk.CellRendererText()
         cellMainCol1 = Gtk.CellRendererText()
+        #cellMainCol2 = Gtk.CellRendererText()
         treeMainCol0 = treeMain.get_column(0)
         treeMainCol1 = treeMain.get_column(1)
+        #treeMainCol2 = treeMain.get_column(2)
         treeMainCol0.pack_start(cellMainCol0,True)
         treeMainCol1.pack_start(cellMainCol1,False)
+        #treeMainCol2.pack_start(cellMainCol2,False)
         treeMainCol0.add_attribute(cellMainCol0,"text",0)
         treeMainCol1.add_attribute(cellMainCol1,"text",1)
+        #treeMainCol2.add_attribute(cellMainCol2,"text",2)
         treeMainCol0.set_attributes(cellMainCol0,markup=0)
+        cellMainCol1.set_alignment(0.95,0.5)
 
-        ## Universe Files Tree
+        # Universe Files Tree
         treeUniv     = self.getObject("treeUniverse")
         treeUniv.set_model(self.univStore)
         cellUnivCol0 = Gtk.CellRendererText()
@@ -163,36 +171,42 @@ class GUI():
         treeUnivCol0.add_attribute(cellUnivCol0,"text",0)
         treeUnivCol1.add_attribute(cellUnivCol1,"text",1)
         treeUnivCol0.set_attributes(cellUnivCol0,markup=0)
+        cellUnivCol1.set_alignment(0.95,0.5)
 
-        ## Scenes Tree
+        # Scenes Tree
         treeScene     = self.getObject("treeScenes")
         sortScene     = Gtk.TreeModelSort(model=self.sceneStore)
-        sortScene.set_sort_column_id(1,Gtk.SortType.ASCENDING)
+        sortScene.set_sort_column_id(4,Gtk.SortType.ASCENDING)
         treeScene.set_model(sortScene)
         cellSceneCol0 = Gtk.CellRendererText()
         cellSceneCol1 = Gtk.CellRendererText()
         cellSceneCol2 = Gtk.CellRendererText()
         cellSceneCol3 = Gtk.CellRendererText()
+        #cellSceneCol4 = Gtk.CellRendererText()
         treeSceneCol0 = treeScene.get_column(0)
         treeSceneCol1 = treeScene.get_column(1)
         treeSceneCol2 = treeScene.get_column(2)
         treeSceneCol3 = treeScene.get_column(3)
+        #treeSceneCol4 = treeScene.get_column(4)
         treeSceneCol0.pack_start(cellSceneCol0,True)
         treeSceneCol1.pack_start(cellSceneCol1,False)
         treeSceneCol2.pack_start(cellSceneCol2,False)
         treeSceneCol3.pack_start(cellSceneCol3,False)
+        #treeSceneCol4.pack_start(cellSceneCol4,False)
         treeSceneCol0.add_attribute(cellSceneCol0,"text",0)
         treeSceneCol1.add_attribute(cellSceneCol1,"text",1)
         treeSceneCol2.add_attribute(cellSceneCol2,"text",2)
         treeSceneCol3.add_attribute(cellSceneCol3,"text",3)
+        #treeSceneCol4.add_attribute(cellSceneCol4,"text",4)
         treeSceneCol0.set_attributes(cellSceneCol0,markup=0)
+        cellSceneCol3.set_alignment(0.95,0.5)
 
-        ## Scenes Chapter Selector
-        adjScene = Gtk.Adjustment(1,0,100,1,1,1)
+        # Scenes Chapter Selector
+        adjScene = Gtk.Adjustment(1,1,100,1,1,1)
         numSceneChapter = self.getObject("numSceneChapter")
         numSceneChapter.configure(adjScene,1,0)
 
-        ## Book Details Universe List
+        # Book Details Universe List
         cmbDetailsBookUniverse  = self.getObject("cmbBookUniverse")
         cmbDetailsBookUniverse.set_model(self.univList)
 
@@ -227,7 +241,7 @@ class GUI():
         for itemHandle in self.allUniverses.dataList.keys():
             tmpItem.setDataPath(self.allUniverses.dataList[itemHandle])
             tmpItem.loadDetails()
-            tmpIter = self.bookStore.append(None,["<b>"+tmpItem.title+"</b>",None,itemHandle])
+            tmpIter = self.bookStore.append(None,["<b>"+tmpItem.title+"</b>",None,None,itemHandle])
             self.mapUnivStore[itemHandle] = tmpIter
             tmpIter = self.univList.append([tmpItem.title,itemHandle])
             self.mapUnivList[itemHandle]  = tmpIter
@@ -237,7 +251,7 @@ class GUI():
             tmpItem.setDataPath(self.allBooks.dataList[itemHandle])
             tmpItem.loadDetails()
             if self.mapUnivStore.has_key(tmpItem.parent):
-                tmpIter = self.bookStore.append(self.mapUnivStore[tmpItem.parent],[tmpItem.title,None,itemHandle])
+                tmpIter = self.bookStore.append(self.mapUnivStore[tmpItem.parent],[tmpItem.title,None,None,itemHandle])
             else:
                 logger.error("Orphanded book found with title '%s'." % tmpItem.title)
             self.mapBookStore[itemHandle] = tmpIter
@@ -255,50 +269,92 @@ class GUI():
 
         self.mapSceneStore = {}
         self.mapChapters   = {}
+        self.chapterCount  = {}
 
         self.sceneStore.clear()
         tmpItem = DataWrapper("Scene")
+        self.chapterCount["1.0.00.000"] = 0
         for itemHandle in self.allScenes.dataList.keys():
             tmpItem.setDataPath(self.allScenes.dataList[itemHandle])
             tmpItem.loadDetails()
 
-            scnNum = makeSceneNumber(tmpItem.section,tmpItem.chapter,tmpItem.number)
+            scnNum = makeSceneNumber(1,tmpItem.section,tmpItem.chapter,tmpItem.number)
+            scnSec = scnNum[:7]+"000"
 
             if tmpItem.section == 0:
                 parIter = None
+                self.chapterCount[scnSec] += 1
             else:
-                scnSec = scnNum[:3]
                 if scnSec in self.mapChapters:
                     parIter = self.mapChapters[scnSec]
+                    self.chapterCount[scnSec] += 1
                 else:
                     if tmpItem.section == 1: scnChapter = "<b>Prologue</b>"
                     if tmpItem.section == 2: scnChapter = "<b>Chapter %d</b>" % tmpItem.chapter
                     if tmpItem.section == 3: scnChapter = "<b>Epilogue</b>"
-                    parIter = self.sceneStore.append(None,[scnChapter,scnSec,None,None,None])
-                    self.mapChapters[scnSec] = parIter
+                    parIter = self.sceneStore.append(None,[scnChapter,None,None,None,scnSec,None])
+                    self.mapChapters[scnSec]  = parIter
+                    self.chapterCount[scnSec] = 1
 
-            tmpIter = self.sceneStore.append(parIter,[tmpItem.title,scnNum,tmpItem.pov,tmpItem.words,itemHandle])
+            tmpIter = self.sceneStore.append(parIter,[tmpItem.title,str(tmpItem.number),tmpItem.pov,tmpItem.words,scnNum,itemHandle])
             self.mapSceneStore[itemHandle] = tmpIter
 
         self.getObject("treeScenes").expand_all()
 
         return
 
-    def loadBookFiles(self, bookHandle = ""):
+    def loadBookFiles(self):
 
         self.fileStore.clear()
-        self.fileStore.append(None,["<b>Plot</b>",0,""])
-        self.fileStore.append(None,["<b>Scenes</b>",0,""])
 
-        if bookHandle == "": return
+        pltSort = makeSceneNumber(0,0,0,0)
+        scnSort = makeSceneNumber(0,0,0,0)
+        pltIter = self.fileStore.append(None,["<b>Plot</b>",0,pltSort,""])
+        scnIter = self.fileStore.append(None,["<b>Scenes</b>",0,scnSort,""])
+
+        if self.projData.bookHandle == "": return
+
+        bookPath = self.allBooks.getItem(self.projData.bookHandle)
+
+        self.allScenes.setDataPath(bookPath)
+        self.allScenes.makeList()
+
+        self.mapFilesStore = {}
+        self.mapChapters   = {}
+
+        tmpItem = DataWrapper("Scene")
+
+        for itemHandle in self.allScenes.dataList.keys():
+            tmpItem.setDataPath(self.allScenes.dataList[itemHandle])
+            tmpItem.loadDetails()
+
+            scnNum = makeSceneNumber(1,tmpItem.section,tmpItem.chapter,tmpItem.number)
+            scnSec = makeSceneNumber(1,tmpItem.section,tmpItem.chapter,0)
+
+            if tmpItem.section == 0:
+                parIter = scnIter
+            else:
+                if scnSec in self.mapChapters:
+                    parIter = self.mapChapters[scnSec]
+                else:
+                    if tmpItem.section == 1: scnChapter = "<b>Prologue</b>"
+                    if tmpItem.section == 2: scnChapter = "<b>Chapter %d</b>" % tmpItem.chapter
+                    if tmpItem.section == 3: scnChapter = "<b>Epilogue</b>"
+                    parIter = self.fileStore.append(scnIter,[scnChapter,None,scnSec,None])
+                    self.mapChapters[scnSec] = parIter
+
+            tmpIter = self.fileStore.append(parIter,[tmpItem.title,tmpItem.words,scnNum,itemHandle])
+            self.mapSceneStore[itemHandle] = tmpIter
+
+        self.getObject("treeMain").expand_all()
 
         return
 
     def loadUnivFiles(self, universeHandle = ""):
 
         self.univStore.clear()
-        self.univStore.append(None,["<b>History</b>",0,""])
-        self.univStore.append(None,["<b>Characters</b>",0,""])
+        self.univStore.append(None,["<b>History</b>",0,"",""])
+        self.univStore.append(None,["<b>Characters</b>",0,"",""])
 
         if universeHandle == "": return
 
@@ -344,19 +400,40 @@ class GUI():
         (listModel, pathList) = guiObject.get_selected_rows()
         for pathItem in pathList:
             listIter   = listModel.get_iter(pathItem)
-            itemHandle = listModel.get_value(listIter,2)
+            itemHandle = listModel.get_value(listIter,3)
 
         if len(pathItem) == 1:
             self.getObject("treeBooks").expand_row(pathItem,False)
 
         if len(pathItem) == 2:
             parIter   = listModel.get_iter(pathItem[0])
-            parHandle = listModel.get_value(parIter,2)
+            parHandle = listModel.get_value(parIter,3)
             itemPath  = self.allBooks.getItem(itemHandle)
             parPath   = self.allUniverses.getItem(parHandle)
             self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
             self.displayBook()
             self.loadScenes()
+
+        return
+
+    def onSelectFile(self, guiObject):
+
+        logger.debug("Select File")
+        if not self.guiLoaded: return
+
+        (listModel, pathList) = guiObject.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,3)
+
+        if itemHandle == "" or itemHandle is None: return
+
+        # If the file is a scene, load it
+        scnPath = self.allScenes.getItem(itemHandle)
+        if scnPath is not None:
+            self.projData.newFile("Scene")
+            self.projData.loadFile(scnPath,itemHandle)
+            self.getObject("mainNoteBook").set_current_page(1)
 
         return
 
@@ -370,13 +447,14 @@ class GUI():
         (listModel, pathList) = guiObject.get_selected_rows()
         for pathItem in pathList:
             listIter   = listModel.get_iter(pathItem)
-            itemHandle = listModel.get_value(listIter,4)
+            itemHandle = listModel.get_value(listIter,5)
 
-        if itemHandle != "":
-            itemPath  = self.allScenes.getItem(itemHandle)
-            self.projData.newFile("Scene")
-            self.projData.loadFile(itemPath,itemHandle)
-            self.updateSceneDetails()
+        if itemHandle == "" or itemHandle is None: return
+
+        itemPath = self.allScenes.getItem(itemHandle)
+        self.projData.newFile("Scene")
+        self.projData.loadFile(itemPath,itemHandle)
+        self.updateSceneDetails()
 
         return
 
@@ -426,7 +504,8 @@ class GUI():
 
         if self.projData.bookHandle == "": return
 
-        sceneNum = self.allScenes.dataLen + 1
+        scnSort  = makeSceneNumber(1,0,0,0)
+        sceneNum = self.chapterCount[scnSort] + 1
 
         self.projData.newFile("Scene")
         self.projData.createFile("New Scene")
@@ -435,6 +514,8 @@ class GUI():
         self.projData.saveFile()
 
         self.loadScenes()
+        if self.getObject("sideNoteBook").get_current_page() == 1:
+            self.loadBookFiles()
 
         return
 
@@ -451,15 +532,32 @@ class GUI():
 
         logger.debug("Scene save clicked")
 
-        scnTitle   = self.getObject("entrySceneTitle").get_text()
-        scnSection = self.getObject("cmbSceneSection").get_active()
-        scnChapter = self.getObject("numSceneChapter").get_value()
-        scnPOV     = self.getObject("cmbSceneCharacter").get_active_text()
+        prevSection = self.projData.theFile.section
+        prevChapter = self.projData.theFile.chapter
+        prevNumber  = self.projData.theFile.number
 
-        self.projData.setSceneSettings(scnTitle,scnSection,scnChapter,scnPOV,"")
+        scnTitle    = self.getObject("entrySceneTitle").get_text()
+        scnSection  = self.getObject("cmbSceneSection").get_active()
+        scnChapter  = self.getObject("numSceneChapter").get_value()
+        scnPOV      = self.getObject("cmbSceneCharacter").get_active_text()
+
+        if scnSection != 2: scnChapter = 1
+
+        scnSort = makeSceneNumber(1,scnSection,scnChapter,0)
+        if scnSort in self.chapterCount:
+            if scnSection == prevSection and scnChapter == prevChapter:
+                scnNumber = prevNumber
+            else:
+                scnNumber = self.chapterCount[scnSort] + 1
+        else:
+            scnNumber = 1
+
+        self.projData.setSceneSettings(scnTitle,scnSection,scnChapter,scnNumber,scnPOV,"")
         self.projData.saveFile()
 
         self.loadScenes()
+        if self.getObject("sideNoteBook").get_current_page() == 1:
+            self.loadBookFiles()
 
         return
 
@@ -485,7 +583,8 @@ class GUI():
             self.editType = self.EDIT_BOOK
         if tabIdx == 1:
             self.editType = self.EDIT_FILE
-        if tabIdx == 1:
+            self.loadBookFiles()
+        if tabIdx == 2:
             self.editType = self.EDIT_CHARACTER
         return
 

@@ -20,6 +20,9 @@ class Editor(WebKit.WebView):
         self.load_html_string("<p>Hello Kitty</p>", "file:///")
         return
 
+    def onToggleEditable(self, guiObject):
+        return
+
     def onEditAction(self, guiObject):
         logger.debug("Editor action %s" % guiObject.get_name())
         self.execute_script("document.execCommand('%s', false, false);" % guiObject.get_name())

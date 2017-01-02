@@ -39,7 +39,10 @@ class DataList():
         return
 
     def getItem(self, itemHandle):
-        return self.dataList[itemHandle]
+        if itemHandle in self.dataList:
+            return self.dataList[itemHandle]
+        else:
+            return None
 
     def setDataPath(self, newPath):
         if path.isdir(newPath):

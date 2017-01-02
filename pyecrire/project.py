@@ -230,7 +230,7 @@ class Project():
         self.theFile.setNumber(newNumber)
         return
 
-    def setSceneSettings(self, scnTitle, scnSection, scnChapter, scnPOV, scnTime):
+    def setSceneSettings(self, scnTitle, scnSection, scnChapter, scnNumber, scnPOV, scnTime):
 
         if self.theFile.dataType == "Scene":
             self.fileTitle = scnTitle
@@ -238,6 +238,7 @@ class Project():
             self.theFile.setTitle(scnTitle)
             self.theFile.setSection(scnSection)
             self.theFile.setChapter(int(scnChapter))
+            self.theFile.setNumber(int(scnNumber))
             self.theFile.setPOV(scnPOV)
 
         return

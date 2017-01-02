@@ -114,6 +114,13 @@ class DataWrapper():
         return
 
     ##
+    #  Getters
+    ##
+
+    def getText(self):
+        return "<p>Hello Kitty</p>"
+
+    ##
     #  Setters
     ##
 
