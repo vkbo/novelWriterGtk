@@ -17,31 +17,31 @@ class Project():
         self.mainConf = config
 
         # The Book
-        self.theBook        = DataWrapper("Book")
-        self.bookTitle      = ""
-        self.bookName       = ""
-        self.bookHandle     = ""
-        self.bookFolder     = ""
-        self.bookPath       = ""
+        self.theBook     = DataWrapper("Book")
+        self.bookTitle   = ""
+        self.bookName    = ""
+        self.bookHandle  = ""
+        self.bookFolder  = ""
+        self.bookPath    = ""
 
         # The Universe
-        self.theUniverse    = DataWrapper("Universe")
-        self.universeTitle  = ""
-        self.universeName   = ""
-        self.universeHandle = ""
-        self.universeFolder = ""
-        self.universePath   = ""
+        self.theUniverse = DataWrapper("Universe")
+        self.univTitle   = ""
+        self.univName    = ""
+        self.univHandle  = ""
+        self.univFolder  = ""
+        self.univPath    = ""
 
         # The File
-        self.theFile        = DataWrapper("File")
-        self.fileType       = ""
-        self.fileCode       = ""
-        self.fileTitle      = ""
-        self.fileName       = ""
-        self.fileHandle     = ""
-        self.fileFolder     = ""
-        self.filePath       = ""
-        self.fileParent     = ""
+        self.theFile     = DataWrapper("File")
+        self.fileType    = ""
+        self.fileCode    = ""
+        self.fileTitle   = ""
+        self.fileName    = ""
+        self.fileHandle  = ""
+        self.fileFolder  = ""
+        self.filePath    = ""
+        self.fileParent  = ""
 
         # Set Other Defaults
         self.theBook.setTitle("New Book")
@@ -71,21 +71,21 @@ class Project():
 
         return
 
-    def createUniverse(self, universeTitle):
+    def createUniverse(self, univTitle):
 
-        universeName = simplifyString(universeTitle)
+        univName = simplifyString(univTitle)
 
-        if len(universeTitle) > 0 and len(universeName) > 0:
-            self.universeTitle = universeTitle
-            self.universeName  = universeName
-            if self.universeHandle == "":
-                self.universeHandle = makeHandle(universeTitle)
-            self.theUniverse.setTitle(universeTitle)
-            self.theBook.setParent(self.universeHandle)
+        if len(univTitle) > 0 and len(univName) > 0:
+            self.univTitle = univTitle
+            self.univName  = univName
+            if self.univHandle == "":
+                self.univHandle = makeHandle(univTitle)
+            self.theUniverse.setTitle(univTitle)
+            self.theBook.setParent(self.univHandle)
 
-        logger.debug("Universe Title:  %s" % self.universeTitle)
-        logger.debug("Universe Name:   %s" % self.universeName)
-        logger.debug("Universe Handle: %s" % self.universeHandle)
+        logger.debug("Universe Title:  %s" % self.univTitle)
+        logger.debug("Universe Name:   %s" % self.univName)
+        logger.debug("Universe Handle: %s" % self.univHandle)
 
         return
 
@@ -137,13 +137,13 @@ class Project():
 
     def updateUniverseFolder(self):
 
-        universeFolder = "U-"+self.universeHandle+"-"+self.universeName
+        univFolder = "U-"+self.univHandle+"-"+self.univName
 
-        if universeFolder != self.universeFolder:
-            oldPath = path.join(self.mainConf.dataPath,self.universeFolder)
-            newPath = path.join(self.mainConf.dataPath,universeFolder)
+        if univFolder != self.univFolder:
+            oldPath = path.join(self.mainConf.dataPath,self.univFolder)
+            newPath = path.join(self.mainConf.dataPath,univFolder)
 
-            if self.universeFolder == "":
+            if self.univFolder == "":
                 mkdir(newPath)
             else:
                 if path.isdir(oldPath):
@@ -151,10 +151,10 @@ class Project():
                 else:
                     mkdir(newPath)
 
-            logger.debug("Universe path changed from '%s' to '%s'" % (self.universeFolder, universeFolder))
+            logger.debug("Universe path changed from '%s' to '%s'" % (self.univFolder, univFolder))
 
-            self.universeFolder = universeFolder
-            self.universePath   = newPath
+            self.univFolder = univFolder
+            self.univPath   = newPath
             self.theUniverse.setDataPath(newPath)
 
         return
@@ -169,7 +169,7 @@ class Project():
         if   self.fileParent == "Book":
             parentFolder = self.bookPath
         elif self.fileParent == "Universe":
-            parentFolder = self.universePath
+            parentFolder = self.univPath
         else:
             logger.error("File parent type must be Book or Universe.")
             return
@@ -198,18 +198,18 @@ class Project():
     #  Setters
     ##
 
-    def setUniverse(self, universeHandle, universePath):
+    def setUniverse(self, univHandle, univPath):
 
-        self.theUniverse.setDataPath(universePath)
+        self.theUniverse.setDataPath(univPath)
         self.theUniverse.loadDetails()
 
-        self.universeTitle  = self.theUniverse.title
-        self.universeName   = simplifyString(self.universeTitle)
-        self.universeHandle = universeHandle
-        self.universeFolder = "U-"+self.universeHandle+"-"+self.universeName
-        self.universePath   = universePath
+        self.univTitle  = self.theUniverse.title
+        self.univName   = simplifyString(self.univTitle)
+        self.univHandle = univHandle
+        self.univFolder = "U-"+self.univHandle+"-"+self.univName
+        self.univPath   = univPath
 
-        self.theBook.parent = universeHandle
+        self.theBook.parent = univHandle
 
         return
 
@@ -220,7 +220,7 @@ class Project():
             self.theFile.parent = self.bookHandle
         elif parentType == "Universe":
             self.fileParent     = parentType
-            self.theFile.parent = self.universeHandle
+            self.theFile.parent = self.univHandle
         else:
             logger.error("File parent type must be Book or Universe.")
 
@@ -250,20 +250,20 @@ class Project():
     def newProject(self, guiObject=None):
 
         # The Book
-        self.theBook        = DataWrapper("Book")
-        self.bookTitle      = ""
-        self.bookName       = ""
-        self.bookHandle     = ""
-        self.bookFolder     = ""
-        self.bookPath       = ""
+        self.theBook     = DataWrapper("Book")
+        self.bookTitle   = ""
+        self.bookName    = ""
+        self.bookHandle  = ""
+        self.bookFolder  = ""
+        self.bookPath    = ""
 
         # The Universe
-        self.theUniverse    = DataWrapper("Universe")
-        self.universeTitle  = ""
-        self.universeName   = ""
-        self.universeHandle = ""
-        self.universeFolder = ""
-        self.universePath   = ""
+        self.theUniverse = DataWrapper("Universe")
+        self.univTitle   = ""
+        self.univName    = ""
+        self.univHandle  = ""
+        self.univFolder  = ""
+        self.univPath    = ""
 
         # The File
         self.newFile("File")
@@ -273,18 +273,18 @@ class Project():
     def newFile(self, fileType):
 
         # The File
-        self.theFile        = DataWrapper(fileType)
-        self.fileType       = fileType
-        self.fileCode       = fileType[0:1]
-        self.fileTitle      = ""
-        self.fileName       = ""
-        self.fileHandle     = ""
-        self.fileFolder     = ""
-        self.filePath       = ""
+        self.theFile     = DataWrapper(fileType)
+        self.fileType    = fileType
+        self.fileCode    = fileType[0:1]
+        self.fileTitle   = ""
+        self.fileName    = ""
+        self.fileHandle  = ""
+        self.fileFolder  = ""
+        self.filePath    = ""
 
         return
 
-    def loadProject(self, bookPath, bookHandle, universePath, universeHandle):
+    def loadProject(self, bookPath, bookHandle, univPath, univHandle):
 
         logger.debug("Loading project")
 
@@ -297,14 +297,14 @@ class Project():
         self.bookFolder = "B-"+self.bookHandle+"-"+self.bookName
         self.bookPath   = bookPath
 
-        self.theUniverse.setDataPath(universePath)
+        self.theUniverse.setDataPath(univPath)
         self.theUniverse.loadDetails()
 
-        self.universeTitle  = self.theUniverse.title
-        self.universeName   = simplifyString(self.universeTitle)
-        self.universeHandle = universeHandle
-        self.universeFolder = "U-"+self.universeHandle+"-"+self.universeName
-        self.universePath   = universePath
+        self.univTitle  = self.theUniverse.title
+        self.univName   = simplifyString(self.univTitle)
+        self.univHandle = univHandle
+        self.univFolder = "U-"+self.univHandle+"-"+self.univName
+        self.univPath   = univPath
 
         return
 

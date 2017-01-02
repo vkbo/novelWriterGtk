@@ -207,5 +207,80 @@ class BookTree():
 
         return
 
-
 # End Class BookTree
+
+
+class UniverseTree():
+
+    def __init__(self, builder, config):
+
+        """
+        Tree Store Structure:
+        Col 1 : String  : History or character title
+        Col 2 : Integer : Word count
+        Col 3 : String  : List sorting column
+        Col 4 : String  : File handle
+        """
+
+        # Connect to GUI
+        self.guiBuilder = builder
+        self.mainConf   = config
+        self.getObject  = self.guiBuilder.get_object
+
+        # Core objects
+        self.treeView  = self.getObject("treeUniverse")
+        self.treeStore = Gtk.TreeStore(str,int,str,str)
+        self.treeSort  = Gtk.TreeModelSort(model=self.treeStore)
+
+        # Data Sorting
+        self.treeSort.set_sort_column_id(2,Gtk.SortType.ASCENDING)
+        self.treeView.set_model(self.treeSort)
+
+        # Columns
+        cellCol0 = Gtk.CellRendererText()
+        cellCol1 = Gtk.CellRendererText()
+        treeCol0 = self.treeView.get_column(0)
+        treeCol1 = self.treeView.get_column(1)
+
+        treeCol0.pack_start(cellCol0,True)
+        treeCol1.pack_start(cellCol1,False)
+        treeCol0.add_attribute(cellCol0,"text",0)
+        treeCol1.add_attribute(cellCol1,"text",1)
+        treeCol0.set_attributes(cellCol0,markup=0)
+
+        cellCol1.set_alignment(0.95,0.5)
+
+        # Enable to Show Sorting
+        cellCol2 = Gtk.CellRendererText()
+        treeCol2 = self.treeView.get_column(2)
+        treeCol2.set_visible(True)
+        treeCol2.pack_start(cellCol2,False)
+        treeCol2.add_attribute(cellCol2,"text",2)
+
+        # Data Maps and Lists
+        self.allChars = DataList(self.mainConf.dataPath,"Character")
+
+        self.iterMap = {}
+
+        return
+
+    def loadContent(self, univHandle, univPath):
+
+        self.treeStore.clear()
+
+        pltSort = makeSceneNumber(0,0,0,0)
+        scnSort = makeSceneNumber(0,0,0,0)
+        pltIter = self.treeStore.append(None,["<b>History</b>",0,pltSort,""])
+        scnIter = self.treeStore.append(None,["<b>Characters</b>",0,scnSort,""])
+
+        if univHandle == "" or univHandle is None: return
+
+        self.allChars.setDataPath(univPath)
+        self.allChars.makeList()
+
+        self.iterMap = {}
+
+        return
+
+
+# End Class UniverseTree

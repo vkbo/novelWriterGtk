@@ -15,7 +15,7 @@ from time                 import sleep
 from pyecrire.editor      import Editor
 from pyecrire.timer       import Timer
 from pyecrire.project     import Project
-from pyecrire.treeviews   import ProjectTree, BookTree
+from pyecrire.treeviews   import ProjectTree, BookTree, UniverseTree
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber # Remove
@@ -49,6 +49,7 @@ class GUI():
         self.guiTimer   = Timer(self.guiBuilder,self.mainConf)
         self.projTree   = ProjectTree(self.guiBuilder,self.mainConf)
         self.bookTree   = BookTree(self.guiBuilder,self.mainConf)
+        self.univTree   = UniverseTree(self.guiBuilder,self.mainConf)
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -111,7 +112,6 @@ class GUI():
         self.allScenes     = DataList(self.mainConf.dataPath,"Scene")
 
         # Gtk ListStore and TreeStore
-        self.univStore  = Gtk.TreeStore(str,int,str,str)
         self.sceneStore = Gtk.TreeStore(str,str,str,int,str,str)
         self.bookType   = Gtk.ListStore(str)
 
@@ -122,20 +122,6 @@ class GUI():
 
         # Other List Maps
         self.chapterCount  = {}
-
-        # Universe Files Tree
-        treeUniv     = self.getObject("treeUniverse")
-        treeUniv.set_model(self.univStore)
-        cellUnivCol0 = Gtk.CellRendererText()
-        cellUnivCol1 = Gtk.CellRendererText()
-        treeUnivCol0 = treeUniv.get_column(0)
-        treeUnivCol1 = treeUniv.get_column(1)
-        treeUnivCol0.pack_start(cellUnivCol0,True)
-        treeUnivCol1.pack_start(cellUnivCol1,False)
-        treeUnivCol0.add_attribute(cellUnivCol0,"text",0)
-        treeUnivCol1.add_attribute(cellUnivCol1,"text",1)
-        treeUnivCol0.set_attributes(cellUnivCol0,markup=0)
-        cellUnivCol1.set_alignment(0.95,0.5)
 
         # Scenes Tree
         treeScene     = self.getObject("treeScenes")
@@ -177,8 +163,7 @@ class GUI():
         # Load Project Data
         self.projTree.loadContent()
         self.bookTree.loadContent(None,None)
-
-        self.loadUnivFiles()
+        self.univTree.loadContent(None,None)
 
         # Default Values
         self.editType = self.EDIT_BOOK
@@ -235,25 +220,6 @@ class GUI():
             self.mapSceneStore[itemHandle] = tmpIter
 
         self.getObject("treeScenes").expand_all()
-
-        return
-
-    def loadBookFiles(self):
-
-        bookHandle = self.projData.bookHandle
-        bookPath   = self.projTree.getPath(bookHandle)
-
-        self.bookTree.loadContent(bookHandle,bookPath)
-
-        return
-
-    def loadUnivFiles(self, universeHandle = ""):
-
-        self.univStore.clear()
-        self.univStore.append(None,["<b>History</b>",0,"",""])
-        self.univStore.append(None,["<b>Characters</b>",0,"",""])
-
-        if universeHandle == "": return
 
         return
 
@@ -370,8 +336,8 @@ class GUI():
             self.projData.createBook(bookTitle)
 
             if chkNewUniverse.get_active():
-                universeTitle = self.getObject("entryBookUniverse").get_text()
-                self.projData.createUniverse(universeTitle)
+                univTitle = self.getObject("entryBookUniverse").get_text()
+                self.projData.createUniverse(univTitle)
             else:
                 univIdx  = self.getObject("cmbBookUniverse").get_active()
                 univItem = self.univList[univIdx]
@@ -412,7 +378,7 @@ class GUI():
 
         self.loadScenes()
         if self.getObject("sideNoteBook").get_current_page() == 1:
-            self.loadBookFiles()
+            self.bookTree.loadContent(self.projData.bookHandle,self.projData.bookPath)
 
         return
 
@@ -477,12 +443,11 @@ class GUI():
     def eventTreeChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tree tab change")
         if tabIdx == 0:
-            self.editType = self.EDIT_BOOK
+            self.getObject("mainNoteBook").set_current_page(0)
         if tabIdx == 1:
-            self.editType = self.EDIT_FILE
-            self.loadBookFiles()
+            self.bookTree.loadContent(self.projData.bookHandle,self.projData.bookPath)
         if tabIdx == 2:
-            self.editType = self.EDIT_CHARACTER
+            self.univTree.loadContent(self.projData.univHandle,self.projData.univPath)
         return
 
     def eventWinKeyPress(self, guiObject, guiEvent):
