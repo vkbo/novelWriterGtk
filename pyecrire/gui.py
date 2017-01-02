@@ -15,10 +15,10 @@ from time                 import sleep
 from pyecrire.editor      import Editor
 from pyecrire.timer       import Timer
 from pyecrire.project     import Project
-from pyecrire.treeviews   import ProjectTree
+from pyecrire.treeviews   import ProjectTree, BookTree
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
-from pyecrire.functions   import makeSceneNumber
+from pyecrire.functions   import makeSceneNumber # Remove
 
 class GUI():
 
@@ -47,7 +47,8 @@ class GUI():
         # Prepare GUI Classes
         self.webEditor  = Editor(self.winMain)
         self.guiTimer   = Timer(self.guiBuilder,self.mainConf)
-        self.bookTree   = ProjectTree(self.guiBuilder,self.mainConf)
+        self.projTree   = ProjectTree(self.guiBuilder,self.mainConf)
+        self.bookTree   = BookTree(self.guiBuilder,self.mainConf)
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -110,39 +111,17 @@ class GUI():
         self.allScenes     = DataList(self.mainConf.dataPath,"Scene")
 
         # Gtk ListStore and TreeStore
-        self.fileStore  = Gtk.TreeStore(str,int,str,str)
         self.univStore  = Gtk.TreeStore(str,int,str,str)
         self.sceneStore = Gtk.TreeStore(str,str,str,int,str,str)
         self.bookType   = Gtk.ListStore(str)
 
         # Handle to List Item Map
-        self.mapFilesStore = {}
         self.mapSceneStore = {}
         self.mapUnivList   = {}
         self.mapChapters   = {}
 
         # Other List Maps
         self.chapterCount  = {}
-
-        # Files Tree
-        treeMain     = self.getObject("treeMain")
-        sortMain     = Gtk.TreeModelSort(model=self.fileStore)
-        sortMain.set_sort_column_id(2,Gtk.SortType.ASCENDING)
-        treeMain.set_model(sortMain)
-        cellMainCol0 = Gtk.CellRendererText()
-        cellMainCol1 = Gtk.CellRendererText()
-        #cellMainCol2 = Gtk.CellRendererText()
-        treeMainCol0 = treeMain.get_column(0)
-        treeMainCol1 = treeMain.get_column(1)
-        #treeMainCol2 = treeMain.get_column(2)
-        treeMainCol0.pack_start(cellMainCol0,True)
-        treeMainCol1.pack_start(cellMainCol1,False)
-        #treeMainCol2.pack_start(cellMainCol2,False)
-        treeMainCol0.add_attribute(cellMainCol0,"text",0)
-        treeMainCol1.add_attribute(cellMainCol1,"text",1)
-        #treeMainCol2.add_attribute(cellMainCol2,"text",2)
-        treeMainCol0.set_attributes(cellMainCol0,markup=0)
-        cellMainCol1.set_alignment(0.95,0.5)
 
         # Universe Files Tree
         treeUniv     = self.getObject("treeUniverse")
@@ -193,12 +172,12 @@ class GUI():
 
         # Book Details Universe List
         cmbDetailsBookUniverse  = self.getObject("cmbBookUniverse")
-        cmbDetailsBookUniverse.set_model(self.bookTree.listUnivs)
+        cmbDetailsBookUniverse.set_model(self.projTree.listUnivs)
 
         # Load Project Data
-        self.bookTree.loadContent()
+        self.projTree.loadContent()
+        self.bookTree.loadContent(None,None)
 
-        self.loadBookFiles()
         self.loadUnivFiles()
 
         # Default Values
@@ -218,7 +197,7 @@ class GUI():
 
         if self.projData.bookHandle == "": return
 
-        bookPath = self.bookTree.getPath(self.projData.bookHandle)
+        bookPath = self.projTree.getPath(self.projData.bookHandle)
 
         self.allScenes.setDataPath(bookPath)
         self.allScenes.makeList()
@@ -261,48 +240,10 @@ class GUI():
 
     def loadBookFiles(self):
 
-        self.fileStore.clear()
+        bookHandle = self.projData.bookHandle
+        bookPath   = self.projTree.getPath(bookHandle)
 
-        pltSort = makeSceneNumber(0,0,0,0)
-        scnSort = makeSceneNumber(0,0,0,0)
-        pltIter = self.fileStore.append(None,["<b>Plot</b>",0,pltSort,""])
-        scnIter = self.fileStore.append(None,["<b>Scenes</b>",0,scnSort,""])
-
-        if self.projData.bookHandle == "": return
-
-        bookPath = self.bookTree.getPath(self.projData.bookHandle)
-
-        self.allScenes.setDataPath(bookPath)
-        self.allScenes.makeList()
-
-        self.mapFilesStore = {}
-        self.mapChapters   = {}
-
-        tmpItem = DataWrapper("Scene")
-
-        for itemHandle in self.allScenes.dataList.keys():
-            tmpItem.setDataPath(self.allScenes.dataList[itemHandle])
-            tmpItem.loadDetails()
-
-            scnNum = makeSceneNumber(1,tmpItem.section,tmpItem.chapter,tmpItem.number)
-            scnSec = makeSceneNumber(1,tmpItem.section,tmpItem.chapter,0)
-
-            if tmpItem.section == 0:
-                parIter = scnIter
-            else:
-                if scnSec in self.mapChapters:
-                    parIter = self.mapChapters[scnSec]
-                else:
-                    if tmpItem.section == 1: scnChapter = "<b>Prologue</b>"
-                    if tmpItem.section == 2: scnChapter = "<b>Chapter %d</b>" % tmpItem.chapter
-                    if tmpItem.section == 3: scnChapter = "<b>Epilogue</b>"
-                    parIter = self.fileStore.append(scnIter,[scnChapter,None,scnSec,None])
-                    self.mapChapters[scnSec] = parIter
-
-            tmpIter = self.fileStore.append(parIter,[tmpItem.title,tmpItem.words,scnNum,itemHandle])
-            self.mapSceneStore[itemHandle] = tmpIter
-
-        self.getObject("treeMain").expand_all()
+        self.bookTree.loadContent(bookHandle,bookPath)
 
         return
 
@@ -319,7 +260,7 @@ class GUI():
     def displayBook(self):
 
         self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
-        self.getObject("cmbBookUniverse").set_active_iter(self.bookTree.univMap[self.projData.theBook.parent])
+        self.getObject("cmbBookUniverse").set_active_iter(self.projTree.univMap[self.projData.theBook.parent])
 
         return
 
@@ -364,8 +305,8 @@ class GUI():
         if len(pathItem) == 2:
             parIter   = listModel.get_iter(pathItem[0])
             parHandle = listModel.get_value(parIter,3)
-            itemPath  = self.bookTree.getPath(itemHandle)
-            parPath   = self.bookTree.getPath(parHandle)
+            itemPath  = self.projTree.getPath(itemHandle)
+            parPath   = self.projTree.getPath(parHandle)
             self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
             self.displayBook()
             self.loadScenes()
