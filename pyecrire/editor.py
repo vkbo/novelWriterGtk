@@ -15,12 +15,14 @@ class Editor(WebKit.WebView):
     def __init__(self,guiParent):
         WebKit.WebView.__init__(self)
         self.guiParent = guiParent
-        self.set_editable(True)
+        self.set_editable(False)
         self.connect("key_press_event",self.onEventKeyPress)
         self.load_html_string("<p>Hello Kitty</p>", "file:///")
         return
 
     def onToggleEditable(self, guiObject):
+        guiEditable = guiObject.get_active()
+        self.set_editable(guiEditable)
         return
 
     def onEditAction(self, guiObject):
