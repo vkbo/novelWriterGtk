@@ -9,6 +9,7 @@
 import logging as logger
 
 from os                   import path, mkdir, rename
+from pyecrire.constants   import *
 from pyecrire.functions   import simplifyString, makeHandle
 from pyecrire.datawrapper import DataWrapper
 
@@ -19,7 +20,7 @@ class Project():
         self.mainConf = config
 
         # The Book
-        self.theBook     = DataWrapper("Book")
+        self.theBook     = DataWrapper(NAME_BOOK)
         self.bookTitle   = ""
         self.bookName    = ""
         self.bookHandle  = ""
@@ -27,7 +28,7 @@ class Project():
         self.bookPath    = ""
 
         # The Universe
-        self.theUniverse = DataWrapper("Universe")
+        self.theUniverse = DataWrapper(NAME_UNIV)
         self.univTitle   = ""
         self.univName    = ""
         self.univHandle  = ""
@@ -35,7 +36,7 @@ class Project():
         self.univPath    = ""
 
         # The File
-        self.theFile     = DataWrapper("File")
+        self.theFile     = DataWrapper(NAME_NONE)
         self.fileType    = ""
         self.fileCode    = ""
         self.fileTitle   = ""
@@ -217,10 +218,10 @@ class Project():
 
     def setFileParent(self, parentType):
 
-        if   parentType == "Book":
+        if   parentType == NAME_BOOK:
             self.fileParent     = parentType
             self.theFile.parent = self.bookHandle
-        elif parentType == "Universe":
+        elif parentType == NAME_UNIV:
             self.fileParent     = parentType
             self.theFile.parent = self.univHandle
         else:
@@ -234,7 +235,7 @@ class Project():
 
     def setSceneSettings(self, scnTitle, scnSection, scnChapter, scnNumber, scnPOV, scnTime):
 
-        if self.theFile.dataType == "Scene":
+        if self.theFile.dataType == NAME_SCNE:
             self.fileTitle = scnTitle
             self.fileName  = simplifyString(scnTitle)
             self.theFile.setTitle(scnTitle)
@@ -252,7 +253,7 @@ class Project():
     def newProject(self, guiObject=None):
 
         # The Book
-        self.theBook     = DataWrapper("Book")
+        self.theBook     = DataWrapper(NAME_BOOK)
         self.bookTitle   = ""
         self.bookName    = ""
         self.bookHandle  = ""
@@ -260,7 +261,7 @@ class Project():
         self.bookPath    = ""
 
         # The Universe
-        self.theUniverse = DataWrapper("Universe")
+        self.theUniverse = DataWrapper(NAME_UNIV)
         self.univTitle   = ""
         self.univName    = ""
         self.univHandle  = ""
@@ -323,14 +324,14 @@ class Project():
         self.fileFolder = self.fileCode+"-"+self.fileHandle+"-"+self.fileName
         self.filePath   = filePath
 
-        if   self.theFile.dataType == "Scene":
-            self.fileParent = "Book"
-        elif self.theFile.dataType == "Plot":
-            self.fileParent = "Book"
-        elif self.theFile.dataType == "Character":
-            self.fileParent = "Universe"
-        elif self.theFile.dataType == "History":
-            self.fileParent = "Universe"
+        if   self.theFile.dataType == NAME_SCNE:
+            self.fileParent = NAME_BOOK
+        elif self.theFile.dataType == NAME_PLOT:
+            self.fileParent = NAME_BOOK
+        elif self.theFile.dataType == NAME_CHAR:
+            self.fileParent = NAME_UNIV
+        elif self.theFile.dataType == NAME_HIST:
+            self.fileParent = NAME_UNIV
         else:
             self.fileParent = ""
 

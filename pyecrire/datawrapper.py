@@ -10,26 +10,27 @@ import logging as logger
 import configparser
 
 from os                 import path
+from pyecrire.constants import *
 from pyecrire.functions import makeTimeStamp
 
 class DataWrapper():
 
     def __init__(self, dataType):
 
-        if   dataType == "Book":
-            self.dataGroup = "Container"
-        elif dataType == "Universe":
-            self.dataGroup = "Container"
-        elif dataType == "Scene":
-            self.dataGroup = "File"
-        elif dataType == "Plot":
-            self.dataGroup = "File"
-        elif dataType == "Character":
-            self.dataGroup = "File"
-        elif dataType == "History":
-            self.dataGroup = "File"
+        if   dataType == NAME_BOOK:
+            self.dataGroup = TYPE_CONT
+        elif dataType == NAME_UNIV:
+            self.dataGroup = TYPE_CONT
+        elif dataType == NAME_SCNE:
+            self.dataGroup = TYPE_FILE
+        elif dataType == NAME_PLOT:
+            self.dataGroup = TYPE_FILE
+        elif dataType == NAME_CHAR:
+            self.dataGroup = TYPE_FILE
+        elif dataType == NAME_HIST:
+            self.dataGroup = TYPE_FILE
         else:
-            self.dataGroup = ""
+            self.dataGroup = TYPE_NONE
 
         # Default Values
         self.dataType = dataType
@@ -74,18 +75,18 @@ class DataWrapper():
         confParser.set(cnfSec,"Title",   str(self.title))
         confParser.set(cnfSec,"Created", str(self.created))
         confParser.set(cnfSec,"Date",    str(self.date))
-        if self.dataType != "Universe":
+        if self.dataType != NAME_UNIV:
             confParser.set(cnfSec,"Parent",   str(self.parent))
-        if self.dataGroup == "File":
+        if self.dataGroup == TYPE_FILE:
             confParser.set(cnfSec,"Notes",    str(self.hasNotes))
             confParser.set(cnfSec,"Text",     str(self.hasText))
             confParser.set(cnfSec,"Words",    str(self.words))
             confParser.set(cnfSec,"Number",   str(self.number))
-        if self.dataType == "Scene":
+        if self.dataType == NAME_SCNE:
             confParser.set(cnfSec,"Section",  str(self.section))
             confParser.set(cnfSec,"Chapter",  str(self.chapter))
             confParser.set(cnfSec,"POV",      str(self.pov))
-        if self.dataType == "Book":
+        if self.dataType == NAME_BOOK:
             confParser.set(cnfSec,"Category", str(self.category))
             confParser.set(cnfSec,"Status",   str(self.status))
 

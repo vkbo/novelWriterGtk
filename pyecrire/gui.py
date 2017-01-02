@@ -14,6 +14,7 @@ gi.require_version('WebKit', '3.0')
 
 from gi.repository        import Gtk, GLib, WebKit
 from time                 import sleep
+from pyecrire.constants   import *
 from pyecrire.editor      import Editor
 from pyecrire.timer       import Timer
 from pyecrire.project     import Project
@@ -101,10 +102,10 @@ class GUI():
         ##
 
         # Data Lists
-        self.allBooks      = DataList(self.mainConf.dataPath,"Book")
-        self.allUniverses  = DataList(self.mainConf.dataPath,"Universe")
-        self.allCharacters = DataList(self.mainConf.dataPath,"Character")
-        self.allScenes     = DataList(self.mainConf.dataPath,"Scene")
+        self.allBooks      = DataList(self.mainConf.dataPath,NAME_BOOK)
+        self.allUniverses  = DataList(self.mainConf.dataPath,NAME_UNIV)
+        self.allScenes     = DataList(self.mainConf.dataPath,NAME_SCNE)
+        self.allCharacters = DataList(self.mainConf.dataPath,NAME_CHAR)
 
         # Gtk ListStore and TreeStore
         self.sceneStore = Gtk.TreeStore(str,str,str,int,str,str)
@@ -184,7 +185,7 @@ class GUI():
         self.chapterCount  = {}
 
         self.sceneStore.clear()
-        tmpItem = DataWrapper("Scene")
+        tmpItem = DataWrapper(NAME_SCNE)
         self.chapterCount["1.0.00.000"] = 0
         for itemHandle in self.allScenes.dataList.keys():
             tmpItem.setDataPath(self.allScenes.dataList[itemHandle])
@@ -286,7 +287,7 @@ class GUI():
         # If the file is a scene, load it
         scnPath = self.allScenes.getItem(itemHandle)
         if scnPath is not None:
-            self.projData.newFile("Scene")
+            self.projData.newFile(NAME_SCNE)
             self.projData.loadFile(scnPath,itemHandle)
             self.getObject("mainNoteBook").set_current_page(1)
 
@@ -307,7 +308,7 @@ class GUI():
         if itemHandle == "" or itemHandle is None: return
 
         itemPath = self.allScenes.getItem(itemHandle)
-        self.projData.newFile("Scene")
+        self.projData.newFile(NAME_SCNE)
         self.projData.loadFile(itemPath,itemHandle)
         self.updateSceneDetails()
 
@@ -362,9 +363,9 @@ class GUI():
         scnSort  = makeSceneNumber(1,0,0,0)
         sceneNum = self.chapterCount[scnSort] + 1
 
-        self.projData.newFile("Scene")
+        self.projData.newFile(NAME_SCNE)
         self.projData.createFile("New Scene")
-        self.projData.setFileParent("Book")
+        self.projData.setFileParent(NAME_BOOK)
         self.projData.setFileNumber(sceneNum)
         self.projData.saveFile()
 

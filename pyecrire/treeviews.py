@@ -12,6 +12,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 
 from gi.repository        import Gtk
+from pyecrire.constants   import *
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber
@@ -59,8 +60,8 @@ class ProjectTree():
         treeCol0.set_attributes(cellCol0,markup=0)
 
         # Data Maps and Lists
-        self.allBooks = DataList(self.mainConf.dataPath,"Book")
-        self.allUnivs = DataList(self.mainConf.dataPath,"Universe")
+        self.allBooks = DataList(self.mainConf.dataPath,NAME_BOOK)
+        self.allUnivs = DataList(self.mainConf.dataPath,NAME_UNIV)
 
         self.iterMap = {}
         self.univMap = {}
@@ -76,7 +77,7 @@ class ProjectTree():
         self.univMap = {}
         self.bookMap = {}
 
-        tmpItem = DataWrapper("Universe")
+        tmpItem = DataWrapper(NAME_UNIV)
         for itemHandle in self.allUnivs.dataList.keys():
             tmpItem.setDataPath(self.allUnivs.dataList[itemHandle])
             tmpItem.loadDetails()
@@ -87,7 +88,7 @@ class ProjectTree():
             tmpIter = self.listUnivs.append([tmpItem.title,itemHandle])
             self.univMap[itemHandle] = tmpIter
 
-        tmpItem = DataWrapper("Book")
+        tmpItem = DataWrapper(NAME_BOOK)
         for itemHandle in self.allBooks.dataList.keys():
             tmpItem.setDataPath(self.allBooks.dataList[itemHandle])
             tmpItem.loadDetails()
@@ -161,7 +162,8 @@ class BookTree():
         treeCol2.add_attribute(cellCol2,"text",2)
 
         # Data Maps and Lists
-        self.allScenes = DataList(self.mainConf.dataPath,"Scene")
+        self.allPlots  = DataList(self.mainConf.dataPath,NAME_PLOT)
+        self.allScenes = DataList(self.mainConf.dataPath,NAME_SCNE)
 
         self.iterMap = {}
         self.chapMap = {}
@@ -174,7 +176,7 @@ class BookTree():
 
         pltSort = makeSceneNumber(0,0,0,0)
         scnSort = makeSceneNumber(0,0,0,0)
-        pltIter = self.treeStore.append(None,["<b>Plot</b>",0,pltSort,""])
+        pltIter = self.treeStore.append(None,["<b>Plots</b>",0,pltSort,""])
         scnIter = self.treeStore.append(None,["<b>Scenes</b>",0,scnSort,""])
 
         if bookHandle == "" or bookHandle is None: return
@@ -185,7 +187,7 @@ class BookTree():
         self.iterMap = {}
         self.chapMap = {}
 
-        tmpItem = DataWrapper("Scene")
+        tmpItem = DataWrapper(NAME_SCNE)
         for itemHandle in self.allScenes.dataList.keys():
             tmpItem.setDataPath(self.allScenes.dataList[itemHandle])
             tmpItem.loadDetails()
@@ -264,7 +266,8 @@ class UniverseTree():
         treeCol2.add_attribute(cellCol2,"text",2)
 
         # Data Maps and Lists
-        self.allChars = DataList(self.mainConf.dataPath,"Character")
+        self.allHists = DataList(self.mainConf.dataPath,NAME_HIST)
+        self.allChars = DataList(self.mainConf.dataPath,NAME_CHAR)
 
         self.iterMap = {}
 
@@ -287,6 +290,5 @@ class UniverseTree():
         self.iterMap = {}
 
         return
-
 
 # End Class UniverseTree
