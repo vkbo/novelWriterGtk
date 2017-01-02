@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*
-#
+
+##
 #  pyÉcrire – Main GUI Class
-#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Sets up the main GUI and holds action and event functions
 ##
 
 import logging as logger
@@ -25,13 +27,6 @@ class GUI():
     def __init__(self, config):
 
         self.guiLoaded = False
-
-        # Constants
-        self.EDIT_FILE      = 0
-        self.EDIT_BOOK      = 1
-        self.EDIT_SCENE     = 2
-        self.EDIT_UNIVERSE  = 3
-        self.EDIT_CHARACTER = 4
 
         # Define Core Objects
         self.mainConf   = config
@@ -164,9 +159,6 @@ class GUI():
         self.projTree.loadContent()
         self.bookTree.loadContent(None,None)
         self.univTree.loadContent(None,None)
-
-        # Default Values
-        self.editType = self.EDIT_BOOK
 
         # Prepare Main Window
         self.winMain.set_title(self.mainConf.appName)

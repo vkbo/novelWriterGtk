@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*
 
+##
+#  pyÉcrire – Data Wrapper Class
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Wrappes the various data files
+##
+
 import logging as logger
 import configparser
 

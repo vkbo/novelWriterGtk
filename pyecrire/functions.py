@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*
 
+##
+#  pyÉcrire – Global Functions
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Various functions used in the applications
+##
+
 import logging as logger
+
 from hashlib     import sha256
 from datetime    import datetime
 from re          import sub

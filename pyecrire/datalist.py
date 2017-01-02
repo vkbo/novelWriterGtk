@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*
 
+##
+#  pyÉcrire – DataList Class
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Holds lists of folder content and maps handle to path
+##
+
 import logging as logger
 
 from os import path, listdir

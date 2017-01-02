@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*
 
+##
+#  pyÉcrire – Timer Class
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+#  Main class for the session timer
+##
+
 import logging as logger
 
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('WebKit', '3.0')
-from gi.repository import Gtk
-from gi.repository import WebKit
 
-from time import time,strftime
+from gi.repository import Gtk
+from time          import time, strftime
 
 class Timer():
 
@@ -105,3 +109,4 @@ class Timer():
         self.btnStop.set_sensitive(False)
         return
 
+# End Class Timer

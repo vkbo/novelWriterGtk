@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*
-#
+
+##
 #  pyÉcrire – Project Class
-#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Holds the main project data and the file currently being edited
 ##
 
 import logging as logger

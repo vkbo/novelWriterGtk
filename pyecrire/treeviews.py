@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*
 
+##
+#  pyÉcrire – Data Tree Classed
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Manages all the TreeViews of the GUI as well as lists for comboboxes
+##
+
 import logging as logger
 
 import gi
