@@ -15,6 +15,7 @@ from time                 import sleep
 from pyecrire.editor      import Editor
 from pyecrire.timer       import Timer
 from pyecrire.project     import Project
+from pyecrire.treeviews   import ProjectTree
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber
@@ -46,6 +47,7 @@ class GUI():
         # Prepare GUI Classes
         self.webEditor  = Editor(self.winMain)
         self.guiTimer   = Timer(self.guiBuilder,self.mainConf)
+        self.bookTree   = ProjectTree(self.guiBuilder,self.mainConf)
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -104,20 +106,16 @@ class GUI():
         # Data Lists
         self.allBooks      = DataList(self.mainConf.dataPath,"Book")
         self.allUniverses  = DataList(self.mainConf.dataPath,"Universe")
-        self.allCharacters = DataList(self.mainConf.dataPath,"Characters")
-        self.allScenes     = DataList(self.mainConf.dataPath,"Scenes")
+        self.allCharacters = DataList(self.mainConf.dataPath,"Character")
+        self.allScenes     = DataList(self.mainConf.dataPath,"Scene")
 
         # Gtk ListStore and TreeStore
-        self.bookStore  = Gtk.TreeStore(str,str,str,str)
         self.fileStore  = Gtk.TreeStore(str,int,str,str)
         self.univStore  = Gtk.TreeStore(str,int,str,str)
         self.sceneStore = Gtk.TreeStore(str,str,str,int,str,str)
-        self.univList   = Gtk.ListStore(str,str)
         self.bookType   = Gtk.ListStore(str)
 
         # Handle to List Item Map
-        self.mapBookStore  = {}
-        self.mapUnivStore  = {}
         self.mapFilesStore = {}
         self.mapSceneStore = {}
         self.mapUnivList   = {}
@@ -125,19 +123,6 @@ class GUI():
 
         # Other List Maps
         self.chapterCount  = {}
-
-        # Books Tree
-        treeBooks     = self.getObject("treeBooks")
-        treeBooks.set_model(self.bookStore)
-        cellBooksCol0 = Gtk.CellRendererText()
-        cellBooksCol1 = Gtk.CellRendererText()
-        treeBooksCol0 = treeBooks.get_column(0)
-        treeBooksCol1 = treeBooks.get_column(1)
-        treeBooksCol0.pack_start(cellBooksCol0,True)
-        treeBooksCol1.pack_start(cellBooksCol1,False)
-        treeBooksCol0.add_attribute(cellBooksCol0,"text",0)
-        treeBooksCol1.add_attribute(cellBooksCol1,"text",1)
-        treeBooksCol0.set_attributes(cellBooksCol0,markup=0)
 
         # Files Tree
         treeMain     = self.getObject("treeMain")
@@ -208,10 +193,11 @@ class GUI():
 
         # Book Details Universe List
         cmbDetailsBookUniverse  = self.getObject("cmbBookUniverse")
-        cmbDetailsBookUniverse.set_model(self.univList)
+        cmbDetailsBookUniverse.set_model(self.bookTree.listUnivs)
 
         # Load Project Data
-        self.loadProjects()
+        self.bookTree.loadContent()
+
         self.loadBookFiles()
         self.loadUnivFiles()
 
@@ -228,41 +214,11 @@ class GUI():
 
         return
 
-    def loadProjects(self):
-
-        self.allBooks.makeList()
-        self.allUniverses.makeList()
-
-        self.mapBookStore = {}
-        self.mapUnivStore = {}
-        self.mapUnivList  = {}
-
-        tmpItem = DataWrapper("Universe")
-        for itemHandle in self.allUniverses.dataList.keys():
-            tmpItem.setDataPath(self.allUniverses.dataList[itemHandle])
-            tmpItem.loadDetails()
-            tmpIter = self.bookStore.append(None,["<b>"+tmpItem.title+"</b>",None,None,itemHandle])
-            self.mapUnivStore[itemHandle] = tmpIter
-            tmpIter = self.univList.append([tmpItem.title,itemHandle])
-            self.mapUnivList[itemHandle]  = tmpIter
-
-        tmpItem = DataWrapper("Book")
-        for itemHandle in self.allBooks.dataList.keys():
-            tmpItem.setDataPath(self.allBooks.dataList[itemHandle])
-            tmpItem.loadDetails()
-            if self.mapUnivStore.has_key(tmpItem.parent):
-                tmpIter = self.bookStore.append(self.mapUnivStore[tmpItem.parent],[tmpItem.title,None,None,itemHandle])
-            else:
-                logger.error("Orphanded book found with title '%s'." % tmpItem.title)
-            self.mapBookStore[itemHandle] = tmpIter
-
-        return
-
     def loadScenes(self):
 
         if self.projData.bookHandle == "": return
 
-        bookPath = self.allBooks.getItem(self.projData.bookHandle)
+        bookPath = self.bookTree.getPath(self.projData.bookHandle)
 
         self.allScenes.setDataPath(bookPath)
         self.allScenes.makeList()
@@ -314,7 +270,7 @@ class GUI():
 
         if self.projData.bookHandle == "": return
 
-        bookPath = self.allBooks.getItem(self.projData.bookHandle)
+        bookPath = self.bookTree.getPath(self.projData.bookHandle)
 
         self.allScenes.setDataPath(bookPath)
         self.allScenes.makeList()
@@ -363,7 +319,7 @@ class GUI():
     def displayBook(self):
 
         self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
-        self.getObject("cmbBookUniverse").set_active_iter(self.mapUnivList[self.projData.theBook.parent])
+        self.getObject("cmbBookUniverse").set_active_iter(self.bookTree.univMap[self.projData.theBook.parent])
 
         return
 
@@ -408,8 +364,8 @@ class GUI():
         if len(pathItem) == 2:
             parIter   = listModel.get_iter(pathItem[0])
             parHandle = listModel.get_value(parIter,3)
-            itemPath  = self.allBooks.getItem(itemHandle)
-            parPath   = self.allUniverses.getItem(parHandle)
+            itemPath  = self.bookTree.getPath(itemHandle)
+            parPath   = self.bookTree.getPath(parHandle)
             self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
             self.displayBook()
             self.loadScenes()
