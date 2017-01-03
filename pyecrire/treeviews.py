@@ -114,6 +114,11 @@ class ProjectTree():
         if itemHandle in self.allUnivs.dataList: return self.allUnivs.dataList[itemHandle]
         return None
 
+    def getType(self, itemHandle):
+        if itemHandle in self.allBooks.dataList: return NAME_BOOK
+        if itemHandle in self.allUnivs.dataList: return NAME_UNIV
+        return NAME_NONE
+
 # End Class ProjectTree
 
 
@@ -224,6 +229,11 @@ class BookTree():
         if itemHandle in self.allScenes.dataList: return self.allScenes.dataList[itemHandle]
         return None
 
+    def getType(self, itemHandle):
+        if itemHandle in self.allPlots.dataList:  return NAME_PLOT
+        if itemHandle in self.allScenes.dataList: return NAME_SCNE
+        return NAME_NONE
+
 # End Class BookTree
 
 
@@ -305,6 +315,11 @@ class UniverseTree():
         if itemHandle in self.allHists.dataList: return self.allHists.dataList[itemHandle]
         if itemHandle in self.allChars.dataList: return self.allChars.dataList[itemHandle]
         return None
+
+    def getType(self, itemHandle):
+        if itemHandle in self.allHists.dataList: return NAME_HIST
+        if itemHandle in self.allChars.dataList: return NAME_CHAR
+        return NAME_NONE
 
 # End Class UniverseTree
 

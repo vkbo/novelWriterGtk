@@ -409,6 +409,7 @@
                               <object class="GtkTreeView" id="treeBooks">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_column">0</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection" id="treeBooksSelect">
                                     <signal name="changed" handler="onChangeTreeBooks" swapped="no"/>
@@ -539,7 +540,6 @@
                                 <property name="expander_column">treeMainName</property>
                                 <property name="enable_search">False</property>
                                 <property name="search_column">0</property>
-                                <property name="level_indentation">10</property>
                                 <property name="tooltip_column">0</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection" id="treeMainSelect">
@@ -548,7 +548,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkTreeViewColumn" id="treeMainName">
-                                    <property name="resizable">True</property>
                                     <property name="title" translatable="yes">Name</property>
                                     <property name="expand">True</property>
                                   </object>
@@ -684,7 +683,6 @@
                                 <property name="expander_column">treeUniverseName</property>
                                 <property name="enable_search">False</property>
                                 <property name="search_column">0</property>
-                                <property name="level_indentation">10</property>
                                 <property name="enable_tree_lines">True</property>
                                 <property name="tooltip_column">0</property>
                                 <child internal-child="selection">
@@ -983,6 +981,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="hexpand">True</property>
+                                    <property name="tooltip_column">0</property>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection" id="treeScenesSelect">
                                         <signal name="changed" handler="onChangeTreeScenes" swapped="no"/>

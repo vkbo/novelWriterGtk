@@ -197,11 +197,12 @@ class GUI():
 
         if itemHandle == "" or itemHandle is None: return
 
-        # If the file is a scene, load it
-        scnPath = self.allScenes.getItem(itemHandle)
-        if scnPath is not None:
-            self.projData.newFile(NAME_SCNE)
-            self.projData.loadFile(scnPath,itemHandle)
+        # If the file is a book tree file, load it
+        filePath = self.bookTree.getPath(itemHandle)
+        fileType = self.bookTree.getType(itemHandle)
+        if filePath is not None:
+            self.projData.newFile(fileType)
+            self.projData.loadFile(filePath,itemHandle)
             self.getObject("mainNoteBook").set_current_page(1)
 
         return
@@ -220,9 +221,9 @@ class GUI():
 
         if itemHandle == "" or itemHandle is None: return
 
-        itemPath = self.scneTree.getPath(itemHandle)
+        filePath = self.scneTree.getPath(itemHandle)
         self.projData.newFile(NAME_SCNE)
-        self.projData.loadFile(itemPath,itemHandle)
+        self.projData.loadFile(filePath,itemHandle)
         self.updateSceneDetails()
 
         return
