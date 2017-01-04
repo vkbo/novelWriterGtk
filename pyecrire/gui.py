@@ -18,7 +18,7 @@ from pyecrire.constants   import *
 from pyecrire.editor      import Editor
 from pyecrire.timer       import Timer
 from pyecrire.project     import Project
-from pyecrire.treeviews   import ProjectTree, BookTree, UniverseTree, SceneTree
+from pyecrire.treeviews   import *
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber # Remove
@@ -47,6 +47,7 @@ class GUI():
         self.bookTree   = BookTree(self.guiBuilder,self.mainConf)
         self.univTree   = UniverseTree(self.guiBuilder,self.mainConf)
         self.scneTree   = SceneTree(self.guiBuilder,self.mainConf)
+        self.fileTree   = FileVersionTree(self.guiBuilder,self.mainConf)
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -55,8 +56,10 @@ class GUI():
             "onEventWinChange"         : self.eventWinChange,
             "onSwitchPageMainNoteBook" : self.eventTabChange,
             "onSwitchPageSideNoteBook" : self.eventTreeChange,
-            "onChangeTreeBooks"        : self.onSelectBook,
-            "onChangeTreeMain"         : self.onSelectFile,
+            "onChangeTreeProject"      : self.onSelectBook,
+            "onChangeTreeBook"         : self.onSelectBookFile,
+            "onChangeTreeUniverse"     : self.onSelectUniverseFile,
+            "onChangeTreeFileVersion"  : self.onSelectFileVersion,
             "onClickNew"               : self.projData.newProject,
             "onClickSave"              : self.onFileSave,
             "onToggleEditable"         : self.webEditor.onToggleEditable,
@@ -172,7 +175,7 @@ class GUI():
             itemHandle = listModel.get_value(listIter,3)
 
         if len(pathItem) == 1:
-            self.getObject("treeBooks").expand_row(pathItem,False)
+            self.getObject("treeProject").expand_row(pathItem,False)
 
         if len(pathItem) == 2:
             parIter   = listModel.get_iter(pathItem[0])
@@ -185,10 +188,12 @@ class GUI():
 
         return
 
-    def onSelectFile(self, guiObject):
+    def onSelectBookFile(self, guiObject):
 
         logger.debug("Select File")
         if not self.guiLoaded: return
+
+        itemHandle = ""
 
         (listModel, pathList) = guiObject.get_selected_rows()
         for pathItem in pathList:
@@ -203,8 +208,11 @@ class GUI():
         if filePath is not None:
             self.projData.newFile(fileType)
             self.projData.loadFile(filePath,itemHandle)
-            self.getObject("mainNoteBook").set_current_page(1)
+            self.getObject("mainNoteBook").set_current_page(TABM_EDIT)
 
+        return
+
+    def onSelectUniverseFile(self, guiObject):
         return
 
     def onSelectScene(self, guiObject):
@@ -227,6 +235,9 @@ class GUI():
         self.updateSceneDetails()
 
         return
+
+    def onSelectFileVersion(self, guiObject):
+        eturn
 
     ##
     #  Button Actions
@@ -284,7 +295,7 @@ class GUI():
         self.projData.saveFile()
 
         self.scneTree.loadContent(self.projData.bookPath)
-        if self.getObject("sideNoteBook").get_current_page() == 1:
+        if self.getObject("sideNoteBook").get_current_page() == TABS_BOOK:
             self.bookTree.loadContent(self.projData.bookPath)
 
         return
@@ -326,7 +337,7 @@ class GUI():
         self.projData.saveFile()
 
         self.scneTree.loadContent(self.projData.bookPath)
-        if self.getObject("sideNoteBook").get_current_page() == 1:
+        if self.getObject("sideNoteBook").get_current_page() == TABS_BOOK:
             self.bookTree.loadContent(self.projData.bookPath)
 
         return
@@ -337,7 +348,7 @@ class GUI():
 
     def eventTabChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tab change")
-        if tabIdx == 2:
+        if tabIdx == TABM_SRCE:
             print("Source View")
             strSource = self.webEditor.getHtml()
             bufferSource = Gtk.TextBuffer()
@@ -349,11 +360,11 @@ class GUI():
 
     def eventTreeChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tree tab change")
-        if tabIdx == 0:
-            self.getObject("mainNoteBook").set_current_page(0)
-        if tabIdx == 1:
+        if tabIdx == TABS_PROJ:
+            self.getObject("mainNoteBook").set_current_page(TABM_BOOK)
+        if tabIdx == TABS_BOOK:
             self.bookTree.loadContent(self.projData.bookPath)
-        if tabIdx == 2:
+        if tabIdx == TABS_UNIV:
             self.univTree.loadContent(self.projData.univPath)
         return
 

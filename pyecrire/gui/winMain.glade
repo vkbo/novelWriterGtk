@@ -352,7 +352,7 @@
                     <property name="can_focus">True</property>
                     <signal name="switch-page" handler="onSwitchPageSideNoteBook" swapped="no"/>
                     <child>
-                      <object class="GtkBox" id="booksBox">
+                      <object class="GtkBox" id="boxProjects">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
@@ -406,24 +406,24 @@
                             <property name="can_focus">True</property>
                             <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkTreeView" id="treeBooks">
+                              <object class="GtkTreeView" id="treeProject">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="tooltip_column">0</property>
                                 <child internal-child="selection">
-                                  <object class="GtkTreeSelection" id="treeBooksSelect">
-                                    <signal name="changed" handler="onChangeTreeBooks" swapped="no"/>
+                                  <object class="GtkTreeSelection" id="treeProjectSelect">
+                                    <signal name="changed" handler="onChangeTreeProject" swapped="no"/>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkTreeViewColumn" id="treeBooksTitle">
+                                  <object class="GtkTreeViewColumn" id="treeProjectTitle">
                                     <property name="resizable">True</property>
                                     <property name="title" translatable="yes">Title</property>
                                     <property name="expand">True</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkTreeViewColumn" id="treeBooksStatus">
+                                  <object class="GtkTreeViewColumn" id="treeProjectStatus">
                                     <property name="title" translatable="yes">Status</property>
                                   </object>
                                 </child>
@@ -469,17 +469,17 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lblTabBooks">
+                      <object class="GtkLabel" id="lblProjects">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Books</property>
+                        <property name="label" translatable="yes">Project</property>
                       </object>
                       <packing>
                         <property name="tab_fill">False</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="filesBox">
+                      <object class="GtkBox" id="boxBook">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
@@ -533,34 +533,34 @@
                             <property name="can_focus">True</property>
                             <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkTreeView" id="treeMain">
+                              <object class="GtkTreeView" id="treeBook">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="vexpand">True</property>
-                                <property name="expander_column">treeMainName</property>
+                                <property name="expander_column">treeBookName</property>
                                 <property name="enable_search">False</property>
                                 <property name="search_column">0</property>
                                 <property name="tooltip_column">0</property>
                                 <child internal-child="selection">
-                                  <object class="GtkTreeSelection" id="treeMainSelect">
-                                    <signal name="changed" handler="onChangeTreeMain" swapped="no"/>
+                                  <object class="GtkTreeSelection" id="treeBookSelect">
+                                    <signal name="changed" handler="onChangeTreeBook" swapped="no"/>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkTreeViewColumn" id="treeMainName">
+                                  <object class="GtkTreeViewColumn" id="treeBookName">
                                     <property name="title" translatable="yes">Name</property>
                                     <property name="expand">True</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkTreeViewColumn" id="treeMainWords">
+                                  <object class="GtkTreeViewColumn" id="treeBookWords">
                                     <property name="resizable">True</property>
                                     <property name="title" translatable="yes">Words</property>
                                     <property name="alignment">1</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkTreeViewColumn" id="treeMainSort">
+                                  <object class="GtkTreeViewColumn" id="treeBookSort">
                                     <property name="visible">False</property>
                                     <property name="title" translatable="yes">Sort</property>
                                   </object>
@@ -610,10 +610,10 @@
                       </packing>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lblTabFiles">
+                      <object class="GtkLabel" id="lblBook">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Files</property>
+                        <property name="label" translatable="yes">Book</property>
                       </object>
                       <packing>
                         <property name="position">1</property>
@@ -621,7 +621,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="universeBox">
+                      <object class="GtkBox" id="boxUniverse">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
@@ -686,7 +686,9 @@
                                 <property name="enable_tree_lines">True</property>
                                 <property name="tooltip_column">0</property>
                                 <child internal-child="selection">
-                                  <object class="GtkTreeSelection" id="treeUniverseSelect"/>
+                                  <object class="GtkTreeSelection" id="treeUniverseSelect">
+                                    <signal name="changed" handler="onChangeTreeUniverse" swapped="no"/>
+                                  </object>
                                 </child>
                                 <child>
                                   <object class="GtkTreeViewColumn" id="treeUniverseName">
@@ -752,7 +754,7 @@
                       </packing>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lblTabUniverse">
+                      <object class="GtkLabel" id="lblUniverse">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Universe</property>
@@ -774,7 +776,7 @@
                     <property name="can_focus">True</property>
                     <signal name="switch-page" handler="onSwitchPageMainNoteBook" swapped="no"/>
                     <child>
-                      <object class="GtkBox" id="boxDetails">
+                      <object class="GtkBox" id="boxBookDetails">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
@@ -1340,7 +1342,7 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lblTabBook">
+                      <object class="GtkLabel" id="lblBookDetails">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Book</property>
@@ -1350,7 +1352,51 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="editBox">
+                      <object class="GtkBox" id="boxUniverseDetails">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkLabel" id="lblUniverseSettings">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">8</property>
+                            <property name="label" translatable="yes">Universe Settings</property>
+                            <property name="xalign">0</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="lblUniverseDetails">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Universe</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="boxEditor">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
@@ -1646,17 +1692,17 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lblTabEditor">
+                      <object class="GtkLabel" id="lblEditor">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Editor</property>
                       </object>
                       <packing>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                         <property name="tab_fill">False</property>
                       </packing>
                     </child>
@@ -1673,17 +1719,17 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lblTabSource">
+                      <object class="GtkLabel" id="lblSource">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Source</property>
                       </object>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                         <property name="tab_fill">False</property>
                       </packing>
                     </child>
@@ -2090,11 +2136,19 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <child internal-child="selection">
-                          <object class="GtkTreeSelection" id="treeVersionSelect"/>
+                          <object class="GtkTreeSelection" id="treeVersionSelect">
+                            <signal name="changed" handler="onChangeTreeFileVersion" swapped="no"/>
+                          </object>
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeVersionDate">
                             <property name="title" translatable="yes">File Version</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="treeVersionSort">
+                            <property name="visible">False</property>
+                            <property name="title" translatable="yes">Sort</property>
                           </object>
                         </child>
                       </object>
