@@ -9,7 +9,7 @@
 import logging as logger
 import configparser
 
-from os                 import path
+from os                 import path, listdir
 from pyecrire.constants import *
 from pyecrire.functions import makeTimeStamp
 
@@ -35,6 +35,11 @@ class DataWrapper():
         # Default Values
         self.dataType = dataType
         self.dataPath = ""
+        self.fileList = {}
+        self.listLen  = 0
+        self.loadFile = ""
+        self.currFile = ""
+
         self.title    = ""
         self.created  = ""
         self.date     = ""
@@ -58,6 +63,35 @@ class DataWrapper():
         self.status   = ""
 
         return
+
+    def makeList(self):
+
+        fileList = {}
+
+        if path.isdir(self.dataPath):
+            dirContent = listdir(self.dataPath)
+
+            for listItem in dirContent:
+                itemPath = path.join(self.dataPath,listItem)
+                if path.isfile(itemPath):
+                    itemExt = listItem[-3:]
+                    if itemExt == "htm":
+                        itemHandle = listItem[0:15]
+                        fileList[itemHandle] = itemPath
+
+            self.listLen = len(fileList)
+        else:
+            logger.error("Path not found: %s" % self.dataPath)
+
+        for fileKey in sorted(fileList):
+            self.fileList[fileKey] = fileList[fileKey]
+            self.loadFile          = fileList[fileKey]
+
+        return
+
+    ##
+    #  Save Functions
+    ##
 
     def saveDetails(self):
 
@@ -95,6 +129,26 @@ class DataWrapper():
 
         return
 
+    def saveText(self):
+
+        logger.debug("Saving text file")
+
+        if self.dataGroup is not TYPE_FILE: return
+
+        if self.currFile == "": self.currFile = makeTimeStamp(1)+".htm"
+
+        fileObj = open(path.join(self.dataPath,self.currFile),"w")
+        fileObj.write(self.text)
+        fileObj.close()
+
+        self.makeList()
+
+        return
+
+    ##
+    #  Load Functions
+    ##
+
     def loadDetails(self):
 
         logger.debug("Loading data details")
@@ -120,12 +174,30 @@ class DataWrapper():
 
         return
 
+    def loadText(self):
+
+        logger.debug("Loading text file")
+
+        if self.loadFile == "":
+            self.text = "<p>New File</p>"
+        else:
+            fileObj = open(path.join(self.dataPath,self.loadFile),"r")
+            self.text = fileObj.read()
+            fileObj.close()
+
+        self.hasText = True
+
+        return
+
     ##
     #  Getters
     ##
 
-    def getText(self):
-        return "<p>Hello Kitty</p>"
+    def getFilePath(self, fileHandle):
+        if fileHandle in self.fileList:
+            return self.fileList[fileHandle]
+        else:
+            return None
 
     ##
     #  Setters
@@ -138,6 +210,7 @@ class DataWrapper():
     def setDataPath(self, newPath):
         if path.isdir(newPath):
             self.dataPath = newPath
+            self.makeList()
         else:
             logger.error("Path not found: %s" % newPath)
         return
@@ -157,7 +230,6 @@ class DataWrapper():
         if newNumber < 0:   newNumber = 0
         if newNumber > 999: newNumber = 999
         self.number = newNumber
-        print(newNumber)
         return
 
     def setSection(self, newSection):
@@ -174,6 +246,18 @@ class DataWrapper():
 
     def setPOV(self, charHandle):
         self.pov = charHandle
+        return
+
+    def setText(self, srcText):
+
+        if len(srcText) > 0:
+            self.text    = srcText
+            self.hasText = True
+
+        return
+
+    def setLoadFile(self, filePath):
+        self.loadFile = filePath
         return
 
 # End Class DataWrapper

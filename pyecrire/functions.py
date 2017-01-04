@@ -61,6 +61,24 @@ def makeTimeStamp(stringFormat=0, timeStamp=None):
 
     return ""
 
+
+#
+# Reformat Date from TimeStamp
+#
+
+def reformatDate(dateString):
+
+    year   = dateString[0:4]
+    month  = dateString[4:6]
+    day    = dateString[6:8]
+
+    hour   = dateString[9:11]
+    minute = dateString[11:13]
+    second = dateString[13:15]
+
+    return "%s/%s/%s %s:%s:%s" % (day,month,year,hour,minute,second)
+
+
 #
 # Create Scene Number
 #

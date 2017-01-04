@@ -22,7 +22,7 @@ class Editor(WebKit.WebView):
         self.guiParent = guiParent
         self.set_editable(False)
         self.connect("key_press_event",self.onEventKeyPress)
-        self.load_html_string("<p>Hello Kitty</p>", "file:///")
+        self.load_html_string("", "file:///")
         return
 
     def onToggleEditable(self, guiObject):
@@ -54,9 +54,25 @@ class Editor(WebKit.WebView):
         #return srcHtml.str
         return self.get_main_frame().get_title()
 
+    def getText(self):
+
+        self.execute_script("document.title=document.documentElement.innerHTML;")
+        srcHtml = self.get_main_frame().get_title()
+
+        bodyStart = srcHtml.find("<body")
+        bodyStart = srcHtml.find(">",bodyStart)+1
+        bodyEnd   = srcHtml.find("</body>")
+
+        return srcHtml[bodyStart:bodyEnd]
+
+    def setText(self, srcText):
+        srcHtml = "<html><head></head><body>"+srcText+"</body></html>"
+        self.load_html_string(srcHtml,"file:///")
+        return
+
     def onEventKeyPress(self, guiObject, guiEvent):
         keyname = Gdk.keyval_name(guiEvent.keyval)
-        logger.debug("Editor key press: %s", keyname)
+        #logger.debug("Editor key press: %s", keyname)
         return
 
 

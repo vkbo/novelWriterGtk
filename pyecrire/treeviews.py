@@ -15,7 +15,7 @@ from gi.repository        import Gtk
 from pyecrire.constants   import *
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
-from pyecrire.functions   import makeSceneNumber
+from pyecrire.functions   import makeSceneNumber, reformatDate
 
 # Set to true to show sorting in all treeviews
 debugShowSort = True
@@ -489,7 +489,13 @@ class FileVersionTree():
 
         return
 
-    def loadContent(self, filePath):
+    def loadContent(self, fileList):
+
+        self.treeStore.clear()
+
+        for itemHandle in fileList.keys():
+            self.treeStore.append(None,[reformatDate(itemHandle),itemHandle])
+
         return
 
 # End Class FileVersionTree

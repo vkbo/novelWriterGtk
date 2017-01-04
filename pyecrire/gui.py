@@ -193,6 +193,9 @@ class GUI():
         if filePath is not None:
             self.projData.newFile(fileType)
             self.projData.loadFile(filePath,itemHandle)
+            self.projData.theFile.loadText()
+            self.fileTree.loadContent(self.projData.theFile.fileList)
+            self.webEditor.setText(self.projData.theFile.text)
             self.getObject("mainNoteBook").set_current_page(TABM_EDIT)
 
         return
@@ -222,7 +225,24 @@ class GUI():
         return
 
     def onSelectFileVersion(self, guiObject):
-        eturn
+
+        logger.debug("Select File Version")
+        if not self.guiLoaded: return
+
+        (listModel, pathList) = guiObject.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,1)
+
+        if itemHandle == "" or itemHandle is None: return
+
+        itemPath = self.projData.theFile.getFilePath(itemHandle)
+
+        self.projData.theFile.setLoadFile(itemPath)
+        self.projData.theFile.loadText()
+        self.webEditor.setText(self.projData.theFile.text)
+
+        return
 
     ##
     #  Form Content
@@ -248,9 +268,12 @@ class GUI():
     ##
 
     def onFileSave(self, guiObject):
+
         logger.debug("Saving")
 
-        if self.editType == self.EDIT_BOOK:
+        guiPage = self.getObject("mainNoteBook").get_current_page()
+
+        if guiPage == TABM_BOOK:
 
             bookTitle      = self.getObject("entryBookTitle").get_text()
             chkNewUniverse = self.getObject("chkNewUniverse")
@@ -265,7 +288,14 @@ class GUI():
                 univItem = self.univList[univIdx]
                 self.projData.setUniverse(univItem[1],self.allUniverses.getItem(univItem[1]))
 
-        self.projData.saveProject()
+            self.projData.saveProject()
+
+        if guiPage == TABM_EDIT:
+
+            srcText = self.webEditor.getText()
+
+            self.projData.theFile.setText(srcText)
+            self.projData.theFile.saveText()
 
         return
 
