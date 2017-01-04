@@ -54,8 +54,8 @@ class GUI():
             "onDestroyWindow"          : self.guiDestroy,
             "onEventKeyPress"          : self.eventWinKeyPress,
             "onEventWinChange"         : self.eventWinChange,
-            "onSwitchPageMainNoteBook" : self.eventTabChange,
-            "onSwitchPageSideNoteBook" : self.eventTreeChange,
+            "onSwitchPageMainNoteBook" : self.eventMainTabChange,
+            "onSwitchPageSideNoteBook" : self.eventSideTabChange,
             "onChangeTreeProject"      : self.onSelectBook,
             "onChangeTreeBook"         : self.onSelectBookFile,
             "onChangeTreeUniverse"     : self.onSelectUniverseFile,
@@ -129,21 +129,6 @@ class GUI():
         self.winMain.show_all()
 
         self.guiLoaded = True
-
-        return
-
-    def displayBook(self):
-
-        self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
-        self.getObject("cmbBookUniverse").set_active_iter(self.projTree.univMap[self.projData.theBook.parent])
-
-        return
-
-    def updateSceneDetails(self):
-
-        self.getObject("entrySceneTitle").set_text(self.projData.fileTitle)
-        self.getObject("cmbSceneSection").set_active(self.projData.theFile.section)
-        self.getObject("numSceneChapter").set_value(self.projData.theFile.chapter)
 
         return
 
@@ -240,7 +225,26 @@ class GUI():
         eturn
 
     ##
-    #  Button Actions
+    #  Form Content
+    ##
+
+    def displayBook(self):
+
+        self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
+        self.getObject("cmbBookUniverse").set_active_iter(self.projTree.univMap[self.projData.theBook.parent])
+
+        return
+
+    def updateSceneDetails(self):
+
+        self.getObject("entrySceneTitle").set_text(self.projData.fileTitle)
+        self.getObject("cmbSceneSection").set_active(self.projData.theFile.section)
+        self.getObject("numSceneChapter").set_value(self.projData.theFile.chapter)
+
+        return
+
+    ##
+    #  Main Button Actions
     ##
 
     def onFileSave(self, guiObject):
@@ -264,6 +268,10 @@ class GUI():
         self.projData.saveProject()
 
         return
+
+    ##
+    #  Menu Action
+    ##
 
     def onActionShowAbout(self, guiObject):
 
@@ -343,10 +351,10 @@ class GUI():
         return
 
     ##
-    #  Main Window Events
+    #  Tab Changes
     ##
 
-    def eventTabChange(self, guiObject, guiChild, tabIdx):
+    def eventMainTabChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tab change")
         if tabIdx == TABM_SRCE:
             print("Source View")
@@ -358,7 +366,7 @@ class GUI():
             print(strSource)
         return
 
-    def eventTreeChange(self, guiObject, guiChild, tabIdx):
+    def eventSideTabChange(self, guiObject, guiChild, tabIdx):
         logger.debug("Tree tab change")
         if tabIdx == TABS_PROJ:
             self.getObject("mainNoteBook").set_current_page(TABM_BOOK)
@@ -367,6 +375,10 @@ class GUI():
         if tabIdx == TABS_UNIV:
             self.univTree.loadContent(self.projData.univPath)
         return
+
+    ##
+    #  Main Window Events
+    ##
 
     def eventWinKeyPress(self, guiObject, guiEvent):
         self.guiTimer.resetAutoPause()

@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*
 
+##
+#  pyÉcrire – Config Class
+# ~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Class to hold the program config
+##
+
 import logging as logger
 import configparser
 

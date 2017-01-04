@@ -469,7 +469,7 @@ class FileVersionTree():
         self.treeSort  = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
-        self.treeSort.set_sort_column_id(1,Gtk.SortType.ASCENDING)
+        self.treeSort.set_sort_column_id(1,Gtk.SortType.DESCENDING)
         self.treeView.set_model(self.treeSort)
 
         # Columns
