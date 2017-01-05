@@ -56,6 +56,8 @@ def makeTimeStamp(stringFormat=0, timeStamp=None):
         return "{:%Y-%m-%d %H:%M:%S}".format(timeStamp)
     elif stringFormat == 3:
         return "{:%d/%m/%Y %H:%M:%S}".format(timeStamp)
+    elif stringFormat == 4:
+        return "{:%H:%M:%S} – ".format(timeStamp)
     else:
         return "{:%Y.%m.%d %H:%M:%S}".format(timeStamp)
 
@@ -91,7 +93,10 @@ def makeSceneNumber(group,section,chapter,number):
 # Clean Up HTML Code
 #
 
-def htmlCleanUp(srcHtml):
-    return srcHtml
+def htmlCleanUp(srcText):
+
+    srcText = srcText.replace("</p>","</p>\n")
+
+    return srcText
 
 # End Functions

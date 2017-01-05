@@ -18,7 +18,7 @@ from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber, reformatDate
 
 # Set to true to show sorting in all treeviews
-debugShowSort = True
+debugShowSort = False
 
 class ProjectTree():
 

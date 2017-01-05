@@ -92,13 +92,25 @@ class Editor(WebKit.WebView):
     ##
 
     def setText(self, srcText):
+
+        fontSize   = str(self.mainConf.fontSize)
+        lineHeight = str(self.mainConf.lineHeight/100.0)
+        lineIndent = str(self.mainConf.lineIndent/100.0)
+        parMargin  = str(self.mainConf.parMargin)
+
         srcHtml  = "<html>"
         srcHtml += "<head>"
-        srcHtml += "<link rel='stylesheet' type='text/css' href='file://"+getcwd()+"/pyecrire/gui/style.css'>"
+        srcHtml += "  <style>"
+        srcHtml += "    body {font-size: "+fontSize+"px; padding: 40px;}"
+        srcHtml += "    p    {margin: "+parMargin+"px; text-align: justify; line-height: "+lineHeight+"em;}"
+        srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
+        srcHtml += "  </style>"
         srcHtml += "</head>"
         srcHtml += "<body>"+srcText+"</body>"
         srcHtml += "</html>"
+
         self.load_html_string(srcHtml,"file:///")
+
         return
 
     def setEditable(self, editable):

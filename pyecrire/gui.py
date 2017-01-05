@@ -99,7 +99,7 @@ class GUI():
 
         # Set Up Timers
         self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
-        self.autoTaskID = GLib.timeout_add_seconds(30,self.autoTasks)
+        self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.autoTasks)
 
         ##
         #  Content
@@ -151,8 +151,8 @@ class GUI():
         self.projData.theFile.setText(self.webEditor.getText())
         saveText = self.projData.theFile.autoSaveText()
 
-        if saveConf: statusBar.push(statusCID,makeTimeStamp(4)+" Config auto-saved")
-        if saveText: statusBar.push(statusCID,makeTimeStamp(4)+" Current file auto-saved")
+        if saveConf: statusBar.push(statusCID,makeTimeStamp(4)+"Config auto-saved")
+        if saveText: statusBar.push(statusCID,makeTimeStamp(4)+"Current file auto-saved")
 
         if saveText: self.fileTree.loadContent(self.projData.theFile.fileList)
 
