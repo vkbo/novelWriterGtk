@@ -12,7 +12,7 @@ import configparser
 from os                 import path, listdir
 from hashlib            import sha256
 from pyecrire.constants import *
-from pyecrire.functions import makeTimeStamp
+from pyecrire.functions import makeTimeStamp, htmlCleanUp, wordCount
 
 class DataWrapper():
 
@@ -146,6 +146,7 @@ class DataWrapper():
 
         self.fileHash = sha256(self.text).hexdigest()
         self.makeList()
+        self.saveDetails()
 
         return
 
@@ -270,6 +271,8 @@ class DataWrapper():
     def setText(self, srcText):
 
         if len(srcText) > 0:
+            self.words   = wordCount(srcText)
+            srcText      = htmlCleanUp(srcText)
             self.text    = srcText
             self.hasText = True
 

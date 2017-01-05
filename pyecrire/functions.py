@@ -10,7 +10,7 @@ import logging as logger
 
 from hashlib     import sha256
 from datetime    import datetime
-from re          import sub
+from re          import sub, compile
 from unicodedata import normalize
 
 #
@@ -98,5 +98,20 @@ def htmlCleanUp(srcText):
     srcText = srcText.replace("</p>","</p>\n")
 
     return srcText
+
+
+#
+# Word Count for HTML Files
+#
+
+def wordCount(srcHtml):
+
+    regTags   = compile("<.*?>")
+    cleanText = sub(regTags, " ", srcHtml)
+    cleanText = cleanText.replace("&nbsp;", " ")
+    cleanText = cleanText.strip()
+    splitText = cleanText.split()
+
+    return len(splitText)
 
 # End Functions

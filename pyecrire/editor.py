@@ -15,7 +15,6 @@ gi.require_version('WebKit', '3.0')
 from gi.repository      import Gtk, Gdk, WebKit
 from os                 import getcwd
 from math               import floor
-from pyecrire.functions import htmlCleanUp
 
 class Editor(WebKit.WebView):
 
@@ -85,7 +84,7 @@ class Editor(WebKit.WebView):
         bodyStart = srcHtml.find(">",bodyStart)+1
         bodyEnd   = srcHtml.find("</body>")
 
-        return htmlCleanUp(srcHtml[bodyStart:bodyEnd])
+        return srcHtml[bodyStart:bodyEnd]
 
     ##
     #  Setters

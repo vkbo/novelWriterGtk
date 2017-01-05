@@ -27,7 +27,7 @@ class GUI():
 
     def __init__(self, config):
 
-        self.guiLoaded = False
+        self.guiLoaded  = False
 
         # Define Core Objects
         self.mainConf   = config
@@ -286,6 +286,7 @@ class GUI():
         logger.debug("Saving")
 
         guiPage = self.getObject("mainNoteBook").get_current_page()
+        guiSide = self.getObject("sideNoteBook").get_current_page()
 
         if guiPage == TABM_BOOK:
 
@@ -309,6 +310,15 @@ class GUI():
             self.projData.theFile.setText(self.webEditor.getText())
             self.projData.theFile.saveText()
             self.fileTree.loadContent(self.projData.theFile.fileList)
+
+            if self.projData.fileParent == NAME_BOOK:
+                self.scneTree.loadContent(self.projData.bookPath)
+
+            if guiSide == TABS_BOOK and self.projData.fileParent == NAME_BOOK:
+                self.bookTree.loadContent(self.projData.bookPath)
+
+            if guiSide == TABS_UNIV and self.projData.fileParent == NAME_UNIV:
+                self.univTree.loadContent(self.projData.univPath)
 
         return
 
