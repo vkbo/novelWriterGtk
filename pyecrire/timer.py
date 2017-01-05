@@ -11,8 +11,9 @@ import logging as logger
 import gi
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk
-from time          import time, strftime
+from gi.repository      import Gtk
+from time               import time, strftime
+from pyecrire.functions import makeTimeStamp
 
 class Timer():
 
@@ -69,7 +70,7 @@ class Timer():
         if self.autoTime >= self.autoPause:
             self.onTimerPause()
             self.statusBar.pop(self.statusCID)
-            self.statusBar.push(self.statusCID,"Session timer auto-paused")
+            self.statusBar.push(self.statusCID,makeTimeStamp(4)+" Session timer auto-paused")
         return
 
     def resetAutoPause(self):
@@ -79,7 +80,7 @@ class Timer():
 
     def onTimerStart(self,guiObject=None):
         logger.debug("Timer started")
-        self.statusBar.push(self.statusCID,"Session timer started")
+        self.statusBar.push(self.statusCID,makeTimeStamp(4)+" Session timer started")
         self.timerOn    = True
         self.timeOffset = time()
         self.autoOffset = time()
@@ -91,7 +92,7 @@ class Timer():
 
     def onTimerPause(self,guiObject=None):
         logger.debug("Timer paused")
-        self.statusBar.push(self.statusCID,"Session timer paused")
+        self.statusBar.push(self.statusCID,makeTimeStamp(4)+" Session timer paused")
         self.timerOn    = False
         self.timeBuffer = self.timeBuffer + time() - self.timeOffset
         self.btnStart.set_sensitive(True)
@@ -101,7 +102,7 @@ class Timer():
 
     def onTimerStop(self,guiObject=None):
         logger.debug("Timer stopped")
-        self.statusBar.push(self.statusCID,"Session timer stopped")
+        self.statusBar.push(self.statusCID,makeTimeStamp(4)+" Session timer stopped")
         self.timerOn    = False
         self.timeBuffer = 0.0
         self.btnStart.set_sensitive(True)

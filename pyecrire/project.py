@@ -169,9 +169,9 @@ class Project():
             return
 
         fileFolder = self.fileCode+"-"+self.fileHandle+"-"+self.fileName
-        if   self.fileParent == "Book":
+        if   self.fileParent == NAME_BOOK:
             parentFolder = self.bookPath
-        elif self.fileParent == "Universe":
+        elif self.fileParent == NAME_UNIV:
             parentFolder = self.univPath
         else:
             logger.error("File parent type must be Book or Universe.")

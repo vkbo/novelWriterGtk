@@ -12,18 +12,31 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 
-from gi.repository import Gtk, Gdk, WebKit
-from math          import floor
+from gi.repository      import Gtk, Gdk, WebKit
+from os                 import getcwd
+from math               import floor
+from pyecrire.functions import htmlCleanUp
 
 class Editor(WebKit.WebView):
 
-    def __init__(self,guiParent):
+    def __init__(self, builder, config):
+
         WebKit.WebView.__init__(self)
-        self.guiParent = guiParent
+
+        # Connect to GUI
+        self.guiBuilder = builder
+        self.mainConf   = config
+        self.getObject  = self.guiBuilder.get_object
+
         self.set_editable(False)
         self.connect("key_press_event",self.onEventKeyPress)
         self.load_html_string("", "file:///")
+
         return
+
+    ##
+    #  Events
+    ##
 
     def onToggleEditable(self, guiObject):
         guiEditable = guiObject.get_active()
@@ -48,6 +61,15 @@ class Editor(WebKit.WebView):
         guiDialog.destroy()
         return
 
+    def onEventKeyPress(self, guiObject, guiEvent):
+        keyname = Gdk.keyval_name(guiEvent.keyval)
+        #logger.debug("Editor key press: %s", keyname)
+        return
+
+    ##
+    #  Getters
+    ##
+
     def getHtml(self):
         self.execute_script("document.title=document.documentElement.innerHTML;")
         #srcHtml = self.get_main_frame().get_data_source().get_data()
@@ -63,16 +85,25 @@ class Editor(WebKit.WebView):
         bodyStart = srcHtml.find(">",bodyStart)+1
         bodyEnd   = srcHtml.find("</body>")
 
-        return srcHtml[bodyStart:bodyEnd]
+        return htmlCleanUp(srcHtml[bodyStart:bodyEnd])
+
+    ##
+    #  Setters
+    ##
 
     def setText(self, srcText):
-        srcHtml = "<html><head></head><body>"+srcText+"</body></html>"
+        srcHtml  = "<html>"
+        srcHtml += "<head>"
+        srcHtml += "<link rel='stylesheet' type='text/css' href='file://"+getcwd()+"/pyecrire/gui/style.css'>"
+        srcHtml += "</head>"
+        srcHtml += "<body>"+srcText+"</body>"
+        srcHtml += "</html>"
         self.load_html_string(srcHtml,"file:///")
         return
 
-    def onEventKeyPress(self, guiObject, guiEvent):
-        keyname = Gdk.keyval_name(guiEvent.keyval)
-        #logger.debug("Editor key press: %s", keyname)
+    def setEditable(self, editable):
+        self.getObject("btnEditFile").set_active(editable)
+        self.set_editable(editable)
         return
 
-
+# End Class Editor

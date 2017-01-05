@@ -131,11 +131,13 @@ class Config:
 
 
     def autoSaveConfig(self):
-        if self.confChanged:
-            logger.debug("Auto-saving config")
-            self.saveConfig()
-        return
 
+        if not self.confChanged: return False
+
+        logger.debug("Auto-saving config")
+        self.saveConfig()
+
+        return True
 
     ##
     #  Setters

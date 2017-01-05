@@ -86,4 +86,12 @@ def reformatDate(dateString):
 def makeSceneNumber(group,section,chapter,number):
     return "%01s.%01d.%02d.%03d" % (group,section,chapter,number)
 
+
+#
+# Clean Up HTML Code
+#
+
+def htmlCleanUp(srcHtml):
+    return srcHtml
+
 # End Functions

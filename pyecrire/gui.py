@@ -21,7 +21,7 @@ from pyecrire.project     import Project
 from pyecrire.treeviews   import *
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
-from pyecrire.functions   import makeSceneNumber # Remove
+from pyecrire.functions   import makeTimeStamp
 
 class GUI():
 
@@ -41,7 +41,7 @@ class GUI():
         self.winMain    = self.getObject("winMain")
 
         # Prepare GUI Classes
-        self.webEditor  = Editor(self.winMain)
+        self.webEditor  = Editor(self.guiBuilder,self.mainConf)
         self.guiTimer   = Timer(self.guiBuilder,self.mainConf)
         self.projTree   = ProjectTree(self.guiBuilder,self.mainConf)
         self.bookTree   = BookTree(self.guiBuilder,self.mainConf)
@@ -142,7 +142,20 @@ class GUI():
 
     # Automated Tasks
     def autoTasks(self):
-        self.mainConf.autoSaveConfig()
+
+        statusBar = self.getObject("mainStatus")
+        statusCID = self.statusBar.get_context_id("File")
+
+        saveConf = self.mainConf.autoSaveConfig()
+
+        self.projData.theFile.setText(self.webEditor.getText())
+        saveText = self.projData.theFile.autoSaveText()
+
+        if saveConf: statusBar.push(statusCID,makeTimeStamp(4)+" Config auto-saved")
+        if saveText: statusBar.push(statusCID,makeTimeStamp(4)+" Current file auto-saved")
+
+        if saveText: self.fileTree.loadContent(self.projData.theFile.fileList)
+
         return True
 
     ##
@@ -241,6 +254,7 @@ class GUI():
         self.projData.theFile.setLoadFile(itemPath)
         self.projData.theFile.loadText()
         self.webEditor.setText(self.projData.theFile.text)
+        self.webEditor.setEditable(False)
 
         return
 
@@ -292,10 +306,9 @@ class GUI():
 
         if guiPage == TABM_EDIT:
 
-            srcText = self.webEditor.getText()
-
-            self.projData.theFile.setText(srcText)
+            self.projData.theFile.setText(self.webEditor.getText())
             self.projData.theFile.saveText()
+            self.fileTree.loadContent(self.projData.theFile.fileList)
 
         return
 
@@ -324,7 +337,7 @@ class GUI():
         if self.projData.bookHandle == "": return
 
         scnSort  = makeSceneNumber(1,0,0,0)
-        sceneNum = self.chapterCount[scnSort] + 1
+        sceneNum = self.scneTree.chapCount[scnSort] + 1
 
         self.projData.newFile(NAME_SCNE)
         self.projData.createFile("New Scene")
@@ -360,14 +373,14 @@ class GUI():
         scnChapter  = self.getObject("numSceneChapter").get_value()
         scnPOV      = self.getObject("cmbSceneCharacter").get_active_text()
 
-        if scnSection != 2: scnChapter = 1
+        if scnSection != 2: scnChapter = 0
 
-        scnSort = makeSceneNumber(1,scnSection,scnChapter,0)
-        if scnSort in self.chapterCount:
+        scnSort = makeSceneNumber(GRP_SCNE,scnSection,scnChapter,0)
+        if scnSort in self.scneTree.chapCount:
             if scnSection == prevSection and scnChapter == prevChapter:
                 scnNumber = prevNumber
             else:
-                scnNumber = self.chapterCount[scnSort] + 1
+                scnNumber = self.scneTree.chapCount[scnSort] + 1
         else:
             scnNumber = 1
 

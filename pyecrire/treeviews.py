@@ -38,9 +38,10 @@ class ProjectTree():
         self.getObject  = self.guiBuilder.get_object
 
         # Core objects
-        self.treeView  = self.getObject("treeProject")
-        self.treeStore = Gtk.TreeStore(str,str,str,str)
-        self.treeSort  = Gtk.TreeModelSort(model=self.treeStore)
+        self.treeView   = self.getObject("treeProject")
+        self.treeSelect = self.getObject("treeProjectSelect")
+        self.treeStore  = Gtk.TreeStore(str,str,str,str)
+        self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Additional Lists for Combo Boxes
         self.listUnivs = Gtk.ListStore(str,str)
@@ -74,6 +75,7 @@ class ProjectTree():
 
     def loadContent(self):
 
+        self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.allBooks.makeList()
         self.allUnivs.makeList()
         self.iterMap = {}
@@ -106,6 +108,8 @@ class ProjectTree():
 
             tmpIter = self.listBooks.append([tmpItem.title,itemHandle])
             self.bookMap[itemHandle] = tmpIter
+
+        self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
         return
 
@@ -140,9 +144,10 @@ class BookTree():
         self.getObject  = self.guiBuilder.get_object
 
         # Core objects
-        self.treeView  = self.getObject("treeBook")
-        self.treeStore = Gtk.TreeStore(str,int,str,str)
-        self.treeSort  = Gtk.TreeModelSort(model=self.treeStore)
+        self.treeView   = self.getObject("treeBook")
+        self.treeSelect = self.getObject("treeBookSelect")
+        self.treeStore  = Gtk.TreeStore(str,int,str,str)
+        self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
         self.treeSort.set_sort_column_id(2,Gtk.SortType.ASCENDING)
@@ -181,6 +186,7 @@ class BookTree():
 
     def loadContent(self, bookPath):
 
+        self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
         pltSort = makeSceneNumber(GRP_PLOT,0,0,0)
@@ -221,6 +227,7 @@ class BookTree():
             self.chapMap[itemHandle] = tmpIter
 
         self.treeView.expand_all()
+        self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
         return
 
@@ -255,9 +262,10 @@ class UniverseTree():
         self.getObject  = self.guiBuilder.get_object
 
         # Core objects
-        self.treeView  = self.getObject("treeUniverse")
-        self.treeStore = Gtk.TreeStore(str,int,str,str)
-        self.treeSort  = Gtk.TreeModelSort(model=self.treeStore)
+        self.treeView   = self.getObject("treeUniverse")
+        self.treeSelect = self.getObject("treeUniverseSelect")
+        self.treeStore  = Gtk.TreeStore(str,int,str,str)
+        self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
         self.treeSort.set_sort_column_id(2,Gtk.SortType.ASCENDING)
@@ -295,6 +303,7 @@ class UniverseTree():
 
     def loadContent(self, univPath):
 
+        self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
         pltSort = makeSceneNumber(GRP_HIST,0,0,0)
@@ -308,6 +317,7 @@ class UniverseTree():
         self.allChars.makeList()
 
         self.iterMap = {}
+        self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
         return
 
@@ -344,9 +354,10 @@ class SceneTree():
         self.getObject  = self.guiBuilder.get_object
 
         # Core objects
-        self.treeView  = self.getObject("treeScenes")
-        self.treeStore = Gtk.TreeStore(str,str,str,int,str,str)
-        self.treeSort  = Gtk.TreeModelSort(model=self.treeStore)
+        self.treeView   = self.getObject("treeScenes")
+        self.treeSelect = self.getObject("treeScenesSelect")
+        self.treeStore  = Gtk.TreeStore(str,str,str,int,str,str)
+        self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
         self.treeSort.set_sort_column_id(4,Gtk.SortType.ASCENDING)
@@ -393,6 +404,7 @@ class SceneTree():
 
     def loadContent(self, bookPath):
 
+        self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
         if bookPath == "" or bookPath is None: return
@@ -427,7 +439,7 @@ class SceneTree():
                     if tmpItem.section == 2: scnChapter = "<b>Chapter %d</b>" % tmpItem.chapter
                     if tmpItem.section == 3: scnChapter = "<b>Epilogue</b>"
                     parIter = self.treeStore.append(None,[scnChapter,None,None,None,scnSec,None])
-                    self.chapMap[scnSec]  = parIter
+                    self.chapMap[scnSec]   = parIter
                     self.chapCount[scnSec] = 1
 
             scnTitle  = tmpItem.title
@@ -438,6 +450,7 @@ class SceneTree():
             self.iterMap[itemHandle] = tmpIter
 
         self.treeView.expand_all()
+        self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
         return
 
@@ -464,9 +477,10 @@ class FileVersionTree():
         self.getObject  = self.guiBuilder.get_object
 
         # Core objects
-        self.treeView  = self.getObject("treeVersion")
-        self.treeStore = Gtk.TreeStore(str,str)
-        self.treeSort  = Gtk.TreeModelSort(model=self.treeStore)
+        self.treeView   = self.getObject("treeVersion")
+        self.treeSelect = self.getObject("treeVersionSelect")
+        self.treeStore  = Gtk.TreeStore(str,str)
+        self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
         self.treeSort.set_sort_column_id(1,Gtk.SortType.DESCENDING)
@@ -491,11 +505,13 @@ class FileVersionTree():
 
     def loadContent(self, fileList):
 
+        self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
         for itemHandle in fileList.keys():
             self.treeStore.append(None,[reformatDate(itemHandle),itemHandle])
 
         return
+        self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
 # End Class FileVersionTree
