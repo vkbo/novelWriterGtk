@@ -177,6 +177,25 @@ class GUI():
         return
 
     def saveBook(self):
+
+        bookTitle      = self.getObject("entryBookTitle").get_text()
+        chkNewUniverse = self.getObject("chkNewUniverse")
+
+        self.projData.setupBook(bookTitle)
+
+        if chkNewUniverse.get_active():
+            univTitle = self.getObject("entryBookUniverse").get_text()
+            self.projData.setupUniverse(univTitle)
+        else:
+            univIdx  = self.getObject("cmbBookUniverse").get_active()
+            univItem = self.projTree.listUnivs[univIdx]
+            self.projData.setUniverse(univItem[1],self.projTree.getPath(univItem[1]))
+
+        self.projData.saveProject()
+
+        if self.getObject("sideNoteBook").get_current_page() == TABS_PROJ:
+            self.projTree.loadContent()
+
         return
 
     def loadUniverse(self):
@@ -249,6 +268,8 @@ class GUI():
 
         logger.debug("Select Book")
         if not self.guiLoaded: return
+
+        pathItem = []
 
         (listModel, pathList) = guiObject.get_selected_rows()
         for pathItem in pathList:
@@ -367,30 +388,12 @@ class GUI():
 
         logger.debug("Saving")
 
-        guiPage = self.getObject("mainNoteBook").get_current_page()
-        guiSide = self.getObject("sideNoteBook").get_current_page()
+        mainIdx = self.getObject("mainNoteBook").get_current_page()
 
-        if guiPage == TABM_BOOK:
+        if mainIdx == TABM_BOOK:
+            self.saveBook()
 
-            bookTitle      = self.getObject("entryBookTitle").get_text()
-            chkNewUniverse = self.getObject("chkNewUniverse")
-
-            self.projData.createBook(bookTitle)
-
-            if chkNewUniverse.get_active():
-                univTitle = self.getObject("entryBookUniverse").get_text()
-                self.projData.createUniverse(univTitle)
-            else:
-                univIdx  = self.getObject("cmbBookUniverse").get_active()
-                univItem = self.univList[univIdx]
-                self.projData.setUniverse(univItem[1],self.allUniverses.getItem(univItem[1]))
-
-            self.projData.saveProject()
-
-            if guiSide == TABS_PROJ:
-                self.projTree.loadContent()
-
-        if guiPage == TABM_EDIT:
+        if mainIdx == TABM_EDIT:
             self.saveEditor()
 
         return
@@ -430,7 +433,7 @@ class GUI():
         sceneNum = self.scneTree.chapCount[scnSort] + 1
 
         self.projData.newFile(NAME_SCNE)
-        self.projData.createFile("New Scene")
+        self.projData.setupFile("New Scene")
         self.projData.setFileParent(NAME_BOOK)
         self.projData.setFileNumber(sceneNum)
         self.projData.saveFile()

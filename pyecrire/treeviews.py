@@ -76,8 +76,11 @@ class ProjectTree():
     def loadContent(self):
 
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
+        self.treeStore.clear()
+
         self.allBooks.makeList()
         self.allUnivs.makeList()
+
         self.iterMap = {}
         self.univMap = {}
         self.bookMap = {}
@@ -511,7 +514,8 @@ class FileVersionTree():
         for itemHandle in fileList.keys():
             self.treeStore.append(None,[reformatDate(itemHandle),itemHandle])
 
-        return
         self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
+
+        return
 
 # End Class FileVersionTree

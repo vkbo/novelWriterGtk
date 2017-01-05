@@ -54,63 +54,6 @@ class Project():
         return
 
     ##
-    #  Creators
-    ##
-
-    def createBook(self, bookTitle):
-
-        bookName = simplifyString(bookTitle)
-
-        if len(bookTitle) > 0 and len(bookName) > 0:
-            self.bookTitle = bookTitle
-            self.bookName  = bookName
-            if self.bookHandle == "":
-                self.bookHandle = makeHandle(bookTitle)
-            self.theBook.setTitle(bookTitle)
-
-        logger.debug("Book Title:  %s" % self.bookTitle)
-        logger.debug("Book Name:   %s" % self.bookName)
-        logger.debug("Book Handle: %s" % self.bookHandle)
-
-        return
-
-    def createUniverse(self, univTitle):
-
-        univName = simplifyString(univTitle)
-
-        if len(univTitle) > 0 and len(univName) > 0:
-            self.univTitle = univTitle
-            self.univName  = univName
-            if self.univHandle == "":
-                self.univHandle = makeHandle(univTitle)
-            self.theUniverse.setTitle(univTitle)
-            self.theBook.setParent(self.univHandle)
-
-        logger.debug("Universe Title:  %s" % self.univTitle)
-        logger.debug("Universe Name:   %s" % self.univName)
-        logger.debug("Universe Handle: %s" % self.univHandle)
-
-        return
-
-    def createFile(self, fileTitle):
-
-        fileName = simplifyString(fileTitle)
-
-        if len(fileTitle) > 0 and len(fileName) > 0:
-            self.fileTitle = fileTitle
-            self.fileName  = fileName
-            if self.fileHandle == "":
-                self.fileHandle = makeHandle(fileTitle)
-            self.theFile.setTitle(fileTitle)
-            self.theFile.setDataType(self.fileType)
-
-        logger.debug("File Title:  %s" % self.fileTitle)
-        logger.debug("File Name:   %s" % self.fileName)
-        logger.debug("File Handle: %s" % self.fileHandle)
-
-        return
-
-    ##
     #  Updaters
     ##
 
@@ -247,7 +190,7 @@ class Project():
         return
 
     ##
-    #  New, Load and Save
+    #  Project Functions
     ##
 
     def newProject(self, guiObject=None):
@@ -270,20 +213,6 @@ class Project():
 
         # The File
         self.newFile("File")
-
-        return
-
-    def newFile(self, fileType):
-
-        # The File
-        self.theFile     = DataWrapper(fileType)
-        self.fileType    = fileType
-        self.fileCode    = fileType[0:1]
-        self.fileTitle   = ""
-        self.fileName    = ""
-        self.fileHandle  = ""
-        self.fileFolder  = ""
-        self.filePath    = ""
 
         return
 
@@ -311,6 +240,98 @@ class Project():
 
         return
 
+    def saveProject(self):
+
+        # Book
+        self.updateBookFolder()
+        self.theBook.saveDetails()
+
+        # Universe
+        self.updateUniverseFolder()
+        self.theUniverse.saveDetails()
+
+        return
+
+    ##
+    #  Book Functions
+    ##
+
+    def setupBook(self, bookTitle):
+
+        bookName = simplifyString(bookTitle)
+
+        if len(bookTitle) > 0 and len(bookName) > 0:
+            self.bookTitle = bookTitle
+            self.bookName  = bookName
+            if self.bookHandle == "":
+                self.bookHandle = makeHandle(bookTitle)
+            self.theBook.setTitle(bookTitle)
+
+        logger.debug("Book Title:  %s" % self.bookTitle)
+        logger.debug("Book Name:   %s" % self.bookName)
+        logger.debug("Book Handle: %s" % self.bookHandle)
+
+        return
+
+    ##
+    #  Universe Functions
+    ##
+
+    def setupUniverse(self, univTitle):
+
+        univName = simplifyString(univTitle)
+
+        if len(univTitle) > 0 and len(univName) > 0:
+            self.univTitle = univTitle
+            self.univName  = univName
+            if self.univHandle == "":
+                self.univHandle = makeHandle(univTitle)
+            self.theUniverse.setTitle(univTitle)
+            self.theBook.setParent(self.univHandle)
+
+        logger.debug("Universe Title:  %s" % self.univTitle)
+        logger.debug("Universe Name:   %s" % self.univName)
+        logger.debug("Universe Handle: %s" % self.univHandle)
+
+        return
+
+
+    ##
+    #  File Functions
+    ##
+
+    def newFile(self, fileType):
+
+        # The File
+        self.theFile     = DataWrapper(fileType)
+        self.fileType    = fileType
+        self.fileCode    = fileType[0:1]
+        self.fileTitle   = ""
+        self.fileName    = ""
+        self.fileHandle  = ""
+        self.fileFolder  = ""
+        self.filePath    = ""
+
+        return
+
+    def setupFile(self, fileTitle):
+
+        fileName = simplifyString(fileTitle)
+
+        if len(fileTitle) > 0 and len(fileName) > 0:
+            self.fileTitle = fileTitle
+            self.fileName  = fileName
+            if self.fileHandle == "":
+                self.fileHandle = makeHandle(fileTitle)
+            self.theFile.setTitle(fileTitle)
+            self.theFile.setDataType(self.fileType)
+
+        logger.debug("File Title:  %s" % self.fileTitle)
+        logger.debug("File Name:   %s" % self.fileName)
+        logger.debug("File Handle: %s" % self.fileHandle)
+
+        return
+
     def loadFile(self, filePath, fileHandle):
 
         logger.debug("Loading file")
@@ -334,18 +355,6 @@ class Project():
             self.fileParent = NAME_UNIV
         else:
             self.fileParent = ""
-
-        return
-
-    def saveProject(self):
-
-        # Book
-        self.updateBookFolder()
-        self.theBook.saveDetails()
-
-        # Universe
-        self.updateUniverseFolder()
-        self.theUniverse.saveDetails()
 
         return
 
