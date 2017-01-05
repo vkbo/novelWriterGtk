@@ -62,12 +62,15 @@ class GUI():
             "onChangeTreeFileVersion"  : self.onSelectFileVersion,
             "onClickNew"               : self.projData.newProject,
             "onClickSave"              : self.onFileSave,
+
             "onToggleEditable"         : self.webEditor.onToggleEditable,
             "onClickEditBold"          : self.webEditor.onEditAction,
             "onClickEditItalic"        : self.webEditor.onEditAction,
             "onClickEditUnderline"     : self.webEditor.onEditAction,
             "onClickEditStrikeThrough" : self.webEditor.onEditAction,
             "onClickEditColour"        : self.webEditor.onEditColour,
+            "onClickEditReload"        : self.onFileReload,
+
             "onClickTimerStart"        : self.guiTimer.onTimerStart,
             "onClickTimerPause"        : self.guiTimer.onTimerPause,
             "onClickTimerStop"         : self.guiTimer.onTimerStop,
@@ -117,6 +120,10 @@ class GUI():
         cmbDetailsBookUniverse  = self.getObject("cmbBookUniverse")
         cmbDetailsBookUniverse.set_model(self.projTree.listUnivs)
 
+        ##
+        #  Finalise GUI Setup
+        ##
+
         # Load Project Data
         self.projTree.loadContent()
         self.bookTree.loadContent(None)
@@ -159,6 +166,82 @@ class GUI():
         return True
 
     ##
+    #  Main NoteBook Content Functions
+    ##
+
+    def loadBook(self):
+
+        self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
+        self.getObject("cmbBookUniverse").set_active_iter(self.projTree.univMap[self.projData.theBook.parent])
+
+        return
+
+    def saveBook(self):
+        return
+
+    def loadUniverse(self):
+        return
+
+    def saveUniverse(self):
+        return
+
+    def loadEditor(self, fileGroup, fileHandle):
+
+        if fileGroup == NAME_BOOK:
+            filePath = self.bookTree.getPath(fileHandle)
+            fileType = self.bookTree.getType(fileHandle)
+
+        if fileGroup == NAME_UNIV:
+            filePath = self.univTree.getPath(fileHandle)
+            fileType = self.univTree.getType(fileHandle)
+
+        if filePath is not None:
+            self.projData.newFile(fileType)
+            self.projData.loadFile(filePath,fileHandle)
+            self.projData.theFile.loadText()
+            self.fileTree.loadContent(self.projData.theFile.fileList)
+            self.webEditor.setText(self.projData.theFile.text)
+            self.getObject("mainNoteBook").set_current_page(TABM_EDIT)
+
+        return
+
+    def saveEditor(self):
+
+        # Set and Save Text
+        self.projData.theFile.setText(self.webEditor.getText())
+        self.projData.theFile.saveText()
+
+        # Reload File Versions
+        self.fileTree.loadContent(self.projData.theFile.fileList)
+
+        # Update Tree View
+
+        """
+        TODO:
+        The only purpose here is to update word count.
+        This should instead be done by altering the word count in the model.
+        """
+
+        sideIdx = self.getObject("sideNoteBook").get_current_page()
+
+        if self.projData.fileParent == NAME_BOOK:
+            self.scneTree.loadContent(self.projData.bookPath)
+
+        if sideIdx == TABS_BOOK and self.projData.fileParent == NAME_BOOK:
+            self.bookTree.loadContent(self.projData.bookPath)
+
+        if sideIdx == TABS_UNIV and self.projData.fileParent == NAME_UNIV:
+            self.univTree.loadContent(self.projData.univPath)
+
+        return
+
+    def loadSource(self):
+        return
+
+    def saveSource(self):
+        return
+
+    ##
     #  Tree Selection Actions
     ##
 
@@ -181,14 +264,14 @@ class GUI():
             itemPath  = self.projTree.getPath(itemHandle)
             parPath   = self.projTree.getPath(parHandle)
             self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
-            self.displayBook()
+            self.loadBook()
             self.scneTree.loadContent(itemPath)
 
         return
 
     def onSelectBookFile(self, guiObject):
 
-        logger.debug("Select File")
+        logger.debug("Select Book File")
         if not self.guiLoaded: return
 
         itemHandle = ""
@@ -200,20 +283,26 @@ class GUI():
 
         if itemHandle == "" or itemHandle is None: return
 
-        # If the file is a book tree file, load it
-        filePath = self.bookTree.getPath(itemHandle)
-        fileType = self.bookTree.getType(itemHandle)
-        if filePath is not None:
-            self.projData.newFile(fileType)
-            self.projData.loadFile(filePath,itemHandle)
-            self.projData.theFile.loadText()
-            self.fileTree.loadContent(self.projData.theFile.fileList)
-            self.webEditor.setText(self.projData.theFile.text)
-            self.getObject("mainNoteBook").set_current_page(TABM_EDIT)
+        self.loadEditor(NAME_BOOK,itemHandle)
 
         return
 
     def onSelectUniverseFile(self, guiObject):
+
+        logger.debug("Select Universe File")
+        if not self.guiLoaded: return
+
+        itemHandle = ""
+
+        (listModel, pathList) = guiObject.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,3)
+
+        if itemHandle == "" or itemHandle is None: return
+
+        self.loadEditor(NAME_UNIV,itemHandle)
+
         return
 
     def onSelectScene(self, guiObject):
@@ -262,13 +351,6 @@ class GUI():
     #  Form Content
     ##
 
-    def displayBook(self):
-
-        self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
-        self.getObject("cmbBookUniverse").set_active_iter(self.projTree.univMap[self.projData.theBook.parent])
-
-        return
-
     def updateSceneDetails(self):
 
         self.getObject("entrySceneTitle").set_text(self.projData.fileTitle)
@@ -281,7 +363,7 @@ class GUI():
     #  Main Button Actions
     ##
 
-    def onFileSave(self, guiObject):
+    def onFileSave(self, guiObject=None):
 
         logger.debug("Saving")
 
@@ -305,20 +387,18 @@ class GUI():
 
             self.projData.saveProject()
 
+            if guiSide == TABS_PROJ:
+                self.projTree.loadContent()
+
         if guiPage == TABM_EDIT:
+            self.saveEditor()
 
-            self.projData.theFile.setText(self.webEditor.getText())
-            self.projData.theFile.saveText()
-            self.fileTree.loadContent(self.projData.theFile.fileList)
+        return
 
-            if self.projData.fileParent == NAME_BOOK:
-                self.scneTree.loadContent(self.projData.bookPath)
+    def onFileReload(self, guiObject=None):
 
-            if guiSide == TABS_BOOK and self.projData.fileParent == NAME_BOOK:
-                self.bookTree.loadContent(self.projData.bookPath)
-
-            if guiSide == TABS_UNIV and self.projData.fileParent == NAME_UNIV:
-                self.univTree.loadContent(self.projData.univPath)
+        self.saveEditor()
+        self.loadEditor(self.projData.fileParent,self.projData.fileHandle)
 
         return
 
@@ -408,25 +488,33 @@ class GUI():
     ##
 
     def eventMainTabChange(self, guiObject, guiChild, tabIdx):
-        logger.debug("Tab change")
+
+        logger.debug("Main tab change")
+
         if tabIdx == TABM_SRCE:
-            print("Source View")
-            strSource = self.webEditor.getHtml()
-            bufferSource = Gtk.TextBuffer()
-            bufferSource.set_text(strSource)
+
+            logger.debug("Source View")
+
+            self.projData.theFile.setText(self.webEditor.getText())
+
             textSource = self.getObject("textSource")
-            textSource.set_buffer(bufferSource)
-            print(strSource)
+            textBuffer = textSource.get_buffer()
+
+            textBuffer.set_text(self.projData.theFile.text)
+
         return
 
     def eventSideTabChange(self, guiObject, guiChild, tabIdx):
-        logger.debug("Tree tab change")
+
+        logger.debug("Side tab change")
+
         if tabIdx == TABS_PROJ:
             self.getObject("mainNoteBook").set_current_page(TABM_BOOK)
         if tabIdx == TABS_BOOK:
             self.bookTree.loadContent(self.projData.bookPath)
         if tabIdx == TABS_UNIV:
             self.univTree.loadContent(self.projData.univPath)
+
         return
 
     ##

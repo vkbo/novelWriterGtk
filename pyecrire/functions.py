@@ -12,6 +12,7 @@ from hashlib     import sha256
 from datetime    import datetime
 from re          import sub, compile
 from unicodedata import normalize
+from bleach      import clean
 
 #
 # Strips string of all non-English characters
@@ -57,7 +58,7 @@ def makeTimeStamp(stringFormat=0, timeStamp=None):
     elif stringFormat == 3:
         return "{:%d/%m/%Y %H:%M:%S}".format(timeStamp)
     elif stringFormat == 4:
-        return "{:%H:%M:%S} – ".format(timeStamp)
+        return "[{:%H:%M:%S}] ".format(timeStamp)
     else:
         return "{:%Y.%m.%d %H:%M:%S}".format(timeStamp)
 
@@ -95,7 +96,17 @@ def makeSceneNumber(group,section,chapter,number):
 
 def htmlCleanUp(srcText):
 
-    srcText = srcText.replace("</p>","</p>\n")
+    okTags   = ["p","b","i","u"]
+    okAttr   = {"*" : ["style"]}
+    okStyles = ["color","text-align"]
+
+    srcText  = clean(srcText,tags=okTags,attributes=okAttr,styles=okStyles)
+
+    srcText  = srcText.replace("</p>","</p>\n")
+    srcText  = srcText.replace('style=""',"")
+    srcText  = srcText.replace("style=''","")
+    srcText  = srcText.replace(" >",">")
+    srcText  = srcText.replace("\n ","\n")
 
     return srcText
 

@@ -1,3 +1,4 @@
 python-webkit
 python-appdirs
 python-configparser
+python-bleach

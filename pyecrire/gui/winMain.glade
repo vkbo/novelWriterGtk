@@ -232,20 +232,6 @@
                     <property name="homogeneous">True</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkToolButton" id="btnEdit">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Edit Book Project</property>
-                    <property name="label" translatable="yes">Edit</property>
-                    <property name="use_underline">True</property>
-                    <property name="stock_id">gtk-edit</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="homogeneous">True</property>
-                  </packing>
-                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -287,20 +273,6 @@
                     <property name="label" translatable="yes">Convert</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-convert</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="homogeneous">True</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkToolButton" id="btnPageSetup">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Editor Setup</property>
-                    <property name="label" translatable="yes">Page Setup</property>
-                    <property name="use_underline">True</property>
-                    <property name="stock_id">gtk-page-setup</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1360,6 +1332,8 @@
                           <object class="GtkLabel" id="lblUniverseSettings">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="margin_left">8</property>
+                            <property name="margin_right">8</property>
                             <property name="margin_top">8</property>
                             <property name="label" translatable="yes">Universe Settings</property>
                             <property name="xalign">0</property>
@@ -1412,6 +1386,7 @@
                               <object class="GtkToggleToolButton" id="btnEditFile">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Toggle File Editable</property>
                                 <property name="label" translatable="yes">Edit File</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-edit</property>
@@ -1420,6 +1395,21 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="homogeneous">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkToolButton" id="btnReloadFile">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Reload File Content (Forces Cleanup)</property>
+                                <property name="label" translatable="yes">Reload</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-refresh</property>
+                                <signal name="clicked" handler="onClickEditReload" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
                               </packing>
                             </child>
                             <child>
@@ -1436,6 +1426,7 @@
                               <object class="GtkToolButton" id="btnEditCopy">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Copy</property>
                                 <property name="label" translatable="yes">Copy</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-copy</property>
@@ -1449,6 +1440,7 @@
                               <object class="GtkToolButton" id="btnEditCut">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Cut</property>
                                 <property name="label" translatable="yes">Cut</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-cut</property>
@@ -1462,6 +1454,7 @@
                               <object class="GtkToolButton" id="btnEditPaste">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Paste</property>
                                 <property name="label" translatable="yes">Paste</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-paste</property>
@@ -1485,6 +1478,7 @@
                               <object class="GtkToolButton" id="btnEditUndo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Undo</property>
                                 <property name="label" translatable="yes">Undo</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-undo</property>
@@ -1498,6 +1492,7 @@
                               <object class="GtkToolButton" id="btnEditRedo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Redo</property>
                                 <property name="label" translatable="yes">Redo</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-redo</property>
@@ -1522,6 +1517,7 @@
                                 <property name="name">bold</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Bold</property>
                                 <property name="label" translatable="yes">Bold</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-bold</property>
@@ -1537,6 +1533,7 @@
                                 <property name="name">italic</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Italic</property>
                                 <property name="label" translatable="yes">Italic</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-italic</property>
@@ -1552,6 +1549,7 @@
                                 <property name="name">underline</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Underline</property>
                                 <property name="label" translatable="yes">Underline</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-underline</property>
@@ -1567,6 +1565,7 @@
                                 <property name="name">strikethrough</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Strikethrough</property>
                                 <property name="label" translatable="yes">Strikethrough</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-strikethrough</property>
@@ -1592,6 +1591,7 @@
                                 <property name="name">colour</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Text Colour</property>
                                 <property name="label" translatable="yes">Colour</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-select-color</property>
@@ -1616,6 +1616,7 @@
                               <object class="GtkToolButton" id="btnEditLeft">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Left Align</property>
                                 <property name="action_name">onEditAdjustLeft</property>
                                 <property name="label" translatable="yes">Left</property>
                                 <property name="use_underline">True</property>
@@ -1630,6 +1631,7 @@
                               <object class="GtkToolButton" id="btnEditCentre">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Centre Align</property>
                                 <property name="action_name">onEditAdjustCentre</property>
                                 <property name="label" translatable="yes">Centre</property>
                                 <property name="use_underline">True</property>
@@ -1644,6 +1646,7 @@
                               <object class="GtkToolButton" id="btnEditRight">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Right Align</property>
                                 <property name="action_name">onEditAdjustRight</property>
                                 <property name="label" translatable="yes">Right</property>
                                 <property name="use_underline">True</property>
@@ -1658,6 +1661,7 @@
                               <object class="GtkToolButton" id="btnEditJustify">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Justify</property>
                                 <property name="action_name">onEditJustify</property>
                                 <property name="label" translatable="yes">Justify</property>
                                 <property name="use_underline">True</property>
@@ -1715,6 +1719,13 @@
                           <object class="GtkTextView" id="textSource">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="wrap_mode">word</property>
+                            <property name="left_margin">12</property>
+                            <property name="right_margin">12</property>
+                            <property name="top_margin">12</property>
+                            <property name="bottom_margin">12</property>
+                            <property name="input_purpose">alpha</property>
+                            <property name="monospace">True</property>
                           </object>
                         </child>
                       </object>
