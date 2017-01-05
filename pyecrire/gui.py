@@ -261,6 +261,28 @@ class GUI():
         return
 
     ##
+    #  Update GUI
+    ##
+
+    def updateTitle(self):
+        self.getObject("lblBookTitle").set_label(self.projData.bookTitle)
+        return
+
+    def updateStatusFile(self):
+
+        if self.projData.fileTitle == "":
+            currFile = self.projData.bookTitle
+        else:
+            if self.projData.fileParent == NAME_BOOK:
+                currFile = self.projData.bookTitle+" > "+self.projData.fileTitle
+            else:
+                currFile = self.projData.univTitle+" > "+self.projData.fileTitle
+
+        self.getObject("lblCurrFile").set_label("File: "+currFile)
+
+        return
+
+    ##
     #  Tree Selection Actions
     ##
 
@@ -287,6 +309,8 @@ class GUI():
             self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
             self.loadBook()
             self.scneTree.loadContent(itemPath)
+            self.updateTitle()
+            self.updateStatusFile()
 
         return
 
@@ -305,6 +329,7 @@ class GUI():
         if itemHandle == "" or itemHandle is None: return
 
         self.loadEditor(NAME_BOOK,itemHandle)
+        self.updateStatusFile()
 
         return
 
@@ -343,7 +368,11 @@ class GUI():
         filePath = self.scneTree.getPath(itemHandle)
         self.projData.newFile(NAME_SCNE)
         self.projData.loadFile(filePath,itemHandle)
-        self.updateSceneDetails()
+
+        # Load Form Details
+        self.getObject("entrySceneTitle").set_text(self.projData.fileTitle)
+        self.getObject("cmbSceneSection").set_active(self.projData.theFile.section)
+        self.getObject("numSceneChapter").set_value(self.projData.theFile.chapter)
 
         return
 
@@ -369,19 +398,7 @@ class GUI():
         return
 
     ##
-    #  Form Content
-    ##
-
-    def updateSceneDetails(self):
-
-        self.getObject("entrySceneTitle").set_text(self.projData.fileTitle)
-        self.getObject("cmbSceneSection").set_active(self.projData.theFile.section)
-        self.getObject("numSceneChapter").set_value(self.projData.theFile.chapter)
-
-        return
-
-    ##
-    #  Main Button Actions
+    #  Button Actions
     ##
 
     def onFileSave(self, guiObject=None):
