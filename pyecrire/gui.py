@@ -141,10 +141,16 @@ class GUI():
 
     # Close Program
     def guiDestroy(self, guiObject):
+
         logger.debug("Exiting")
+
         self.mainConf.setWinPane(self.guiPaned.get_position())
         self.mainConf.autoSaveConfig()
+        self.projData.theFile.setText(self.webEditor.getText())
+        self.projData.theFile.autoSaveText()
+
         Gtk.main_quit()
+
         return
 
     # Automated Tasks
@@ -153,15 +159,14 @@ class GUI():
         statusBar = self.getObject("mainStatus")
         statusCID = self.statusBar.get_context_id("File")
 
-        saveConf = self.mainConf.autoSaveConfig()
+        if self.mainConf.autoSaveConfig():
+            statusBar.push(statusCID,makeTimeStamp(4)+"Config auto-saved")
 
         self.projData.theFile.setText(self.webEditor.getText())
-        saveText = self.projData.theFile.autoSaveText()
-
-        if saveConf: statusBar.push(statusCID,makeTimeStamp(4)+"Config auto-saved")
-        if saveText: statusBar.push(statusCID,makeTimeStamp(4)+"Current file auto-saved")
-
-        if saveText: self.fileTree.loadContent(self.projData.theFile.fileList)
+        if self.projData.theFile.autoSaveText():
+            statusBar.push(statusCID,makeTimeStamp(4)+"File auto-saved")
+            self.fileTree.loadContent(self.projData.theFile.fileList)
+            self.webEditor.setAsSaved()
 
         return True
 
@@ -206,6 +211,10 @@ class GUI():
 
     def loadEditor(self, fileGroup, fileHandle):
 
+        if fileHandle == self.projData.fileHandle:
+            logger.debug("File already open")
+            return
+
         if fileGroup == NAME_BOOK:
             filePath = self.bookTree.getPath(fileHandle)
             fileType = self.bookTree.getType(fileHandle)
@@ -214,7 +223,14 @@ class GUI():
             filePath = self.univTree.getPath(fileHandle)
             fileType = self.univTree.getType(fileHandle)
 
+        print("Loading %s" % filePath)
+
         if filePath is not None:
+
+            # First save editor content
+            self.saveEditor()
+
+            # Then load new content
             self.projData.newFile(fileType)
             self.projData.loadFile(filePath,fileHandle)
             self.projData.theFile.loadText()
@@ -229,28 +245,25 @@ class GUI():
         # Set and Save Text
         self.projData.theFile.setText(self.webEditor.getText())
         self.projData.theFile.saveText()
+        self.webEditor.setAsSaved()
 
         # Reload File Versions
         self.fileTree.loadContent(self.projData.theFile.fileList)
 
-        # Update Tree View
+        # Update Word Counts
+        wordCount  = self.projData.theFile.words
+        fileHandle = self.projData.fileHandle
 
-        """
-        TODO:
-        The only purpose here is to update word count.
-        This should instead be done by altering the word count in the model.
-        """
-
-        sideIdx = self.getObject("sideNoteBook").get_current_page()
+        self.scneTree.setValue(fileHandle,self.scneTree.COL_WORDS,wordCount)
+        self.scneTree.sumWords()
 
         if self.projData.fileParent == NAME_BOOK:
-            self.scneTree.loadContent(self.projData.bookPath)
+            self.bookTree.setValue(fileHandle,self.bookTree.COL_WORDS,wordCount)
+            self.bookTree.sumWords()
 
-        if sideIdx == TABS_BOOK and self.projData.fileParent == NAME_BOOK:
-            self.bookTree.loadContent(self.projData.bookPath)
-
-        if sideIdx == TABS_UNIV and self.projData.fileParent == NAME_UNIV:
-            self.univTree.loadContent(self.projData.univPath)
+        if self.projData.fileParent == NAME_UNIV:
+            self.univTree.setValue(fileHandle,self.univTree.COL_WORDS,wordCount)
+            self.univTree.sumWords()
 
         return
 

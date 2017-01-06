@@ -126,6 +126,10 @@ class ProjectTree():
         if itemHandle in self.allUnivs.dataList: return NAME_UNIV
         return NAME_NONE
 
+    def getIter(self, itemHandle):
+        if itemHandle in self.iterMap:  return self.aiterMap[itemHandle]
+        return None
+
 # End Class ProjectTree
 
 
@@ -135,11 +139,16 @@ class BookTree():
 
         """
         Tree Store Structure:
-        Col 1 : String  : Plot or scene title
-        Col 2 : Integer : Word count
-        Col 3 : String  : List sorting column
-        Col 4 : String  : File handle
+        Col 1 : String : Plot or scene title
+        Col 2 : String : Word count
+        Col 3 : String : List sorting column
+        Col 4 : String : File handle
         """
+
+        self.COL_TITLE  = 0
+        self.COL_WORDS  = 1
+        self.COL_SORT   = 2
+        self.COL_HANDLE = 3
 
         # Connect to GUI
         self.guiBuilder = builder
@@ -149,7 +158,7 @@ class BookTree():
         # Core objects
         self.treeView   = self.getObject("treeBook")
         self.treeSelect = self.getObject("treeBookSelect")
-        self.treeStore  = Gtk.TreeStore(str,int,str,str)
+        self.treeStore  = Gtk.TreeStore(str,str,str,str)
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
@@ -167,8 +176,9 @@ class BookTree():
         treeCol0.add_attribute(cellCol0,"text",0)
         treeCol1.add_attribute(cellCol1,"text",1)
         treeCol0.set_attributes(cellCol0,markup=0)
+        treeCol1.set_attributes(cellCol1,markup=1)
 
-        cellCol1.set_alignment(0.95,0.5)
+        cellCol1.set_alignment(1.0,0.5)
 
         # Enable to Show Sorting
         if debugShowSort:
@@ -194,8 +204,8 @@ class BookTree():
 
         pltSort = makeSceneNumber(GRP_PLOT,0,0,0)
         scnSort = makeSceneNumber(GRP_SCNE,0,0,0)
-        pltIter = self.treeStore.append(None,["<b>Plots</b>",0,pltSort,""])
-        scnIter = self.treeStore.append(None,["<b>Scenes</b>",0,scnSort,""])
+        pltIter = self.treeStore.append(None,["<b>Plots</b>",None,pltSort,""])
+        scnIter = self.treeStore.append(None,["<b>Scenes</b>",None,scnSort,""])
 
         if bookPath == "" or bookPath is None: return
 
@@ -226,12 +236,25 @@ class BookTree():
                     parIter = self.treeStore.append(scnIter,[scnChapter,None,scnSec,None])
                     self.chapMap[scnSec] = parIter
 
-            tmpIter = self.treeStore.append(parIter,[tmpItem.title,tmpItem.words,scnNum,itemHandle])
-            self.chapMap[itemHandle] = tmpIter
+            tmpIter = self.treeStore.append(parIter,[tmpItem.title,str(tmpItem.words),scnNum,itemHandle])
+            self.iterMap[itemHandle] = tmpIter
 
         self.treeView.expand_all()
+        self.sumWords()
         self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
+        return
+
+    def sumWords(self):
+        for chIter in self.chapMap.items():
+            if self.treeStore.iter_has_child(chIter[1]):
+                nChildren = self.treeStore.iter_n_children(chIter[1])
+                wordSum   = 0
+                for n in range(nChildren):
+                    scnIter  = self.treeStore.iter_nth_child(chIter[1],n)
+                    wordSum += int(self.treeStore.get_value(scnIter,self.COL_WORDS))
+                wordCount = "<span foreground='blue'>"+str(wordSum)+"</span>"
+                self.treeStore.set_value(chIter[1],self.COL_WORDS,wordCount)
         return
 
     def getPath(self, itemHandle):
@@ -244,6 +267,16 @@ class BookTree():
         if itemHandle in self.allScenes.dataList: return NAME_SCNE
         return NAME_NONE
 
+    def getIter(self, itemHandle):
+        if itemHandle in self.iterMap: return self.iterMap[itemHandle]
+        return None
+
+    def setValue(self, itemHandle, colIdx, newValue):
+        iterHandle = self.getIter(itemHandle)
+        if iterHandle is not None:
+            self.treeStore.set_value(iterHandle,colIdx,str(newValue))
+        return
+
 # End Class BookTree
 
 
@@ -253,11 +286,16 @@ class UniverseTree():
 
         """
         Tree Store Structure:
-        Col 1 : String  : History or character title
-        Col 2 : Integer : Word count
-        Col 3 : String  : List sorting column
-        Col 4 : String  : File handle
+        Col 1 : String : History or character title
+        Col 2 : String : Word count
+        Col 3 : String : List sorting column
+        Col 4 : String : File handle
         """
+
+        self.COL_TITLE  = 0
+        self.COL_WORDS  = 1
+        self.COL_SORT   = 2
+        self.COL_HANDLE = 3
 
         # Connect to GUI
         self.guiBuilder = builder
@@ -267,7 +305,7 @@ class UniverseTree():
         # Core objects
         self.treeView   = self.getObject("treeUniverse")
         self.treeSelect = self.getObject("treeUniverseSelect")
-        self.treeStore  = Gtk.TreeStore(str,int,str,str)
+        self.treeStore  = Gtk.TreeStore(str,str,str,str)
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
@@ -286,7 +324,7 @@ class UniverseTree():
         treeCol1.add_attribute(cellCol1,"text",1)
         treeCol0.set_attributes(cellCol0,markup=0)
 
-        cellCol1.set_alignment(0.95,0.5)
+        cellCol1.set_alignment(1.0,0.5)
 
         # Enable to Show Sorting
         if debugShowSort:
@@ -311,8 +349,8 @@ class UniverseTree():
 
         pltSort = makeSceneNumber(GRP_HIST,0,0,0)
         scnSort = makeSceneNumber(GRP_CHAR,0,0,0)
-        pltIter = self.treeStore.append(None,["<b>History</b>",0,pltSort,""])
-        scnIter = self.treeStore.append(None,["<b>Characters</b>",0,scnSort,""])
+        pltIter = self.treeStore.append(None,["<b>History</b>",None,pltSort,""])
+        scnIter = self.treeStore.append(None,["<b>Characters</b>",None,scnSort,""])
 
         if univPath == "" or univPath is None: return
 
@@ -334,6 +372,16 @@ class UniverseTree():
         if itemHandle in self.allChars.dataList: return NAME_CHAR
         return NAME_NONE
 
+    def getIter(self, itemHandle):
+        if itemHandle in self.iterMap:  return self.aiterMap[itemHandle]
+        return None
+
+    def setValue(self, itemHandle, colIdx, newValue):
+        iterHandle = self.getIter(itemHandle)
+        if iterHandle is not None:
+            self.treeStore.set_value(iterHandle,colIdx,str(newValue))
+        return
+
 # End Class UniverseTree
 
 
@@ -351,6 +399,13 @@ class SceneTree():
         Col 5 : String  : File handle
         """
 
+        self.COL_TITLE  = 0
+        self.COL_NUMBER = 1
+        self.COL_POV    = 2
+        self.COL_WORDS  = 3
+        self.COL_SORT   = 4
+        self.COL_HANDLE = 5
+
         # Connect to GUI
         self.guiBuilder = builder
         self.mainConf   = config
@@ -359,7 +414,7 @@ class SceneTree():
         # Core objects
         self.treeView   = self.getObject("treeScenes")
         self.treeSelect = self.getObject("treeScenesSelect")
-        self.treeStore  = Gtk.TreeStore(str,str,str,int,str,str)
+        self.treeStore  = Gtk.TreeStore(str,str,str,str,str,str)
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
@@ -385,8 +440,9 @@ class SceneTree():
         treeCol2.add_attribute(cellCol2,"text",2)
         treeCol3.add_attribute(cellCol3,"text",3)
         treeCol0.set_attributes(cellCol0,markup=0)
+        treeCol3.set_attributes(cellCol3,markup=3)
 
-        cellCol3.set_alignment(0.95,0.5)
+        cellCol3.set_alignment(1.0,0.5)
 
         # Enable to Show Sorting
         if debugShowSort:
@@ -448,18 +504,41 @@ class SceneTree():
             scnTitle  = tmpItem.title
             scnNumber = str(tmpItem.number)
             scnPOV    = tmpItem.pov
-            scnWords  = tmpItem.words
+            scnWords  = str(tmpItem.words)
             tmpIter   = self.treeStore.append(parIter,[scnTitle,scnNumber,scnPOV,scnWords,scnNum,itemHandle])
             self.iterMap[itemHandle] = tmpIter
 
         self.treeView.expand_all()
+        self.sumWords()
         self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
+        return
+
+    def sumWords(self):
+        for chIter in self.chapMap.items():
+            if self.treeStore.iter_has_child(chIter[1]):
+                nChildren = self.treeStore.iter_n_children(chIter[1])
+                wordSum   = 0
+                for n in range(nChildren):
+                    scnIter  = self.treeStore.iter_nth_child(chIter[1],n)
+                    wordSum += int(self.treeStore.get_value(scnIter,self.COL_WORDS))
+                wordCount = "<span foreground='blue'>"+str(wordSum)+"</span>"
+                self.treeStore.set_value(chIter[1],self.COL_WORDS,wordCount)
         return
 
     def getPath(self, itemHandle):
         if itemHandle in self.allScenes.dataList: return self.allScenes.dataList[itemHandle]
         return None
+
+    def getIter(self, itemHandle):
+        if itemHandle in self.iterMap:  return self.iterMap[itemHandle]
+        return None
+
+    def setValue(self, itemHandle, colIdx, newValue):
+        iterHandle = self.getIter(itemHandle)
+        if iterHandle is not None:
+            self.treeStore.set_value(iterHandle,colIdx,str(newValue))
+        return
 
 # End Class SceneTree
 

@@ -9,7 +9,7 @@
 import logging as logger
 import configparser
 
-from os      import path, mkdir
+from os      import path, mkdir, getcwd
 from appdirs import user_config_dir
 
 class Config:
@@ -25,6 +25,8 @@ class Config:
         self.confPath    = user_config_dir(self.appHandle)
         self.confFile    = self.appHandle+".conf"
         self.homePath    = path.expanduser("~")
+        self.appPath     = getcwd()
+        self.guiPath     = path.join(self.appPath,self.appHandle,"gui")
 
         # If config folder does not exist, make it.
         # This assumes that the os config folder itself exists.
@@ -41,7 +43,7 @@ class Config:
         self.winPane     = 200
 
         ## Editor
-        self.autoSave    = 10
+        self.autoSave    = 30
         self.fontSize    = 16
         self.lineHeight  = 150
         self.lineIndent  = 400

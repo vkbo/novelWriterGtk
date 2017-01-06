@@ -9,6 +9,7 @@
 import logging as logger
 import configparser
 
+from io                 import open
 from os                 import path, listdir
 from hashlib            import sha256
 from pyecrire.constants import *
@@ -140,11 +141,11 @@ class DataWrapper():
 
         if self.currFile == "": self.currFile = makeTimeStamp(1)+".htm"
 
-        fileObj = open(path.join(self.dataPath,self.currFile),"w")
+        fileObj = open(path.join(self.dataPath,self.currFile),encoding="utf-8",mode="w")
         fileObj.write(self.text)
         fileObj.close()
 
-        self.fileHash = sha256(self.text).hexdigest()
+        self.fileHash = sha256(self.text.encode("ascii","replace")).hexdigest()
         self.makeList()
         self.saveDetails()
 
@@ -154,7 +155,7 @@ class DataWrapper():
 
         logger.debug("Auto-saving text file")
 
-        fileHash = sha256(self.text).hexdigest()
+        fileHash = sha256(self.text.encode("ascii","replace")).hexdigest()
 
         if not self.hasText:                return False
         if self.dataGroup is not TYPE_FILE: return False
@@ -200,11 +201,11 @@ class DataWrapper():
         if self.loadFile == "":
             self.text = "<p>New File</p>"
         else:
-            fileObj   = open(path.join(self.dataPath,self.loadFile),"r")
+            fileObj   = open(path.join(self.dataPath,self.loadFile),encoding="utf-8",mode="r")
             self.text = fileObj.read()
             fileObj.close()
 
-        self.fileHash = sha256(self.text).hexdigest()
+        self.fileHash = sha256(self.text.encode("ascii","replace")).hexdigest()
         self.hasText  = True
 
         return

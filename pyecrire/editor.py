@@ -12,9 +12,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 
-from gi.repository      import Gtk, Gdk, WebKit
-from os                 import getcwd
-from math               import floor
+from gi.repository import Gtk, Gdk, WebKit
+from os            import getcwd
+from math          import floor
 
 class Editor(WebKit.WebView):
 
@@ -27,11 +27,28 @@ class Editor(WebKit.WebView):
         self.mainConf   = config
         self.getObject  = self.guiBuilder.get_object
 
+        self.fileSaved  = self.getObject("imgFileSaved")
+        self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-grey.png")
+
+        # Create Editor
         self.set_editable(False)
         self.connect("key_press_event",self.onEventKeyPress)
+        self.connect("user-changed-contents",self.onContentChanged)
         self.load_html_string("", "file:///")
 
+        # Properties
+        self.textSaved  = True
+
         return
+
+    def clearEditor(self):
+
+        if not self.textSaved: return False
+
+        self.load_html_string("", "file:///")
+        self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-grey.png")
+
+        return True
 
     ##
     #  Events
@@ -61,8 +78,15 @@ class Editor(WebKit.WebView):
         return
 
     def onEventKeyPress(self, guiObject, guiEvent):
-        keyname = Gdk.keyval_name(guiEvent.keyval)
+        #keyname = Gdk.keyval_name(guiEvent.keyval)
         #logger.debug("Editor key press: %s", keyname)
+        return
+
+    def onContentChanged(self, guiObject):
+        logger.debug("Editor content changed")
+        if self.textSaved:
+            self.textSaved = False
+            self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-red.png")
         return
 
     ##
@@ -73,7 +97,7 @@ class Editor(WebKit.WebView):
         self.execute_script("document.title=document.documentElement.innerHTML;")
         #srcHtml = self.get_main_frame().get_data_source().get_data()
         #return srcHtml.str
-        return self.get_main_frame().get_title()
+        return unicode(self.get_main_frame().get_title(),"utf-8")
 
     def getText(self):
 
@@ -91,6 +115,8 @@ class Editor(WebKit.WebView):
     ##
 
     def setText(self, srcText):
+
+        if not self.textSaved: return False
 
         fontSize   = str(self.mainConf.fontSize)
         lineHeight = str(self.mainConf.lineHeight/100.0)
@@ -110,11 +136,18 @@ class Editor(WebKit.WebView):
 
         self.load_html_string(srcHtml,"file:///")
 
-        return
+        return True
 
     def setEditable(self, editable):
         self.getObject("btnEditFile").set_active(editable)
         self.set_editable(editable)
+        return
+
+    def setAsSaved(self):
+
+        self.textSaved = True
+        self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-green.png")
+
         return
 
 # End Class Editor

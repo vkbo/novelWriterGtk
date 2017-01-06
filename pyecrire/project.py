@@ -302,7 +302,10 @@ class Project():
 
     def newFile(self, fileType):
 
-        # The File
+        # Trigger autosave in case there's unsaved data
+        self.theFile.autoSaveText()
+
+        # Reset all file values
         self.theFile     = DataWrapper(fileType)
         self.fileType    = fileType
         self.fileCode    = fileType[0:1]
@@ -336,6 +339,10 @@ class Project():
 
         logger.debug("Loading file")
 
+        # Trigger autosave in case there's unsaved data
+        self.theFile.autoSaveText()
+
+        # Load data from file
         self.theFile.setDataPath(filePath)
         self.theFile.loadDetails()
 
