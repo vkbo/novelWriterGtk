@@ -9,7 +9,6 @@
 import logging as logger
 import configparser
 
-from io                 import open
 from os                 import path, listdir
 from hashlib            import sha256
 from pyecrire.constants import *
@@ -145,7 +144,7 @@ class DataWrapper():
         fileObj.write(self.text)
         fileObj.close()
 
-        self.fileHash = sha256(self.text.encode("ascii","replace")).hexdigest()
+        self.fileHash = sha256(str(self.text).encode()).hexdigest()
         self.makeList()
         self.saveDetails()
 
@@ -155,7 +154,7 @@ class DataWrapper():
 
         logger.debug("Auto-saving text file")
 
-        fileHash = sha256(self.text.encode("ascii","replace")).hexdigest()
+        fileHash = sha256(str(self.text).encode()).hexdigest()
 
         if not self.hasText:                return False
         if self.dataGroup is not TYPE_FILE: return False
@@ -205,7 +204,7 @@ class DataWrapper():
             self.text = fileObj.read()
             fileObj.close()
 
-        self.fileHash = sha256(self.text.encode("ascii","replace")).hexdigest()
+        self.fileHash = sha256(str(self.text).encode()).hexdigest()
         self.hasText  = True
 
         return

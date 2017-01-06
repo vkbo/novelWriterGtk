@@ -11,7 +11,7 @@ import logging as logger
 from hashlib     import sha256
 from datetime    import datetime
 from re          import sub, compile
-from unicodedata import normalize
+from unidecode   import unidecode
 from bleach      import clean
 
 #
@@ -20,7 +20,7 @@ from bleach      import clean
 
 def simplifyString(inStr):
 
-    outStr = normalize("NFKD",inStr.decode("utf-8")).encode("ASCII","ignore").lower()
+    outStr = str(unidecode(inStr)).lower()
     outStr = sub("[^a-z0-9\.]","",outStr)
 
     return outStr
@@ -34,7 +34,7 @@ def makeHandle(inStr):
 
     tmpStr     = simplifyString(inStr)
     timeStamp  = makeTimeStamp(1)
-    hashObject = sha256(tmpStr+timeStamp)
+    hashObject = sha256((tmpStr+timeStamp).encode())
     hexHandle  = hashObject.hexdigest()[:10]
 
     return hexHandle
