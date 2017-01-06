@@ -83,6 +83,18 @@ def reformatDate(dateString):
 
 
 #
+# Format Time from Seconds
+#
+
+def formatTime(timeValue):
+
+    minute, second = divmod(timeValue, 60)
+    hour,   minute = divmod(minute, 60)
+
+    return "%02d:%02d:%02d" % (hour, minute, second)
+
+
+#
 # Create Scene Number
 #
 
