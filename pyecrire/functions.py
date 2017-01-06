@@ -108,17 +108,32 @@ def makeSceneNumber(group,section,chapter,number):
 
 def htmlCleanUp(srcText):
 
-    okTags   = ["p","b","i","u"]
+    okTags   = ["p","b","i","u","strike"]
     okAttr   = {"*" : ["style"]}
     okStyles = ["color","text-align"]
 
-    srcText  = clean(srcText,tags=okTags,attributes=okAttr,styles=okStyles)
+    srcText  = clean(srcText,tags=okTags,attributes=okAttr,styles=okStyles,strip=True)
 
     srcText  = srcText.replace("</p>","</p>\n")
     srcText  = srcText.replace('style=""',"")
     srcText  = srcText.replace("style=''","")
     srcText  = srcText.replace(" >",">")
     srcText  = srcText.replace("\n ","\n")
+
+    return srcText
+
+
+#
+# Strip All HTML Code
+#
+
+def htmlStrip(srcText):
+
+    okTags   = ["p"]
+    okAttr   = {}
+    okStyles = []
+
+    srcText  = clean(srcText,tags=okTags,attributes=okAttr,styles=okStyles,strip=True)
 
     return srcText
 

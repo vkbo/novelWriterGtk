@@ -12,9 +12,10 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 
-from gi.repository import Gtk, Gdk, WebKit
-from os            import getcwd
-from math          import floor
+from gi.repository      import Gtk, Gdk, WebKit
+from os                 import getcwd
+from math               import floor
+from pyecrire.functions import htmlStrip
 
 class Editor(WebKit.WebView):
 
@@ -64,6 +65,26 @@ class Editor(WebKit.WebView):
         self.execute_script("document.execCommand('%s', false, false);" % guiObject.get_name())
         return
 
+    def onEditCopy(self, guiObject):
+        self.copy_clipboard()
+        return
+
+    def onEditCut(self, guiObject):
+        self.cut_clipboard()
+        return
+
+    def onEditPaste(self, guiObject):
+        self.paste_clipboard()
+        return
+
+    def onEditStripFormatting(self, guiObject):
+        srcText = self.getText()
+        srcText = htmlStrip(srcText)
+        self.setText(srcText)
+        return
+
+    # Button Removed
+    """"
     def onEditColour(self, guiObject):
         guiDialog = Gtk.ColorSelectionDialog("Select Colour")
         guiDialog.set_transient_for(self.guiParent)
@@ -76,6 +97,7 @@ class Editor(WebKit.WebView):
             self.execute_script("document.execCommand('forecolor', null, '%s');" % strCol)
         guiDialog.destroy()
         return
+    """
 
     def onEventKeyPress(self, guiObject, guiEvent):
         #keyname = Gdk.keyval_name(guiEvent.keyval)

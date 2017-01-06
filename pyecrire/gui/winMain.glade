@@ -1424,12 +1424,14 @@
                             </child>
                             <child>
                               <object class="GtkToolButton" id="btnEditCopy">
+                                <property name="name">copy</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Copy</property>
                                 <property name="label" translatable="yes">Copy</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-copy</property>
+                                <signal name="clicked" handler="onClickEditCopy" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1438,12 +1440,14 @@
                             </child>
                             <child>
                               <object class="GtkToolButton" id="btnEditCut">
+                                <property name="name">cut</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Cut</property>
                                 <property name="label" translatable="yes">Cut</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-cut</property>
+                                <signal name="clicked" handler="onClickEditCut" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1452,12 +1456,14 @@
                             </child>
                             <child>
                               <object class="GtkToolButton" id="btnEditPaste">
+                                <property name="name">paste</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Paste</property>
                                 <property name="label" translatable="yes">Paste</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-paste</property>
+                                <signal name="clicked" handler="onClickEditPaste" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1476,12 +1482,14 @@
                             </child>
                             <child>
                               <object class="GtkToolButton" id="btnEditUndo">
+                                <property name="name">undo</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Undo</property>
                                 <property name="label" translatable="yes">Undo</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-undo</property>
+                                <signal name="clicked" handler="onClickEditUndo" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1490,12 +1498,14 @@
                             </child>
                             <child>
                               <object class="GtkToolButton" id="btnEditRedo">
+                                <property name="name">redo</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Redo</property>
                                 <property name="label" translatable="yes">Redo</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-redo</property>
+                                <signal name="clicked" handler="onClickEditRedo" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1587,15 +1597,63 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkToolButton" id="btnEditColour">
-                                <property name="name">colour</property>
+                              <object class="GtkToolButton" id="btnEditLeft">
+                                <property name="name">justifyleft</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Text Colour</property>
-                                <property name="label" translatable="yes">Colour</property>
+                                <property name="tooltip_text" translatable="yes">Left Align</property>
+                                <property name="label" translatable="yes">Left</property>
                                 <property name="use_underline">True</property>
-                                <property name="stock_id">gtk-select-color</property>
-                                <signal name="clicked" handler="onClickEditColour" swapped="no"/>
+                                <property name="stock_id">gtk-justify-left</property>
+                                <signal name="clicked" handler="onClickEditLeft" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkToolButton" id="btnEditCentre">
+                                <property name="name">justifycenter</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Centre Align</property>
+                                <property name="label" translatable="yes">Centre</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-justify-center</property>
+                                <signal name="clicked" handler="onClickEditCentre" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkToolButton" id="btnEditRight">
+                                <property name="name">justifyright</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Right Align</property>
+                                <property name="label" translatable="yes">Right</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-justify-right</property>
+                                <signal name="clicked" handler="onClickEditRight" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkToolButton" id="btnEditJustify">
+                                <property name="name">justifyfull</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Justify</property>
+                                <property name="label" translatable="yes">Justify</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-justify-fill</property>
+                                <signal name="clicked" handler="onClickEditJustify" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1613,59 +1671,14 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkToolButton" id="btnEditLeft">
+                              <object class="GtkToolButton" id="btnStripFormatting">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Left Align</property>
-                                <property name="action_name">onEditAdjustLeft</property>
-                                <property name="label" translatable="yes">Left</property>
+                                <property name="tooltip_text" translatable="yes">Strip Formatting</property>
+                                <property name="label" translatable="yes">Strip</property>
                                 <property name="use_underline">True</property>
-                                <property name="stock_id">gtk-justify-left</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="homogeneous">True</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkToolButton" id="btnEditCentre">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Centre Align</property>
-                                <property name="action_name">onEditAdjustCentre</property>
-                                <property name="label" translatable="yes">Centre</property>
-                                <property name="use_underline">True</property>
-                                <property name="stock_id">gtk-justify-center</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="homogeneous">True</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkToolButton" id="btnEditRight">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Right Align</property>
-                                <property name="action_name">onEditAdjustRight</property>
-                                <property name="label" translatable="yes">Right</property>
-                                <property name="use_underline">True</property>
-                                <property name="stock_id">gtk-justify-right</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="homogeneous">True</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkToolButton" id="btnEditJustify">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Justify</property>
-                                <property name="action_name">onEditJustify</property>
-                                <property name="label" translatable="yes">Justify</property>
-                                <property name="use_underline">True</property>
-                                <property name="stock_id">gtk-justify-fill</property>
+                                <property name="stock_id">gtk-revert-to-saved</property>
+                                <signal name="clicked" handler="onClickEditStrip" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -2248,7 +2261,7 @@
               <object class="GtkImage" id="imgFileSaved">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="stock">gtk-close</property>
+                <property name="stock">gtk-dialog-warning</property>
               </object>
               <packing>
                 <property name="expand">False</property>
