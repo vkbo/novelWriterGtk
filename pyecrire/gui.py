@@ -169,8 +169,9 @@ class GUI():
             statusBar.push(statusCID,makeTimeStamp(4)+"Config auto-saved")
 
         if self.webEditor.autoSave():
-            statusBar.push(statusCID,makeTimeStamp(4)+"File auto-saved")
+            self.updateWordCount()
             self.fileTree.loadContent(self.webEditor.theFile.fileList)
+            statusBar.push(statusCID,makeTimeStamp(4)+"File auto-saved")
 
         return True
 
@@ -242,24 +243,9 @@ class GUI():
 
     def saveEditor(self):
 
-        # Save File
         self.webEditor.saveFile()
         self.fileTree.loadContent(self.webEditor.theFile.fileList)
-
-        # Update Word Counts
-        wordCount  = self.webEditor.theFile.words
-        fileHandle = self.webEditor.fileHandle
-
-        self.scneTree.setValue(fileHandle,self.scneTree.COL_WORDS,wordCount)
-        self.scneTree.sumWords()
-
-        if self.webEditor.theFile.parType == NAME_BOOK:
-            self.bookTree.setValue(fileHandle,self.bookTree.COL_WORDS,wordCount)
-            self.bookTree.sumWords()
-
-        if self.webEditor.theFile.parType == NAME_UNIV:
-            self.univTree.setValue(fileHandle,self.univTree.COL_WORDS,wordCount)
-            self.univTree.sumWords()
+        self.updateWordCount()
 
         return
 
@@ -279,15 +265,37 @@ class GUI():
 
     def updateStatusFile(self):
 
-        if self.projData.fileTitle == "":
-            currFile = self.projData.bookTitle
+        fileTitle = self.webEditor.theFile.title
+        bookTitle = self.projData.bookTitle
+        univTitle = self.projData.univTitle
+
+        if fileTitle == "":
+            currFile = bookTitle
         else:
-            if self.projData.fileParent == NAME_BOOK:
-                currFile = self.projData.bookTitle+" > "+self.webEditor.theFile.title
+            if self.projData.theFile.parType == NAME_BOOK:
+                currFile = bookTitle+" > "+fileTitle
             else:
-                currFile = self.projData.univTitle+" > "+self.webEditor.theFile.title
+                currFile = univTitle+" > "+fileTitle
 
         self.getObject("lblCurrFile").set_label("File: "+currFile)
+
+        return
+
+    def updateWordCount(self):
+
+        wordCount  = self.webEditor.theFile.words
+        fileHandle = self.webEditor.fileHandle
+
+        self.scneTree.setValue(fileHandle,self.scneTree.COL_WORDS,wordCount)
+        self.scneTree.sumWords()
+
+        if self.webEditor.theFile.parType == NAME_BOOK:
+            self.bookTree.setValue(fileHandle,self.bookTree.COL_WORDS,wordCount)
+            self.bookTree.sumWords()
+
+        if self.webEditor.theFile.parType == NAME_UNIV:
+            self.univTree.setValue(fileHandle,self.univTree.COL_WORDS,wordCount)
+            self.univTree.sumWords()
 
         return
 
@@ -420,8 +428,8 @@ class GUI():
 
     def onFileReload(self, guiObject=None):
 
-        self.saveEditor()
-        self.loadEditor(self.projData.fileParent,self.projData.fileHandle)
+        #self.saveEditor()
+        self.loadEditor(self.webEditor.theFile.parType,self.webEditor.fileHandle)
 
         return
 
@@ -515,15 +523,11 @@ class GUI():
         logger.debug("Main tab change")
 
         if tabIdx == TABM_SRCE:
-
             logger.debug("Source View")
-
-            self.projData.theFile.setText(self.webEditor.getText())
-
             textSource = self.getObject("textSource")
             textBuffer = textSource.get_buffer()
-
-            textBuffer.set_text(self.projData.theFile.text)
+            srcText    = self.webEditor.getText()
+            textBuffer.set_text(srcText)
 
         return
 
