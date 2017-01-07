@@ -22,6 +22,7 @@ from math                 import floor
 from pyecrire             import *
 from pyecrire.functions   import htmlStrip
 from pyecrire.datawrapper import DataWrapper
+from pyecrire.dialogs     import OkCancelDialog
 
 class Editor(WebKit.WebView):
 
@@ -149,9 +150,12 @@ class Editor(WebKit.WebView):
         return
 
     def onEditStripFormatting(self, guiObject):
-        srcText = self.getText()
-        srcText = htmlStrip(srcText)
-        self.setText(srcText)
+        guiDialog = OkCancelDialog("Clear all document formatting?")
+        if guiDialog.run() == Gtk.ResponseType.OK:
+            srcText = self.getText()
+            srcText = htmlStrip(srcText)
+            self.setText(srcText)
+        guiDialog.destroy()
         return
 
     # Button Removed
@@ -176,7 +180,6 @@ class Editor(WebKit.WebView):
         return
 
     def onContentChanged(self, guiObject):
-        logger.debug("Editor content changed")
         if self.textSaved:
             self.textSaved = False
             self.fileSaved.set_from_file(self.ledRed)

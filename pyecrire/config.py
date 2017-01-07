@@ -61,8 +61,9 @@ class Config:
         # Validate config
         self.validateConfig()
 
-        # Always save config after load in case of new values
-        self.saveConfig()
+        # Save a copy of the default config if no file exists
+        if not path.isfile(path.join(self.confPath,self.confFile)):
+            self.saveConfig()
 
         return
 

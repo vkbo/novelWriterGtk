@@ -117,7 +117,6 @@ def htmlCleanUp(srcText):
 
     if srcText[0:3] != "<p>": srcText = "<p>"+srcText+"</p>"
 
-    srcText  = srcText.replace("> <","><")
     srcText  = srcText.replace("<p></p>","")
     srcText  = srcText.replace("</p>","</p>\n")
     srcText  = srcText.replace('style=""',"")

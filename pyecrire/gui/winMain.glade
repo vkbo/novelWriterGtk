@@ -5,6 +5,7 @@
   <object class="GtkApplicationWindow" id="winMain">
     <property name="can_focus">False</property>
     <property name="hide_titlebar_when_maximized">True</property>
+    <property name="icon">pyEcrire.png</property>
     <property name="has_resize_grip">True</property>
     <signal name="configure-event" handler="onEventWinChange" swapped="no"/>
     <signal name="destroy" handler="onDestroyWindow" swapped="no"/>
@@ -246,7 +247,6 @@
                 <property name="can_focus">False</property>
                 <property name="margin_left">15</property>
                 <property name="margin_right">15</property>
-                <property name="label" translatable="yes">New Book</property>
                 <property name="ellipsize">end</property>
                 <attributes>
                   <attribute name="weight" value="medium"/>
@@ -390,7 +390,7 @@
                                 <child>
                                   <object class="GtkTreeViewColumn" id="treeProjectTitle">
                                     <property name="resizable">True</property>
-                                    <property name="title" translatable="yes">Title</property>
+                                    <property name="title" translatable="yes">Project</property>
                                     <property name="expand">True</property>
                                   </object>
                                 </child>
@@ -520,7 +520,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkTreeViewColumn" id="treeBookName">
-                                    <property name="title" translatable="yes">Name</property>
+                                    <property name="title" translatable="yes">Title</property>
                                     <property name="expand">True</property>
                                   </object>
                                 </child>
@@ -665,7 +665,7 @@
                                 <child>
                                   <object class="GtkTreeViewColumn" id="treeUniverseName">
                                     <property name="resizable">True</property>
-                                    <property name="title" translatable="yes">Name</property>
+                                    <property name="title" translatable="yes">Title</property>
                                     <property name="expand">True</property>
                                   </object>
                                 </child>
@@ -1685,6 +1685,19 @@
                                 <property name="homogeneous">True</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkToggleToolButton" id="btnSpellCheck">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">SpellCheck</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-spell-check</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1823,6 +1836,22 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkLabel" id="lblTimeTotal">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="margin_bottom">5</property>
+                                <property name="label" translatable="yes">00:00:00</property>
+                                <attributes>
+                                  <attribute name="weight" value="medium"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkProgressBar" id="progressTimer">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -1830,7 +1859,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                             <child>
@@ -1883,7 +1912,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">2</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                           </object>
@@ -1894,7 +1923,7 @@
                       <object class="GtkLabel" id="lblTimer">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Session Timer</property>
+                        <property name="label" translatable="yes">Writing Timer</property>
                       </object>
                     </child>
                   </object>
@@ -1902,102 +1931,6 @@
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkFrame" id="frameDocTimer">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_bottom">5</property>
-                    <property name="label_xalign">0</property>
-                    <child>
-                      <object class="GtkAlignment" id="alignDocTimer">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="top_padding">3</property>
-                        <property name="bottom_padding">3</property>
-                        <property name="left_padding">3</property>
-                        <property name="right_padding">3</property>
-                        <child>
-                          <object class="GtkGrid" id="gridDocTimer">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="row_spacing">3</property>
-                            <property name="column_spacing">3</property>
-                            <property name="row_homogeneous">True</property>
-                            <property name="column_homogeneous">True</property>
-                            <child>
-                              <object class="GtkLabel" id="lblDTTotal">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Total</property>
-                                <property name="ellipsize">middle</property>
-                                <property name="xalign">0</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="lblDTSession">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Session</property>
-                                <property name="xalign">0</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="lblDTTotalTime">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">00:00:00</property>
-                                <property name="ellipsize">start</property>
-                                <property name="xalign">0</property>
-                                <attributes>
-                                  <attribute name="weight" value="medium"/>
-                                </attributes>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="lblDTSessionTime">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">00:00:00</property>
-                                <property name="xalign">0</property>
-                                <attributes>
-                                  <attribute name="weight" value="medium"/>
-                                </attributes>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="lblDocTimer">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Document Timer</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -2147,7 +2080,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -2192,7 +2125,7 @@
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -2211,7 +2144,7 @@
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeVersionDate">
-                            <property name="title" translatable="yes">File Version</property>
+                            <property name="title" translatable="yes">File Versions</property>
                           </object>
                         </child>
                         <child>
@@ -2226,7 +2159,7 @@
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
               </object>
