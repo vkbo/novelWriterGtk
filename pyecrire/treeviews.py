@@ -9,10 +9,10 @@
 import logging as logger
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version("Gtk","3.0")
 
 from gi.repository        import Gtk
-from pyecrire.constants   import *
+from pyecrire             import *
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber, reformatDate
@@ -22,7 +22,7 @@ debugShowSort = False
 
 class ProjectTree():
 
-    def __init__(self, builder, config):
+    def __init__(self):
 
         """
         Tree Store Structure:
@@ -33,9 +33,8 @@ class ProjectTree():
         """
 
         # Connect to GUI
-        self.guiBuilder = builder
-        self.mainConf   = config
-        self.getObject  = self.guiBuilder.get_object
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
 
         # Core objects
         self.treeView   = self.getObject("treeProject")
@@ -135,7 +134,7 @@ class ProjectTree():
 
 class BookTree():
 
-    def __init__(self, builder, config):
+    def __init__(self):
 
         """
         Tree Store Structure:
@@ -151,9 +150,8 @@ class BookTree():
         self.COL_HANDLE = 3
 
         # Connect to GUI
-        self.guiBuilder = builder
-        self.mainConf   = config
-        self.getObject  = self.guiBuilder.get_object
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
 
         # Core objects
         self.treeView   = self.getObject("treeBook")
@@ -282,7 +280,7 @@ class BookTree():
 
 class UniverseTree():
 
-    def __init__(self, builder, config):
+    def __init__(self):
 
         """
         Tree Store Structure:
@@ -298,9 +296,8 @@ class UniverseTree():
         self.COL_HANDLE = 3
 
         # Connect to GUI
-        self.guiBuilder = builder
-        self.mainConf   = config
-        self.getObject  = self.guiBuilder.get_object
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
 
         # Core objects
         self.treeView   = self.getObject("treeUniverse")
@@ -387,7 +384,7 @@ class UniverseTree():
 
 class SceneTree():
 
-    def __init__(self, builder, config):
+    def __init__(self):
 
         """
         Tree Store Structure:
@@ -407,9 +404,8 @@ class SceneTree():
         self.COL_HANDLE = 5
 
         # Connect to GUI
-        self.guiBuilder = builder
-        self.mainConf   = config
-        self.getObject  = self.guiBuilder.get_object
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
 
         # Core objects
         self.treeView   = self.getObject("treeScenes")
@@ -545,7 +541,7 @@ class SceneTree():
 
 class FileVersionTree():
 
-    def __init__(self, builder, config):
+    def __init__(self):
 
         """
         Tree Store Structure:
@@ -554,9 +550,8 @@ class FileVersionTree():
         """
 
         # Connect to GUI
-        self.guiBuilder = builder
-        self.mainConf   = config
-        self.getObject  = self.guiBuilder.get_object
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
 
         # Core objects
         self.treeView   = self.getObject("treeVersion")

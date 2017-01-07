@@ -9,26 +9,25 @@
 import logging as logger
 
 import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('WebKit', '3.0')
+gi.require_version("Gtk","3.0")
+gi.require_version("WebKit","3.0")
 
 from gi.repository        import Gtk, Gdk, WebKit
 from os                   import getcwd
 from math                 import floor
-from pyecrire.constants   import *
+from pyecrire             import *
 from pyecrire.functions   import htmlStrip
 from pyecrire.datawrapper import DataWrapper
 
 class Editor(WebKit.WebView):
 
-    def __init__(self, builder, config):
+    def __init__(self):
 
         WebKit.WebView.__init__(self)
 
         # Connect to GUI
-        self.guiBuilder = builder
-        self.mainConf   = config
-        self.getObject  = self.guiBuilder.get_object
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
         self.fileSaved  = self.getObject("imgFileSaved")
 
         # Paths
@@ -70,7 +69,9 @@ class Editor(WebKit.WebView):
         if not self.textSaved:
             self.theFile.autoSaveText()
 
+        self.theFile    = DataWrapper(NAME_NONE)
         self.fileHandle = fileHandle
+        self.textSaved  = True
 
         self.theFile.setDataPath(filePath)
         self.theFile.setDataType(fileType)
@@ -81,23 +82,15 @@ class Editor(WebKit.WebView):
             self.startWords = self.theFile.words
             self.startChars = self.theFile.chars
 
-        fontSize   = str(self.mainConf.fontSize)
-        lineHeight = str(self.mainConf.lineHeight/100.0)
-        lineIndent = str(self.mainConf.lineIndent/100.0)
-        parMargin  = str(self.mainConf.parMargin)
+        self.setText(self.theFile.text)
 
-        srcHtml  = "<html>"
-        srcHtml += "<head>"
-        srcHtml += "  <style>"
-        srcHtml += "    body {font-size: "+fontSize+"px; padding: 40px;}"
-        srcHtml += "    p    {margin: "+parMargin+"px; text-align: justify; line-height: "+lineHeight+"em;}"
-        srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
-        srcHtml += "  </style>"
-        srcHtml += "</head>"
-        srcHtml += "<body>"+self.theFile.text+"</body>"
-        srcHtml += "</html>"
+        return
 
-        self.load_html_string(srcHtml,"file:///")
+    def loadFileVersion(self, filePath):
+
+        self.theFile.setLoadFile(filePath)
+        self.theFile.loadText()
+        self.setText(self.theFile.text)
 
         return
 

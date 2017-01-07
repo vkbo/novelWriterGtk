@@ -8,11 +8,11 @@
 
 import logging as logger
 
-from hashlib     import sha256
-from datetime    import datetime
-from re          import sub, compile
-from unidecode   import unidecode
-from bleach      import clean
+from hashlib   import sha256
+from datetime  import datetime
+from re        import sub, compile
+from unidecode import unidecode
+from bleach    import clean
 
 #
 # Strips string of all non-English characters
@@ -80,6 +80,14 @@ def reformatDate(dateString):
     second = dateString[13:15]
 
     return "%s/%s/%s %s:%s:%s" % (day,month,year,hour,minute,second)
+
+
+#
+# Date String to Number
+#
+
+def dateFromString(dateString):
+    return datetime.strptime(dateString,"%Y%m%d-%H%M%S")
 
 
 #

@@ -9,15 +9,15 @@
 import logging as logger
 
 from os                   import path, mkdir, rename
-from pyecrire.constants   import *
+from pyecrire             import *
 from pyecrire.functions   import simplifyString, makeHandle
 from pyecrire.datawrapper import DataWrapper
 
 class Project():
 
-    def __init__(self, config):
+    def __init__(self):
 
-        self.mainConf = config
+        self.mainConf    = CONFIG
 
         # The Book
         self.theBook     = DataWrapper(NAME_BOOK)
@@ -119,9 +119,6 @@ class Project():
         else:
             logger.error("File parent type must be Book or Universe.")
             return
-
-        print(fileFolder)
-        print(self.fileFolder)
 
         if fileFolder != self.fileFolder:
             oldPath = path.join(parentFolder,self.fileFolder)

@@ -7,47 +7,46 @@
 ##
 
 import logging as logger
+#import pyecrire
 
 import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('WebKit', '3.0')
+gi.require_version("Gtk","3.0")
+gi.require_version("WebKit","3.0")
 
-from gi.repository        import Gtk, GLib, WebKit
-from time                 import sleep
-from pyecrire.constants   import *
-from pyecrire.editor      import Editor
-from pyecrire.timer       import Timer
-from pyecrire.project     import Project
-from pyecrire.treeviews   import *
-from pyecrire.datalist    import DataList
-from pyecrire.datawrapper import DataWrapper
-from pyecrire.functions   import makeTimeStamp
+from gi.repository      import Gtk, GLib, WebKit
+from time               import sleep
+from pyecrire           import *
+from pyecrire.project   import Project
+from pyecrire.editor    import Editor
+from pyecrire.timer     import Timer
+from pyecrire.treeviews import ProjectTree, BookTree, UniverseTree, SceneTree, FileVersionTree
+from pyecrire.functions import makeTimeStamp, makeSceneNumber
 
 class GUI():
 
-    def __init__(self, config):
+    def __init__(self):
 
         self.guiLoaded  = False
 
         # Define Core Objects
-        self.mainConf   = config
-        self.projData   = Project(self.mainConf)
+        self.mainConf   = CONFIG
+        self.projData   = Project()
 
         # Initialise GUI
-        self.guiBuilder = Gtk.Builder()
+        self.guiBuilder = BUILDER
         self.guiBuilder.add_from_file("pyecrire/gui/winMain.glade")
 
         self.getObject  = self.guiBuilder.get_object
         self.winMain    = self.getObject("winMain")
 
         # Prepare GUI Classes
-        self.webEditor  = Editor(self.guiBuilder,self.mainConf)
-        self.guiTimer   = Timer(self.guiBuilder,self.mainConf)
-        self.projTree   = ProjectTree(self.guiBuilder,self.mainConf)
-        self.bookTree   = BookTree(self.guiBuilder,self.mainConf)
-        self.univTree   = UniverseTree(self.guiBuilder,self.mainConf)
-        self.scneTree   = SceneTree(self.guiBuilder,self.mainConf)
-        self.fileTree   = FileVersionTree(self.guiBuilder,self.mainConf)
+        self.webEditor  = Editor()
+        self.guiTimer   = Timer()
+        self.projTree   = ProjectTree()
+        self.bookTree   = BookTree()
+        self.univTree   = UniverseTree()
+        self.scneTree   = SceneTree()
+        self.fileTree   = FileVersionTree()
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -404,6 +403,8 @@ class GUI():
         logger.debug("Select File Version")
         if not self.guiLoaded: return
 
+        itemHandle = ""
+
         (listModel, pathList) = guiObject.get_selected_rows()
         for pathItem in pathList:
             listIter   = listModel.get_iter(pathItem)
@@ -412,10 +413,9 @@ class GUI():
         if itemHandle == "" or itemHandle is None: return
 
         itemPath = self.webEditor.theFile.getFilePath(itemHandle)
-        itemType = self.webEditor.theFile.dataType
 
         self.webEditor.autoSave()
-        self.webEditor.loadFile(itemType,itemPath,itemHandle)
+        self.webEditor.loadFileVersion(itemPath)
         self.webEditor.setEditable(False)
 
         return

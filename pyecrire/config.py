@@ -9,8 +9,9 @@
 import logging as logger
 import configparser
 
-from os      import path, mkdir, getcwd
-from appdirs import user_config_dir
+from os       import path, mkdir, getcwd
+from appdirs  import user_config_dir
+from pyecrire import *
 
 class Config:
 
@@ -43,11 +44,12 @@ class Config:
         self.winPane     = 200
 
         ## Editor
-        self.autoSave    = 30
-        self.fontSize    = 16
-        self.lineHeight  = 150
-        self.lineIndent  = 400
-        self.parMargin   = 4
+        self.autoSave    = 30   # Seconds
+        self.versionAge  = 60   # Minutes
+        self.fontSize    = 16   # Pixels
+        self.lineHeight  = 150  # Percent
+        self.lineIndent  = 400  # Percent
+        self.parMargin   = 4    # Pixels
 
         ## Timer
         self.autoPause   = 60
@@ -88,6 +90,7 @@ class Config:
         cnfSec = "Editor"
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"autoSave"):   self.autoSave   = confParser.getint("Editor","autoSave")
+            if confParser.has_option(cnfSec,"versionAge"): self.versionAge = confParser.getint("Editor","versionAge")
             if confParser.has_option(cnfSec,"fontSize"):   self.fontSize   = confParser.getint("Editor","fontSize")
             if confParser.has_option(cnfSec,"lineHeight"): self.lineHeight = confParser.getint("Editor","lineHeight")
             if confParser.has_option(cnfSec,"lineIndent"): self.lineIndent = confParser.getint("Editor","lineIndent")
@@ -117,6 +120,7 @@ class Config:
         ## Editor
         confParser.add_section("Editor")
         confParser.set("Editor","autoSave",   str(self.autoSave))
+        confParser.set("Editor","versionAge", str(self.versionAge))
         confParser.set("Editor","fontSize",   str(self.fontSize))
         confParser.set("Editor","lineHeight", str(self.lineHeight))
         confParser.set("Editor","lineIndent", str(self.lineIndent))

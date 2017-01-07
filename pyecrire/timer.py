@@ -9,20 +9,20 @@
 import logging as logger
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version("Gtk","3.0")
 
 from gi.repository      import Gtk
 from time               import time, strftime
+from pyecrire           import *
 from pyecrire.functions import makeTimeStamp, formatTime
 
 class Timer():
 
-    def __init__(self, builder, config):
+    def __init__(self):
 
         # Connect to GUI
-        self.guiBuilder = builder
-        self.mainConf   = config
-        self.getObject  = self.guiBuilder.get_object
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
 
         self.timeLabel  = self.getObject("lblTimeCount")
         self.docSLabel  = self.getObject("lblDTSessionTime")

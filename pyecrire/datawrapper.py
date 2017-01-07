@@ -11,12 +11,16 @@ import configparser
 
 from os                 import path, listdir
 from hashlib            import sha256
-from pyecrire.constants import *
-from pyecrire.functions import makeTimeStamp, htmlCleanUp, wordCount
+from datetime           import datetime
+from pyecrire           import *
+from pyecrire.functions import makeTimeStamp, htmlCleanUp, wordCount, dateFromString
 
 class DataWrapper():
 
     def __init__(self, dataType):
+
+        # Connect to GUI
+        self.mainConf = CONFIG
 
         # Default Values
         self.dataType = ""
@@ -58,7 +62,8 @@ class DataWrapper():
 
     def makeList(self):
 
-        fileList = {}
+        fileList    = {}
+        fileExclude = ["details.txt"]
 
         if path.isdir(self.dataPath):
             dirContent = listdir(self.dataPath)
@@ -67,7 +72,7 @@ class DataWrapper():
                 itemPath = path.join(self.dataPath,listItem)
                 if path.isfile(itemPath):
                     itemExt = listItem[-3:]
-                    if itemExt == "htm":
+                    if itemExt == "txt" and listItem not in fileExclude:
                         itemHandle = listItem[0:15]
                         fileList[itemHandle] = itemPath
 
@@ -75,9 +80,16 @@ class DataWrapper():
         else:
             logger.error("Path not found: %s" % self.dataPath)
 
+        fileKey = ""
         for fileKey in sorted(fileList):
             self.fileList[fileKey] = fileList[fileKey]
-            self.loadFile          = fileList[fileKey]
+
+        if fileKey != "":
+            self.loadFile = fileList[fileKey]
+            fileDate      = dateFromString(fileKey)
+            fileAge       = (datetime.now()-fileDate).total_seconds()/60.
+            if fileAge < self.mainConf.versionAge:
+                self.currFile = self.loadFile
 
         return
 
@@ -129,7 +141,7 @@ class DataWrapper():
         if not self.hasText: return
         if self.dataGroup is not TYPE_FILE: return
 
-        if self.currFile == "": self.currFile = makeTimeStamp(1)+".htm"
+        if self.currFile == "": self.currFile = makeTimeStamp(1)+".txt"
 
         fileObj = open(path.join(self.dataPath,self.currFile),encoding="utf-8",mode="w")
         fileObj.write(self.text)
