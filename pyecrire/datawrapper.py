@@ -28,6 +28,7 @@ class DataWrapper():
         self.currFile = ""
         self.fileHash = ""
 
+        # General Values
         self.title    = ""
         self.created  = ""
         self.date     = ""
@@ -39,6 +40,7 @@ class DataWrapper():
         self.text     = ""
         self.hasText  = False
         self.words    = 0
+        self.chars    = 0
         self.number   = 0
 
         # Scene Specific Values
@@ -105,6 +107,7 @@ class DataWrapper():
             confParser.set(cnfSec,"Notes",    str(self.hasNotes))
             confParser.set(cnfSec,"Text",     str(self.hasText))
             confParser.set(cnfSec,"Words",    str(self.words))
+            confParser.set(cnfSec,"Chars",    str(self.chars))
             confParser.set(cnfSec,"Number",   str(self.number))
         if self.dataType == NAME_SCNE:
             confParser.set(cnfSec,"Section",  str(self.section))
@@ -159,6 +162,31 @@ class DataWrapper():
     def loadDetails(self):
 
         logger.debug("Loading data details")
+
+        # General Values
+        self.title    = ""
+        self.created  = ""
+        self.date     = ""
+        self.parent   = ""
+
+        # File Specific Values
+        self.notes    = ""
+        self.hasNotes = False
+        self.text     = ""
+        self.hasText  = False
+        self.words    = 0
+        self.chars    = 0
+        self.number   = 0
+
+        # Scene Specific Values
+        self.section  = 0
+        self.chapter  = 0
+        self.pov      = ""
+
+        # Book Specific Values
+        self.category = ""
+        self.status   = ""
+
         confParser = configparser.ConfigParser()
         confParser.readfp(open(path.join(self.dataPath,"details.txt")))
 
@@ -172,6 +200,7 @@ class DataWrapper():
             if confParser.has_option(cnfSec,"Notes"):    self.hasNotes = confParser.getboolean(cnfSec,"Notes")
             if confParser.has_option(cnfSec,"Text"):     self.hasText  = confParser.getboolean(cnfSec,"Text")
             if confParser.has_option(cnfSec,"Words"):    self.words    = confParser.getint(cnfSec,"Words")
+            if confParser.has_option(cnfSec,"Chars"):    self.chars    = confParser.getint(cnfSec,"Chars")
             if confParser.has_option(cnfSec,"Number"):   self.number   = confParser.getint(cnfSec,"Number")
             if confParser.has_option(cnfSec,"Section"):  self.section  = confParser.getint(cnfSec,"Section")
             if confParser.has_option(cnfSec,"Chapter"):  self.chapter  = confParser.getint(cnfSec,"Chapter")
@@ -281,13 +310,13 @@ class DataWrapper():
         return
 
     def setText(self, srcText):
-
         if len(srcText) > 0:
-            self.words   = wordCount(srcText)
+            words,chars  = wordCount(srcText)
             srcText      = htmlCleanUp(srcText)
             self.text    = srcText
             self.hasText = True
-
+            self.words   = words
+            self.chars   = chars
         return
 
     def setLoadFile(self, filePath):

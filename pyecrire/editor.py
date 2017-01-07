@@ -29,6 +29,7 @@ class Editor(WebKit.WebView):
         self.guiBuilder = builder
         self.mainConf   = config
         self.getObject  = self.guiBuilder.get_object
+        self.fileSaved  = self.getObject("imgFileSaved")
 
         # Paths
         self.ledGrey    = self.mainConf.guiPath+"/led-grey.png"
@@ -38,14 +39,15 @@ class Editor(WebKit.WebView):
         # Editor Data
         self.theFile    = DataWrapper(NAME_NONE)
         self.fileHandle = ""
-        self.fileSaved  = self.getObject("imgFileSaved")
-        self.fileSaved.set_from_file(self.ledGrey)
+        self.startWords = 0
+        self.startChars = 0
 
-        # Create Editor
+        # Set Up Editor
         self.set_editable(False)
         self.connect("key_press_event",self.onEventKeyPress)
         self.connect("user-changed-contents",self.onContentChanged)
         self.load_html_string("", "file:///")
+        self.fileSaved.set_from_file(self.ledGrey)
 
         # Properties
         self.textSaved  = True
@@ -61,7 +63,7 @@ class Editor(WebKit.WebView):
 
         return True
 
-    def loadFile(self, fileType, filePath, fileHandle):
+    def loadFile(self, fileType, filePath, fileHandle, doWordCount=True):
 
         logger.debug("Loading file")
 
@@ -74,6 +76,10 @@ class Editor(WebKit.WebView):
         self.theFile.setDataType(fileType)
         self.theFile.loadDetails()
         self.theFile.loadText()
+
+        if doWordCount:
+            self.startWords = self.theFile.words
+            self.startChars = self.theFile.chars
 
         fontSize   = str(self.mainConf.fontSize)
         lineHeight = str(self.mainConf.lineHeight/100.0)

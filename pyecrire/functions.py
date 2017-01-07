@@ -110,12 +110,14 @@ def htmlCleanUp(srcText):
 
     okTags   = ["p","b","i","u","strike"]
     okAttr   = {"*" : ["style"]}
-    okStyles = ["color","text-align"]
+    okStyles = ["text-align"]
 
     srcText  = clean(srcText,tags=okTags,attributes=okAttr,styles=okStyles,strip=True)
 
     if srcText[0:3] != "<p>": srcText = "<p>"+srcText+"</p>"
 
+    srcText  = srcText.replace("> <","><")
+    srcText  = srcText.replace("<p></p>","")
     srcText  = srcText.replace("</p>","</p>\n")
     srcText  = srcText.replace('style=""',"")
     srcText  = srcText.replace("style=''","")
@@ -152,6 +154,6 @@ def wordCount(srcHtml):
     cleanText = cleanText.strip()
     splitText = cleanText.split()
 
-    return len(splitText)
+    return len(splitText), len(cleanText)
 
 # End Functions

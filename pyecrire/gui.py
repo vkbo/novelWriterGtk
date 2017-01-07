@@ -222,7 +222,7 @@ class GUI():
     def saveUniverse(self):
         return
 
-    def loadEditor(self, fileGroup, fileHandle):
+    def loadEditor(self, fileGroup, fileHandle, doWordCount=True):
 
         if fileGroup == NAME_BOOK:
             filePath = self.bookTree.getPath(fileHandle)
@@ -234,10 +234,13 @@ class GUI():
 
         if filePath is not None:
             self.webEditor.autoSave()
-            self.webEditor.loadFile(fileType,filePath,fileHandle)
+            self.webEditor.loadFile(fileType,filePath,fileHandle,doWordCount)
             self.fileTree.loadContent(self.webEditor.theFile.fileList)
             self.getObject("mainNoteBook").set_current_page(TABM_EDIT)
             self.updateStatusFile()
+
+        if doWordCount:
+            self.updateWordCount()
 
         return
 
@@ -286,6 +289,7 @@ class GUI():
         wordCount  = self.webEditor.theFile.words
         fileHandle = self.webEditor.fileHandle
 
+        # Update Trees
         self.scneTree.setValue(fileHandle,self.scneTree.COL_WORDS,wordCount)
         self.scneTree.sumWords()
 
@@ -296,6 +300,12 @@ class GUI():
         if self.webEditor.theFile.parType == NAME_UNIV:
             self.univTree.setValue(fileHandle,self.univTree.COL_WORDS,wordCount)
             self.univTree.sumWords()
+
+        # Update Info Panel
+        self.getObject("lblWCTotWords").set_label(str(self.webEditor.theFile.words))
+        self.getObject("lblWCTotChars").set_label(str(self.webEditor.theFile.chars))
+        self.getObject("lblWCSesWords").set_label(str(self.webEditor.theFile.words - self.webEditor.startWords))
+        self.getObject("lblWCSesChars").set_label(str(self.webEditor.theFile.chars - self.webEditor.startChars))
 
         return
 
@@ -429,7 +439,7 @@ class GUI():
     def onFileReload(self, guiObject=None):
 
         #self.saveEditor()
-        self.loadEditor(self.webEditor.theFile.parType,self.webEditor.fileHandle)
+        self.loadEditor(self.webEditor.theFile.parType,self.webEditor.fileHandle,False)
 
         return
 

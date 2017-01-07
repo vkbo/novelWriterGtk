@@ -120,6 +120,9 @@ class Project():
             logger.error("File parent type must be Book or Universe.")
             return
 
+        print(fileFolder)
+        print(self.fileFolder)
+
         if fileFolder != self.fileFolder:
             oldPath = path.join(parentFolder,self.fileFolder)
             newPath = path.join(parentFolder,fileFolder)
