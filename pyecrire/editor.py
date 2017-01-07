@@ -12,10 +12,12 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 
-from gi.repository      import Gtk, Gdk, WebKit
-from os                 import getcwd
-from math               import floor
-from pyecrire.functions import htmlStrip
+from gi.repository        import Gtk, Gdk, WebKit
+from os                   import getcwd
+from math                 import floor
+from pyecrire.constants   import *
+from pyecrire.functions   import htmlStrip
+from pyecrire.datawrapper import DataWrapper
 
 class Editor(WebKit.WebView):
 
@@ -28,8 +30,16 @@ class Editor(WebKit.WebView):
         self.mainConf   = config
         self.getObject  = self.guiBuilder.get_object
 
+        # Paths
+        self.ledGrey    = self.mainConf.guiPath+"/led-grey.png"
+        self.ledGreen   = self.mainConf.guiPath+"/led-green.png"
+        self.ledRed     = self.mainConf.guiPath+"/led-red.png"
+
+        # Editor Data
+        self.theFile    = DataWrapper(NAME_NONE)
+        self.fileHandle = ""
         self.fileSaved  = self.getObject("imgFileSaved")
-        self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-grey.png")
+        self.fileSaved.set_from_file(self.ledGrey)
 
         # Create Editor
         self.set_editable(False)
@@ -47,7 +57,65 @@ class Editor(WebKit.WebView):
         if not self.textSaved: return False
 
         self.load_html_string("", "file:///")
-        self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-grey.png")
+        self.fileSaved.set_from_file(self.ledGrey)
+
+        return True
+
+    def loadFile(self, fileType, filePath, fileHandle):
+
+        logger.debug("Loading file")
+
+        if not self.textSaved:
+            self.theFile.autoSaveText()
+
+        self.fileHandle = fileHandle
+
+        self.theFile.setDataPath(filePath)
+        self.theFile.setDataType(fileType)
+        self.theFile.loadDetails()
+        self.theFile.loadText()
+
+        fontSize   = str(self.mainConf.fontSize)
+        lineHeight = str(self.mainConf.lineHeight/100.0)
+        lineIndent = str(self.mainConf.lineIndent/100.0)
+        parMargin  = str(self.mainConf.parMargin)
+
+        srcHtml  = "<html>"
+        srcHtml += "<head>"
+        srcHtml += "  <style>"
+        srcHtml += "    body {font-size: "+fontSize+"px; padding: 40px;}"
+        srcHtml += "    p    {margin: "+parMargin+"px; text-align: justify; line-height: "+lineHeight+"em;}"
+        srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
+        srcHtml += "  </style>"
+        srcHtml += "</head>"
+        srcHtml += "<body>"+self.theFile.text+"</body>"
+        srcHtml += "</html>"
+
+        self.load_html_string(srcHtml,"file:///")
+
+        return
+
+    def saveFile(self):
+
+        srcText = self.getText()
+
+        self.theFile.setText(srcText)
+        self.theFile.saveText()
+
+        self.textSaved = True
+        self.fileSaved.set_from_file(self.ledGreen)
+
+        return
+
+    def autoSave(self):
+
+        srcText = self.getText()
+
+        self.theFile.setText(srcText)
+        self.theFile.autoSaveText()
+
+        self.textSaved = True
+        self.fileSaved.set_from_file(self.ledGreen)
 
         return True
 
@@ -62,7 +130,7 @@ class Editor(WebKit.WebView):
 
     def onEditAction(self, guiObject):
         logger.debug("Editor action %s" % guiObject.get_name())
-        self.execute_script("document.execCommand('%s', false, false);" % guiObject.get_name())
+        self.execute_script("document.execCommand('%s',false,false);" % guiObject.get_name())
         return
 
     def onEditCopy(self, guiObject):
@@ -108,18 +176,20 @@ class Editor(WebKit.WebView):
         logger.debug("Editor content changed")
         if self.textSaved:
             self.textSaved = False
-            self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-red.png")
+            self.fileSaved.set_from_file(self.ledRed)
         return
 
     ##
     #  Getters
     ##
 
+    """
     def getHtml(self):
         self.execute_script("document.title=document.documentElement.innerHTML;")
         #srcHtml = self.get_main_frame().get_data_source().get_data()
         #return srcHtml.str
         return unicode(self.get_main_frame().get_title(),"utf-8")
+    """
 
     def getText(self):
 
@@ -165,11 +235,13 @@ class Editor(WebKit.WebView):
         self.set_editable(editable)
         return
 
+    """
     def setAsSaved(self):
 
         self.textSaved = True
         self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-green.png")
 
         return
+    """
 
 # End Class Editor

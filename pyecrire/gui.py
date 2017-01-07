@@ -56,13 +56,13 @@ class GUI():
             "onEventWinChange"         : self.eventWinChange,
             "onSwitchPageMainNoteBook" : self.eventMainTabChange,
             "onSwitchPageSideNoteBook" : self.eventSideTabChange,
-            "onChangeTreeProject"      : self.onSelectBook,
-            "onChangeTreeBook"         : self.onSelectBookFile,
-            "onChangeTreeUniverse"     : self.onSelectUniverseFile,
-            "onChangeTreeFileVersion"  : self.onSelectFileVersion,
             "onClickNew"               : self.projData.newProject,
             "onClickSave"              : self.onFileSave,
-
+            "onChangeTreeProject"      : self.onSelectProjectTree,
+            "onChangeTreeBook"         : self.onSelectBookTree,
+            "onChangeTreeUniverse"     : self.onSelectUniverseTree,
+            "onChangeTreeScenes"       : self.onSelectSceneTree,
+            "onChangeTreeFileVersion"  : self.onSelectFileTree,
             "onToggleEditable"         : self.webEditor.onToggleEditable,
             "onClickEditReload"        : self.onFileReload,
             "onClickEditCopy"          : self.webEditor.onEditCopy,
@@ -79,7 +79,6 @@ class GUI():
             "onClickEditRight"         : self.webEditor.onEditAction,
             "onClickEditJustify"       : self.webEditor.onEditAction,
             "onClickEditStrip"         : self.webEditor.onEditStripFormatting,
-
             "onClickTimerStart"        : self.guiTimer.onTimerStart,
             "onClickTimerPause"        : self.guiTimer.onTimerPause,
             "onClickTimerStop"         : self.guiTimer.onTimerStop,
@@ -88,7 +87,6 @@ class GUI():
             "onClickSceneUp"           : self.onSceneUp,
             "onClickSceneDown"         : self.onSceneDown,
             "onClickSceneSave"         : self.onSceneSave,
-            "onChangeTreeScenes"       : self.onSelectScene,
             "onToggleNewUniverse"      : self.onToggleNewUniverse,
             "onMenuActionHelpAbout"    : self.onActionShowAbout,
             "onMenuActionFileSave"     : self.onFileSave,
@@ -155,8 +153,7 @@ class GUI():
 
         self.mainConf.setWinPane(self.guiPaned.get_position())
         self.mainConf.autoSaveConfig()
-        self.projData.theFile.setText(self.webEditor.getText())
-        self.projData.theFile.autoSaveText()
+        self.webEditor.autoSave()
 
         Gtk.main_quit()
 
@@ -171,11 +168,9 @@ class GUI():
         if self.mainConf.autoSaveConfig():
             statusBar.push(statusCID,makeTimeStamp(4)+"Config auto-saved")
 
-        self.projData.theFile.setText(self.webEditor.getText())
-        if self.projData.theFile.autoSaveText():
+        if self.webEditor.autoSave():
             statusBar.push(statusCID,makeTimeStamp(4)+"File auto-saved")
-            self.fileTree.loadContent(self.projData.theFile.fileList)
-            self.webEditor.setAsSaved()
+            self.fileTree.loadContent(self.webEditor.theFile.fileList)
 
         return True
 
@@ -185,8 +180,16 @@ class GUI():
 
     def loadBook(self):
 
+        self.webEditor.autoSave()
+        self.webEditor.clearEditor()
+        self.scneTree.loadContent(self.projData.bookPath)
+        self.fileTree.clearTree()
+        self.updateTitle()
+        self.updateStatusFile()
+
         self.getObject("entryBookTitle").set_text(self.projData.bookTitle)
         self.getObject("cmbBookUniverse").set_active_iter(self.projTree.univMap[self.projData.theBook.parent])
+        self.getObject("mainNoteBook").set_current_page(TABM_BOOK)
 
         return
 
@@ -220,10 +223,6 @@ class GUI():
 
     def loadEditor(self, fileGroup, fileHandle):
 
-        if fileHandle == self.projData.fileHandle:
-            logger.debug("File already open")
-            return
-
         if fileGroup == NAME_BOOK:
             filePath = self.bookTree.getPath(fileHandle)
             fileType = self.bookTree.getType(fileHandle)
@@ -232,45 +231,33 @@ class GUI():
             filePath = self.univTree.getPath(fileHandle)
             fileType = self.univTree.getType(fileHandle)
 
-        print("Loading %s" % filePath)
-
         if filePath is not None:
-
-            # First save editor content
-            self.saveEditor()
-
-            # Then load new content
-            self.projData.newFile(fileType)
-            self.projData.loadFile(filePath,fileHandle)
-            self.projData.theFile.loadText()
-            self.fileTree.loadContent(self.projData.theFile.fileList)
-            self.webEditor.setText(self.projData.theFile.text)
+            self.webEditor.autoSave()
+            self.webEditor.loadFile(fileType,filePath,fileHandle)
+            self.fileTree.loadContent(self.webEditor.theFile.fileList)
             self.getObject("mainNoteBook").set_current_page(TABM_EDIT)
+            self.updateStatusFile()
 
         return
 
     def saveEditor(self):
 
-        # Set and Save Text
-        self.projData.theFile.setText(self.webEditor.getText())
-        self.projData.theFile.saveText()
-        self.webEditor.setAsSaved()
-
-        # Reload File Versions
-        self.fileTree.loadContent(self.projData.theFile.fileList)
+        # Save File
+        self.webEditor.saveFile()
+        self.fileTree.loadContent(self.webEditor.theFile.fileList)
 
         # Update Word Counts
-        wordCount  = self.projData.theFile.words
-        fileHandle = self.projData.fileHandle
+        wordCount  = self.webEditor.theFile.words
+        fileHandle = self.webEditor.fileHandle
 
         self.scneTree.setValue(fileHandle,self.scneTree.COL_WORDS,wordCount)
         self.scneTree.sumWords()
 
-        if self.projData.fileParent == NAME_BOOK:
+        if self.webEditor.theFile.parType == NAME_BOOK:
             self.bookTree.setValue(fileHandle,self.bookTree.COL_WORDS,wordCount)
             self.bookTree.sumWords()
 
-        if self.projData.fileParent == NAME_UNIV:
+        if self.webEditor.theFile.parType == NAME_UNIV:
             self.univTree.setValue(fileHandle,self.univTree.COL_WORDS,wordCount)
             self.univTree.sumWords()
 
@@ -296,9 +283,9 @@ class GUI():
             currFile = self.projData.bookTitle
         else:
             if self.projData.fileParent == NAME_BOOK:
-                currFile = self.projData.bookTitle+" > "+self.projData.fileTitle
+                currFile = self.projData.bookTitle+" > "+self.webEditor.theFile.title
             else:
-                currFile = self.projData.univTitle+" > "+self.projData.fileTitle
+                currFile = self.projData.univTitle+" > "+self.webEditor.theFile.title
 
         self.getObject("lblCurrFile").set_label("File: "+currFile)
 
@@ -308,9 +295,9 @@ class GUI():
     #  Tree Selection Actions
     ##
 
-    def onSelectBook(self, guiObject):
+    def onSelectProjectTree(self, guiObject):
 
-        logger.debug("Select Book")
+        logger.debug("Select Project")
         if not self.guiLoaded: return
 
         pathItem = []
@@ -330,13 +317,10 @@ class GUI():
             parPath   = self.projTree.getPath(parHandle)
             self.projData.loadProject(itemPath,itemHandle,parPath,parHandle)
             self.loadBook()
-            self.scneTree.loadContent(itemPath)
-            self.updateTitle()
-            self.updateStatusFile()
 
         return
 
-    def onSelectBookFile(self, guiObject):
+    def onSelectBookTree(self, guiObject):
 
         logger.debug("Select Book File")
         if not self.guiLoaded: return
@@ -351,11 +335,10 @@ class GUI():
         if itemHandle == "" or itemHandle is None: return
 
         self.loadEditor(NAME_BOOK,itemHandle)
-        self.updateStatusFile()
 
         return
 
-    def onSelectUniverseFile(self, guiObject):
+    def onSelectUniverseTree(self, guiObject):
 
         logger.debug("Select Universe File")
         if not self.guiLoaded: return
@@ -373,7 +356,7 @@ class GUI():
 
         return
 
-    def onSelectScene(self, guiObject):
+    def onSelectSceneTree(self, guiObject):
 
         logger.debug("Select Scene")
         if not self.guiLoaded: return
@@ -398,7 +381,7 @@ class GUI():
 
         return
 
-    def onSelectFileVersion(self, guiObject):
+    def onSelectFileTree(self, guiObject):
 
         logger.debug("Select File Version")
         if not self.guiLoaded: return
@@ -410,11 +393,11 @@ class GUI():
 
         if itemHandle == "" or itemHandle is None: return
 
-        itemPath = self.projData.theFile.getFilePath(itemHandle)
+        itemPath = self.webEditor.theFile.getFilePath(itemHandle)
+        itemType = self.webEditor.theFile.dataType
 
-        self.projData.theFile.setLoadFile(itemPath)
-        self.projData.theFile.loadText()
-        self.webEditor.setText(self.projData.theFile.text)
+        self.webEditor.autoSave()
+        self.webEditor.loadFile(itemType,itemPath,itemHandle)
         self.webEditor.setEditable(False)
 
         return
@@ -429,11 +412,9 @@ class GUI():
 
         mainIdx = self.getObject("mainNoteBook").get_current_page()
 
-        if mainIdx == TABM_BOOK:
-            self.saveBook()
-
-        if mainIdx == TABM_EDIT:
-            self.saveEditor()
+        if mainIdx == TABM_BOOK: self.saveBook()
+        if mainIdx == TABM_UNIV: self.saveUniverse()
+        if mainIdx == TABM_EDIT: self.saveEditor()
 
         return
 

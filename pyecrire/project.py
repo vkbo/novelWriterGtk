@@ -112,9 +112,9 @@ class Project():
             return
 
         fileFolder = self.fileCode+"-"+self.fileHandle+"-"+self.fileName
-        if   self.fileParent == NAME_BOOK:
+        if   self.theFile.parType == NAME_BOOK:
             parentFolder = self.bookPath
-        elif self.fileParent == NAME_UNIV:
+        elif self.theFile.parType == NAME_UNIV:
             parentFolder = self.univPath
         else:
             logger.error("File parent type must be Book or Universe.")
@@ -162,10 +162,10 @@ class Project():
     def setFileParent(self, parentType):
 
         if   parentType == NAME_BOOK:
-            self.fileParent     = parentType
+            #self.fileParent     = parentType
             self.theFile.parent = self.bookHandle
         elif parentType == NAME_UNIV:
-            self.fileParent     = parentType
+            #self.fileParent     = parentType
             self.theFile.parent = self.univHandle
         else:
             logger.error("File parent type must be Book or Universe.")
@@ -295,7 +295,6 @@ class Project():
 
         return
 
-
     ##
     #  File Functions
     ##
@@ -303,7 +302,7 @@ class Project():
     def newFile(self, fileType):
 
         # Trigger autosave in case there's unsaved data
-        self.theFile.autoSaveText()
+        #self.theFile.autoSaveText()
 
         # Reset all file values
         self.theFile     = DataWrapper(fileType)
@@ -335,12 +334,13 @@ class Project():
 
         return
 
+
     def loadFile(self, filePath, fileHandle):
 
         logger.debug("Loading file")
 
         # Trigger autosave in case there's unsaved data
-        self.theFile.autoSaveText()
+        #self.theFile.autoSaveText()
 
         # Load data from file
         self.theFile.setDataPath(filePath)
@@ -352,6 +352,7 @@ class Project():
         self.fileFolder = self.fileCode+"-"+self.fileHandle+"-"+self.fileName
         self.filePath   = filePath
 
+        """
         if   self.theFile.dataType == NAME_SCNE:
             self.fileParent = NAME_BOOK
         elif self.theFile.dataType == NAME_PLOT:
@@ -362,6 +363,7 @@ class Project():
             self.fileParent = NAME_UNIV
         else:
             self.fileParent = ""
+        """
 
         return
 

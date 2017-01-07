@@ -114,6 +114,8 @@ def htmlCleanUp(srcText):
 
     srcText  = clean(srcText,tags=okTags,attributes=okAttr,styles=okStyles,strip=True)
 
+    if srcText[0:3] != "<p>": srcText = "<p>"+srcText+"</p>"
+
     srcText  = srcText.replace("</p>","</p>\n")
     srcText  = srcText.replace('style=""',"")
     srcText  = srcText.replace("style=''","")

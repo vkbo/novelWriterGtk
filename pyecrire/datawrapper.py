@@ -18,24 +18,10 @@ class DataWrapper():
 
     def __init__(self, dataType):
 
-        if   dataType == NAME_BOOK:
-            self.dataGroup = TYPE_CONT
-        elif dataType == NAME_UNIV:
-            self.dataGroup = TYPE_CONT
-        elif dataType == NAME_SCNE:
-            self.dataGroup = TYPE_FILE
-        elif dataType == NAME_PLOT:
-            self.dataGroup = TYPE_FILE
-        elif dataType == NAME_CHAR:
-            self.dataGroup = TYPE_FILE
-        elif dataType == NAME_HIST:
-            self.dataGroup = TYPE_FILE
-        else:
-            self.dataGroup = TYPE_NONE
-
         # Default Values
-        self.dataType = dataType
+        self.dataType = ""
         self.dataPath = ""
+        self.parType  = ""
         self.fileList = {}
         self.listLen  = 0
         self.loadFile = ""
@@ -63,6 +49,8 @@ class DataWrapper():
         # Book Specific Values
         self.category = ""
         self.status   = ""
+
+        self.setDataType(dataType)
 
         return
 
@@ -224,7 +212,31 @@ class DataWrapper():
     ##
 
     def setDataType(self, dataType):
+
         self.dataType = dataType
+
+        if   dataType == NAME_BOOK:
+            self.dataGroup = TYPE_CONT
+            self.parType   = NAME_NONE
+        elif dataType == NAME_UNIV:
+            self.dataGroup = TYPE_CONT
+            self.parType   = NAME_NONE
+        elif dataType == NAME_SCNE:
+            self.dataGroup = TYPE_FILE
+            self.parType   = NAME_BOOK
+        elif dataType == NAME_PLOT:
+            self.dataGroup = TYPE_FILE
+            self.parType   = NAME_BOOK
+        elif dataType == NAME_CHAR:
+            self.dataGroup = TYPE_FILE
+            self.parType   = NAME_UNIV
+        elif dataType == NAME_HIST:
+            self.dataGroup = TYPE_FILE
+            self.parType   = NAME_UNIV
+        else:
+            self.dataGroup = TYPE_NONE
+            self.parType   = NAME_NONE
+
         return
 
     def setDataPath(self, newPath):

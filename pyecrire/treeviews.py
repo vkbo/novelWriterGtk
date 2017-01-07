@@ -597,4 +597,8 @@ class FileVersionTree():
 
         return
 
+    def clearTree(self):
+        self.treeStore.clear()
+        return
+
 # End Class FileVersionTree
