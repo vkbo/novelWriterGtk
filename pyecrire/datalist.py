@@ -3,7 +3,7 @@
 ##
 #  pyÉcrire – DataList Class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds lists of folder content and maps handle to path
+#  Main class to scan folders and hold lists of the various file types available.
 ##
 
 import logging as logger

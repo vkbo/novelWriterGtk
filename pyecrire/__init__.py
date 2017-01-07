@@ -3,7 +3,7 @@
 ##
 #  pyÉcrire – Init File
 # ~~~~~~~~~~~~~~~~~~~~~~
-#  Holds global constants
+#  Inits pyÉcrire and set program constants and core objects
 ##
 
 import logging as logger

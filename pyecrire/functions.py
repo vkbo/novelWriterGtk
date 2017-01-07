@@ -3,7 +3,7 @@
 ##
 #  pyÉcrire – Global Functions
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Various functions used in the applications
+#  This file holds all the global data manipulation functions
 ##
 
 import logging as logger
@@ -25,7 +25,6 @@ def simplifyString(inStr):
 
     return outStr
 
-
 #
 # Creates a file handle from a string
 #
@@ -38,7 +37,6 @@ def makeHandle(inStr):
     hexHandle  = hashObject.hexdigest()[:10]
 
     return hexHandle
-
 
 #
 # Create a TimeStamp string of a time or current time if none specified
@@ -64,7 +62,6 @@ def makeTimeStamp(stringFormat=0, timeStamp=None):
 
     return ""
 
-
 #
 # Reformat Date from TimeStamp
 #
@@ -81,14 +78,12 @@ def reformatDate(dateString):
 
     return "%s/%s/%s %s:%s:%s" % (day,month,year,hour,minute,second)
 
-
 #
 # Date String to Number
 #
 
 def dateFromString(dateString):
     return datetime.strptime(dateString,"%Y%m%d-%H%M%S")
-
 
 #
 # Format Time from Seconds
@@ -101,14 +96,12 @@ def formatTime(timeValue):
 
     return "%02d:%02d:%02d" % (hour, minute, second)
 
-
 #
 # Create Scene Number
 #
 
 def makeSceneNumber(group,section,chapter,number):
     return "%01s.%01d.%02d.%03d" % (group,section,chapter,number)
-
 
 #
 # Clean Up HTML Code
@@ -134,7 +127,6 @@ def htmlCleanUp(srcText):
 
     return srcText
 
-
 #
 # Strip All HTML Code
 #
@@ -148,7 +140,6 @@ def htmlStrip(srcText):
     srcText  = clean(srcText,tags=okTags,attributes=okAttr,styles=okStyles,strip=True)
 
     return srcText
-
 
 #
 # Word Count for HTML Files

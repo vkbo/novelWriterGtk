@@ -3,7 +3,9 @@
 ##
 #  pyÉcrire – Project Class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the main project data and the file currently being edited
+#  Holds the main project meta data.
+#  This is the class where the data folder hierarchy is set up and maintained.
+#  This class does not handle the actual text content of files, but does handle file notes.
 ##
 
 import logging as logger

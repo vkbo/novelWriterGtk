@@ -3,7 +3,11 @@
 ##
 #  pyÉcrire – Editor Class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Manages the WebKit editor
+#  Main wrapper class for the GUI text editor.
+#  This class also holds its own file DataWrapper object that contains the text of the file
+#  currently being edited. This is to ensure it doesn't interfere with the editing of meta
+#  data that occurs in the other tabs. That data is handled by the file object of the
+#  Project class.
 ##
 
 import logging as logger

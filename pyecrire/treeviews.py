@@ -3,7 +3,11 @@
 ##
 #  pyÉcrire – Data Tree Classed
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Manages all the TreeViews of the GUI as well as lists for comboboxes
+#  Wrapper classes for all the Gtk.TreeView objects in the main GUI.
+#  All manipulation of content as well as loading of data is handled here.
+#  Meta data related to the files listed are also kept as hidden columns and
+#  in additional dictionaries and lists as they are needed by the main GUI.
+#  This includes plain lists needed for combo boxes.
 ##
 
 import logging as logger

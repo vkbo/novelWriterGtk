@@ -3,7 +3,8 @@
 ##
 #  pyÉcrire – Data Wrapper Class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Wrappes the various data files
+#  This class wraps the actual data files related to the different data types.
+#  All file reading and writing is done in this class.
 ##
 
 import logging as logger
@@ -94,81 +95,7 @@ class DataWrapper():
         return
 
     ##
-    #  Save Functions
-    ##
-
-    def saveDetails(self):
-
-        logger.debug("Saving data details")
-        confParser = configparser.ConfigParser()
-
-        # Set or Update TimeStamps
-        if self.created == "":
-            self.created = makeTimeStamp(3)
-        self.date = makeTimeStamp(3)
-
-        # Set Variables
-        cnfSec = self.dataType
-        confParser.add_section(cnfSec)
-        confParser.set(cnfSec,"Title",   str(self.title))
-        confParser.set(cnfSec,"Created", str(self.created))
-        confParser.set(cnfSec,"Date",    str(self.date))
-        if self.dataType != NAME_UNIV:
-            confParser.set(cnfSec,"Parent",   str(self.parent))
-        if self.dataGroup == TYPE_FILE:
-            confParser.set(cnfSec,"Notes",    str(self.hasNotes))
-            confParser.set(cnfSec,"Text",     str(self.hasText))
-            confParser.set(cnfSec,"Words",    str(self.words))
-            confParser.set(cnfSec,"Chars",    str(self.chars))
-            confParser.set(cnfSec,"Number",   str(self.number))
-        if self.dataType == NAME_SCNE:
-            confParser.set(cnfSec,"Section",  str(self.section))
-            confParser.set(cnfSec,"Chapter",  str(self.chapter))
-            confParser.set(cnfSec,"POV",      str(self.pov))
-        if self.dataType == NAME_BOOK:
-            confParser.set(cnfSec,"Category", str(self.category))
-            confParser.set(cnfSec,"Status",   str(self.status))
-
-        # Write File
-        confParser.write(open(path.join(self.dataPath,"details.txt"),"w"))
-
-        return
-
-    def saveText(self):
-
-        logger.debug("Saving text file")
-
-        if not self.hasText: return
-        if self.dataGroup is not TYPE_FILE: return
-
-        if self.currFile == "": self.currFile = makeTimeStamp(1)+".txt"
-
-        fileObj = open(path.join(self.dataPath,self.currFile),encoding="utf-8",mode="w")
-        fileObj.write(self.text)
-        fileObj.close()
-
-        self.fileHash = sha256(str(self.text).encode()).hexdigest()
-        self.makeList()
-        self.saveDetails()
-
-        return
-
-    def autoSaveText(self):
-
-        logger.debug("Auto-saving text file")
-
-        fileHash = sha256(str(self.text).encode()).hexdigest()
-
-        if not self.hasText:                return False
-        if self.dataGroup is not TYPE_FILE: return False
-        if self.fileHash == fileHash:       return False
-
-        self.saveText()
-
-        return True
-
-    ##
-    #  Load Functions
+    #  Meta Data Functions (details.txt)
     ##
 
     def loadDetails(self):
@@ -222,6 +149,47 @@ class DataWrapper():
 
         return
 
+    def saveDetails(self):
+
+        logger.debug("Saving data details")
+        confParser = configparser.ConfigParser()
+
+        # Set or Update TimeStamps
+        if self.created == "":
+            self.created = makeTimeStamp(3)
+        self.date = makeTimeStamp(3)
+
+        # Set Variables
+        cnfSec = self.dataType
+        confParser.add_section(cnfSec)
+        confParser.set(cnfSec,"Title",   str(self.title))
+        confParser.set(cnfSec,"Created", str(self.created))
+        confParser.set(cnfSec,"Date",    str(self.date))
+        if self.dataType != NAME_UNIV:
+            confParser.set(cnfSec,"Parent",   str(self.parent))
+        if self.dataGroup == TYPE_FILE:
+            confParser.set(cnfSec,"Notes",    str(self.hasNotes))
+            confParser.set(cnfSec,"Text",     str(self.hasText))
+            confParser.set(cnfSec,"Words",    str(self.words))
+            confParser.set(cnfSec,"Chars",    str(self.chars))
+            confParser.set(cnfSec,"Number",   str(self.number))
+        if self.dataType == NAME_SCNE:
+            confParser.set(cnfSec,"Section",  str(self.section))
+            confParser.set(cnfSec,"Chapter",  str(self.chapter))
+            confParser.set(cnfSec,"POV",      str(self.pov))
+        if self.dataType == NAME_BOOK:
+            confParser.set(cnfSec,"Category", str(self.category))
+            confParser.set(cnfSec,"Status",   str(self.status))
+
+        # Write File
+        confParser.write(open(path.join(self.dataPath,"details.txt"),"w"))
+
+        return
+
+    ##
+    #  File Text Functions ([timestamp].txt)
+    ##
+
     def loadText(self):
 
         logger.debug("Loading text file")
@@ -237,6 +205,39 @@ class DataWrapper():
         self.hasText  = True
 
         return
+
+    def saveText(self):
+
+        logger.debug("Saving text file")
+
+        if not self.hasText: return
+        if self.dataGroup is not TYPE_FILE: return
+
+        if self.currFile == "": self.currFile = makeTimeStamp(1)+".txt"
+
+        fileObj = open(path.join(self.dataPath,self.currFile),encoding="utf-8",mode="w")
+        fileObj.write(self.text)
+        fileObj.close()
+
+        self.fileHash = sha256(str(self.text).encode()).hexdigest()
+        self.makeList()
+        self.saveDetails()
+
+        return
+
+    def autoSaveText(self):
+
+        logger.debug("Auto-saving text file")
+
+        fileHash = sha256(str(self.text).encode()).hexdigest()
+
+        if not self.hasText:                return False
+        if self.dataGroup is not TYPE_FILE: return False
+        if self.fileHash == fileHash:       return False
+
+        self.saveText()
+
+        return True
 
     ##
     #  Getters

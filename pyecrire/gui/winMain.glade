@@ -2261,7 +2261,7 @@
               <object class="GtkImage" id="imgFileSaved">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="stock">gtk-dialog-warning</property>
+                <property name="stock">gtk-about</property>
               </object>
               <packing>
                 <property name="expand">False</property>

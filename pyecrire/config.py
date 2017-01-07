@@ -3,7 +3,7 @@
 ##
 #  pyÉcrire – Config Class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Class to hold the program config
+#  This class reads and store the main preferences of the application.
 ##
 
 import logging as logger

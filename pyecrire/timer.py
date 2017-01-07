@@ -3,7 +3,7 @@
 ##
 #  pyÉcrire – Timer Class
 # ~~~~~~~~~~~~~~~~~~~~~~~~
-#  Main class for the session timer
+#  Main wrapper class for the GUI timer and its related functions
 ##
 
 import logging as logger
@@ -89,6 +89,10 @@ class Timer():
         self.docTimerOn = False
         self.docBuffer  = self.docBuffer + time() - self.docOffset
         return
+
+    ##
+    #  Event Handlers
+    ##
 
     def onTick(self):
         self.tickCount += 1
