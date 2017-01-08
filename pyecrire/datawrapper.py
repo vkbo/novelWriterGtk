@@ -36,6 +36,7 @@ class DataWrapper():
         self.timeTotal  = 0.0
         self.startWords = 0
         self.startChars = 0
+        self.editFormat = ""
 
         # General Values
         self.title      = ""
@@ -310,23 +311,27 @@ class DataWrapper():
         self.dataType = dataType
 
         if   dataType == NAME_BOOK:
-            self.dataGroup = TYPE_CONT
-            self.parType   = NAME_NONE
+            self.dataGroup  = TYPE_CONT
+            self.parType    = NAME_NONE
         elif dataType == NAME_UNIV:
-            self.dataGroup = TYPE_CONT
-            self.parType   = NAME_NONE
-        elif dataType == NAME_SCNE:
-            self.dataGroup = TYPE_FILE
-            self.parType   = NAME_BOOK
+            self.dataGroup  = TYPE_CONT
+            self.parType    = NAME_NONE
         elif dataType == NAME_PLOT:
             self.dataGroup = TYPE_FILE
             self.parType   = NAME_BOOK
-        elif dataType == NAME_CHAR:
-            self.dataGroup = TYPE_FILE
-            self.parType   = NAME_UNIV
+            self.editFormat = self.mainConf.plotFormat
+        elif dataType == NAME_SCNE:
+            self.dataGroup  = TYPE_FILE
+            self.parType    = NAME_BOOK
+            self.editFormat = self.mainConf.scneFormat
         elif dataType == NAME_HIST:
-            self.dataGroup = TYPE_FILE
-            self.parType   = NAME_UNIV
+            self.dataGroup  = TYPE_FILE
+            self.parType    = NAME_UNIV
+            self.editFormat = self.mainConf.histFormat
+        elif dataType == NAME_CHAR:
+            self.dataGroup  = TYPE_FILE
+            self.parType    = NAME_UNIV
+            self.editFormat = self.mainConf.charFormat
         else:
             self.dataGroup = TYPE_NONE
             self.parType   = NAME_NONE

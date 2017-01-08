@@ -226,8 +226,11 @@ class Editor(WebKit.WebView):
         srcHtml += "<head>"
         srcHtml += "  <style>"
         srcHtml += "    body {font-size: "+fontSize+"px; padding: 40px;}"
-        srcHtml += "    p    {margin: "+parMargin+"px; text-align: justify; line-height: "+lineHeight+"em;}"
-        srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
+        if self.theFile.editFormat.lower() == "indent":
+            srcHtml += "    p    {margin: 0px; text-align: justify; line-height: "+lineHeight+"em;}"
+            srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
+        if self.theFile.editFormat.lower() == "skip":
+            srcHtml += "    p    {margin: "+parMargin+"px; text-align: justify; line-height: "+lineHeight+"em;}"
         srcHtml += "  </style>"
         srcHtml += "</head>"
         srcHtml += "<body>"+srcText+"</body>"

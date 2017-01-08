@@ -49,7 +49,11 @@ class Config:
         self.fontSize    = 16   # Pixels
         self.lineHeight  = 150  # Percent
         self.lineIndent  = 400  # Percent
-        self.parMargin   = 4    # Pixels
+        self.parMargin   = 16   # Pixels
+        self.plotFormat  = "Skip"
+        self.scneFormat  = "Indent"
+        self.histFormat  = "Skip"
+        self.charFormat  = "Skip"
 
         ## Timer
         self.autoPause   = 60   # Seconds
@@ -83,10 +87,10 @@ class Config:
         ## Main
         cnfSec = "Main"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"dataPath"):   self.dataPath   = confParser.get("Main","dataPath")
-            if confParser.has_option(cnfSec,"winWidth"):   self.winWidth   = confParser.getint("Main","winWidth")
-            if confParser.has_option(cnfSec,"winHeight"):  self.winHeight  = confParser.getint("Main","winHeight")
-            if confParser.has_option(cnfSec,"winPane"):    self.winPane    = confParser.getint("Main","winPane")
+            if confParser.has_option(cnfSec,"dataPath"):    self.dataPath    = confParser.get("Main","dataPath")
+            if confParser.has_option(cnfSec,"winWidth"):    self.winWidth    = confParser.getint("Main","winWidth")
+            if confParser.has_option(cnfSec,"winHeight"):   self.winHeight   = confParser.getint("Main","winHeight")
+            if confParser.has_option(cnfSec,"winPane"):     self.winPane     = confParser.getint("Main","winPane")
 
         ## Editor
         cnfSec = "Editor"
@@ -97,6 +101,10 @@ class Config:
             if confParser.has_option(cnfSec,"lineHeight"): self.lineHeight = confParser.getint("Editor","lineHeight")
             if confParser.has_option(cnfSec,"lineIndent"): self.lineIndent = confParser.getint("Editor","lineIndent")
             if confParser.has_option(cnfSec,"parMargin"):  self.parMargin  = confParser.getint("Editor","parMargin")
+            if confParser.has_option(cnfSec,"plotFormat"): self.plotFormat = confParser.get("Editor","plotFormat")
+            if confParser.has_option(cnfSec,"scneFormat"): self.scneFormat = confParser.get("Editor","scneFormat")
+            if confParser.has_option(cnfSec,"histFormat"): self.histFormat = confParser.get("Editor","histFormat")
+            if confParser.has_option(cnfSec,"charFormat"): self.charFormat = confParser.get("Editor","charFormat")
 
         ## Timer
         cnfSec = "Timer"
@@ -128,6 +136,10 @@ class Config:
         confParser.set("Editor","lineHeight", str(self.lineHeight))
         confParser.set("Editor","lineIndent", str(self.lineIndent))
         confParser.set("Editor","parMargin",  str(self.parMargin))
+        confParser.set("Editor","plotFormat", str(self.plotFormat))
+        confParser.set("Editor","scneFormat", str(self.scneFormat))
+        confParser.set("Editor","histFormat", str(self.histFormat))
+        confParser.set("Editor","charFormat", str(self.charFormat))
 
         ## Timer
         confParser.add_section("Timer")

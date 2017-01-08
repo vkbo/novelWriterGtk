@@ -152,7 +152,7 @@ class GUI():
         logger.debug("Exiting")
 
         self.mainConf.setWinPane(self.guiPaned.get_position())
-        self.mainConf.autoSaveConfig()
+        self.mainConf.saveConfig()
         self.webEditor.autoSave()
         self.webEditor.onTimerStop()
 
