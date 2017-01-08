@@ -426,7 +426,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkToolbar" id="filesToolBar">
+                          <object class="GtkToolbar" id="bookToolBar">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="halign">end</property>
@@ -435,13 +435,14 @@
                             <property name="margin_top">1</property>
                             <property name="margin_bottom">1</property>
                             <child>
-                              <object class="GtkToolButton" id="btnFilesAddDoc">
+                              <object class="GtkToolButton" id="btnBookAddFile">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">New Document</property>
                                 <property name="label" translatable="yes">Add</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-add</property>
+                                <signal name="clicked" handler="onClickBookAddFile" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -449,7 +450,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkToolButton" id="btnFilesDeleteDoc">
+                              <object class="GtkToolButton" id="btnBookDeleteFile">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Delete Document</property>
@@ -661,7 +662,7 @@
                             <property name="margin_top">1</property>
                             <property name="margin_bottom">1</property>
                             <child>
-                              <object class="GtkToolButton" id="btnUniverseAddDoc">
+                              <object class="GtkToolButton" id="btnUniverseAddFile">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">New Document</property>
@@ -675,7 +676,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkToolButton" id="btnUniverseDeleteDoc">
+                              <object class="GtkToolButton" id="btnUniverseDeleteFile">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Delete Document</property>

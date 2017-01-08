@@ -21,6 +21,7 @@ from pyecrire.editor    import Editor
 from pyecrire.timer     import Timer
 from pyecrire.treeviews import ProjectTree, BookTree, UniverseTree, SceneTree, FileVersionTree, TimeTree
 from pyecrire.functions import makeTimeStamp, makeSceneNumber
+from pyecrire.dialogs   import SelectDialog
 
 class GUI():
 
@@ -48,6 +49,9 @@ class GUI():
         self.scneTree  = SceneTree()
         self.fileTree  = FileVersionTree()
         self.timeTree  = TimeTree()
+
+        # Connect Editable Tree Cells
+        self.bookTree.editCell.connect("edited",self.onEditBookFileTitle)
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -82,6 +86,7 @@ class GUI():
             "onClickTimerStart"        : self.webEditor.onTimerStart,
             "onClickTimerPause"        : self.webEditor.onTimerPause,
             "onClickTimerStop"         : self.webEditor.onTimerStop,
+            "onClickBookAddFile"       : self.onBookAddFile,
             "onClickSceneAdd"          : self.onSceneAdd,
             "onClickSceneRemove"       : self.onSceneRemove,
             "onClickSceneUp"           : self.onSceneUp,
@@ -463,10 +468,58 @@ class GUI():
         return
 
     ##
+    #  Book Files Action Buttons
+    ##
+
+    def onBookAddFile(self, guiObject):
+
+        if self.projData.bookHandle == "": return
+
+        logger.debug("Add book file")
+
+        guiDialog = SelectDialog("Select file type",["Plot","Scene"],[NUM_PLOT,NUM_SCNE])
+        dlgReturn = guiDialog.run()
+        guiDialog.destroy()
+
+        if dlgReturn == Gtk.ResponseType.CANCEL: return
+        if dlgReturn == NUM_SCNE: self.onSceneAdd()
+
+        if dlgReturn == NUM_PLOT:
+            self.projData.newFile(NAME_PLOT)
+            self.projData.setupFile("New Plot")
+            self.projData.setFileParent(NAME_BOOK)
+            self.projData.saveFile()
+            self.bookTree.loadContent(self.projData.bookPath)
+
+        return
+
+    def onEditBookFileTitle(self, guiObject, rowPath, editValue):
+
+        logger.debug("Edit book file title")
+
+        treeSelect = self.getObject("treeBookSelect")
+        itemIter   = self.bookTree.treeSort.get_iter(rowPath)
+        itemHandle = self.bookTree.treeSort.get_value(itemIter,self.bookTree.COL_HANDLE)
+        itemPath   = self.bookTree.getPath(itemHandle)
+        itemType   = self.bookTree.getType(itemHandle)
+
+        self.bookTree.setValue(itemHandle,self.bookTree.COL_TITLE,editValue)
+        self.projData.newFile(itemType)
+        self.projData.loadFile(itemPath,itemHandle)
+        self.projData.setFileTitle(editValue)
+        if itemType == NAME_PLOT: self.bookTree.allPlots.makeList()
+        if itemType == NAME_SCNE: self.bookTree.allScenes.makeList()
+
+        if itemType == NAME_SCNE:
+            self.scneTree.loadContent(self.projData.bookPath)
+
+        return
+
+    ##
     #  Scene Settings Action Buttons
     ##
 
-    def onSceneAdd(self, guiObject):
+    def onSceneAdd(self, guiObject=None):
 
         if self.projData.bookHandle == "": return
 
@@ -485,16 +538,16 @@ class GUI():
 
         return
 
-    def onSceneRemove(self, guiObject):
+    def onSceneRemove(self, guiObject=None):
         return
 
-    def onSceneUp(self, guiObject):
+    def onSceneUp(self, guiObject=None):
         return
 
-    def onSceneDown(self, guiObject):
+    def onSceneDown(self, guiObject=None):
         return
 
-    def onSceneSave(self, guiObject):
+    def onSceneSave(self, guiObject=None):
 
         logger.debug("Scene save clicked")
 

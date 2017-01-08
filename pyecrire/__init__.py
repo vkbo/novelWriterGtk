@@ -29,6 +29,15 @@ NAME_SCNE = "Scene"
 NAME_HIST = "History"
 NAME_CHAR = "Character"
 
+# Main num types
+NUM_NONE  = 0
+NUM_BOOK  = 10
+NUM_UNIV  = 20
+NUM_PLOT  = 11
+NUM_SCNE  = 12
+NUM_HIST  = 21
+NUM_CHAR  = 22
+
 # Name is container of file
 TYPE_NONE = 0  # Unknown datatype
 TYPE_CONT = 1  # Container, with files

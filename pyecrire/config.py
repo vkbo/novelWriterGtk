@@ -87,10 +87,10 @@ class Config:
         ## Main
         cnfSec = "Main"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"dataPath"):    self.dataPath    = confParser.get("Main","dataPath")
-            if confParser.has_option(cnfSec,"winWidth"):    self.winWidth    = confParser.getint("Main","winWidth")
-            if confParser.has_option(cnfSec,"winHeight"):   self.winHeight   = confParser.getint("Main","winHeight")
-            if confParser.has_option(cnfSec,"winPane"):     self.winPane     = confParser.getint("Main","winPane")
+            if confParser.has_option(cnfSec,"dataPath"):   self.dataPath   = confParser.get("Main","dataPath")
+            if confParser.has_option(cnfSec,"winWidth"):   self.winWidth   = confParser.getint("Main","winWidth")
+            if confParser.has_option(cnfSec,"winHeight"):  self.winHeight  = confParser.getint("Main","winHeight")
+            if confParser.has_option(cnfSec,"winPane"):    self.winPane    = confParser.getint("Main","winPane")
 
         ## Editor
         cnfSec = "Editor"

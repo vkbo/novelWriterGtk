@@ -178,6 +178,15 @@ class Project():
         self.theFile.setNumber(newNumber)
         return
 
+    def setFileTitle(self, newTitle):
+        if len(newTitle) > 0:
+            self.fileTitle = newTitle
+            self.fileName  = simplifyString(self.fileTitle)
+            self.theFile.setTitle(newTitle)
+            self.updateFileFolder()
+            self.theFile.saveDetails()
+        return
+
     def setSceneSettings(self, scnTitle, scnSection, scnChapter, scnNumber, scnPOV, scnTime):
 
         if self.theFile.dataType == NAME_SCNE:
@@ -336,7 +345,6 @@ class Project():
 
         return
 
-
     def loadFile(self, filePath, fileHandle):
 
         logger.debug("Loading file")
@@ -353,19 +361,6 @@ class Project():
         self.fileHandle = fileHandle
         self.fileFolder = self.fileCode+"-"+self.fileHandle+"-"+self.fileName
         self.filePath   = filePath
-
-        """
-        if   self.theFile.dataType == NAME_SCNE:
-            self.fileParent = NAME_BOOK
-        elif self.theFile.dataType == NAME_PLOT:
-            self.fileParent = NAME_BOOK
-        elif self.theFile.dataType == NAME_CHAR:
-            self.fileParent = NAME_UNIV
-        elif self.theFile.dataType == NAME_HIST:
-            self.fileParent = NAME_UNIV
-        else:
-            self.fileParent = ""
-        """
 
         return
 

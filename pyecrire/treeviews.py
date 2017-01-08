@@ -145,12 +145,14 @@ class BookTree():
         Col 2 : String : Word count
         Col 3 : String : List sorting column
         Col 4 : String : File handle
+        Col 5 : Bool   : Editable title
         """
 
         self.COL_TITLE  = 0
         self.COL_WORDS  = 1
         self.COL_SORT   = 2
         self.COL_HANDLE = 3
+        self.COL_EDIT   = 4
 
         # Connect to GUI
         self.mainConf   = CONFIG
@@ -159,7 +161,7 @@ class BookTree():
         # Core objects
         self.treeView   = self.getObject("treeBook")
         self.treeSelect = self.getObject("treeBookSelect")
-        self.treeStore  = Gtk.TreeStore(str,str,str,str)
+        self.treeStore  = Gtk.TreeStore(str,str,str,str,bool)
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
@@ -176,10 +178,11 @@ class BookTree():
         treeCol1.pack_start(cellCol1,False)
         treeCol0.add_attribute(cellCol0,"text",0)
         treeCol1.add_attribute(cellCol1,"text",1)
-        treeCol0.set_attributes(cellCol0,markup=0)
+        treeCol0.set_attributes(cellCol0,markup=0,editable=4)
         treeCol1.set_attributes(cellCol1,markup=1)
 
         cellCol1.set_alignment(1.0,0.5)
+        self.editCell = cellCol0
 
         # Enable to Show Sorting
         if debugShowSort:
@@ -205,24 +208,36 @@ class BookTree():
 
         pltSort = makeSceneNumber(GRP_PLOT,0,0,0)
         scnSort = makeSceneNumber(GRP_SCNE,0,0,0)
-        pltIter = self.treeStore.append(None,["<b>Plots</b>",None,pltSort,""])
-        scnIter = self.treeStore.append(None,["<b>Scenes</b>",None,scnSort,""])
+        pltIter = self.treeStore.append(None,["<b>Plots</b>",None,pltSort,"",False])
+        scnIter = self.treeStore.append(None,["<b>Scenes</b>",None,scnSort,"",False])
 
         if bookPath == "" or bookPath is None: return
 
+        self.allPlots.setDataPath(bookPath)
         self.allScenes.setDataPath(bookPath)
+
+        self.allPlots.makeList()
         self.allScenes.makeList()
 
         self.iterMap = {}
         self.chapMap = {}
+
+        tmpItem = DataWrapper(NAME_PLOT)
+        for itemHandle in self.allPlots.dataList.keys():
+            tmpItem.setDataPath(self.allPlots.dataList[itemHandle])
+            tmpItem.loadDetails()
+
+            pltNum = makeSceneNumber(GRP_PLOT,0,0,tmpItem.number)
+            tmpIter = self.treeStore.append(pltIter,[tmpItem.title,str(tmpItem.words),pltNum,itemHandle,True])
+            self.iterMap[itemHandle] = tmpIter
 
         tmpItem = DataWrapper(NAME_SCNE)
         for itemHandle in self.allScenes.dataList.keys():
             tmpItem.setDataPath(self.allScenes.dataList[itemHandle])
             tmpItem.loadDetails()
 
-            scnNum = makeSceneNumber(1,tmpItem.section,tmpItem.chapter,tmpItem.number)
-            scnSec = makeSceneNumber(1,tmpItem.section,tmpItem.chapter,0)
+            scnNum = makeSceneNumber(GRP_SCNE,tmpItem.section,tmpItem.chapter,tmpItem.number)
+            scnSec = makeSceneNumber(GRP_SCNE,tmpItem.section,tmpItem.chapter,0)
 
             if tmpItem.section == 0:
                 parIter = scnIter
@@ -234,10 +249,10 @@ class BookTree():
                     if tmpItem.section == 2: scnChapter = "<b>Chapter %d</b>" % tmpItem.chapter
                     if tmpItem.section == 3: scnChapter = "<b>Epilogue</b>"
 
-                    parIter = self.treeStore.append(scnIter,[scnChapter,None,scnSec,None])
+                    parIter = self.treeStore.append(scnIter,[scnChapter,None,scnSec,None,False])
                     self.chapMap[scnSec] = parIter
 
-            tmpIter = self.treeStore.append(parIter,[tmpItem.title,str(tmpItem.words),scnNum,itemHandle])
+            tmpIter = self.treeStore.append(parIter,[tmpItem.title,str(tmpItem.words),scnNum,itemHandle,True])
             self.iterMap[itemHandle] = tmpIter
 
         self.treeView.expand_all()

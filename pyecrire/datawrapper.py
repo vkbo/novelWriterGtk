@@ -31,12 +31,12 @@ class DataWrapper():
         self.listLen    = 0
         self.loadFile   = ""
         self.currFile   = ""
+        self.editFormat = ""
         self.fileHash   = ""
         self.timeList   = []
         self.timeTotal  = 0.0
         self.startWords = 0
         self.startChars = 0
-        self.editFormat = ""
 
         # General Values
         self.title      = ""
