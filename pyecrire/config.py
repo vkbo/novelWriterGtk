@@ -52,7 +52,8 @@ class Config:
         self.parMargin   = 4    # Pixels
 
         ## Timer
-        self.autoPause   = 60
+        self.autoPause   = 60   # Seconds
+        self.timeCutOff  = 10   # Seconds
 
         # Check if config file exists
         if path.isfile(path.join(self.confPath,self.confFile)):
@@ -101,6 +102,7 @@ class Config:
         cnfSec = "Timer"
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"AutoPause"):  self.autoPause  = confParser.getint("Timer","AutoPause")
+            if confParser.has_option(cnfSec,"timeCutOff"): self.timeCutOff = confParser.getint("Timer","timeCutOff")
 
         return
 
@@ -130,6 +132,7 @@ class Config:
         ## Timer
         confParser.add_section("Timer")
         confParser.set("Timer","autoPause",   str(self.autoPause))
+        confParser.set("Timer","timeCutOff",  str(self.timeCutOff))
 
         # Write config file
         confParser.write(open(path.join(self.confPath,self.confFile),"w"))

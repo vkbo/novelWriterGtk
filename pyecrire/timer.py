@@ -25,8 +25,7 @@ class Timer():
         self.getObject  = BUILDER.get_object
 
         self.timeLabel  = self.getObject("lblTimeCount")
-        self.docSLabel  = self.getObject("lblDTSessionTime")
-        self.docTLabel  = self.getObject("lblDTTotalTime")
+        self.timeTotal  = self.getObject("lblTimeTotal")
         self.progTimer  = self.getObject("progressTimer")
         self.btnStart   = self.getObject("btnTimerStart")
         self.btnPause   = self.getObject("btnTimerPause")
@@ -36,17 +35,16 @@ class Timer():
         self.statusCID  = self.statusBar.get_context_id("Timer")
 
         # Initialise Variables
+        self.currTime   = 0.0
+        self.totTime    = 0.0
         self.timeOffset = time()
         self.timeBuffer = 0.0
+        self.docTotal   = 0.0
         self.timerOn    = False
         self.tickCount  = 0
         self.autoPause  = self.mainConf.autoPause
         self.autoOffset = 0.0
         self.autoTime   = 0.0
-        self.docOffset  = time()
-        self.docBuffer  = 0.0
-        self.docTotal   = 0.0
-        self.docTimerOn = False
 
         # Default Button States
         self.btnStart.set_sensitive(True)
@@ -57,37 +55,53 @@ class Timer():
 
     def setDocTotal(self, timeValue):
         self.docTotal = timeValue
+        self.timeTotal.set_label(formatTime(self.docTotal))
         return
 
     def updateTime(self):
 
-        currTime = time() - self.timeOffset + self.timeBuffer
-        docTime  = time() - self.docOffset  + self.docBuffer
+        self.currTime = time() - self.timeOffset + self.timeBuffer
+        self.totTime  = self.currTime + self.docTotal
 
-        self.timeLabel.set_label(formatTime(currTime))
-        self.docSLabel.set_label(formatTime(docTime))
-        self.docTLabel.set_label(formatTime(docTime+self.docTotal))
+        self.timeLabel.set_label(formatTime(self.currTime))
+        self.timeTotal.set_label(formatTime(self.totTime))
 
         return
 
     def updateAutoTime(self):
+
         self.autoTime = time() - self.autoOffset
         self.progTimer.set_fraction(self.autoTime/self.autoPause)
+
         if self.autoTime >= self.autoPause:
-            self.onTimerPause()
-            self.docTimerPause()
+            self.pauseTimer()
             self.statusBar.pop(self.statusCID)
             self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer auto-paused")
+
         return
 
     def resetAutoPause(self):
+
         self.autoOffset = time()
         self.progTimer.set_fraction(0.0)
+
         return
 
-    def docTimerPause(self):
-        self.docTimerOn = False
-        self.docBuffer  = self.docBuffer + time() - self.docOffset
+    def resetTimer(self):
+
+        self.currTime   = 0.0
+        self.totTime    = 0.0
+        self.timeOffset = time()
+        self.timeBuffer = 0.0
+        self.docTotal   = 0.0
+        self.timerOn    = False
+        self.tickCount  = 0
+        self.autoOffset = 0.0
+        self.autoTime   = 0.0
+
+        self.timeLabel.set_label(formatTime(0))
+        self.timeTotal.set_label(formatTime(0))
+
         return
 
     ##
@@ -95,15 +109,20 @@ class Timer():
     ##
 
     def onTick(self):
+
         self.tickCount += 1
         if self.timerOn:
             self.updateTime()
             if self.autoPause > 0.0:
                 self.updateAutoTime()
+
         return True
 
-    def onTimerStart(self,guiObject=None):
+    def startTimer(self):
+
+        if not self.btnStart.get_sensitive(): return
         logger.debug("Timer started")
+
         self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer started")
         self.timerOn    = True
         self.timeOffset = time()
@@ -112,26 +131,35 @@ class Timer():
         self.btnPause.set_sensitive(True)
         self.btnStop.set_sensitive(True)
         self.progTimer.set_fraction(0.0)
+
         return
 
-    def onTimerPause(self,guiObject=None):
+    def pauseTimer(self):
+
+        if not self.btnPause.get_sensitive(): return
         logger.debug("Timer paused")
+
         self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer paused")
         self.timerOn    = False
         self.timeBuffer = self.timeBuffer + time() - self.timeOffset
         self.btnStart.set_sensitive(True)
         self.btnPause.set_sensitive(False)
         self.btnStop.set_sensitive(True)
+
         return
 
-    def onTimerStop(self,guiObject=None):
+    def stopTimer(self):
+
+        if not self.btnStop.get_sensitive(): return
         logger.debug("Timer stopped")
+
         self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer stopped")
         self.timerOn    = False
         self.timeBuffer = 0.0
         self.btnStart.set_sensitive(True)
         self.btnPause.set_sensitive(False)
         self.btnStop.set_sensitive(False)
+
         return
 
 # End Class Timer

@@ -19,7 +19,7 @@ from pyecrire           import *
 from pyecrire.project   import Project
 from pyecrire.editor    import Editor
 from pyecrire.timer     import Timer
-from pyecrire.treeviews import ProjectTree, BookTree, UniverseTree, SceneTree, FileVersionTree
+from pyecrire.treeviews import ProjectTree, BookTree, UniverseTree, SceneTree, FileVersionTree, TimeTree
 from pyecrire.functions import makeTimeStamp, makeSceneNumber
 
 class GUI():
@@ -40,13 +40,14 @@ class GUI():
         self.winMain    = self.getObject("winMain")
 
         # Prepare GUI Classes
-        self.webEditor  = Editor()
-        self.guiTimer   = Timer()
-        self.projTree   = ProjectTree()
-        self.bookTree   = BookTree()
-        self.univTree   = UniverseTree()
-        self.scneTree   = SceneTree()
-        self.fileTree   = FileVersionTree()
+        self.guiTimer  = Timer()
+        self.webEditor = Editor(self.guiTimer)
+        self.projTree  = ProjectTree()
+        self.bookTree  = BookTree()
+        self.univTree  = UniverseTree()
+        self.scneTree  = SceneTree()
+        self.fileTree  = FileVersionTree()
+        self.timeTree  = TimeTree()
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -78,9 +79,9 @@ class GUI():
             "onClickEditRight"         : self.webEditor.onEditAction,
             "onClickEditJustify"       : self.webEditor.onEditAction,
             "onClickEditStrip"         : self.webEditor.onEditStripFormatting,
-            "onClickTimerStart"        : self.guiTimer.onTimerStart,
-            "onClickTimerPause"        : self.guiTimer.onTimerPause,
-            "onClickTimerStop"         : self.guiTimer.onTimerStop,
+            "onClickTimerStart"        : self.webEditor.onTimerStart,
+            "onClickTimerPause"        : self.webEditor.onTimerPause,
+            "onClickTimerStop"         : self.webEditor.onTimerStop,
             "onClickSceneAdd"          : self.onSceneAdd,
             "onClickSceneRemove"       : self.onSceneRemove,
             "onClickSceneUp"           : self.onSceneUp,
@@ -153,6 +154,7 @@ class GUI():
         self.mainConf.setWinPane(self.guiPaned.get_position())
         self.mainConf.autoSaveConfig()
         self.webEditor.autoSave()
+        self.webEditor.onTimerStop()
 
         Gtk.main_quit()
 
@@ -235,6 +237,7 @@ class GUI():
             self.webEditor.autoSave()
             self.webEditor.loadFile(fileType,filePath,fileHandle,doWordCount)
             self.fileTree.loadContent(self.webEditor.theFile.fileList)
+            self.timeTree.loadContent(self.webEditor.theFile.timeList)
             self.getObject("mainNoteBook").set_current_page(TABM_EDIT)
             self.updateStatusFile()
 
@@ -303,8 +306,8 @@ class GUI():
         # Update Info Panel
         self.getObject("lblWCTotWords").set_label(str(self.webEditor.theFile.words))
         self.getObject("lblWCTotChars").set_label(str(self.webEditor.theFile.chars))
-        self.getObject("lblWCSesWords").set_label(str(self.webEditor.theFile.words - self.webEditor.startWords))
-        self.getObject("lblWCSesChars").set_label(str(self.webEditor.theFile.chars - self.webEditor.startChars))
+        self.getObject("lblWCSesWords").set_label(str(self.webEditor.theFile.words - self.webEditor.theFile.startWords))
+        self.getObject("lblWCSesChars").set_label(str(self.webEditor.theFile.chars - self.webEditor.theFile.startChars))
 
         return
 
@@ -531,6 +534,9 @@ class GUI():
     def eventMainTabChange(self, guiObject, guiChild, tabIdx):
 
         logger.debug("Main tab change")
+
+        if tabIdx != TABM_EDIT:
+            self.webEditor.setEditable(False)
 
         if tabIdx == TABM_SRCE:
             logger.debug("Source View")

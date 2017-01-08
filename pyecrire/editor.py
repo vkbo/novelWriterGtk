@@ -26,13 +26,14 @@ from pyecrire.dialogs     import OkCancelDialog
 
 class Editor(WebKit.WebView):
 
-    def __init__(self):
+    def __init__(self, timer):
 
         WebKit.WebView.__init__(self)
 
         # Connect to GUI
         self.mainConf   = CONFIG
         self.getObject  = BUILDER.get_object
+        self.guiTimer   = timer
         self.fileSaved  = self.getObject("imgFileSaved")
 
         # Paths
@@ -43,8 +44,6 @@ class Editor(WebKit.WebView):
         # Editor Data
         self.theFile    = DataWrapper(NAME_NONE)
         self.fileHandle = ""
-        self.startWords = 0
-        self.startChars = 0
 
         # Set Up Editor
         self.set_editable(False)
@@ -74,6 +73,10 @@ class Editor(WebKit.WebView):
         if not self.textSaved:
             self.theFile.autoSaveText()
 
+        self.onTimerStop()
+        self.setEditable(False)
+        self.guiTimer.resetTimer()
+
         self.theFile    = DataWrapper(NAME_NONE)
         self.fileHandle = fileHandle
         self.textSaved  = True
@@ -82,10 +85,12 @@ class Editor(WebKit.WebView):
         self.theFile.setDataType(fileType)
         self.theFile.loadDetails()
         self.theFile.loadText()
+        self.theFile.loadTiming()
+        self.guiTimer.setDocTotal(self.theFile.timeTotal)
 
         if doWordCount:
-            self.startWords = self.theFile.words
-            self.startChars = self.theFile.chars
+            self.theFile.startWords = self.theFile.words
+            self.theFile.startChars = self.theFile.chars
 
         self.setText(self.theFile.text)
 
@@ -128,8 +133,7 @@ class Editor(WebKit.WebView):
     ##
 
     def onToggleEditable(self, guiObject):
-        guiEditable = guiObject.get_active()
-        self.set_editable(guiEditable)
+        self.setEditable(guiObject.get_active(),"Button")
         return
 
     def onEditAction(self, guiObject):
@@ -158,44 +162,41 @@ class Editor(WebKit.WebView):
         guiDialog.destroy()
         return
 
-    # Button Removed
-    """"
-    def onEditColour(self, guiObject):
-        guiDialog = Gtk.ColorSelectionDialog("Select Colour")
-        guiDialog.set_transient_for(self.guiParent)
-        if guiDialog.run() == Gtk.ResponseType.OK:
-            selCol = guiDialog.get_color_selection().get_current_color()
-            colR   = int(floor(selCol.red   / 256))
-            colG   = int(floor(selCol.green / 256))
-            colB   = int(floor(selCol.blue  / 256))
-            strCol = "#%02x%02x%02x" % (colR,colG,colB)
-            self.execute_script("document.execCommand('forecolor', null, '%s');" % strCol)
-        guiDialog.destroy()
-        return
-    """
-
     def onEventKeyPress(self, guiObject, guiEvent):
         #keyname = Gdk.keyval_name(guiEvent.keyval)
         #logger.debug("Editor key press: %s", keyname)
         return
 
     def onContentChanged(self, guiObject):
+
         if self.textSaved:
             self.textSaved = False
             self.fileSaved.set_from_file(self.ledRed)
+
+        # Reset timer auto-pause
+        self.guiTimer.resetAutoPause()
+
+        return
+
+    def onTimerStart(self, guiObject=None):
+        self.guiTimer.startTimer()
+        return
+
+    def onTimerPause(self, guiObject=None):
+        self.guiTimer.pauseTimer()
+        return
+
+    def onTimerStop(self, guiObject=None):
+        self.guiTimer.stopTimer()
+        self.theFile.setText(self.getText())
+        self.theFile.saveTiming(self.guiTimer.currTime)
+        self.guiTimer.setDocTotal(self.theFile.timeTotal)
+        self.setEditable(False)
         return
 
     ##
     #  Getters
     ##
-
-    """
-    def getHtml(self):
-        self.execute_script("document.title=document.documentElement.innerHTML;")
-        #srcHtml = self.get_main_frame().get_data_source().get_data()
-        #return srcHtml.str
-        return unicode(self.get_main_frame().get_title(),"utf-8")
-    """
 
     def getText(self):
 
@@ -236,18 +237,17 @@ class Editor(WebKit.WebView):
 
         return True
 
-    def setEditable(self, editable):
-        self.getObject("btnEditFile").set_active(editable)
-        self.set_editable(editable)
+    def setEditable(self, makeEditable, initSource="Action"):
+
+        if initSource != "Button":
+            self.getObject("btnEditFile").set_active(makeEditable)
+        self.set_editable(makeEditable)
+
+        if makeEditable:
+            self.guiTimer.startTimer()
+        else:
+            self.guiTimer.pauseTimer()
+
         return
-
-    """
-    def setAsSaved(self):
-
-        self.textSaved = True
-        self.fileSaved.set_from_file(self.mainConf.guiPath+"/led-green.png")
-
-        return
-    """
 
 # End Class Editor

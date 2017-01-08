@@ -24,38 +24,42 @@ class DataWrapper():
         self.mainConf = CONFIG
 
         # Default Values
-        self.dataType = ""
-        self.dataPath = ""
-        self.parType  = ""
-        self.fileList = {}
-        self.listLen  = 0
-        self.loadFile = ""
-        self.currFile = ""
-        self.fileHash = ""
+        self.dataType   = ""
+        self.dataPath   = ""
+        self.parType    = ""
+        self.fileList   = {}
+        self.listLen    = 0
+        self.loadFile   = ""
+        self.currFile   = ""
+        self.fileHash   = ""
+        self.timeList   = []
+        self.timeTotal  = 0.0
+        self.startWords = 0
+        self.startChars = 0
 
         # General Values
-        self.title    = ""
-        self.created  = ""
-        self.date     = ""
-        self.parent   = ""
+        self.title      = ""
+        self.created    = ""
+        self.date       = ""
+        self.parent     = ""
 
         # File Specific Values
-        self.notes    = ""
-        self.hasNotes = False
-        self.text     = ""
-        self.hasText  = False
-        self.words    = 0
-        self.chars    = 0
-        self.number   = 0
+        self.notes      = ""
+        self.hasNotes   = False
+        self.text       = ""
+        self.hasText    = False
+        self.words      = 0
+        self.chars      = 0
+        self.number     = 0
 
         # Scene Specific Values
-        self.section  = 0
-        self.chapter  = 0
-        self.pov      = ""
+        self.section    = 0
+        self.chapter    = 0
+        self.pov        = ""
 
         # Book Specific Values
-        self.category = ""
-        self.status   = ""
+        self.category   = ""
+        self.status     = ""
 
         self.setDataType(dataType)
 
@@ -64,7 +68,7 @@ class DataWrapper():
     def makeList(self):
 
         fileList    = {}
-        fileExclude = ["details.txt"]
+        fileExclude = ["details.txt","timing.txt"]
 
         if path.isdir(self.dataPath):
             dirContent = listdir(self.dataPath)
@@ -87,7 +91,7 @@ class DataWrapper():
 
         if fileKey != "":
             self.loadFile = fileList[fileKey]
-            fileDate      = dateFromString(fileKey)
+            fileDate      = dateFromString(fileKey,1)
             fileAge       = (datetime.now()-fileDate).total_seconds()/60.
             if fileAge < self.mainConf.versionAge:
                 self.currFile = self.loadFile
@@ -187,6 +191,54 @@ class DataWrapper():
         return
 
     ##
+    #  Timing Functions (timing.txt)
+    ##
+
+    def loadTiming(self):
+
+        timeFile = path.join(self.dataPath,"timing.txt")
+        if not path.isfile(timeFile): return
+        logger.debug("Loading timing information")
+
+        fileObj = open(timeFile,"r")
+        tmpData = fileObj.read()
+        fileObj.close()
+
+        self.timeList  = []
+        self.timeTotal = 0.0
+        tmpLines = tmpData.split("\n")
+        for tmpLine in tmpLines:
+            tmpValues = tmpLine.split(",")
+            if len(tmpValues) == 4:
+                self.timeList.append(tmpValues)
+                self.timeTotal += float(tmpValues[1])
+
+        return
+
+    def saveTiming(self, timeValue):
+
+        if timeValue < self.mainConf.timeCutOff: return
+
+        logger.debug("Saving timing information")
+
+        self.timeTotal += timeValue
+
+        timeStamp = makeTimeStamp(0)
+        timeValue = str(timeValue)
+        wordCount = str(self.words - self.startWords)
+        charCount = str(self.chars - self.startChars)
+
+        self.timeList.append([timeStamp,timeValue,wordCount,charCount])
+
+        timeFile = path.join(self.dataPath,"timing.txt")
+        timeSet  = timeStamp+","+timeValue+","+wordCount+","+charCount+"\n"
+        fileObj  = open(timeFile,"a+")
+        fileObj.write(timeSet)
+        fileObj.close()
+
+        return
+
+    ##
     #  File Text Functions ([timestamp].txt)
     ##
 
@@ -208,10 +260,10 @@ class DataWrapper():
 
     def saveText(self):
 
-        logger.debug("Saving text file")
-
         if not self.hasText: return
         if self.dataGroup is not TYPE_FILE: return
+
+        logger.debug("Saving text file")
 
         if self.currFile == "": self.currFile = makeTimeStamp(1)+".txt"
 
@@ -227,13 +279,13 @@ class DataWrapper():
 
     def autoSaveText(self):
 
-        logger.debug("Auto-saving text file")
-
         fileHash = sha256(str(self.text).encode()).hexdigest()
 
         if not self.hasText:                return False
         if self.dataGroup is not TYPE_FILE: return False
         if self.fileHash == fileHash:       return False
+
+        logger.debug("Auto-saving text file")
 
         self.saveText()
 

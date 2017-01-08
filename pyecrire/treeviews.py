@@ -19,7 +19,7 @@ from gi.repository        import Gtk
 from pyecrire             import *
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
-from pyecrire.functions   import makeSceneNumber, reformatDate
+from pyecrire.functions   import makeSceneNumber, reformatDate, formatTime, dateFromString
 
 # Set to true to show sorting in all treeviews
 debugShowSort = False
@@ -134,7 +134,6 @@ class ProjectTree():
         return None
 
 # End Class ProjectTree
-
 
 class BookTree():
 
@@ -281,7 +280,6 @@ class BookTree():
 
 # End Class BookTree
 
-
 class UniverseTree():
 
     def __init__(self):
@@ -384,7 +382,6 @@ class UniverseTree():
         return
 
 # End Class UniverseTree
-
 
 class SceneTree():
 
@@ -542,7 +539,6 @@ class SceneTree():
 
 # End Class SceneTree
 
-
 class FileVersionTree():
 
     def __init__(self):
@@ -601,3 +597,79 @@ class FileVersionTree():
         return
 
 # End Class FileVersionTree
+
+class TimeTree():
+
+    def __init__(self):
+
+        """
+        Tree Store Structure:
+        Col 1 : String  : Date
+        Col 2 : String  : Time
+        Col 3 : String  : Words
+        Col 4 : String  : Sort
+        """
+
+        # Connect to GUI
+        self.mainConf   = CONFIG
+        self.getObject  = BUILDER.get_object
+
+        # Core objects
+        self.treeView   = self.getObject("treeTimes")
+        self.treeSelect = self.getObject("treeTimesSelect")
+        self.treeStore  = Gtk.TreeStore(str,str,str,str)
+        self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
+
+        # Data Sorting
+        self.treeSort.set_sort_column_id(3,Gtk.SortType.DESCENDING)
+        self.treeView.set_model(self.treeSort)
+
+        # Columns
+        cellCol0 = Gtk.CellRendererText()
+        cellCol1 = Gtk.CellRendererText()
+        cellCol2 = Gtk.CellRendererText()
+        treeCol0 = self.treeView.get_column(0)
+        treeCol1 = self.treeView.get_column(1)
+        treeCol2 = self.treeView.get_column(2)
+
+        treeCol0.pack_start(cellCol0,True)
+        treeCol1.pack_start(cellCol1,False)
+        treeCol2.pack_start(cellCol2,False)
+        treeCol0.add_attribute(cellCol0,"text",0)
+        treeCol1.add_attribute(cellCol1,"text",1)
+        treeCol2.add_attribute(cellCol2,"text",2)
+
+        cellCol2.set_alignment(1.0,0.5)
+
+        # Enable to Show Sorting
+        if debugShowSort:
+            cellCol3 = Gtk.CellRendererText()
+            treeCol3 = self.treeView.get_column(3)
+            treeCol3.set_visible(True)
+            treeCol3.pack_start(cellCol3,False)
+            treeCol3.add_attribute(cellCol3,"text",3)
+
+        return
+
+    def loadContent(self, timeList):
+
+        self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
+        self.treeStore.clear()
+
+        for timeSet in timeList:
+            timeDate  = timeSet[0][6:8]+"/"+timeSet[0][4:6]
+            timeVal   = formatTime(float(timeSet[1]))
+            timeWords = timeSet[2]
+            timeSort  = timeSet[0]
+            self.treeStore.append(None,[timeDate,timeVal,timeWords,timeSort])
+
+        self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
+
+        return
+
+    def clearTree(self):
+        self.treeStore.clear()
+        return
+
+# End Class TimeTree
+

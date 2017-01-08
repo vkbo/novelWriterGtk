@@ -82,8 +82,22 @@ def reformatDate(dateString):
 # Date String to Number
 #
 
-def dateFromString(dateString):
-    return datetime.strptime(dateString,"%Y%m%d-%H%M%S")
+def dateFromString(dateString, stringFormat=0):
+
+    if   stringFormat == 0:
+        return datetime.strptime(dateString,"%Y%m%d%H%M%S")
+    elif stringFormat == 1:
+        return datetime.strptime(dateString,"%Y%m%d-%H%M%S")
+    elif stringFormat == 2:
+        return datetime.strptime(dateString,"%Y-%m-%d %H:%M:%S")
+    elif stringFormat == 3:
+        return datetime.strptime(dateString,"%d/%m/%Y %H:%M:%S")
+    elif stringFormat == 4:
+        return datetime.strptime(dateString,"%H:%M:%S")
+    else:
+        return None
+
+    return None
 
 #
 # Format Time from Seconds
