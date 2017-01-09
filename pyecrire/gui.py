@@ -60,7 +60,7 @@ class GUI():
             "onEventWinChange"         : self.eventWinChange,
             "onSwitchPageMainNoteBook" : self.eventMainTabChange,
             "onSwitchPageSideNoteBook" : self.eventSideTabChange,
-            "onClickNew"               : self.projData.newProject,
+            "onClickNew"               : self.onNewProject,
             "onClickSave"              : self.onFileSave,
             "onChangeTreeProject"      : self.onSelectProjectTree,
             "onChangeTreeBook"         : self.onSelectBookTree,
@@ -432,6 +432,19 @@ class GUI():
     #  Button Actions
     ##
 
+    def onNewProject(self, guiObject=None):
+
+        self.projData.newProject()
+        self.scneTree.clearContent()
+
+        self.getObject("entryBookTitle").set_text("")
+        self.getObject("entryBookUniverse").set_text("")
+        self.getObject("treeProjectSelect").unselect_all()
+        self.getObject("entryBookUniverse").set_can_focus(False)
+        self.getObject("mainNoteBook").set_current_page(TABM_BOOK)
+
+        return
+
     def onFileSave(self, guiObject=None):
 
         logger.debug("Saving")
@@ -449,6 +462,13 @@ class GUI():
         #self.saveEditor()
         self.loadEditor(self.webEditor.theFile.parType,self.webEditor.fileHandle,False)
 
+        return
+
+    def onToggleNewUniverse(self, guiObject):
+        if guiObject.get_active():
+            self.getObject("entryBookUniverse").set_can_focus(True)
+        else:
+            self.getObject("entryBookUniverse").set_can_focus(False)
         return
 
     ##
@@ -623,13 +643,6 @@ class GUI():
 
     def eventWinChange(self, guiObject, guiEvent):
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
-        return
-
-    def onToggleNewUniverse(self, guiObject):
-        if guiObject.get_active():
-            self.getObject("entryBookUniverse").set_can_focus(True)
-        else:
-            self.getObject("entryBookUniverse").set_can_focus(False)
         return
 
 # End Class GUI

@@ -75,6 +75,7 @@ class Timer():
 
         if self.autoTime >= self.autoPause:
             self.pauseTimer()
+            self.getObject("btnEditFile").set_active(False)
             self.statusBar.pop(self.statusCID)
             self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer auto-paused")
 

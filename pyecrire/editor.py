@@ -47,10 +47,30 @@ class Editor(WebKit.WebView):
 
         # Set Up Editor
         self.set_editable(False)
-        self.connect("key_press_event",self.onEventKeyPress)
         self.connect("user-changed-contents",self.onContentChanged)
         self.load_html_string("", "file:///")
         self.fileSaved.set_from_file(self.ledGrey)
+
+        # Formatting Menu
+        fmtMenu   = Gtk.Menu()
+        menuOrder = ["p","h2","h3","h4","ul","ol","pre"]
+        menuItems = {
+            "p"   : "Paragraph",
+            "h2"  : "Large Heading",
+            "h3"  : "Medium Heading",
+            "h4"  : "Small Heading",
+            "ul"  : "Bulleted List",
+            "ol"  : "Numbered List",
+            "pre" : "Preformatted",
+        }
+
+        for menuKey in menuOrder:
+            fmtMenuItem = Gtk.MenuItem(menuItems[menuKey])
+            fmtMenu.append(fmtMenuItem)
+            fmtMenuItem.connect("activate",self.onSelectFormat, menuKey)
+            fmtMenuItem.show()
+
+        self.getObject("btnFormat").set_menu(fmtMenu)
 
         # Properties
         self.textSaved  = True
@@ -65,6 +85,32 @@ class Editor(WebKit.WebView):
         self.fileSaved.set_from_file(self.ledGrey)
 
         return True
+
+    def updateFileDetails(self):
+
+        fileType = self.theFile.dataType
+
+        if fileType == NAME_PLOT or fileType == NAME_SCNE:
+            self.getObject("lblBookInfoCreated").set_label(self.theFile.created)
+            self.getObject("lblBookInfoUpdated").set_label(self.theFile.date)
+            self.getObject("lblBookInfoVersions").set_label(str(self.theFile.listLen))
+            self.getObject("lblUniverseInfoCreated").set_label("")
+            self.getObject("lblUniverseInfoUpdated").set_label("")
+            self.getObject("lblUniverseInfoVersions").set_label("")
+
+        if fileType == NAME_HIST or fileType == NAME_CHAR:
+            self.getObject("lblBookInfoCreated").set_label("")
+            self.getObject("lblBookInfoUpdated").set_label("")
+            self.getObject("lblBookInfoVersions").set_label("")
+            self.getObject("lblUniverseInfoCreated").set_label(self.theFile.created)
+            self.getObject("lblUniverseInfoUpdated").set_label(self.theFile.date)
+            self.getObject("lblUniverseInfoVersions").set_label(str(self.theFile.listLen))
+
+        return
+
+    ##
+    #  Load and Save
+    ##
 
     def loadFile(self, fileType, filePath, fileHandle, doWordCount=True):
 
@@ -93,6 +139,7 @@ class Editor(WebKit.WebView):
             self.theFile.startChars = self.theFile.chars
 
         self.setText(self.theFile.text)
+        self.updateFileDetails()
 
         return
 
@@ -136,6 +183,16 @@ class Editor(WebKit.WebView):
         self.setEditable(guiObject.get_active(),"Button")
         return
 
+    def onSelectFormat(self, guiObject, fmtCode):
+        logger.debug("Set format to %s" % fmtCode)
+        if   fmtCode == "ol":
+            self.execute_script("document.execCommand('insertOrderedList',false,false);")
+        elif fmtCode == "ul":
+            self.execute_script("document.execCommand('insertUnorderedList',false,false);")
+        else:
+            self.execute_script("document.execCommand('formatBlock',false,'%s');" % fmtCode)
+        return
+
     def onEditAction(self, guiObject):
         logger.debug("Editor action %s" % guiObject.get_name())
         self.execute_script("document.execCommand('%s',false,false);" % guiObject.get_name())
@@ -160,11 +217,6 @@ class Editor(WebKit.WebView):
             srcText = htmlStrip(srcText)
             self.setText(srcText)
         guiDialog.destroy()
-        return
-
-    def onEventKeyPress(self, guiObject, guiEvent):
-        #keyname = Gdk.keyval_name(guiEvent.keyval)
-        #logger.debug("Editor key press: %s", keyname)
         return
 
     def onContentChanged(self, guiObject):
@@ -222,15 +274,19 @@ class Editor(WebKit.WebView):
         lineIndent = str(self.mainConf.lineIndent/100.0)
         parMargin  = str(self.mainConf.parMargin)
 
+        if self.theFile.editFormat.lower() == "indent": parMargin  = "0"
+        if self.theFile.editFormat.lower() == "skip":   lineIndent = "0"
+
         srcHtml  = "<html>"
         srcHtml += "<head>"
         srcHtml += "  <style>"
-        srcHtml += "    body {font-size: "+fontSize+"px; padding: 40px;}"
-        if self.theFile.editFormat.lower() == "indent":
-            srcHtml += "    p    {margin: 0px; text-align: justify; line-height: "+lineHeight+"em;}"
-            srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
-        if self.theFile.editFormat.lower() == "skip":
-            srcHtml += "    p    {margin: "+parMargin+"px; text-align: justify; line-height: "+lineHeight+"em;}"
+        srcHtml += "    body {font-size: "+fontSize+"px; padding: 40px; line-height: "+lineHeight+"em;}"
+        srcHtml += "    h2   {margin: 0 0 0.7em 0; font-size: 1.6em;}"
+        srcHtml += "    h3   {margin: 0 0 0.5em 0; font-size: 1.4em;}"
+        srcHtml += "    h4   {margin: 0 0 0.5em 0; font-size: 1.2em;}"
+        srcHtml += "    li   {text-align: justify;}"
+        srcHtml += "    p    {margin: "+parMargin+"px 0; text-align: justify;}"
+        srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
         srcHtml += "  </style>"
         srcHtml += "</head>"
         srcHtml += "<body>"+srcText+"</body>"

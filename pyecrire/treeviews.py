@@ -526,6 +526,16 @@ class SceneTree():
 
         return
 
+    def clearContent(self):
+
+        self.treeStore.clear()
+
+        self.iterMap   = {}
+        self.chapMap   = {}
+        self.chapCount = {}
+
+        return
+
     def sumWords(self):
         for chIter in self.chapMap.items():
             if self.treeStore.iter_has_child(chIter[1]):

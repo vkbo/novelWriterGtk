@@ -123,7 +123,7 @@ def makeSceneNumber(group,section,chapter,number):
 
 def htmlCleanUp(srcText):
 
-    okTags   = ["p","b","i","u","strike"]
+    okTags   = ["p","b","i","u","strike","ul","ol","li","h2","h3","h4","pre"]
     okAttr   = {"*" : ["style"]}
     okStyles = ["text-align"]
 

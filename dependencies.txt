@@ -1,5 +1,5 @@
 python-webkit
-python-appdirs
 python-configparser
-python-bleach
-python-unidecode
+python3-appdirs
+python3-bleach
+python3-unidecode
