@@ -22,7 +22,7 @@ from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber, reformatDate, formatTime, dateFromString, numFromString
 
 # Set to true to show sorting in all treeviews
-debugShowSort = False
+debugShowSort = True
 
 class ProjectTree():
 
@@ -280,6 +280,10 @@ class BookTree():
             wordCount = "<span foreground='"+fontColor+"'>"+str(wordSum)+"</span>"
             self.treeStore.set_value(parIter,self.COL_WORDS,wordCount)
         return
+
+    def getCount(self, dataType):
+        if dataType == NAME_PLOT: return self.allPlots.getCount()
+        if dataType == NAME_SCNE: return self.allScenes.getCount()
 
     def getPath(self, itemHandle):
         if itemHandle in self.allPlots.dataList:  return self.allPlots.dataList[itemHandle]

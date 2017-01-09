@@ -507,6 +507,7 @@ class GUI():
         if dlgReturn == NUM_PLOT:
             self.projData.initFile(NAME_PLOT)
             self.projData.setupFile("New Plot")
+            self.projData.setFileNumber(self.bookTree.getCount(NAME_PLOT)+1)
             self.projData.setFileParent(NAME_BOOK)
             self.projData.saveFile()
             self.bookTree.loadContent(self.projData.bookPath)

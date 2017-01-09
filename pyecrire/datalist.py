@@ -45,6 +45,9 @@ class DataList():
 
         return
 
+    def getCount(self):
+        return len(self.dataList)
+
     def getItem(self, itemHandle):
         if itemHandle in self.dataList:
             return self.dataList[itemHandle]
