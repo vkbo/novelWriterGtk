@@ -22,7 +22,7 @@ from pyecrire.datawrapper import DataWrapper
 from pyecrire.functions   import makeSceneNumber, reformatDate, formatTime, dateFromString, numFromString
 
 # Set to true to show sorting in all treeviews
-debugShowSort = True
+debugShowSort = False
 
 class ProjectTree():
 
@@ -51,7 +51,7 @@ class ProjectTree():
         self.listBooks = Gtk.ListStore(str,str)
 
         # Data Sorting
-        self.treeSort.set_sort_column_id(2,Gtk.SortType.ASCENDING)
+        self.treeSort.set_sort_column_id(0,Gtk.SortType.ASCENDING)
         self.treeView.set_model(self.treeSort)
 
         # Columns
@@ -65,6 +65,14 @@ class ProjectTree():
         treeCol0.add_attribute(cellCol0,"text",0)
         treeCol1.add_attribute(cellCol1,"text",1)
         treeCol0.set_attributes(cellCol0,markup=0)
+
+        # Enable to Show Sorting
+        if debugShowSort:
+            cellCol2 = Gtk.CellRendererText()
+            treeCol2 = self.treeView.get_column(2)
+            treeCol2.set_visible(True)
+            treeCol2.pack_start(cellCol2,False)
+            treeCol2.add_attribute(cellCol2,"text",2)
 
         # Data Maps and Lists
         self.allBooks = DataList(self.mainConf.dataPath,NAME_BOOK)
@@ -331,7 +339,7 @@ class UniverseTree():
         # Core objects
         self.treeView   = self.getObject("treeUniverse")
         self.treeSelect = self.getObject("treeUniverseSelect")
-        self.treeStore  = Gtk.TreeStore(str,str,str,str)
+        self.treeStore  = Gtk.TreeStore(str,str,str,str,bool)
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
@@ -348,7 +356,8 @@ class UniverseTree():
         treeCol1.pack_start(cellCol1,False)
         treeCol0.add_attribute(cellCol0,"text",0)
         treeCol1.add_attribute(cellCol1,"text",1)
-        treeCol0.set_attributes(cellCol0,markup=0)
+        treeCol0.set_attributes(cellCol0,markup=0,editable=4)
+        treeCol1.set_attributes(cellCol1,markup=1)
 
         cellCol1.set_alignment(1.0,0.5)
 
@@ -364,6 +373,7 @@ class UniverseTree():
         self.allHists = DataList(self.mainConf.dataPath,NAME_HIST)
         self.allChars = DataList(self.mainConf.dataPath,NAME_CHAR)
 
+        self.rootMap = {}
         self.iterMap = {}
 
         return
@@ -373,20 +383,65 @@ class UniverseTree():
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
-        pltSort = makeSceneNumber(GRP_HIST,0,0,0)
-        scnSort = makeSceneNumber(GRP_CHAR,0,0,0)
-        pltIter = self.treeStore.append(None,["<b>History</b>",None,pltSort,""])
-        scnIter = self.treeStore.append(None,["<b>Characters</b>",None,scnSort,""])
+        hstSort = makeSceneNumber(GRP_HIST,0,0,0)
+        chrSort = makeSceneNumber(GRP_CHAR,0,0,0)
+        hstIter = self.treeStore.append(None,["<b>History</b>",None,hstSort,"",False])
+        chrIter = self.treeStore.append(None,["<b>Characters</b>",None,chrSort,"",False])
+        self.rootMap = {0 : hstIter, 1 : chrIter}
 
         if univPath == "" or univPath is None: return
 
+        self.allHists.setDataPath(univPath)
         self.allChars.setDataPath(univPath)
+
+        self.allHists.makeList()
         self.allChars.makeList()
 
         self.iterMap = {}
+
+        tmpItem = DataWrapper(NAME_HIST)
+        for itemHandle in self.allHists.dataList.keys():
+            tmpItem.setDataPath(self.allHists.dataList[itemHandle])
+            tmpItem.loadDetails()
+
+            hstNum = makeSceneNumber(GRP_HIST,0,0,tmpItem.number)
+            tmpIter = self.treeStore.append(hstIter,[tmpItem.title,str(tmpItem.words),hstNum,itemHandle,True])
+            self.iterMap[itemHandle] = tmpIter
+
+        tmpItem = DataWrapper(NAME_CHAR)
+        for itemHandle in self.allChars.dataList.keys():
+            tmpItem.setDataPath(self.allChars.dataList[itemHandle])
+            tmpItem.loadDetails()
+
+            chrNum = makeSceneNumber(GRP_HIST,0,0,tmpItem.number)
+            tmpIter = self.treeStore.append(chrIter,[tmpItem.title,str(tmpItem.words),chrNum,itemHandle,True])
+            self.iterMap[itemHandle] = tmpIter
+
+        self.treeView.expand_all()
+        self.sumWords()
         self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
         return
+
+    def sumWords(self):
+        for chIter in self.rootMap.items():
+            self.sumWordsOfChildren(chIter[1],"green")
+        return
+
+    def sumWordsOfChildren(self, parIter, fontColor):
+        if self.treeStore.iter_has_child(parIter):
+            nChildren = self.treeStore.iter_n_children(parIter)
+            wordSum   = 0
+            for n in range(nChildren):
+                scnIter  = self.treeStore.iter_nth_child(parIter,n)
+                wordSum += numFromString(self.treeStore.get_value(scnIter,self.COL_WORDS))
+            wordCount = "<span foreground='"+fontColor+"'>"+str(wordSum)+"</span>"
+            self.treeStore.set_value(parIter,self.COL_WORDS,wordCount)
+        return
+
+    def getCount(self, dataType):
+        if dataType == NAME_HIST: return self.allHists.getCount()
+        if dataType == NAME_CHAR: return self.allChars.getCount()
 
     def getPath(self, itemHandle):
         if itemHandle in self.allHists.dataList: return self.allHists.dataList[itemHandle]
@@ -399,7 +454,7 @@ class UniverseTree():
         return NAME_NONE
 
     def getIter(self, itemHandle):
-        if itemHandle in self.iterMap:  return self.aiterMap[itemHandle]
+        if itemHandle in self.iterMap:  return self.iterMap[itemHandle]
         return None
 
     def setValue(self, itemHandle, colIdx, newValue):

@@ -87,6 +87,7 @@ class GUI():
             "onClickTimerPause"        : self.webEditor.onTimerPause,
             "onClickTimerStop"         : self.webEditor.onTimerStop,
             "onClickBookAddFile"       : self.onBookAddFile,
+            "onClickUniverseAddFile"   : self.onUniverseAddFile,
             "onClickSceneAdd"          : self.onSceneAdd,
             "onClickSceneRemove"       : self.onSceneRemove,
             "onClickSceneUp"           : self.onSceneUp,
@@ -511,6 +512,30 @@ class GUI():
             self.projData.setFileParent(NAME_BOOK)
             self.projData.saveFile()
             self.bookTree.loadContent(self.projData.bookPath)
+
+        return
+
+    def onUniverseAddFile(self, guiObject):
+
+        if self.projData.univHandle == "": return
+
+        logger.debug("Add universe file")
+
+        guiDialog = SelectDialog("Select file type",["History","Character"],[NUM_HIST,NUM_CHAR])
+        dlgReturn = guiDialog.run()
+        guiDialog.destroy()
+
+        if dlgReturn == Gtk.ResponseType.CANCEL: return
+
+        if dlgReturn == NUM_HIST: fileType = NAME_HIST
+        if dlgReturn == NUM_CHAR: fileType = NAME_CHAR
+
+        self.projData.initFile(fileType)
+        self.projData.setupFile("New "+fileType)
+        self.projData.setFileNumber(self.univTree.getCount(fileType)+1)
+        self.projData.setFileParent(NAME_UNIV)
+        self.projData.saveFile()
+        self.univTree.loadContent(self.projData.univPath)
 
         return
 

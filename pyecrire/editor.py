@@ -122,6 +122,7 @@ class Editor(WebKit.WebView):
         self.onTimerStop()
         self.setEditable(False)
         self.guiTimer.resetTimer()
+        self.guiTimer.resetAutoPause()
 
         self.theFile    = DataWrapper(NAME_NONE)
         self.fileHandle = fileHandle

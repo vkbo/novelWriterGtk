@@ -140,12 +140,12 @@ class DataWrapper():
             if confParser.has_option(cnfSec,"Title"):    self.title    = confParser.get(cnfSec,"Title")
             if confParser.has_option(cnfSec,"Created"):  self.created  = confParser.get(cnfSec,"Created")
             if confParser.has_option(cnfSec,"Date"):     self.date     = confParser.get(cnfSec,"Date")
+            if confParser.has_option(cnfSec,"Number"):   self.number   = confParser.getint(cnfSec,"Number")
             if confParser.has_option(cnfSec,"Parent"):   self.parent   = confParser.get(cnfSec,"Parent")
             if confParser.has_option(cnfSec,"Notes"):    self.hasNotes = confParser.getboolean(cnfSec,"Notes")
             if confParser.has_option(cnfSec,"Text"):     self.hasText  = confParser.getboolean(cnfSec,"Text")
             if confParser.has_option(cnfSec,"Words"):    self.words    = confParser.getint(cnfSec,"Words")
             if confParser.has_option(cnfSec,"Chars"):    self.chars    = confParser.getint(cnfSec,"Chars")
-            if confParser.has_option(cnfSec,"Number"):   self.number   = confParser.getint(cnfSec,"Number")
             if confParser.has_option(cnfSec,"Section"):  self.section  = confParser.getint(cnfSec,"Section")
             if confParser.has_option(cnfSec,"Chapter"):  self.chapter  = confParser.getint(cnfSec,"Chapter")
             if confParser.has_option(cnfSec,"POV"):      self.pov      = confParser.get(cnfSec,"POV")
@@ -170,6 +170,7 @@ class DataWrapper():
         confParser.set(cnfSec,"Title",   str(self.title))
         confParser.set(cnfSec,"Created", str(self.created))
         confParser.set(cnfSec,"Date",    str(self.date))
+        confParser.set(cnfSec,"Number",  str(self.number))
         if self.dataType != NAME_UNIV:
             confParser.set(cnfSec,"Parent",   str(self.parent))
         if self.dataGroup == TYPE_FILE:
@@ -177,7 +178,6 @@ class DataWrapper():
             confParser.set(cnfSec,"Text",     str(self.hasText))
             confParser.set(cnfSec,"Words",    str(self.words))
             confParser.set(cnfSec,"Chars",    str(self.chars))
-            confParser.set(cnfSec,"Number",   str(self.number))
         if self.dataType == NAME_SCNE:
             confParser.set(cnfSec,"Section",  str(self.section))
             confParser.set(cnfSec,"Chapter",  str(self.chapter))
