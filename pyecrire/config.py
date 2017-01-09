@@ -160,7 +160,7 @@ class Config:
             logger.debug("Created folder %s" % self.dataPath)
         return
 
-    def autoSaveConfig(self):
+    def doAutoSaveConfig(self):
 
         if not self.confChanged: return False
 

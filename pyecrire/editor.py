@@ -117,7 +117,7 @@ class Editor(WebKit.WebView):
         logger.debug("Loading file")
 
         if not self.textSaved:
-            self.theFile.autoSaveText()
+            self.theFile.doAutoSaveText()
 
         self.onTimerStop()
         self.setEditable(False)
@@ -135,8 +135,8 @@ class Editor(WebKit.WebView):
         self.guiTimer.setDocTotal(self.theFile.timeTotal)
 
         if doWordCount:
-            self.theFile.startWords = self.theFile.words
-            self.theFile.startChars = self.theFile.chars
+            self.theFile.prevWords = self.theFile.words
+            self.theFile.prevChars = self.theFile.chars
 
         self.setText(self.theFile.text)
         self.updateFileDetails()
@@ -145,7 +145,7 @@ class Editor(WebKit.WebView):
 
     def loadFileVersion(self, filePath):
 
-        self.theFile.setLoadFile(filePath)
+        self.theFile.setFileToLoad(filePath)
         self.theFile.loadText()
         self.setText(self.theFile.text)
 
@@ -163,12 +163,12 @@ class Editor(WebKit.WebView):
 
         return
 
-    def autoSave(self):
+    def doAutoSave(self):
 
         srcText = self.getText()
 
         self.theFile.setText(srcText)
-        self.theFile.autoSaveText()
+        self.theFile.doAutoSaveText()
 
         self.textSaved = True
         self.fileSaved.set_from_file(self.ledGreen)

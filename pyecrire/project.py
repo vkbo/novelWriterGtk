@@ -310,7 +310,7 @@ class Project():
     #  File Functions
     ##
 
-    def newFile(self, fileType):
+    def initFile(self, fileType):
 
         # Trigger autosave in case there's unsaved data
         #self.theFile.autoSaveText()

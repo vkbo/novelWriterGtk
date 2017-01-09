@@ -55,11 +55,11 @@ class GUI():
 
         # Set Up Event Handlers
         guiHandlers = {
-            "onDestroyWindow"          : self.guiDestroy,
-            "onEventKeyPress"          : self.eventWinKeyPress,
-            "onEventWinChange"         : self.eventWinChange,
-            "onSwitchPageMainNoteBook" : self.eventMainTabChange,
-            "onSwitchPageSideNoteBook" : self.eventSideTabChange,
+            "onDestroyWindow"          : self.onGuiDestroy,
+            "onEventKeyPress"          : self.onWinKeyPress,
+            "onEventWinChange"         : self.onWinChange,
+            "onSwitchPageMainNoteBook" : self.onMainTabChange,
+            "onSwitchPageSideNoteBook" : self.onSideTabChange,
             "onClickNew"               : self.onNewProject,
             "onClickSave"              : self.onFileSave,
             "onChangeTreeProject"      : self.onSelectProjectTree,
@@ -95,7 +95,7 @@ class GUI():
             "onToggleNewUniverse"      : self.onToggleNewUniverse,
             "onMenuActionHelpAbout"    : self.onActionShowAbout,
             "onMenuActionFileSave"     : self.onFileSave,
-            "onMenuActionFileQuit"     : self.guiDestroy,
+            "onMenuActionFileQuit"     : self.onGuiDestroy,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
@@ -114,7 +114,7 @@ class GUI():
 
         # Set Up Timers
         self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
-        self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.autoTasks)
+        self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.doAutoTasks)
 
         ##
         #  Content
@@ -152,13 +152,13 @@ class GUI():
         return
 
     # Close Program
-    def guiDestroy(self, guiObject):
+    def onGuiDestroy(self, guiObject):
 
         logger.debug("Exiting")
 
         self.mainConf.setWinPane(self.guiPaned.get_position())
         self.mainConf.saveConfig()
-        self.webEditor.autoSave()
+        self.webEditor.doAutoSave()
         self.webEditor.onTimerStop()
 
         Gtk.main_quit()
@@ -166,15 +166,15 @@ class GUI():
         return
 
     # Automated Tasks
-    def autoTasks(self):
+    def doAutoTasks(self):
 
         statusBar = self.getObject("mainStatus")
         statusCID = self.statusBar.get_context_id("File")
 
-        if self.mainConf.autoSaveConfig():
+        if self.mainConf.doAutoSaveConfig():
             statusBar.push(statusCID,makeTimeStamp(4)+"Config auto-saved")
 
-        if self.webEditor.autoSave():
+        if self.webEditor.doAutoSave():
             self.updateWordCount()
             self.fileTree.loadContent(self.webEditor.theFile.fileList)
             statusBar.push(statusCID,makeTimeStamp(4)+"File auto-saved")
@@ -187,7 +187,7 @@ class GUI():
 
     def loadBook(self):
 
-        self.webEditor.autoSave()
+        self.webEditor.doAutoSave()
         self.webEditor.clearEditor()
         self.scneTree.loadContent(self.projData.bookPath)
         self.fileTree.clearTree()
@@ -239,7 +239,7 @@ class GUI():
             fileType = self.univTree.getType(fileHandle)
 
         if filePath is not None:
-            self.webEditor.autoSave()
+            self.webEditor.doAutoSave()
             self.webEditor.loadFile(fileType,filePath,fileHandle,doWordCount)
             self.fileTree.loadContent(self.webEditor.theFile.fileList)
             self.timeTree.loadContent(self.webEditor.theFile.timeList)
@@ -311,8 +311,8 @@ class GUI():
         # Update Info Panel
         self.getObject("lblWCTotWords").set_label(str(self.webEditor.theFile.words))
         self.getObject("lblWCTotChars").set_label(str(self.webEditor.theFile.chars))
-        self.getObject("lblWCSesWords").set_label(str(self.webEditor.theFile.words - self.webEditor.theFile.startWords))
-        self.getObject("lblWCSesChars").set_label(str(self.webEditor.theFile.chars - self.webEditor.theFile.startChars))
+        self.getObject("lblWCSesWords").set_label(str(self.webEditor.theFile.words - self.webEditor.theFile.prevWords))
+        self.getObject("lblWCSesChars").set_label(str(self.webEditor.theFile.chars - self.webEditor.theFile.prevChars))
 
         return
 
@@ -396,7 +396,7 @@ class GUI():
         if itemHandle == "" or itemHandle is None: return
 
         filePath = self.scneTree.getPath(itemHandle)
-        self.projData.newFile(NAME_SCNE)
+        self.projData.initFile(NAME_SCNE)
         self.projData.loadFile(filePath,itemHandle)
 
         # Load Form Details
@@ -422,7 +422,7 @@ class GUI():
 
         itemPath = self.webEditor.theFile.getFilePath(itemHandle)
 
-        self.webEditor.autoSave()
+        self.webEditor.doAutoSave()
         self.webEditor.loadFileVersion(itemPath)
         self.webEditor.setEditable(False)
 
@@ -505,7 +505,7 @@ class GUI():
         if dlgReturn == NUM_SCNE: self.onSceneAdd()
 
         if dlgReturn == NUM_PLOT:
-            self.projData.newFile(NAME_PLOT)
+            self.projData.initFile(NAME_PLOT)
             self.projData.setupFile("New Plot")
             self.projData.setFileParent(NAME_BOOK)
             self.projData.saveFile()
@@ -524,7 +524,7 @@ class GUI():
         itemType   = self.bookTree.getType(itemHandle)
 
         self.bookTree.setValue(itemHandle,self.bookTree.COL_TITLE,editValue)
-        self.projData.newFile(itemType)
+        self.projData.initFile(itemType)
         self.projData.loadFile(itemPath,itemHandle)
         self.projData.setFileTitle(editValue)
         if itemType == NAME_PLOT: self.bookTree.allPlots.makeList()
@@ -546,7 +546,7 @@ class GUI():
         scnSort  = makeSceneNumber(1,0,0,0)
         sceneNum = self.scneTree.chapCount[scnSort] + 1
 
-        self.projData.newFile(NAME_SCNE)
+        self.projData.initFile(NAME_SCNE)
         self.projData.setupFile("New Scene")
         self.projData.setFileParent(NAME_BOOK)
         self.projData.setFileNumber(sceneNum)
@@ -604,7 +604,7 @@ class GUI():
     #  Tab Changes
     ##
 
-    def eventMainTabChange(self, guiObject, guiChild, tabIdx):
+    def onMainTabChange(self, guiObject, guiChild, tabIdx):
 
         logger.debug("Main tab change")
 
@@ -620,7 +620,7 @@ class GUI():
 
         return
 
-    def eventSideTabChange(self, guiObject, guiChild, tabIdx):
+    def onSideTabChange(self, guiObject, guiChild, tabIdx):
 
         logger.debug("Side tab change")
 
@@ -637,11 +637,11 @@ class GUI():
     #  Main Window Events
     ##
 
-    def eventWinKeyPress(self, guiObject, guiEvent):
-        self.guiTimer.resetAutoPause()
+    def onWinKeyPress(self, guiObject, guiEvent):
+        #self.guiTimer.resetAutoPause()
         return
 
-    def eventWinChange(self, guiObject, guiEvent):
+    def onWinChange(self, guiObject, guiEvent):
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
 

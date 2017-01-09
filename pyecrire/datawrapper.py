@@ -29,14 +29,14 @@ class DataWrapper():
         self.parType    = ""
         self.fileList   = {}
         self.listLen    = 0
-        self.loadFile   = ""
+        self.fileToLoad   = ""
         self.currFile   = ""
         self.editFormat = ""
         self.fileHash   = ""
         self.timeList   = []
         self.timeTotal  = 0.0
-        self.startWords = 0
-        self.startChars = 0
+        self.prevWords  = 0
+        self.prevChars  = 0
 
         # General Values
         self.title      = ""
@@ -91,11 +91,11 @@ class DataWrapper():
             self.fileList[fileKey] = fileList[fileKey]
 
         if fileKey != "":
-            self.loadFile = fileList[fileKey]
-            fileDate      = dateFromString(fileKey,1)
-            fileAge       = (datetime.now()-fileDate).total_seconds()/60.
+            self.fileToLoad = fileList[fileKey]
+            fileDate        = dateFromString(fileKey,1)
+            fileAge         = (datetime.now()-fileDate).total_seconds()/60.
             if fileAge < self.mainConf.versionAge:
-                self.currFile = self.loadFile
+                self.currFile = self.fileToLoad
 
         return
 
@@ -226,8 +226,8 @@ class DataWrapper():
 
         timeStamp = makeTimeStamp(0)
         timeValue = str(timeValue)
-        wordCount = str(self.words - self.startWords)
-        charCount = str(self.chars - self.startChars)
+        wordCount = str(self.words - self.prevWords)
+        charCount = str(self.chars - self.prevChars)
 
         self.timeList.append([timeStamp,timeValue,wordCount,charCount])
 
@@ -247,10 +247,10 @@ class DataWrapper():
 
         logger.debug("Loading text file")
 
-        if self.loadFile == "":
+        if self.fileToLoad == "":
             self.text = "<p>New File</p>"
         else:
-            fileObj   = open(path.join(self.dataPath,self.loadFile),encoding="utf-8",mode="r")
+            fileObj   = open(path.join(self.dataPath,self.fileToLoad),encoding="utf-8",mode="r")
             self.text = fileObj.read()
             fileObj.close()
 
@@ -278,7 +278,7 @@ class DataWrapper():
 
         return
 
-    def autoSaveText(self):
+    def doAutoSaveText(self):
 
         fileHash = sha256(str(self.text).encode()).hexdigest()
 
@@ -389,8 +389,8 @@ class DataWrapper():
             self.chars   = chars
         return
 
-    def setLoadFile(self, filePath):
-        self.loadFile = filePath
+    def setFileToLoad(self, filePath):
+        self.fileToLoad = filePath
         return
 
 # End Class DataWrapper

@@ -19,7 +19,7 @@ A lot of features are not yet working, and there are probably a number of bugs.
 **Current features are:**
 
 * HTML based editor that allows for three heading styles, lists and preformatted text.
-* Editor can either be formatted with indented lines for each paragraph, or with a space between thes. The format can
+* Editor can either be formatted with indented lines for each paragraph, or with a space between these. The format can
   be selected for each file type.
 * Scene files can be organised into numbered chapters, prologue or epilogue chapters, and moved freely within and
   between these. The intention is to add export features to concatenate these files into whole documents.
