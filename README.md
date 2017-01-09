@@ -1,8 +1,8 @@
 #pyÉcrire
 
-**Simple Book Writing**
+**Simple Book Writing Program**
 
-Written for Python3, with Gtk3 and an WebKit3 based editor.
+Written for Python3, with Gtk3 and a WebKit3 based editor.
 
 pyÉcrire is a simple book writing program for organising scenes, plot descriptions, character profiles, etc in an
 organised interface. It is mainly written for my own personal book writing projects, and therefore suited to my own
