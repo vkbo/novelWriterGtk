@@ -168,4 +168,19 @@ def wordCount(srcHtml):
 
     return len(splitText), len(cleanText)
 
+#
+# Extract Number from String
+#
+
+def numFromString(inString):
+
+    outString = ""
+
+    for c in inString:
+        if c.isdigit(): outString += c
+
+    if outString == "": return 0
+
+    return int(outString)
+
 # End Functions

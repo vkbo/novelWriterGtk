@@ -19,7 +19,7 @@ from gi.repository        import Gtk
 from pyecrire             import *
 from pyecrire.datalist    import DataList
 from pyecrire.datawrapper import DataWrapper
-from pyecrire.functions   import makeSceneNumber, reformatDate, formatTime, dateFromString
+from pyecrire.functions   import makeSceneNumber, reformatDate, formatTime, dateFromString, numFromString
 
 # Set to true to show sorting in all treeviews
 debugShowSort = False
@@ -196,6 +196,7 @@ class BookTree():
         self.allPlots  = DataList(self.mainConf.dataPath,NAME_PLOT)
         self.allScenes = DataList(self.mainConf.dataPath,NAME_SCNE)
 
+        self.rootMap = {}
         self.iterMap = {}
         self.chapMap = {}
 
@@ -210,6 +211,7 @@ class BookTree():
         scnSort = makeSceneNumber(GRP_SCNE,0,0,0)
         pltIter = self.treeStore.append(None,["<b>Plots</b>",None,pltSort,"",False])
         scnIter = self.treeStore.append(None,["<b>Scenes</b>",None,scnSort,"",False])
+        self.rootMap = {0 : pltIter, 1 : scnIter}
 
         if bookPath == "" or bookPath is None: return
 
@@ -263,14 +265,20 @@ class BookTree():
 
     def sumWords(self):
         for chIter in self.chapMap.items():
-            if self.treeStore.iter_has_child(chIter[1]):
-                nChildren = self.treeStore.iter_n_children(chIter[1])
-                wordSum   = 0
-                for n in range(nChildren):
-                    scnIter  = self.treeStore.iter_nth_child(chIter[1],n)
-                    wordSum += int(self.treeStore.get_value(scnIter,self.COL_WORDS))
-                wordCount = "<span foreground='blue'>"+str(wordSum)+"</span>"
-                self.treeStore.set_value(chIter[1],self.COL_WORDS,wordCount)
+            self.sumWordsOfChildren(chIter[1],"blue")
+        for chIter in self.rootMap.items():
+            self.sumWordsOfChildren(chIter[1],"green")
+        return
+
+    def sumWordsOfChildren(self, parIter, fontColor):
+        if self.treeStore.iter_has_child(parIter):
+            nChildren = self.treeStore.iter_n_children(parIter)
+            wordSum   = 0
+            for n in range(nChildren):
+                scnIter  = self.treeStore.iter_nth_child(parIter,n)
+                wordSum += numFromString(self.treeStore.get_value(scnIter,self.COL_WORDS))
+            wordCount = "<span foreground='"+fontColor+"'>"+str(wordSum)+"</span>"
+            self.treeStore.set_value(parIter,self.COL_WORDS,wordCount)
         return
 
     def getPath(self, itemHandle):
