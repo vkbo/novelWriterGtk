@@ -40,7 +40,8 @@ class Config:
         self.dataPath   = path.join(self.homePath, self.appName)
         self.winWidth   = 1000
         self.winHeight  = 700
-        self.winPane    = 200
+        self.mainPane   = 200
+        self.sidePane   = 200
 
         ## Editor
         self.autoSave   = 30   # Seconds
@@ -84,7 +85,8 @@ class Config:
             if confParser.has_option(cnfSec,"dataPath"):   self.dataPath   = confParser.get("Main","dataPath")
             if confParser.has_option(cnfSec,"winWidth"):   self.winWidth   = confParser.getint("Main","winWidth")
             if confParser.has_option(cnfSec,"winHeight"):  self.winHeight  = confParser.getint("Main","winHeight")
-            if confParser.has_option(cnfSec,"winPane"):    self.winPane    = confParser.getint("Main","winPane")
+            if confParser.has_option(cnfSec,"mainPane"):   self.mainPane   = confParser.getint("Main","mainPane")
+            if confParser.has_option(cnfSec,"sidePane"):   self.sidePane   = confParser.getint("Main","sidePane")
 
         ## Editor
         cnfSec = "Editor"
@@ -115,7 +117,8 @@ class Config:
         confParser.set("Main","dataPath",     str(self.dataPath))
         confParser.set("Main","winWidth",     str(self.winWidth))
         confParser.set("Main","winHeight",    str(self.winHeight))
-        confParser.set("Main","winPane",      str(self.winPane))
+        confParser.set("Main","mainPane",     str(self.mainPane))
+        confParser.set("Main","sidePane",     str(self.sidePane))
 
         ## Editor
         confParser.add_section("Editor")
@@ -165,10 +168,17 @@ class Config:
             self.confChanged = True
         return
 
-    def setWinPane(self, width):
-        if width != self.winPane:
+    def setMainPane(self, position):
+        if position != self.mainPane:
             logger.debug("Pane size changed")
-            self.winPane = width
+            self.mainPane = position
+            self.confChanged = True
+        return
+
+    def setSidePane(self, position):
+        if position != self.sidePane:
+            logger.debug("Pane size changed")
+            self.sidePane = position
             self.confChanged = True
         return
 
