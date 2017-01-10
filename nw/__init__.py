@@ -12,11 +12,12 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
+from nw.config     import Config
 
 logger.basicConfig(format="%(levelname)s: %(message)s",level=logger.DEBUG)
 
 # Global Classes
-#CONFIG  = Config()
+CONFIG  = Config()
 BUILDER = Gtk.Builder()
 
 # End novelWriter Initialisation
