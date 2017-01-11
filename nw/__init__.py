@@ -13,7 +13,11 @@ gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
 from os            import path
+from datetime      import datetime
 from nw.config     import Config
+
+# ==================================================================================================================== #
+# Begin Initialisation
 
 logger.basicConfig(format="%(levelname)s: %(message)s",level=logger.DEBUG)
 
@@ -24,4 +28,54 @@ BUILDER = Gtk.Builder()
 BUILDER.add_from_file(path.join(CONFIG.guiPath,"novelWriter.glade"))
 BUILDER.add_from_file(path.join(CONFIG.guiPath,"dlgEditBook.glade"))
 
-# End novelWriter Initialisation
+# End Initialisation
+# ==================================================================================================================== #
+# Begin Global Constant
+
+# Date Formats
+DATEFORMAT = {
+    "dd.mm.yyyy" : ["DMY","."],
+    "dd/mm/yyyy" : ["DMY","/"],
+    "dd-mm-yyyy" : ["DMY","-"],
+    "mm.dd.yyyy" : ["MDY","."],
+    "mm/dd/yyyy" : ["MDY","/"],
+    "mm-dd-yyyy" : ["MDY","-"],
+    "yyyy.mm.dd" : ["YMD","."],
+    "yyyy/mm/dd" : ["YMD","/"],
+    "yyyy-mm-dd" : ["YMD","-"],
+}
+DATE_NUM1 = 0
+DATE_NUM2 = 1
+DATE_TIME = 2
+DATE_DATE = 3
+DATE_FULL = 4
+
+
+# End Global Constants
+# ==================================================================================================================== #
+# Begin Global Functions
+
+def formatDateTime(dateFormat=DATE_NUM1, timeValue=None, localFormat="dd.mm.yyyy"):
+
+    if timeValue is None: timeValue = datetime.now()
+
+    if dateFormat == DATE_NUM1: return "{:%Y%m%d%H%M%S}".format(timeValue)
+    if dateFormat == DATE_NUM2: return "{:%Y%m%d-%H%M%S}".format(timeValue)
+
+    timeString = "{:%H%M%S}".format(timeValue)
+
+    dtSeq = DATEFORMAT[localFormat][0]
+    dtSep = DATEFORMAT[localFormat][1]
+
+    if dtSeq == "DMY": dateString = "{:%d"+dtSep+"%m"+dtSep+"%Y}".format(timeValue)
+    if dtSeq == "MDY": dateString = "{:%m"+dtSep+"%d"+dtSep+"%Y}".format(timeValue)
+    if dtSeq == "YMD": dateString = "{:%Y"+dtSep+"%m"+dtSep+"%d}".format(timeValue)
+
+    if dateFormat == DATE_TIME: return timeString
+    if dateFormat == DATE_DATE: return dateString
+    if dateFormat == DATE_FULL: return timeString+" "+dateString
+    
+    return None
+
+# End Global Functions
+# ==================================================================================================================== #
