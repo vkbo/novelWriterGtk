@@ -37,7 +37,6 @@ class Config:
         self.confChanged = False
 
         ## General
-        self.dataPath   = path.join(self.homePath, self.appName)
         self.winWidth   = 1000
         self.winHeight  = 700
         self.mainPane   = 200
@@ -45,7 +44,6 @@ class Config:
 
         ## Editor
         self.autoSave   = 30   # Seconds
-        self.versionAge = 60   # Minutes
         self.fontSize   = 16   # Pixels
         self.lineHeight = 150  # Percent
         self.lineIndent = 400  # Percent
@@ -54,12 +52,12 @@ class Config:
         ## Timer
         self.autoPause  = 60   # Seconds
 
+        ## Paths
+        self.lastBook   = ""
+
         # Check if config file exists
         if path.isfile(path.join(self.confPath,self.confFile)):
             self.loadConfig()
-
-        # Validate config
-        self.validateConfig()
 
         # Save a copy of the default config if no file exists
         if not path.isfile(path.join(self.confPath,self.confFile)):
@@ -82,26 +80,29 @@ class Config:
         ## Main
         cnfSec = "Main"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"dataPath"):   self.dataPath   = confParser.get("Main","dataPath")
-            if confParser.has_option(cnfSec,"winWidth"):   self.winWidth   = confParser.getint("Main","winWidth")
-            if confParser.has_option(cnfSec,"winHeight"):  self.winHeight  = confParser.getint("Main","winHeight")
-            if confParser.has_option(cnfSec,"mainPane"):   self.mainPane   = confParser.getint("Main","mainPane")
-            if confParser.has_option(cnfSec,"sidePane"):   self.sidePane   = confParser.getint("Main","sidePane")
+            if confParser.has_option(cnfSec,"winWidth"):   self.winWidth   = confParser.getint(cnfSec,"winWidth")
+            if confParser.has_option(cnfSec,"winHeight"):  self.winHeight  = confParser.getint(cnfSec,"winHeight")
+            if confParser.has_option(cnfSec,"mainPane"):   self.mainPane   = confParser.getint(cnfSec,"mainPane")
+            if confParser.has_option(cnfSec,"sidePane"):   self.sidePane   = confParser.getint(cnfSec,"sidePane")
 
         ## Editor
         cnfSec = "Editor"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"autoSave"):   self.autoSave   = confParser.getint("Editor","autoSave")
-            if confParser.has_option(cnfSec,"versionAge"): self.versionAge = confParser.getint("Editor","versionAge")
-            if confParser.has_option(cnfSec,"fontSize"):   self.fontSize   = confParser.getint("Editor","fontSize")
-            if confParser.has_option(cnfSec,"lineHeight"): self.lineHeight = confParser.getint("Editor","lineHeight")
-            if confParser.has_option(cnfSec,"lineIndent"): self.lineIndent = confParser.getint("Editor","lineIndent")
-            if confParser.has_option(cnfSec,"parMargin"):  self.parMargin  = confParser.getint("Editor","parMargin")
+            if confParser.has_option(cnfSec,"autoSave"):   self.autoSave   = confParser.getint(cnfSec,"autoSave")
+            if confParser.has_option(cnfSec,"fontSize"):   self.fontSize   = confParser.getint(cnfSec,"fontSize")
+            if confParser.has_option(cnfSec,"lineHeight"): self.lineHeight = confParser.getint(cnfSec,"lineHeight")
+            if confParser.has_option(cnfSec,"lineIndent"): self.lineIndent = confParser.getint(cnfSec,"lineIndent")
+            if confParser.has_option(cnfSec,"parMargin"):  self.parMargin  = confParser.getint(cnfSec,"parMargin")
 
         ## Timer
         cnfSec = "Timer"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"AutoPause"):  self.autoPause  = confParser.getint("Timer","AutoPause")
+            if confParser.has_option(cnfSec,"autoPause"):  self.autoPause  = confParser.getint(cnfSec,"autoPause")
+
+        ## Path
+        cnfSec = "Path"
+        if confParser.has_section(cnfSec):
+            if confParser.has_option(cnfSec,"lastBook"):   self.lastBook   = confParser.get(cnfSec,"lastBook")
 
         return
 
@@ -114,7 +115,6 @@ class Config:
 
         ## Main
         confParser.add_section("Main")
-        confParser.set("Main","dataPath",     str(self.dataPath))
         confParser.set("Main","winWidth",     str(self.winWidth))
         confParser.set("Main","winHeight",    str(self.winHeight))
         confParser.set("Main","mainPane",     str(self.mainPane))
@@ -123,7 +123,6 @@ class Config:
         ## Editor
         confParser.add_section("Editor")
         confParser.set("Editor","autoSave",   str(self.autoSave))
-        confParser.set("Editor","versionAge", str(self.versionAge))
         confParser.set("Editor","fontSize",   str(self.fontSize))
         confParser.set("Editor","lineHeight", str(self.lineHeight))
         confParser.set("Editor","lineIndent", str(self.lineIndent))
@@ -133,18 +132,14 @@ class Config:
         confParser.add_section("Timer")
         confParser.set("Timer","autoPause",   str(self.autoPause))
 
+        ## Path
+        confParser.add_section("Path")
+        confParser.set("Path","lastBook",     str(self.lastBook))
+
         # Write config file
         confParser.write(open(path.join(self.confPath,self.confFile),"w"))
         self.confChanged = False
 
-        return
-
-    def validateConfig(self):
-        if not path.isdir(self.dataPath):
-            logger.debug("Data path does not exist")
-            self.dataPath = path.join(self.homePath, self.appName)
-            mkdir(self.dataPath)
-            logger.debug("Created folder %s" % self.dataPath)
         return
 
     def doAutoSaveConfig(self):
@@ -180,6 +175,11 @@ class Config:
             logger.debug("Pane size changed")
             self.sidePane = position
             self.confChanged = True
+        return
+
+    def setLastBook(self, bookPath):
+        logger.debug("Setting last book path")
+        self.lastBook = bookPath
         return
 
 # End Class Config
