@@ -54,6 +54,7 @@ class Config:
 
         ## Paths
         self.lastBook   = ""
+        self.lastFile   = ""
 
         # Check if config file exists
         if path.isfile(path.join(self.confPath,self.confFile)):
@@ -71,7 +72,7 @@ class Config:
 
     def loadConfig(self):
 
-        logger.debug("Loading config")
+        logger.debug("Config: Loading")
         confParser = configparser.ConfigParser()
         confParser.readfp(open(path.join(self.confPath,self.confFile)))
 
@@ -103,12 +104,13 @@ class Config:
         cnfSec = "Path"
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"lastBook"):   self.lastBook   = confParser.get(cnfSec,"lastBook")
+            if confParser.has_option(cnfSec,"lastFile"):   self.lastFile   = confParser.get(cnfSec,"lastFile")
 
         return
 
     def saveConfig(self):
 
-        logger.debug("Saving config")
+        logger.debug("Config: Saving")
         confParser = configparser.ConfigParser()
 
         # Set options
@@ -135,6 +137,7 @@ class Config:
         ## Path
         confParser.add_section("Path")
         confParser.set("Path","lastBook",     str(self.lastBook))
+        confParser.set("Path","lastFile",     str(self.lastFile))
 
         # Write config file
         confParser.write(open(path.join(self.confPath,self.confFile),"w"))
@@ -146,7 +149,7 @@ class Config:
 
         if not self.confChanged: return False
 
-        logger.debug("Auto-saving config")
+        logger.debug("Config: AutoSaving")
         self.saveConfig()
 
         return True
@@ -157,7 +160,6 @@ class Config:
 
     def setWinSize(self, width, height):
         if width != self.winWidth or height != self.winHeight:
-            logger.debug("Window size changed")
             self.winWidth  = width
             self.winHeight = height
             self.confChanged = True
@@ -165,21 +167,22 @@ class Config:
 
     def setMainPane(self, position):
         if position != self.mainPane:
-            logger.debug("Pane size changed")
             self.mainPane = position
             self.confChanged = True
         return
 
     def setSidePane(self, position):
         if position != self.sidePane:
-            logger.debug("Pane size changed")
             self.sidePane = position
             self.confChanged = True
         return
 
     def setLastBook(self, bookPath):
-        logger.debug("Setting last book path")
         self.lastBook = bookPath
+        return
+
+    def setLastFile(self, fileHandle):
+        self.lastFile = fileHandle
         return
 
 # End Class Config
