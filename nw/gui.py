@@ -33,7 +33,6 @@ class GUI():
 
         # Data Files
         self.theBook    = BookData()
-        self.theScene   = SceneData()
 
         # Prepare GUI Classes
         self.guiTimer   = None #Timer()
@@ -46,6 +45,7 @@ class GUI():
             "onClickOpen"        : self.onOpenBook,
             "onClickSave"        : self.onSaveBook,
             "onClickPreferences" : self.onEditBook,
+            "onClickSceneAdd"    : self.onSceneAdd,
             "onDestroyWindow"    : self.onGuiDestroy,
             "onMainWinChange"    : self.onWinChange,
 
@@ -123,6 +123,14 @@ class GUI():
     def onEditBook(self, guiObject):
         self.bookEditor.loadEditor()
         self.bookEditor.dlgWin.show()
+        return
+
+    ##
+    #  Scene ToolBar Button Events
+    ##
+
+    def onSceneAdd(self, guiObject):
+        self.theBook.makeNewScene("New Scene")
         return
 
     ##

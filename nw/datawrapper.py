@@ -9,7 +9,7 @@
 import logging as logger
 import configparser
 
-from os      import path, mkdir
+from os      import path, mkdir, listdir
 from hashlib import sha256
 from time    import time
 from re      import sub
@@ -34,9 +34,16 @@ class BookData():
         self.bookFolder = ""
         self.bookDraft  = 1
 
+        self.theScene   = SceneData()
+        self.fileIndex  = {}
+
         self.bookLoaded = False
 
         return
+
+    ##
+    #  Load Functions
+    ##
 
     def loadBook(self, loadPath):
 
@@ -52,13 +59,19 @@ class BookData():
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"Title"):  self.bookTitle  = confParser.get(cnfSec,"Title")
             if confParser.has_option(cnfSec,"Author"): self.bookAuthor = confParser.get(cnfSec,"Author")
-            if confParser.has_option(cnfSec,"Draft"):  self.bookDraft  = confParser.get(cnfSec,"Draft")
+            if confParser.has_option(cnfSec,"Draft"):  self.bookDraft  = confParser.getint(cnfSec,"Draft")
+
+        self.makeIndex()
 
         self.mainConf.setLastBook(self.bookFolder)
 
         self.bookLoaded = True
 
         return
+
+    ##
+    #  Save Functions
+    ##
 
     def saveBook(self):
 
@@ -105,6 +118,57 @@ class BookData():
                 mkdir(self.bookFolder)
         return
 
+    ##
+    #  Methods
+    ##
+
+    def makeNewScene(self, sceneTitle):
+
+        logger.debug("BookData; New Scene")
+
+        filesFolder = self.getFilesPath()
+
+        self.theScene = SceneData()
+        self.theScene.setTitle(sceneTitle)
+        self.theScene.setFolderPath(filesFolder)
+        self.theScene.setText("New Scene")
+        self.theScene.saveScene()
+
+        return
+
+    def makeIndex(self):
+
+        self.fileIndex = {}
+        filesFolder = self.getFilesPath()
+
+        if not path.isdir(filesFolder):
+            logger.error("BookData: Path not found: %s" % filesFolder)
+            return False
+
+        logger.debug("BookData; Scanning folder")
+            
+        dirContent = listdir(filesFolder)
+
+        for listItem in dirContent:
+            itemPath = path.join(filesFolder,listItem)
+            if path.isfile(itemPath):
+                if len(listItem) == 25 and listItem[-12:] == "metadata.cnf":
+                    itemHandle = listItem[:12]
+                    tmpScene = SceneData()
+                    tmpScene.setFolderPath(filesFolder)
+                    tmpScene.loadScene(itemHandle,True)
+                    self.fileIndex[itemHandle] = [tmpScene.fileTitle,tmpScene.fileWords,0]
+
+        for listItem in dirContent:
+            itemPath = path.join(filesFolder,listItem)
+            if path.isfile(itemPath):
+                if len(listItem) > 15 and listItem[-3:] == "txt":
+                    self.fileIndex[itemHandle][2] += 1
+
+        print(self.fileIndex)
+
+        return True
+
 # End Class BookData
 # ==================================================================================================================== #
 # Begin Class SceneData
@@ -112,6 +176,8 @@ class BookData():
 class SceneData():
 
     def __init__(self):
+
+        self.mainConf    = CONFIG
 
         self.fileTitle   = ""
         self.fileFolder  = ""
@@ -122,6 +188,8 @@ class SceneData():
         self.fileSection = 0
         self.fileChapter = 0
         self.fileNumber  = 0
+        self.fileWords   = 0
+        self.fileChars   = 0
 
         self.theText     = TextFile()
         
@@ -133,7 +201,7 @@ class SceneData():
     #  Load Functions
     ##
 
-    def loadScene(self, fileHandle):
+    def loadScene(self, fileHandle, headerOnly=False):
 
         if self.fileFolder == "":
             logger.error("SceneData: No folder specified")
@@ -165,12 +233,17 @@ class SceneData():
             if confParser.has_option(cnfSec,"Title"):   self.fileTitle   = confParser.get(cnfSec,"Title")
             if confParser.has_option(cnfSec,"Created"): self.fileCreated = confParser.get(cnfSec,"Created")
             if confParser.has_option(cnfSec,"Updated"): self.fileUpdated = confParser.get(cnfSec,"Updated")
+            if confParser.has_option(cnfSec,"Section"): self.fileSection = confParser.getint(cnfSec,"Section")
+            if confParser.has_option(cnfSec,"Chapter"): self.fileChapter = confParser.getint(cnfSec,"Chapter")
+            if confParser.has_option(cnfSec,"Number"):  self.fileNumber  = confParser.getint(cnfSec,"Number")
+            if confParser.has_option(cnfSec,"Words"):   self.fileWords   = confParser.getint(cnfSec,"Words")
+            if confParser.has_option(cnfSec,"Chars"):   self.fileChars   = confParser.getint(cnfSec,"Chars")
 
-        self.theText.loadText(self.fileFolder,self.fileHandle,self.fileVersion)
-        self.theText.loadSummary(self.fileFolder,self.fileHandle,self.fileVersion)
-        self.mainConf.setLastFile(self.fileHandle)
-
-        self.fileLoaded = True
+        if not headerOnly:
+            self.theText.loadText(self.fileFolder,self.fileHandle,self.fileVersion)
+            self.theText.loadSummary(self.fileFolder,self.fileHandle,self.fileVersion)
+            self.mainConf.setLastFile(self.fileHandle)
+            self.fileLoaded = True
         
         return True
 
@@ -184,6 +257,9 @@ class SceneData():
             logger.error("SceneData: No folder specified")
             return False
 
+        self.theText.saveText(self.fileFolder,self.fileHandle,self.fileVersion)
+        self.theText.saveSummary(self.fileFolder,self.fileHandle,self.fileVersion)
+
         logger.debug("SceneData: Loading Scene MetaData")
         confParser = configparser.ConfigParser()
 
@@ -193,6 +269,11 @@ class SceneData():
         confParser.set(cnfSec,"Title",   str(self.fileTitle))
         confParser.set(cnfSec,"Created", str(self.fileCreated))
         confParser.set(cnfSec,"Updated", str(self.fileUpdated))
+        confParser.set(cnfSec,"Section", str(self.fileSection))
+        confParser.set(cnfSec,"Chapter", str(self.fileChapter))
+        confParser.set(cnfSec,"Number",  str(self.fileNumber))
+        confParser.set(cnfSec,"Words",   str(self.theText.wordsLatest))
+        confParser.set(cnfSec,"Chars",   str(self.theText.charsLatest))
 
         # Write File
         fileName = "%s-metadata.cnf" % self.fileHandle
@@ -200,8 +281,6 @@ class SceneData():
 
         confParser.write(open(filePath,"w"))
 
-        self.theText.saveText(self.fileFolder,self.fileHandle,self.fileVersion)
-        self.theText.saveSummary(self.fileFolder,self.fileHandle,self.fileVersion)
         self.mainConf.setLastFile(self.fileHandle)
 
         return True
@@ -230,7 +309,7 @@ class SceneData():
     def setTitle(self, newTitle):
         newTitle = newTitle.strip()
         if len(newTitle) > 0:
-            self.fileTitel = newTitle
+            self.fileTitle = newTitle
         else:
             logger.error("SceneData: Invalid scene title")
         return
@@ -287,6 +366,8 @@ class TextFile():
 
     def __init__(self):
 
+        self.mainConf    = CONFIG
+
         self.text        = ""
         self.summary     = ""
         self.textHash    = ""
@@ -295,6 +376,8 @@ class TextFile():
         self.charsOnLoad = 0
         self.wordsAdded  = 0
         self.charsAdded  = 0
+        self.wordsLatest = 0
+        self.charsLatest = 0
         
         return
 
@@ -308,24 +391,20 @@ class TextFile():
 
         logger.debug("TextFile: Loading Scene Text")
 
-        fileName = "%s-scene-v%d.txt" % (fileHandle,fileVersion)
-        filePath = path.join(fileFolder,fileName)
+        fileName  = "%s-scene-v%d.txt" % (fileHandle,fileVersion)
+        filePath  = path.join(fileFolder,fileName)
 
-        if not path.isfile(filePath):
-            self.text = "<p>New scene</p>"
-            self.saveText()
-            self.wordsAdded = 2
-            self.charsAdded = 9
-        else:
-            fileObj   = open(filePath,encoding="utf-8",mode="r")
-            self.text = fileObj.read()
-            fileObj.close()
-            words, chars     = self.wordCount()
-            self.wordsOnLoad = words
-            self.charsOnLoad = chars
+        fileObj   = open(filePath,encoding="utf-8",mode="r")
+        self.text = fileObj.read()
+        fileObj.close()
 
-        self.textHash = sha256(str(self.text).encode()).hexdigest()
-        self.hasText  = True
+        words, chars     = self.countWords()
+        self.wordsOnLoad = words
+        self.charsOnLoad = chars
+        self.wordsLatest = words
+        self.charsLatest = chars
+        self.textHash    = sha256(str(self.text).encode()).hexdigest()
+        self.hasText     = True
 
         return
 
@@ -361,6 +440,10 @@ class TextFile():
         fileObj.write(self.text)
         fileObj.close()
 
+        words, chars     = self.countWords()
+        self.wordsLatest = words
+        self.charsLatest = chars
+
         self.textHash = sha256(str(self.text).encode()).hexdigest()
 
         return
@@ -378,14 +461,14 @@ class TextFile():
 
     def saveSummary(self, fileFolder, fileHandle, fileVersion):
 
-        if not self.hasSummary: return
+        if self.summary == "": return
 
         logger.debug("TextFile: Saving Scene Summary")
 
         fileName = "%s-summary-v%d.txt" % (fileHandle,fileVersion)
         filePath = path.join(fileFolder,fileName)
         fileObj  = open(filePath,encoding="utf-8",mode="w")
-        fileObj.write(self.text)
+        fileObj.write(self.summary)
         fileObj.close()
 
         return
@@ -406,12 +489,15 @@ class TextFile():
 
     def setText(self, srcText):
         if len(srcText) > 0:
-            words,chars  = wordCount(srcText)
-            srcText      = htmlCleanUp(srcText)
-            self.text    = srcText
-            self.hasText = True
-            self.words   = words
-            self.chars   = chars
+            srcText          = self.htmlCleanUp(srcText)
+            self.text        = srcText
+            self.hasText     = True
+
+            words,chars      = self.countWords()
+            self.wordsAdded  = words - self.wordsOnLoad
+            self.charsAdded  = chars - self.charsOnLoad
+            self.wordsLatest = words
+            self.charsLatest = chars
         return
 
     def setSummary(self, newSummary):
@@ -452,23 +538,4 @@ class TextFile():
         return srcText
     
 # End Class TextFile
-# ==================================================================================================================== #
-# Begin Class Chapters
-
-class Chapters():
-
-    def __init__(self):
-
-        self.chapterList = []
-        
-        return
-
-    ##
-    #  Load Functions
-    ##
-
-    def loadChapters(self, fileFolder):
-        return
-        
-# End Class Chapters
 # ==================================================================================================================== #
