@@ -332,7 +332,7 @@
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="fmeCharTime">
-                        <property name="height_request">62</property>
+                        <property name="height_request">65</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_top">2</property>
@@ -672,7 +672,7 @@
                     </child>
                     <child>
                       <object class="GtkFrame" id="fmeSceneDetails">
-                        <property name="height_request">62</property>
+                        <property name="height_request">65</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label_xalign">0</property>
@@ -691,47 +691,16 @@
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkBox" id="boxSceneTitl">
+                                  <object class="GtkLabel" id="lblSceneTitle">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkLabel" id="lblSceneTitle">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">No file loaded</property>
-                                        <property name="ellipsize">end</property>
-                                        <property name="xalign">0</property>
-                                        <attributes>
-                                          <attribute name="weight" value="medium"/>
-                                          <attribute name="scale" value="1.8"/>
-                                        </attributes>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkToggleButton" id="toggleFileEditable">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="tooltip_text" translatable="yes">Make the file editable</property>
-                                        <child>
-                                          <object class="GtkImage" id="imgFileEditable">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="stock">gtk-edit</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
+                                    <property name="label" translatable="yes">No file loaded</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="xalign">0</property>
+                                    <attributes>
+                                      <attribute name="weight" value="medium"/>
+                                      <attribute name="scale" value="1.8"/>
+                                    </attributes>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -834,7 +803,7 @@
                     </child>
                     <child>
                       <object class="GtkFrame" id="fmeWordCount">
-                        <property name="height_request">62</property>
+                        <property name="height_request">65</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label_xalign">0</property>
@@ -940,7 +909,7 @@
                     </child>
                     <child>
                       <object class="GtkFrame" id="fmeTimer">
-                        <property name="height_request">62</property>
+                        <property name="height_request">65</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label_xalign">0</property>
@@ -981,15 +950,45 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="lblTimeTotal">
+                                      <object class="GtkBox" id="boxTimerEight">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">00:00:00</property>
-                                        <property name="xalign">0</property>
-                                        <property name="yalign">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="medium"/>
-                                        </attributes>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel" id="lblTimerStatus">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">STOP</property>
+                                            <property name="xalign">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="bold"/>
+                                              <attribute name="scale" value="0.59999999999999998"/>
+                                              <attribute name="foreground" value="#ffff00000000"/>
+                                            </attributes>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="lblTimeTotal">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">00:00:00</property>
+                                            <property name="xalign">0</property>
+                                            <property name="yalign">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="medium"/>
+                                            </attributes>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
