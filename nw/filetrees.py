@@ -51,7 +51,7 @@ class SceneTree():
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
-        self.treeSort.set_sort_column_id(4,Gtk.SortType.ASCENDING)
+        self.treeSort.set_sort_column_id(3,Gtk.SortType.ASCENDING)
         self.treeView.set_model(self.treeSort)
 
         # Columns
@@ -93,13 +93,16 @@ class SceneTree():
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
-        if not theBook.bookLoaded: return
+        if not theBook.bookLoaded:
+            logger.debug("SceneTree: No book loaded")
+            return
 
         self.iterMap   = {}
         self.chapMap   = {}
         self.chapCount = {}
 
         self.chapCount[makeSortString(0,0,0)] = 0
+        theBook.makeIndex()
 
         for itemHandle in theBook.fileIndex.keys():
 

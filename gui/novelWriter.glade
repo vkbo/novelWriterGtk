@@ -1142,11 +1142,12 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkSpinButton" id="spinSceneChapter">
+                                          <object class="GtkSpinButton" id="numSceneChapter">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="numeric">True</property>
                                             <property name="wrap">True</property>
+                                            <property name="value">2.2351741811588166e-10</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>

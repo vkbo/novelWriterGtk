@@ -70,6 +70,19 @@ class GUI():
         self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
         self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.doAutoTasks)
 
+        ##
+        #  Content
+        ##
+
+        # Scene Chapter Selector
+        adjScene = Gtk.Adjustment(1,1,100,1,1,1)
+        numSceneChapter = self.getObject("numSceneChapter")
+        numSceneChapter.configure(adjScene,1,0)
+
+        ##
+        #  Finalise GUI Setup
+        ##
+
         # Prepare Main Window
         self.winMain.set_title(self.mainConf.appName)
         self.winMain.resize(self.mainConf.winWidth,self.mainConf.winHeight)
@@ -122,22 +135,70 @@ class GUI():
         self.theBook.loadScene(sceneHandle)
         self.webEditor.setText(self.theBook.getText())
 
-        scnTitle   = self.theBook.getFileTitle()
-        scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getFileCreated()))
-        scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getFileUpdated()))
-        scnVersion = "Draft %d, Version %d" % (self.theBook.bookDraft,self.theBook.getFileVersion())
+        tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
+        tmpBuffer.set_text(self.theBook.getSummary())
+
+        scnTitle   = self.theBook.theScene.fileTitle
+        scnSection = self.theBook.theScene.fileSection
+        scnChapter = self.theBook.theScene.fileChapter
+        scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileCreated))
+        scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileUpdated))
+        scnVersion = "Draft %d, Version %d" % (self.theBook.bookDraft,self.theBook.theScene.fileVersion)
 
         self.getObject("lblSceneTitle").set_label(scnTitle)
         self.getObject("lblSceneCreated").set_label(scnCreated)
         self.getObject("lblSceneUpdated").set_label(scnUpdated)
         self.getObject("lblSceneVersion").set_label(scnVersion)
 
+        self.getObject("entrySceneTitle").set_text(scnTitle)
+        self.getObject("cmbSceneSection").set_active(scnSection)
+        self.getObject("numSceneChapter").set_value(scnChapter)
+
         self.updateWordCount()
 
         return
 
     def saveScene(self):
+
         logger.debug("GUI: Saving scene")
+
+        prevSection = self.theBook.theScene.fileSection
+        prevChapter = self.theBook.theScene.fileChapter
+        prevNumber  = self.theBook.theScene.fileNumber
+
+        scnTitle    = self.getObject("entrySceneTitle").get_text()
+        scnSection  = self.getObject("cmbSceneSection").get_active()
+        scnChapter  = self.getObject("numSceneChapter").get_value()
+        scnChapter  = int(scnChapter)
+
+        if scnSection != 2: scnChapter = 0
+
+        scnSort = makeSortString(scnSection,scnChapter,0)
+        if scnSort in self.sceneTree.chapCount:
+            if scnSection == prevSection and scnChapter == prevChapter:
+                scnNumber = prevNumber
+            else:
+                scnNumber = self.sceneTree.chapCount[scnSort] + 1
+        else:
+            scnNumber = 1
+        
+        tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
+        tmpStart   = tmpBuffer.get_start_iter()
+        tmpEnd     = tmpBuffer.get_end_iter()
+        scnSummary = tmpBuffer.get_text(tmpStart,tmpEnd,True)
+
+        scnText    = self.webEditor.getText()
+
+        self.theBook.theScene.setTitle(scnTitle)
+        self.theBook.theScene.setSection(scnSection)
+        self.theBook.theScene.setChapter(scnChapter)
+        self.theBook.theScene.setNumber(scnNumber)
+        self.theBook.theScene.setSummary(scnSummary)
+        self.theBook.theScene.setText(scnText)
+
+        self.theBook.saveScene()
+        self.sceneTree.loadContent(self.theBook)
+        
         return
 
     ##
@@ -167,6 +228,7 @@ class GUI():
 
     def onSaveBook(self, guiObject):
         self.saveBook()
+        self.saveScene()
         return
 
     def onEditBook(self, guiObject):
@@ -179,7 +241,11 @@ class GUI():
     ##
 
     def onSceneAdd(self, guiObject):
-        self.theBook.makeNewScene("New Scene")
+        scnSort  = makeSortString(0,0,0)
+        sceneNum = self.sceneTree.chapCount[scnSort] + 1
+        self.theBook.makeNewScene("New Scene",sceneNum)
+        self.theBook.makeIndex()
+        self.sceneTree.loadContent(self.theBook)
         return
 
     def onSceneSelect(self, guiObject):

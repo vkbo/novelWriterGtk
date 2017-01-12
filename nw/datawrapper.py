@@ -73,7 +73,7 @@ class BookData():
             if confParser.has_option(cnfSec,"Author"): self.bookAuthor = confParser.get(cnfSec,"Author")
             if confParser.has_option(cnfSec,"Draft"):  self.bookDraft  = confParser.getint(cnfSec,"Draft")
 
-        self.makeIndex()
+        #self.makeIndex()
 
         self.mainConf.setLastBook(self.bookFolder)
 
@@ -115,6 +115,10 @@ class BookData():
 
         return
 
+    def saveScene(self):
+        self.theScene.saveScene()
+        return
+
     ##
     #  Getters
     ##
@@ -126,17 +130,8 @@ class BookData():
     def getText(self):
         return self.theScene.getText()
 
-    def getFileTitle(self):
-        return self.theScene.fileTitle
-
-    def getFileCreated(self):
-        return self.theScene.fileCreated
-
-    def getFileUpdated(self):
-        return self.theScene.fileUpdated
-
-    def getFileVersion(self):
-        return self.theScene.fileVersion
+    def getSummary(self):
+        return self.theScene.getSummary()
 
     ##
     #  Setters
@@ -161,7 +156,7 @@ class BookData():
     #  Methods
     ##
 
-    def makeNewScene(self, sceneTitle):
+    def makeNewScene(self, sceneTitle, sceneNumber):
 
         logger.debug("BookData: New scene")
 
@@ -170,6 +165,7 @@ class BookData():
         self.theScene = SceneData()
         self.theScene.setTitle(sceneTitle)
         self.theScene.setFolderPath(filesFolder)
+        self.theScene.setNumber(sceneNumber)
         self.theScene.setText("New Scene")
         self.theScene.saveScene()
 
@@ -214,8 +210,6 @@ class BookData():
                 if len(listItem) > 15 and listItem[-3:] == "txt":
                     itemHandle = listItem[:12]
                     self.fileIndex[itemHandle][self.IDX_COUNT] += 1
-
-        print(self.fileIndex)
 
         return True
 
@@ -438,7 +432,7 @@ class TextFile():
 
         logger.debug("TextFile: Loading scene text")
 
-        fileName  = "%s-scene-v%d.txt" % (fileHandle,fileVersion)
+        fileName  = "%s-scene-%03d.txt" % (fileHandle,fileVersion)
         filePath  = path.join(fileFolder,fileName)
 
         fileObj   = open(filePath,encoding="utf-8",mode="r")
@@ -461,7 +455,7 @@ class TextFile():
 
         logger.debug("TextFile: Loading scene summary")
 
-        fileName = "%s-summary-v%d.txt" % (fileHandle,fileVersion)
+        fileName = "%s-summary-%03d.txt" % (fileHandle,fileVersion)
         filePath = path.join(fileFolder,fileName)
 
         if path.isfile(filePath):
@@ -481,7 +475,7 @@ class TextFile():
 
         logger.debug("TextFile: Saving scene text")
 
-        fileName = "%s-scene-v%d.txt" % (fileHandle,fileVersion)
+        fileName = "%s-scene-%03d.txt" % (fileHandle,fileVersion)
         filePath = path.join(fileFolder,fileName)
         fileObj  = open(filePath,encoding="utf-8",mode="w")
         fileObj.write(self.text)
@@ -512,7 +506,7 @@ class TextFile():
 
         logger.debug("TextFile: Saving scene summary")
 
-        fileName = "%s-summary-v%d.txt" % (fileHandle,fileVersion)
+        fileName = "%s-summary-%03d.txt" % (fileHandle,fileVersion)
         filePath = path.join(fileFolder,fileName)
         fileObj  = open(filePath,encoding="utf-8",mode="w")
         fileObj.write(self.summary)
