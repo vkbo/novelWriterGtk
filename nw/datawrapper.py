@@ -212,6 +212,7 @@ class BookData():
             itemPath = path.join(filesFolder,listItem)
             if path.isfile(itemPath):
                 if len(listItem) > 15 and listItem[-3:] == "txt":
+                    itemHandle = listItem[:12]
                     self.fileIndex[itemHandle][self.IDX_COUNT] += 1
 
         print(self.fileIndex)

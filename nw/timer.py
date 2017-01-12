@@ -11,7 +11,7 @@ import logging as logger
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from time          import time, strftime
 from nw            import *
 
@@ -20,50 +20,51 @@ class Timer():
     def __init__(self):
 
         # Connect to GUI
-        self.mainConf   = CONFIG
-        self.getObject  = BUILDER.get_object
+        self.mainConf    = CONFIG
+        self.getObject   = BUILDER.get_object
 
-        self.timeLabel  = self.getObject("lblTimeCount")
-        self.timeTotal  = self.getObject("lblTimeTotal")
-        self.progTimer  = self.getObject("progressTimer")
-        self.btnStart   = self.getObject("btnTimerStart")
-        self.btnPause   = self.getObject("btnTimerPause")
-        self.btnStop    = self.getObject("btnTimerStop")
-
-        self.statusBar  = self.getObject("mainStatus")
-        self.statusCID  = self.statusBar.get_context_id("Timer")
+        self.timeSession = self.getObject("lblTimeSession")
+        self.timeTotal   = self.getObject("lblTimeTotal")
+        self.progTimer   = self.getObject("progTimerPause")
+        self.timerStatus = self.getObject("lblTimerStatus")
 
         # Initialise Variables
-        self.currTime   = 0.0
-        self.totTime    = 0.0
-        self.timeOffset = time()
-        self.timeBuffer = 0.0
-        self.docTotal   = 0.0
-        self.timerOn    = False
-        self.tickCount  = 0
-        self.autoPause  = self.mainConf.autoPause
-        self.autoOffset = 0.0
-        self.autoTime   = 0.0
+        self.sessionTime = 0.0
+        self.totalTime   = 0.0
+        self.timeOffset  = time()
+        self.timeBuffer  = 0.0
+        self.prevTotal   = 0.0
+        self.timerOn     = False
+        self.tickCount   = 0
+        self.autoPause   = self.mainConf.autoPause
+        self.autoOffset  = 0.0
+        self.autoTime    = 0.0
 
-        # Default Button States
-        self.btnStart.set_sensitive(True)
-        self.btnPause.set_sensitive(False)
-        self.btnStop.set_sensitive(False)
+        self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#aa0000"))
+        self.timerStatus.set_label("STOPPED")
 
         return
 
-    def setDocTotal(self, timeValue):
-        self.docTotal = timeValue
-        self.timeTotal.set_label(formatTime(self.docTotal))
+    ##
+    #  Setters
+    ##
+
+    def setPreviousTotal(self, timeValue):
+        self.prevTotal = timeValue
+        self.timeTotal.set_label(self.formatTime(self.prevTotal))
         return
+
+    ##
+    #  Modifiers
+    ##
 
     def updateTime(self):
 
-        self.currTime = time() - self.timeOffset + self.timeBuffer
-        self.totTime  = self.currTime + self.docTotal
+        self.sessionTime = time() - self.timeOffset + self.timeBuffer
+        self.totalTime   = self.sessionTime + self.prevTotal
 
-        self.timeLabel.set_label(formatTime(self.currTime))
-        self.timeTotal.set_label(formatTime(self.totTime))
+        self.timeSession.set_label(self.formatTime(self.sessionTime))
+        self.timeTotal.set_label(self.formatTime(self.totalTime))
 
         return
 
@@ -73,12 +74,13 @@ class Timer():
         self.progTimer.set_fraction(self.autoTime/self.autoPause)
 
         if self.autoTime >= self.autoPause:
-            self.pauseTimer()
-            self.getObject("btnEditFile").set_active(False)
-            self.statusBar.pop(self.statusCID)
-            self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer auto-paused")
+            self.getObject("btnEditable").set_active(False)
 
         return
+
+    ##
+    #  Methods
+    ##
 
     def resetAutoPause(self):
 
@@ -89,18 +91,57 @@ class Timer():
 
     def resetTimer(self):
 
-        self.currTime   = 0.0
-        self.totTime    = 0.0
-        self.timeOffset = time()
-        self.timeBuffer = 0.0
-        self.docTotal   = 0.0
-        self.timerOn    = False
-        self.tickCount  = 0
-        self.autoOffset = 0.0
-        self.autoTime   = 0.0
+        self.sessionTime = 0.0
+        self.totalTime   = 0.0
+        self.timeOffset  = time()
+        self.timeBuffer  = 0.0
+        self.prevTotal   = 0.0
+        self.timerOn     = False
+        self.tickCount   = 0
+        self.autoOffset  = 0.0
+        self.autoTime    = 0.0
 
-        self.timeLabel.set_label(formatTime(0))
-        self.timeTotal.set_label(formatTime(0))
+        self.timeSession.set_label(self.formatTime(0))
+        self.timeTotal.set_label(self.formatTime(0))
+
+        return
+
+    def startTimer(self):
+
+        logger.debug("Timer: Started")
+
+        self.timerOn    = True
+        self.timeOffset = time()
+        self.autoOffset = time()
+
+        self.progTimer.set_fraction(0.0)
+
+        self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#00aa00"))
+        self.timerStatus.set_label("RUNNING")
+
+        return
+
+    def pauseTimer(self):
+
+        logger.debug("Timer: Paused")
+
+        self.timerOn    = False
+        self.timeBuffer = self.timeBuffer + time() - self.timeOffset
+
+        self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#ffaa00"))
+        self.timerStatus.set_label("PAUSED")
+
+        return
+
+    def stopTimer(self):
+
+        logger.debug("Timer: Stopped")
+
+        self.timerOn    = False
+        self.timeBuffer = 0.0
+
+        self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#aa0000"))
+        self.timerStatus.set_label("STOPPED")
 
         return
 
@@ -118,48 +159,15 @@ class Timer():
 
         return True
 
-    def startTimer(self):
+    ##
+    #  Internal Methods
+    ##
 
-        if not self.btnStart.get_sensitive(): return
-        logger.debug("Timer started")
+    def formatTime(self, timeValue):
 
-        self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer started")
-        self.timerOn    = True
-        self.timeOffset = time()
-        self.autoOffset = time()
-        self.btnStart.set_sensitive(False)
-        self.btnPause.set_sensitive(True)
-        self.btnStop.set_sensitive(True)
-        self.progTimer.set_fraction(0.0)
+        minute, second = divmod(timeValue, 60)
+        hour,   minute = divmod(minute, 60)
 
-        return
-
-    def pauseTimer(self):
-
-        if not self.btnPause.get_sensitive(): return
-        logger.debug("Timer paused")
-
-        self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer paused")
-        self.timerOn    = False
-        self.timeBuffer = self.timeBuffer + time() - self.timeOffset
-        self.btnStart.set_sensitive(True)
-        self.btnPause.set_sensitive(False)
-        self.btnStop.set_sensitive(True)
-
-        return
-
-    def stopTimer(self):
-
-        if not self.btnStop.get_sensitive(): return
-        logger.debug("Timer stopped")
-
-        self.statusBar.push(self.statusCID,makeTimeStamp(4)+"Session timer stopped")
-        self.timerOn    = False
-        self.timeBuffer = 0.0
-        self.btnStart.set_sensitive(True)
-        self.btnPause.set_sensitive(False)
-        self.btnStop.set_sensitive(False)
-
-        return
+        return "%02d:%02d:%02d" % (hour, minute, second)
 
 # End Class Timer

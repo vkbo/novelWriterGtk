@@ -11,13 +11,14 @@ import logging as logger
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository  import Gtk
+from gi.repository  import Gtk, GLib
 from os             import path
 from nw             import *
 from nw.editor      import Editor
 from nw.bookeditor  import BookEditor
 from nw.datawrapper import BookData, SceneData
 from nw.filetrees   import SceneTree
+from nw.timer       import Timer
 
 class GUI():
 
@@ -34,7 +35,7 @@ class GUI():
 
         # Prepare GUI Classes
         self.theBook    = BookData()
-        self.guiTimer   = None #Timer()
+        self.guiTimer   = Timer()
         self.webEditor  = Editor(self.guiTimer)
         self.bookEditor = BookEditor(self.theBook)
         self.sceneTree  = SceneTree()
@@ -50,7 +51,9 @@ class GUI():
             "onSelectTreeScene"  : self.onSceneSelect,
             "onDestroyWindow"    : self.onGuiDestroy,
             "onMainWinChange"    : self.onWinChange,
-            # Editor Signals
+            # WebKit Editor Signals
+            "onToggleEditable"   : self.webEditor.onToggleEditable,
+            # Book Editor Signals
             "onClickBookCancel"  : self.bookEditor.onBookCancel,
             "onClickBookSave"    : self.bookEditor.onBookSave,
         }
@@ -62,6 +65,10 @@ class GUI():
 
         # Prepare Editor
         self.getObject("scrollEditor").add(self.webEditor)
+
+        # Set Up Timers
+        self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
+        self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.doAutoTasks)
 
         # Prepare Main Window
         self.winMain.set_title(self.mainConf.appName)
@@ -196,7 +203,6 @@ class GUI():
     #  Main Window Events
     ##
 
-    # Close Program
     def onGuiDestroy(self, guiObject):
         logger.debug("GUI: Exiting")
         mainPane = self.getObject("panedContent").get_position()
@@ -210,5 +216,10 @@ class GUI():
     def onWinChange(self, guiObject, guiEvent):
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
+
+    def doAutoTasks(self):
+        self.mainConf.doAutoSaveConfig()
+        #self.webEditor.doAutoSave()
+        return True
 
 # End Class GUI

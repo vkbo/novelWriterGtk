@@ -958,12 +958,11 @@
                                           <object class="GtkLabel" id="lblTimerStatus">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">STOP</property>
+                                            <property name="label" translatable="yes">STOPPED</property>
                                             <property name="xalign">1</property>
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
                                               <attribute name="scale" value="0.59999999999999998"/>
-                                              <attribute name="foreground" value="#ffff00000000"/>
                                             </attributes>
                                           </object>
                                           <packing>
@@ -1004,7 +1003,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkProgressBar" id="progressTimeAutoPause">
+                                  <object class="GtkProgressBar" id="progTimerPause">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                   </object>
@@ -1106,6 +1105,7 @@
                                 <property name="label" translatable="yes">Editable</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-edit</property>
+                                <signal name="toggled" handler="onToggleEditable" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

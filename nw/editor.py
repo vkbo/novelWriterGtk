@@ -57,7 +57,15 @@ class Editor(WebKit.WebView):
     ##
 
     def onToggleEditable(self, guiObject):
-        self.setEditable(guiObject.get_active(),"Button")
+
+        editState = guiObject.get_active()
+        self.set_editable(editState)
+
+        if editState:
+            self.guiTimer.startTimer()
+        else:
+            self.guiTimer.pauseTimer()
+        
         return
 
     def onEditAction(self, guiObject):
@@ -82,6 +90,7 @@ class Editor(WebKit.WebView):
         if self.textSaved:
             self.textSaved = False
             self.fileStatus.set_from_file(self.ledRed)
+            self.guiTimer.resetAutoPause()
 
         return
 
@@ -127,13 +136,5 @@ class Editor(WebKit.WebView):
         self.load_html_string(srcHtml,"file:///")
 
         return True
-
-    def setEditable(self, makeEditable, fromButton=False):
-
-        if fromButton:
-            self.getObject("toggleFileEditable").set_active(makeEditable)
-        self.set_editable(makeEditable)
-
-        return
 
 # End Class Editor
