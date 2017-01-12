@@ -456,20 +456,6 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkToolButton" id="btnSceneEdit">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="tooltip_text" translatable="yes">Edit Scene</property>
-                            <property name="label" translatable="yes">Edit</property>
-                            <property name="use_underline">True</property>
-                            <property name="stock_id">gtk-edit</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="homogeneous">True</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkToolButton" id="btnSceneMoveUp">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -1069,88 +1055,9 @@
                         <property name="orientation">vertical</property>
                         <property name="spacing">4</property>
                         <child>
-                          <object class="GtkGrid" id="gridSceneSettings">
+                          <object class="GtkBox" id="boxSceneDetail">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="row_spacing">4</property>
-                            <property name="column_spacing">4</property>
-                            <property name="row_homogeneous">True</property>
-                            <property name="column_homogeneous">True</property>
-                            <child>
-                              <object class="GtkFrame" id="fmeSceneChapter">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label_xalign">0</property>
-                                <property name="shadow_type">none</property>
-                                <child>
-                                  <object class="GtkAlignment" id="alignSceneChapter">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="top_padding">2</property>
-                                    <property name="bottom_padding">2</property>
-                                    <property name="left_padding">12</property>
-                                    <child>
-                                      <object class="GtkBox" id="boxSceneChapter">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <child>
-                                          <object class="GtkComboBoxText" id="cmbSceneSection">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="active">0</property>
-                                            <property name="has_entry">True</property>
-                                            <property name="active_id">0</property>
-                                            <items>
-                                              <item id="0" translatable="yes">None</item>
-                                              <item id="1" translatable="yes">Prologue</item>
-                                              <item id="2" translatable="yes">Chapter</item>
-                                              <item id="3" translatable="yes">Epilogue</item>
-                                            </items>
-                                            <child internal-child="entry">
-                                              <object class="GtkEntry" id="entrySceneSection">
-                                                <property name="can_focus">False</property>
-                                                <property name="text" translatable="yes">None</property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">True</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkSpinButton" id="spinSceneChapter">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child type="label">
-                                  <object class="GtkLabel" id="lblSceneChapter">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Chapter</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                      <attribute name="scale" value="0.80000000000000004"/>
-                                    </attributes>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
                             <child>
                               <object class="GtkFrame" id="fmeSceneTitle">
                                 <property name="visible">True</property>
@@ -1185,42 +1092,77 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkFrame" id="fmeScenePOV">
+                              <object class="GtkFrame" id="fmeSceneChapter">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label_xalign">0</property>
                                 <property name="shadow_type">none</property>
                                 <child>
-                                  <object class="GtkAlignment" id="alignScenePOV">
+                                  <object class="GtkAlignment" id="alignSceneChapter">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="top_padding">2</property>
                                     <property name="bottom_padding">2</property>
                                     <property name="left_padding">12</property>
                                     <child>
-                                      <object class="GtkComboBoxText" id="cmbScenePOV">
+                                      <object class="GtkBox" id="boxSceneChapter">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="has_entry">True</property>
-                                        <child internal-child="entry">
-                                          <object class="GtkEntry" id="entryScenePOV">
+                                        <property name="spacing">4</property>
+                                        <child>
+                                          <object class="GtkComboBoxText" id="cmbSceneSection">
+                                            <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="active">0</property>
+                                            <property name="has_entry">True</property>
+                                            <property name="active_id">0</property>
+                                            <items>
+                                              <item id="0" translatable="yes">None</item>
+                                              <item id="1" translatable="yes">Prologue</item>
+                                              <item id="2" translatable="yes">Chapter</item>
+                                              <item id="3" translatable="yes">Epilogue</item>
+                                            </items>
+                                            <child internal-child="entry">
+                                              <object class="GtkEntry" id="entrySceneSection">
+                                                <property name="can_focus">False</property>
+                                                <property name="text" translatable="yes">None</property>
+                                              </object>
+                                            </child>
                                           </object>
+                                          <packing>
+                                            <property name="expand">True</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkSpinButton" id="spinSceneChapter">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="numeric">True</property>
+                                            <property name="wrap">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
                                         </child>
                                       </object>
                                     </child>
                                   </object>
                                 </child>
                                 <child type="label">
-                                  <object class="GtkLabel" id="lblScenePOV">
+                                  <object class="GtkLabel" id="lblSceneChapter">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Point-of-View Character</property>
+                                    <property name="label" translatable="yes">Chapter</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                       <attribute name="scale" value="0.80000000000000004"/>
@@ -1229,52 +1171,9 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkFrame" id="fmeSceneTimeline">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label_xalign">0</property>
-                                <property name="shadow_type">none</property>
-                                <child>
-                                  <object class="GtkAlignment" id="alignSceneTimeline">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="top_padding">2</property>
-                                    <property name="bottom_padding">2</property>
-                                    <property name="left_padding">12</property>
-                                    <child>
-                                      <object class="GtkComboBoxText" id="cmbSceneTimeline">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="has_entry">True</property>
-                                        <child internal-child="entry">
-                                          <object class="GtkEntry" id="entrySceneTimeline">
-                                            <property name="can_focus">False</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child type="label">
-                                  <object class="GtkLabel" id="lb">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Point on Timeline</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                      <attribute name="scale" value="0.80000000000000004"/>
-                                    </attributes>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">1</property>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                           </object>
@@ -1334,6 +1233,281 @@
                             <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="boxCharsNTime">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkFrame" id="fmeChars">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label_xalign">0</property>
+                                <property name="shadow_type">none</property>
+                                <child>
+                                  <object class="GtkAlignment" id="alignChars">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="top_padding">2</property>
+                                    <property name="bottom_padding">2</property>
+                                    <property name="left_padding">12</property>
+                                    <child>
+                                      <object class="GtkBox" id="boxChar">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkScrolledWindow" id="scrollChars">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="shadow_type">in</property>
+                                            <child>
+                                              <object class="GtkTreeView" id="treeChars">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <child internal-child="selection">
+                                                  <object class="GtkTreeSelection" id="treeCharsSelect"/>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkTreeViewColumn" id="treeCharsIncluded">
+                                                    <property name="title" translatable="yes">Inc</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkTreeViewColumn" id="treeCharsName">
+                                                    <property name="title" translatable="yes">Name</property>
+                                                    <property name="expand">True</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkTreeViewColumn" id="treeCharsNick">
+                                                    <property name="title" translatable="yes">Nick</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkTreeViewColumn" id="treeCharsType">
+                                                    <property name="title" translatable="yes">Type</property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">True</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkToolbar" id="tbChars">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="orientation">vertical</property>
+                                            <property name="toolbar_style">icons</property>
+                                            <property name="icon_size">2</property>
+                                            <child>
+                                              <object class="GtkToolButton" id="btnCharAdd">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="tooltip_text" translatable="yes">Add Character</property>
+                                                <property name="label" translatable="yes">Add</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="stock_id">gtk-add</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="homogeneous">True</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkToolButton" id="btnCharDelete">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="tooltip_text" translatable="yes">Delete Character</property>
+                                                <property name="label" translatable="yes">Delete</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="stock_id">gtk-remove</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="homogeneous">True</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkToolButton" id="btnCharEdit">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="tooltip_text" translatable="yes">Edit Character</property>
+                                                <property name="label" translatable="yes">Edit</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="stock_id">gtk-edit</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="homogeneous">True</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel" id="lblChars">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">Characters</property>
+                                    <attributes>
+                                      <attribute name="weight" value="bold"/>
+                                      <attribute name="scale" value="0.80000000000000004"/>
+                                    </attributes>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkFrame" id="fmeTime">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label_xalign">0</property>
+                                <property name="shadow_type">none</property>
+                                <child>
+                                  <object class="GtkAlignment" id="alignTime">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="top_padding">2</property>
+                                    <property name="bottom_padding">2</property>
+                                    <property name="left_padding">12</property>
+                                    <child>
+                                      <object class="GtkBox" id="boxTim">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkScrolledWindow" id="scrollTime">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="shadow_type">in</property>
+                                            <child>
+                                              <object class="GtkTreeView" id="treeTime">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <child internal-child="selection">
+                                                  <object class="GtkTreeSelection" id="treeTimeSelect"/>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkTreeViewColumn" id="treeTimeIncluded">
+                                                    <property name="title" translatable="yes">Inc</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkTreeViewColumn" id="treeTimeDate">
+                                                    <property name="title" translatable="yes">Date</property>
+                                                    <property name="expand">True</property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">True</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkToolbar" id="tbTime">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="orientation">vertical</property>
+                                            <property name="toolbar_style">icons</property>
+                                            <property name="icon_size">2</property>
+                                            <child>
+                                              <object class="GtkToolButton" id="btnTimeAdd">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="tooltip_text" translatable="yes">Add Timeline Entry</property>
+                                                <property name="label" translatable="yes">Add</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="stock_id">gtk-add</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="homogeneous">True</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkToolButton" id="btnTimeDelete">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="tooltip_text" translatable="yes">Delete Timeline Entry</property>
+                                                <property name="label" translatable="yes">Delete</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="stock_id">gtk-remove</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="homogeneous">True</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkToolButton" id="btnTimeEdit">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="tooltip_text" translatable="yes">Edit Timeline Entry</property>
+                                                <property name="label" translatable="yes">Edit</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="stock_id">gtk-edit</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="homogeneous">True</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel" id="lblTime">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">Timeline</property>
+                                    <attributes>
+                                      <attribute name="weight" value="bold"/>
+                                      <attribute name="scale" value="0.80000000000000004"/>
+                                    </attributes>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>
