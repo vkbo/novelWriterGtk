@@ -27,17 +27,27 @@ class BookData():
 
     def __init__(self):
 
-        self.mainConf   = CONFIG
+        # Constants
+        self.IDX_TITLE   = 0
+        self.IDX_NUMBER  = 1
+        self.IDX_WORDS   = 2
+        self.IDX_SECTION = 3
+        self.IDX_CHAPTER = 4
+        self.IDX_NUMBER  = 5
+        self.IDX_COUNT   = 6
 
-        self.bookTitle  = ""
-        self.bookAuthor = ""
-        self.bookFolder = ""
-        self.bookDraft  = 1
+        # Properties
+        self.mainConf    = CONFIG
 
-        self.theScene   = SceneData()
-        self.fileIndex  = {}
+        self.bookTitle   = ""
+        self.bookAuthor  = ""
+        self.bookFolder  = ""
+        self.bookDraft   = 1
 
-        self.bookLoaded = False
+        self.theScene    = SceneData()
+        self.fileIndex   = {}
+
+        self.bookLoaded  = False
 
         return
 
@@ -149,6 +159,7 @@ class BookData():
             
         dirContent = listdir(filesFolder)
 
+        # Scane Book Folder
         for listItem in dirContent:
             itemPath = path.join(filesFolder,listItem)
             if path.isfile(itemPath):
@@ -157,13 +168,22 @@ class BookData():
                     tmpScene = SceneData()
                     tmpScene.setFolderPath(filesFolder)
                     tmpScene.loadScene(itemHandle,True)
-                    self.fileIndex[itemHandle] = [tmpScene.fileTitle,tmpScene.fileWords,0]
+                    self.fileIndex[itemHandle] = [
+                        tmpScene.fileTitle,
+                        tmpScene.fileNumber,
+                        tmpScene.fileWords,
+                        tmpScene.fileSection,
+                        tmpScene.fileChapter,
+                        tmpScene.fileNumber,
+                        0
+                    ]
 
+        # Count File Versions
         for listItem in dirContent:
             itemPath = path.join(filesFolder,listItem)
             if path.isfile(itemPath):
                 if len(listItem) > 15 and listItem[-3:] == "txt":
-                    self.fileIndex[itemHandle][2] += 1
+                    self.fileIndex[itemHandle][self.IDX_COUNT] += 1
 
         print(self.fileIndex)
 
@@ -298,9 +318,6 @@ class SceneData():
 
     def getSummary(self):
         return self.theText.getSummary()
-
-    def getSortString(self):
-        return "%01d.%02d.%03d" % (self.fileSection,self.fileChapter,self.fileNumber)
     
     ##
     #  Setters

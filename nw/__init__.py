@@ -77,5 +77,8 @@ def formatDateTime(dateFormat=DATE_NUM1, timeValue=None, localFormat="dd.mm.yyyy
     
     return None
 
+def makeSortString(section,chapter,number):
+    return "%01d.%02d.%03d" % (section,chapter,number)
+
 # End Global Functions
 # ==================================================================================================================== #

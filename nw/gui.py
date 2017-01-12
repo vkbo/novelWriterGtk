@@ -17,6 +17,7 @@ from nw             import *
 from nw.editor      import Editor
 from nw.bookeditor  import BookEditor
 from nw.datawrapper import BookData, SceneData
+from nw.filetrees   import SceneTree
 
 class GUI():
 
@@ -38,6 +39,7 @@ class GUI():
         self.guiTimer   = None #Timer()
         self.webEditor  = Editor(self.guiTimer)
         self.bookEditor = BookEditor(self.theBook)
+        self.sceneTree  = SceneTree()
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -84,6 +86,7 @@ class GUI():
 
         self.theBook = BookData()
         self.theBook.loadBook(self.mainConf.lastBook)
+        self.sceneTree.loadContent(self.theBook)
 
         if self.theBook.bookLoaded:
             winTitle = self.mainConf.appName+" – "+self.theBook.bookTitle
