@@ -87,10 +87,11 @@ class Editor(WebKit.WebView):
 
     def onContentChanged(self, guiObject):
 
+        self.guiTimer.resetAutoPause()
+
         if self.textSaved:
             self.textSaved = False
             self.fileStatus.set_from_file(self.ledRed)
-            self.guiTimer.resetAutoPause()
 
         return
 
