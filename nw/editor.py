@@ -12,7 +12,7 @@ import gi
 gi.require_version("Gtk","3.0")
 gi.require_version("WebKit","3.0")
 
-from gi.repository import Gtk, Gdk, WebKit
+from gi.repository import Gtk, WebKit
 from nw            import *
 
 class Editor(WebKit.WebView):
@@ -25,6 +25,7 @@ class Editor(WebKit.WebView):
         self.mainConf   = CONFIG
         self.getObject  = BUILDER.get_object
         self.guiTimer   = timer
+        self.theBook    = None
         self.fileStatus = self.getObject("imgStatusFile")
 
         # Paths
@@ -53,46 +54,48 @@ class Editor(WebKit.WebView):
         return True
 
     ##
-    #  Events
+    #  Loading and Saving
     ##
 
-    def onToggleEditable(self, guiObject):
+    def loadText(self, fileHandle, theBook):
 
-        editState = guiObject.get_active()
-        self.set_editable(editState)
+        self.theBook = theBook
 
-        if editState:
-            self.guiTimer.startTimer()
-        else:
-            self.guiTimer.pauseTimer()
-        
+        if not self.textSaved:
+            self.guiTimer.stopTimer()
+            self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
+            self.guiTimer.resetTimer()
+            self.saveText()
+
+        self.theBook.loadScene(fileHandle)
+        self.setText(self.theBook.getText())
+        self.guiTimer.setPreviousTotal(self.theBook.theScene.timeTotal)
+        self.fileStatus.set_from_file(self.ledGreen)
+        self.setEditable(False)
+        self.textSaved = True
+            
         return
 
-    def onEditAction(self, guiObject):
-        logger.debug("Editor: Action %s" % guiObject.get_name())
-        self.execute_script("document.execCommand('%s',false,false);" % guiObject.get_name())
+    def saveText(self):
+
+        scnText = self.getText()
+        self.theBook.theScene.setText(scnText)
+        self.theBook.saveScene()
+        self.fileStatus.set_from_file(self.ledGreen)
+        self.textSaved = True
+
         return
 
-    def onEditCopy(self, guiObject):
-        self.copy_clipboard()
-        return
+    def doAutoSave(self):
 
-    def onEditCut(self, guiObject):
-        self.cut_clipboard()
-        return
-
-    def onEditPaste(self, guiObject):
-        self.paste_clipboard()
-        return
-
-    def onContentChanged(self, guiObject):
-
-        self.guiTimer.resetAutoPause()
-
-        if self.textSaved:
-            self.textSaved = False
-            self.fileStatus.set_from_file(self.ledRed)
-
+        if not self.textSaved:
+            logger.debug("Editor: Autsaving")
+            scnText = self.getText()
+            self.theBook.theScene.setText(scnText)
+            self.theBook.doAutoSave()
+            self.fileStatus.set_from_file(self.ledGreen)
+            self.textSaved = True
+            
         return
 
     ##
@@ -135,7 +138,53 @@ class Editor(WebKit.WebView):
         srcHtml += "</html>"
 
         self.load_html_string(srcHtml,"file:///")
+        self.setEditable(False)
 
         return True
+
+    def setEditable(self, editState):
+        self.getObject("btnEditable").set_active(editState)
+        #self.set_editable(editState)
+        return
+
+    ##
+    #  Events
+    ##
+
+    def onToggleEditable(self, guiObject):
+
+        editState = guiObject.get_active()
+        self.set_editable(editState)
+
+        if editState:
+            self.guiTimer.startTimer()
+        else:
+            self.guiTimer.pauseTimer()
+        
+        return
+
+    def onEditAction(self, guiObject):
+        logger.debug("Editor: Action %s" % guiObject.get_name())
+        self.execute_script("document.execCommand('%s',false,false);" % guiObject.get_name())
+        return
+
+    def onEditCopy(self, guiObject):
+        self.copy_clipboard()
+        return
+
+    def onEditCut(self, guiObject):
+        self.cut_clipboard()
+        return
+
+    def onEditPaste(self, guiObject):
+        self.paste_clipboard()
+        return
+
+    def onContentChanged(self, guiObject):
+        self.guiTimer.resetAutoPause()
+        if self.textSaved:
+            self.textSaved = False
+            self.fileStatus.set_from_file(self.ledRed)
+        return
 
 # End Class Editor

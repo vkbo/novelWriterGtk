@@ -48,6 +48,7 @@ class BookData():
         self.fileIndex   = {}
 
         self.bookLoaded  = False
+        self.bookChanged = False
 
         return
 
@@ -112,11 +113,17 @@ class BookData():
         # Write File
         confParser.write(open(path.join(self.bookFolder,"metadata.cnf"),"w"))
         self.mainConf.setLastBook(self.bookFolder)
+        self.bookChanged = False
 
         return
 
     def saveScene(self):
         self.theScene.saveScene()
+        return
+
+    def doAutoSave(self):
+        if self.bookChanged: self.saveBook()
+        self.theScene.doAutoSave()
         return
 
     ##
@@ -138,16 +145,19 @@ class BookData():
     ##
 
     def setTitle(self, title):
-        self.bookTitle = title.strip()
+        self.bookTitle   = title.strip()
+        self.bookChanged = True
         return
 
     def setAuthor(self, author):
-        self.bookAuthor = author.strip()
+        self.bookAuthor  = author.strip()
+        self.bookChanged = True
         return
 
     def setBookFolder(self, folder):
         if path.isdir(folder) and self.bookTitle != "":
-            self.bookFolder = path.join(folder,self.bookTitle)
+            self.bookFolder  = path.join(folder,self.bookTitle)
+            self.bookChanged = True
             if not path.isdir(self.bookFolder):
                 mkdir(self.bookFolder)
         return
@@ -235,9 +245,13 @@ class SceneData():
         self.fileWords   = 0
         self.fileChars   = 0
 
+        self.timeTotal   = 0.0
+        self.timeList    = []
+
         self.theText     = TextFile()
         
         self.fileLoaded  = False
+        self.fileChanged = False
 
         return
 
@@ -269,8 +283,6 @@ class SceneData():
         confParser = configparser.ConfigParser()
         confParser.readfp(open(filePath))
 
-        self.fileUpdated = formatDateTime()
-
         # Get Variables
         cnfSec = "Scene"
         if confParser.has_section(cnfSec):
@@ -284,12 +296,40 @@ class SceneData():
             if confParser.has_option(cnfSec,"Chars"):   self.fileChars   = confParser.getint(cnfSec,"Chars")
 
         if not metaOnly:
+            self.theText = TextFile()
             self.theText.loadText(self.fileFolder,self.fileHandle,self.fileVersion)
             self.theText.loadSummary(self.fileFolder,self.fileHandle,self.fileVersion)
             self.mainConf.setLastFile(self.fileHandle)
+            self.loadTiming()
             self.fileLoaded = True
+
+        self.fileChanged = False
         
         return True
+
+    def loadTiming(self):
+
+        fileName = "%s-timing.csv" % self.fileHandle
+        filePath = path.join(self.fileFolder,fileName)
+
+        if not path.isfile(filePath): return
+
+        logger.debug("SceneData: Loading timing information")
+
+        fileObj = open(filePath,"r")
+        tmpData = fileObj.read()
+        fileObj.close()
+
+        self.timeList  = []
+        self.timeTotal = 0.0
+        tmpLines = tmpData.split("\n")
+        for tmpLine in tmpLines:
+            tmpValues = tmpLine.split(",")
+            if len(tmpValues) == 4:
+                self.timeList.append(tmpValues)
+                self.timeTotal += float(tmpValues[1])
+
+        return
 
     ##
     #  Save Functions
@@ -306,6 +346,8 @@ class SceneData():
 
         logger.debug("SceneData: Saving scene metadata")
         confParser = configparser.ConfigParser()
+
+        self.fileUpdated = formatDateTime()
 
         # Set Variables
         cnfSec = "Scene"
@@ -327,10 +369,38 @@ class SceneData():
 
         self.mainConf.setLastFile(self.fileHandle)
 
+        self.fileChanged = False
+
         return True
 
-    def doAutoSaveText(self):
-        self.theText.doAutoSaveText(self.fileFolder,self.fileHandle,self.fileVersion)
+    def doAutoSave(self):
+        if self.fileChanged: self.saveScene()
+        self.theText.doAutoSave(self.fileFolder,self.fileHandle,self.fileVersion)
+        return
+
+    def saveTiming(self, timeValue):
+
+        if timeValue < 30: return
+
+        logger.debug("SceneData: Saving timing information")
+
+        self.timeTotal += timeValue
+
+        timeStamp = formatDateTime()
+        timeValue = str(timeValue)
+        wordCount = str(self.theText.wordsLatest)
+        charCount = str(self.theText.charsLatest)
+
+        self.timeList.append([timeStamp,timeValue,wordCount,charCount])
+
+        # Write File
+        fileName = "%s-timing.csv" % self.fileHandle
+        filePath = path.join(self.fileFolder,fileName)
+        timeSet  = timeStamp+","+timeValue+","+wordCount+","+charCount+"\n"
+        fileObj  = open(filePath,"a+")
+        fileObj.write(timeSet)
+        fileObj.close()
+
         return
 
     ##
@@ -350,7 +420,8 @@ class SceneData():
     def setTitle(self, newTitle):
         newTitle = newTitle.strip()
         if len(newTitle) > 0:
-            self.fileTitle = newTitle
+            self.fileTitle   = newTitle
+            self.fileChanged = True
         else:
             logger.error("SceneData: Invalid scene title")
         return
@@ -359,7 +430,8 @@ class SceneData():
         if not path.isdir(folderPath):
             mkdir(folderPath)
             logger.debug("SceneData: Folder created %s" % folderPath)
-        self.fileFolder = folderPath
+        self.fileFolder  = folderPath
+        self.fileChanged = True
         return
 
     def setSection(self, fileSection):
@@ -367,6 +439,7 @@ class SceneData():
         if fileSection > 3: fileSection = 3
         self.fileSection = fileSection
         if fileSection != 2: self.fileChapter = 0
+        self.fileChanged = True
         return
 
     def setChapter(self, fileChapter):
@@ -374,20 +447,24 @@ class SceneData():
         if fileChapter > 99: fileChapter = 99
         if self.fileSection != 2: fileChapter = 0
         self.fileChapter = fileChapter
+        self.fileChanged = True
         return
 
     def setNumber(self, fileNumber):
         if fileNumber < 1:   fileNumber = 1
         if fileNumber > 999: fileNumber = 999
-        self.fileNumber = fileNumber
+        self.fileNumber  = fileNumber
+        self.fileChanged = True
         return
 
     def setText(self, srcText):
         self.theText.setText(srcText)
+        self.fileChanged = True
         return
 
     def setSummary(self, newSummary):
         self.theText.setSummary(newSummary)
+        self.fileChanged = True
         return
 
     ##
@@ -434,7 +511,6 @@ class TextFile():
 
         fileName  = "%s-scene-%03d.txt" % (fileHandle,fileVersion)
         filePath  = path.join(fileFolder,fileName)
-
         fileObj   = open(filePath,encoding="utf-8",mode="r")
         self.text = fileObj.read()
         fileObj.close()
@@ -484,15 +560,14 @@ class TextFile():
         words, chars     = self.countWords()
         self.wordsLatest = words
         self.charsLatest = chars
-
-        self.textHash = sha256(str(self.text).encode()).hexdigest()
+        self.textHash    = sha256(str(self.text).encode()).hexdigest()
 
         return
 
-    def doAutoSaveText(self, fileFolder, fileHandle, fileVersion):
+    def doAutoSave(self, fileFolder, fileHandle, fileVersion):
 
         if not self.hasText: return False
-        if self.fileHash == sha256(str(self.text).encode()).hexdigest(): return False
+        if self.textHash == sha256(str(self.text).encode()).hexdigest(): return False
 
         logger.debug("TextFile: Autosaving")
 
@@ -533,7 +608,6 @@ class TextFile():
             srcText          = self.htmlCleanUp(srcText)
             self.text        = srcText
             self.hasText     = True
-
             words,chars      = self.countWords()
             self.wordsAdded  = words - self.wordsOnLoad
             self.charsAdded  = chars - self.charsOnLoad

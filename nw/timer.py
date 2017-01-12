@@ -115,7 +115,6 @@ class Timer():
         self.autoOffset = time()
 
         self.progTimer.set_fraction(0.0)
-
         self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#00aa00"))
         self.timerStatus.set_label("RUNNING")
 
@@ -140,6 +139,7 @@ class Timer():
         self.timerOn    = False
         self.timeBuffer = 0.0
 
+        self.progTimer.set_fraction(0.0)
         self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#aa0000"))
         self.timerStatus.set_label("STOPPED")
 

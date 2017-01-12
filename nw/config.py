@@ -149,7 +149,7 @@ class Config:
 
         return
 
-    def doAutoSaveConfig(self):
+    def doAutoSave(self):
 
         if not self.confChanged: return False
 
@@ -164,29 +164,31 @@ class Config:
 
     def setWinSize(self, width, height):
         if width != self.winWidth or height != self.winHeight:
-            self.winWidth  = width
-            self.winHeight = height
+            self.winWidth    = width
+            self.winHeight   = height
             self.confChanged = True
         return
 
     def setMainPane(self, position):
         if position != self.mainPane:
-            self.mainPane = position
+            self.mainPane    = position
             self.confChanged = True
         return
 
     def setSidePane(self, position):
         if position != self.sidePane:
-            self.sidePane = position
+            self.sidePane    = position
             self.confChanged = True
         return
 
     def setLastBook(self, bookPath):
-        self.lastBook = bookPath
+        self.lastBook    = bookPath
+        self.confChanged = True
         return
 
     def setLastFile(self, fileHandle):
-        self.lastFile = fileHandle
+        self.lastFile    = fileHandle
+        self.confChanged = True
         return
 
 # End Class Config
