@@ -67,15 +67,20 @@ def formatDateTime(dateFormat=DATE_NUM1, timeValue=None, localFormat="dd.mm.yyyy
     dtSeq = DATEFORMAT[localFormat][0]
     dtSep = DATEFORMAT[localFormat][1]
 
-    if dtSeq == "DMY": dateString = "{:%d"+dtSep+"%m"+dtSep+"%Y}".format(timeValue)
-    if dtSeq == "MDY": dateString = "{:%m"+dtSep+"%d"+dtSep+"%Y}".format(timeValue)
-    if dtSeq == "YMD": dateString = "{:%Y"+dtSep+"%m"+dtSep+"%d}".format(timeValue)
+    if dtSeq == "DMY": dateString = "{:%d.%m.%Y}".format(timeValue)
+    if dtSeq == "MDY": dateString = "{:%m.%d.%Y}".format(timeValue)
+    if dtSeq == "YMD": dateString = "{:%Y.%m.%d}".format(timeValue)
+
+    dateString.replace(".",dtSep)
 
     if dateFormat == DATE_TIME: return timeString
     if dateFormat == DATE_DATE: return dateString
     if dateFormat == DATE_FULL: return timeString+" "+dateString
     
     return None
+
+def dateFromStamp(dateString):
+    return datetime.strptime(dateString,"%Y%m%d%H%M%S")
 
 def makeSortString(section,chapter,number):
     return "%01d.%02d.%03d" % (section,chapter,number)

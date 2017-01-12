@@ -59,11 +59,6 @@ class Editor(WebKit.WebView):
         return True
 
     ##
-    #  Load and Save
-    ##
-
-
-    ##
     #  Events
     ##
 

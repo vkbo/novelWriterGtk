@@ -514,7 +514,9 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <child internal-child="selection">
-                              <object class="GtkTreeSelection" id="treeScenesSelect"/>
+                              <object class="GtkTreeSelection" id="treeScenesSelect">
+                                <signal name="changed" handler="onSelectTreeScene" swapped="no"/>
+                              </object>
                             </child>
                             <child>
                               <object class="GtkTreeViewColumn" id="treeScenesTitle">

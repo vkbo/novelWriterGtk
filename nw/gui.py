@@ -48,6 +48,7 @@ class GUI():
             "onClickSave"        : self.onSaveBook,
             "onClickPreferences" : self.onEditBook,
             "onClickSceneAdd"    : self.onSceneAdd,
+            "onSelectTreeScene"  : self.onSceneSelect,
             "onDestroyWindow"    : self.onGuiDestroy,
             "onMainWinChange"    : self.onWinChange,
 
@@ -102,10 +103,40 @@ class GUI():
 
         return
 
-    def loadScene(self):
+    def loadScene(self, sceneHandle):
+
+        self.theBook.loadScene(sceneHandle)
+        self.webEditor.setText(self.theBook.getText())
+
+        scnTitle   = self.theBook.getFileTitle()
+        scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getFileCreated()))
+        scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getFileUpdated()))
+        scnVersion = "Draft %d, Version %d" % (self.theBook.bookDraft,self.theBook.getFileVersion())
+
+        self.getObject("lblSceneTitle").set_label(scnTitle)
+        self.getObject("lblSceneCreated").set_label(scnCreated)
+        self.getObject("lblSceneUpdated").set_label(scnUpdated)
+        self.getObject("lblSceneVersion").set_label(scnVersion)
+
+        self.updateWordCount()
+
         return
 
     def saveScene(self):
+        return
+
+    ##
+    #  Update Functions
+    ##
+
+    def updateWordCount(self):
+
+        sessionWords = str(self.theBook.theScene.theText.wordsAdded)
+        totalWords   = str(self.theBook.theScene.theText.wordsLatest)
+
+        self.getObject("lblWordsSessionValue").set_label(sessionWords)
+        self.getObject("lblWordsTotalValue").set_label(totalWords)
+
         return
 
     ##
@@ -134,6 +165,23 @@ class GUI():
 
     def onSceneAdd(self, guiObject):
         self.theBook.makeNewScene("New Scene")
+        return
+
+    def onSceneSelect(self, guiObject):
+
+        logger.debug("GUI: Select Scene")
+
+        itemHandle = ""
+
+        (listModel, pathList) = guiObject.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,self.sceneTree.COL_HANDLE)
+
+        if itemHandle == "" or itemHandle is None: return
+
+        self.loadScene(itemHandle)
+
         return
 
     ##

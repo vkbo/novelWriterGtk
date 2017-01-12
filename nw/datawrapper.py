@@ -79,6 +79,16 @@ class BookData():
 
         return
 
+    def loadScene(self, itemHandle):
+
+        filesFolder = self.getFilesPath()
+
+        self.theScene = SceneData()
+        self.theScene.setFolderPath(filesFolder)
+        self.theScene.loadScene(itemHandle)
+
+        return
+
     ##
     #  Save Functions
     ##
@@ -108,6 +118,21 @@ class BookData():
     def getFilesPath(self):
         if self.bookFolder == "": return None
         return path.join(self.bookFolder,"Draft %d" % self.bookDraft)
+
+    def getText(self):
+        return self.theScene.getText()
+
+    def getFileTitle(self):
+        return self.theScene.fileTitle
+
+    def getFileCreated(self):
+        return self.theScene.fileCreated
+
+    def getFileUpdated(self):
+        return self.theScene.fileUpdated
+
+    def getFileVersion(self):
+        return self.theScene.fileVersion
 
     ##
     #  Setters
@@ -221,7 +246,7 @@ class SceneData():
     #  Load Functions
     ##
 
-    def loadScene(self, fileHandle, headerOnly=False):
+    def loadScene(self, fileHandle, metaOnly=False):
 
         if self.fileFolder == "":
             logger.error("SceneData: No folder specified")
@@ -259,7 +284,7 @@ class SceneData():
             if confParser.has_option(cnfSec,"Words"):   self.fileWords   = confParser.getint(cnfSec,"Words")
             if confParser.has_option(cnfSec,"Chars"):   self.fileChars   = confParser.getint(cnfSec,"Chars")
 
-        if not headerOnly:
+        if not metaOnly:
             self.theText.loadText(self.fileFolder,self.fileHandle,self.fileVersion)
             self.theText.loadSummary(self.fileFolder,self.fileHandle,self.fileVersion)
             self.mainConf.setLastFile(self.fileHandle)
