@@ -27,6 +27,7 @@ class Editor(WebKit.WebView):
         self.guiTimer   = timer
         self.theBook    = None
         self.fileStatus = self.getObject("imgStatusFile")
+        self.lblStatus  = self.getObject("lblStatusFile")
 
         # Paths
         self.ledGrey    = self.mainConf.guiPath+"/led-grey.png"

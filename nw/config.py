@@ -150,12 +150,9 @@ class Config:
         return
 
     def doAutoSave(self):
-
-        if not self.confChanged: return False
-
-        logger.debug("Config: Autosaving")
-        self.saveConfig()
-
+        if self.confChanged:
+            logger.debug("Config: Autosaving")
+            self.saveConfig()
         return True
 
     ##
