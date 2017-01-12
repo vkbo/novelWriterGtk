@@ -32,10 +32,8 @@ class GUI():
         self.getObject  = self.guiBuilder.get_object
         self.winMain    = self.getObject("winMain")
 
-        # Data Files
-        self.theBook    = BookData()
-
         # Prepare GUI Classes
+        self.theBook    = BookData()
         self.guiTimer   = None #Timer()
         self.webEditor  = Editor(self.guiTimer)
         self.bookEditor = BookEditor(self.theBook)
@@ -43,6 +41,7 @@ class GUI():
 
         # Set Up Event Handlers
         guiHandlers = {
+            # Main GUI
             "onClickNew"         : self.onNewBook,
             "onClickOpen"        : self.onOpenBook,
             "onClickSave"        : self.onSaveBook,
@@ -51,13 +50,13 @@ class GUI():
             "onSelectTreeScene"  : self.onSceneSelect,
             "onDestroyWindow"    : self.onGuiDestroy,
             "onMainWinChange"    : self.onWinChange,
-
+            # Editor Signals
             "onClickBookCancel"  : self.bookEditor.onBookCancel,
             "onClickBookSave"    : self.bookEditor.onBookSave,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
-        # Set Panes
+        # Set Pane Positions
         self.getObject("panedContent").set_position(self.mainConf.mainPane)
         self.getObject("panedSide").set_position(self.mainConf.sidePane)
 
@@ -81,12 +80,18 @@ class GUI():
     #  Load and Save Functions
     ##
 
-    def loadBook(self):
+    def loadBook(self, bookFolder=None):
 
-        logger.debug("Loading Book")
+        if bookFolder is None:
+            bookFolder = self.mainConf.lastBook
+
+        if bookFolder == "":
+            return
+
+        logger.debug("GUI: Loading book")
 
         self.theBook = BookData()
-        self.theBook.loadBook(self.mainConf.lastBook)
+        self.theBook.loadBook(bookFolder)
         self.sceneTree.loadContent(self.theBook)
 
         if self.theBook.bookLoaded:
@@ -98,12 +103,14 @@ class GUI():
     def saveBook(self):
 
         if self.theBook.bookLoaded:
-            logger.debug("Saving Book")
+            logger.debug("GUI: Saving book")
             self.theBook.saveBook()
 
         return
 
     def loadScene(self, sceneHandle):
+
+        logger.debug("GUI: Loading scene")
 
         self.theBook.loadScene(sceneHandle)
         self.webEditor.setText(self.theBook.getText())
@@ -123,6 +130,7 @@ class GUI():
         return
 
     def saveScene(self):
+        logger.debug("GUI: Saving scene")
         return
 
     ##
@@ -169,7 +177,7 @@ class GUI():
 
     def onSceneSelect(self, guiObject):
 
-        logger.debug("GUI: Select Scene")
+        logger.debug("GUI: Select scene")
 
         itemHandle = ""
 
@@ -190,7 +198,7 @@ class GUI():
 
     # Close Program
     def onGuiDestroy(self, guiObject):
-        logger.debug("Exiting")
+        logger.debug("GUI: Exiting")
         mainPane = self.getObject("panedContent").get_position()
         sidePane = self.getObject("panedSide").get_position()
         self.mainConf.setMainPane(mainPane)

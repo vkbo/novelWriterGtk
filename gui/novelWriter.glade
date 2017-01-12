@@ -373,7 +373,7 @@
                                   <object class="GtkLabel" id="lblSceneTimeline">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Timeline</property>
+                                    <property name="label" translatable="yes">Default timeline</property>
                                     <property name="xalign">0</property>
                                     <attributes>
                                       <attribute name="scale" value="0.90000000000000002"/>
@@ -393,7 +393,7 @@
                           <object class="GtkLabel" id="lblCharTime">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Scene Setting</property>
+                            <property name="label" translatable="yes">Character</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
                               <attribute name="scale" value="0.80000000000000004"/>
@@ -1100,6 +1100,30 @@
                             <property name="can_focus">False</property>
                             <property name="icon_size">2</property>
                             <child>
+                              <object class="GtkToggleToolButton" id="btnEditable">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Make file editable</property>
+                                <property name="label" translatable="yes">Editable</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-edit</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSeparatorToolItem" id="sepEdit1">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkToolButton" id="btnEditUndo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -1128,7 +1152,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSeparatorToolItem" id="sepEdit1">
+                              <object class="GtkSeparatorToolItem" id="sepEdit2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                               </object>
@@ -1180,7 +1204,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSeparatorToolItem" id="sepEdit2">
+                              <object class="GtkSeparatorToolItem" id="sepEdit3">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                               </object>
@@ -1246,7 +1270,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSeparatorToolItem" id="sepEdit3">
+                              <object class="GtkSeparatorToolItem" id="sepEdit4">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                               </object>

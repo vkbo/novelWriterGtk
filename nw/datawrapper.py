@@ -59,6 +59,8 @@ class BookData():
 
         if loadPath == "": return
 
+        logger.debug("BookData: Loadeing book metadata")
+
         self.bookFolder = loadPath
 
         confParser = configparser.ConfigParser()
@@ -81,6 +83,8 @@ class BookData():
 
     def loadScene(self, itemHandle):
 
+        logger.debug("BookData: Loadeing scene data")
+
         filesFolder = self.getFilesPath()
 
         self.theScene = SceneData()
@@ -95,7 +99,7 @@ class BookData():
 
     def saveBook(self):
 
-        logger.debug("Saving Book Data")
+        logger.debug("BookData: Saving book metadata")
         confParser = configparser.ConfigParser()
 
         # Set Variables
@@ -159,7 +163,7 @@ class BookData():
 
     def makeNewScene(self, sceneTitle):
 
-        logger.debug("BookData; New Scene")
+        logger.debug("BookData: New scene")
 
         filesFolder = self.getFilesPath()
 
@@ -180,7 +184,7 @@ class BookData():
             logger.error("BookData: Path not found: %s" % filesFolder)
             return False
 
-        logger.debug("BookData; Scanning folder")
+        logger.debug("BookData: Scanning folder")
             
         dirContent = listdir(filesFolder)
 
@@ -265,7 +269,7 @@ class SceneData():
             logger.error("SceneData: File not found %s" % filePath)
             return False
 
-        logger.debug("SceneData: Loading Scene MetaData")
+        logger.debug("SceneData: Loading scene metadata")
 
         confParser = configparser.ConfigParser()
         confParser.readfp(open(filePath))
@@ -305,7 +309,7 @@ class SceneData():
         self.theText.saveText(self.fileFolder,self.fileHandle,self.fileVersion)
         self.theText.saveSummary(self.fileFolder,self.fileHandle,self.fileVersion)
 
-        logger.debug("SceneData: Loading Scene MetaData")
+        logger.debug("SceneData: Saving scene metadata")
         confParser = configparser.ConfigParser()
 
         # Set Variables
@@ -377,7 +381,7 @@ class SceneData():
         self.fileChapter = fileChapter
         return
 
-    def setChapter(self, fileNumber):
+    def setNumber(self, fileNumber):
         if fileNumber < 1:   fileNumber = 1
         if fileNumber > 999: fileNumber = 999
         self.fileNumber = fileNumber
@@ -431,7 +435,7 @@ class TextFile():
 
         if not path.isdir(fileFolder): return False
 
-        logger.debug("TextFile: Loading Scene Text")
+        logger.debug("TextFile: Loading scene text")
 
         fileName  = "%s-scene-v%d.txt" % (fileHandle,fileVersion)
         filePath  = path.join(fileFolder,fileName)
@@ -454,7 +458,7 @@ class TextFile():
 
         if not path.isdir(fileFolder): return False
 
-        logger.debug("TextFile: Loading Scene Summary")
+        logger.debug("TextFile: Loading scene summary")
 
         fileName = "%s-summary-v%d.txt" % (fileHandle,fileVersion)
         filePath = path.join(fileFolder,fileName)
@@ -474,7 +478,7 @@ class TextFile():
 
         if not self.hasText: return
 
-        logger.debug("TextFile: Saving Scene Text")
+        logger.debug("TextFile: Saving scene text")
 
         fileName = "%s-scene-v%d.txt" % (fileHandle,fileVersion)
         filePath = path.join(fileFolder,fileName)
@@ -495,7 +499,7 @@ class TextFile():
         if not self.hasText: return False
         if self.fileHash == sha256(str(self.text).encode()).hexdigest(): return False
 
-        logger.debug("TextFile: AutoSaving")
+        logger.debug("TextFile: Autosaving")
 
         self.saveText(fileFolder,fileHandle,fileVersion)
 
@@ -505,7 +509,7 @@ class TextFile():
 
         if self.summary == "": return
 
-        logger.debug("TextFile: Saving Scene Summary")
+        logger.debug("TextFile: Saving scene summary")
 
         fileName = "%s-summary-v%d.txt" % (fileHandle,fileVersion)
         filePath = path.join(fileFolder,fileName)

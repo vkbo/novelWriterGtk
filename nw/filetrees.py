@@ -15,7 +15,7 @@ from gi.repository import Gtk
 from nw            import *
 
 # Set to true to show sorting in all treeviews
-debugShowSort = False
+debugShowSort = True
 
 # ==================================================================================================================== #
 # Begin Class SceneTree
@@ -26,13 +26,14 @@ class SceneTree():
 
         """
         Tree Store Structure:
-        Col 1 : String  : Scene title
-        Col 2 : String  : Scene number
-        Col 4 : Integer : Word count
-        Col 5 : String  : List sorting column
-        Col 5 : String  : File handle
+        Col 1 : String : Scene title
+        Col 2 : String : Scene number
+        Col 4 : String : Word count
+        Col 5 : String : List sorting column
+        Col 5 : String : File handle
         """
 
+        # Constants
         self.COL_TITLE  = 0
         self.COL_NUMBER = 1
         self.COL_WORDS  = 2
@@ -98,9 +99,7 @@ class SceneTree():
         self.chapMap   = {}
         self.chapCount = {}
 
-        scnRoot = makeSortString(0,0,0)
-
-        self.chapCount[scnRoot] = 0
+        self.chapCount[makeSortString(0,0,0)] = 0
 
         for itemHandle in theBook.fileIndex.keys():
 
@@ -125,7 +124,7 @@ class SceneTree():
                 else:
                     if tmpSection == 1: scnChapter = "<b>Prologue</b>"
                     if tmpSection == 2: scnChapter = "<b>Chapter %d</b>" % tmpChapter
-                    if tmoSection == 3: scnChapter = "<b>Epilogue</b>"
+                    if tmpSection == 3: scnChapter = "<b>Epilogue</b>"
                     parIter = self.treeStore.append(None,[scnChapter,None,None,scnSec,None])
                     self.chapMap[scnSec]   = parIter
                     self.chapCount[scnSec] = 1

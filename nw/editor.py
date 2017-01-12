@@ -13,8 +13,6 @@ gi.require_version("Gtk","3.0")
 gi.require_version("WebKit","3.0")
 
 from gi.repository import Gtk, Gdk, WebKit
-#from os            import getcwd
-#from math          import floor
 from nw            import *
 
 class Editor(WebKit.WebView):
@@ -33,10 +31,6 @@ class Editor(WebKit.WebView):
         self.ledGrey    = self.mainConf.guiPath+"/led-grey.png"
         self.ledGreen   = self.mainConf.guiPath+"/led-green.png"
         self.ledRed     = self.mainConf.guiPath+"/led-red.png"
-
-        # Editor Data
-        #self.theFile    = DataWrapper(NAME_NONE)
-        #self.fileHandle = ""
 
         # Set Up Editor
         self.set_editable(False)
@@ -67,7 +61,7 @@ class Editor(WebKit.WebView):
         return
 
     def onEditAction(self, guiObject):
-        logger.debug("Editor action %s" % guiObject.get_name())
+        logger.debug("Editor: Action %s" % guiObject.get_name())
         self.execute_script("document.execCommand('%s',false,false);" % guiObject.get_name())
         return
 
