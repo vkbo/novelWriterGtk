@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*
 
 ##
-#  pyÉcrire – Timer Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~
+#  novelWriter – Timer Class
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #  Main wrapper class for the GUI timer and its related functions
 ##
 
@@ -11,10 +11,9 @@ import logging as logger
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository      import Gtk
-from time               import time, strftime
-from pyecrire           import *
-from pyecrire.functions import makeTimeStamp, formatTime
+from gi.repository import Gtk
+from time          import time, strftime
+from nw            import *
 
 class Timer():
 
