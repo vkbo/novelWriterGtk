@@ -1,5 +1,6 @@
-#novelWriter
+# novelWriter
 
+**Version Dev0.2**
 *Under initial development*
 
 A simple editor for writing books by providing a simple editor with basic formatting.

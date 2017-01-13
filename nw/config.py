@@ -19,7 +19,7 @@ class Config:
 
         self.appName    = "novelWriter"
         self.appHandle  = "novelwriter"
-        self.appVersion = "0.1"
+        self.appVersion = "Dev0.2"
         self.appURL     = "https://github.com/Jadzia626/novelWriter"
 
         self.confPath   = user_config_dir(self.appHandle)
