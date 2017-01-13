@@ -82,6 +82,8 @@ class Editor(WebKit.WebView):
 
     def saveText(self):
 
+        if self.theBook is None: return
+
         scnText = self.getText()
         self.theBook.theScene.setText(scnText)
         self.theBook.saveScene()
@@ -91,6 +93,8 @@ class Editor(WebKit.WebView):
         return
 
     def doAutoSave(self):
+
+        if self.theBook is None: return
 
         if not self.textSaved:
             logger.debug("Editor: Autsaving")

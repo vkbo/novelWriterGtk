@@ -37,7 +37,7 @@ class GUI():
         self.theBook    = BookData()
         self.guiTimer   = Timer()
         self.webEditor  = Editor(self.guiTimer)
-        self.bookEditor = BookEditor(self.theBook)
+        self.bookEditor = BookEditor()
         self.sceneTree  = SceneTree()
 
         # Set Up Event Handlers
@@ -131,14 +131,8 @@ class GUI():
         self.theBook.loadBook(bookFolder)
         self.sceneTree.loadContent(self.theBook)
 
-        appName   = self.mainConf.appName
-        bookTitle = self.theBook.bookTitle
-        bookDraft = self.theBook.bookDraft
+        self.updateWindowTitle()
 
-        if self.theBook.bookLoaded:
-            winTitle = "%s: %s (Draft %d)" % (appName,bookTitle,bookDraft)
-            self.getObject("winMain").set_title(winTitle)
-        
         return
 
     def saveBook(self):
@@ -250,6 +244,18 @@ class GUI():
 
         return
 
+    def updateWindowTitle(self):
+        
+        appName   = self.mainConf.appName
+        bookTitle = self.theBook.bookTitle
+        bookDraft = self.theBook.bookDraft
+
+        if self.theBook.bookLoaded:
+            winTitle = "%s: %s (Draft %d)" % (appName,bookTitle,bookDraft)
+            self.getObject("winMain").set_title(winTitle)
+
+        return
+
     ##
     #  Main ToolBar Button Events
     ##
@@ -263,11 +269,6 @@ class GUI():
         guiDialog = Gtk.FileChooserDialog("Open Book Folder",None,Gtk.FileChooserAction.SELECT_FOLDER,(
             Gtk.STOCK_CANCEL,Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN,Gtk.ResponseType.OK))
         guiDialog.set_default_response(Gtk.ResponseType.OK)
-
-        #~ fileFilter = Gtk.FileFilter()
-        #~ fileFilter.set_name("novelWriter files")
-        #~ fileFilter.add_pattern("*.nwf")
-        #~ guiDialog.add_filter(fileFilter)
 
         dlgReturn = guiDialog.run()
         if dlgReturn == Gtk.ResponseType.OK:
@@ -283,7 +284,7 @@ class GUI():
         return
 
     def onEditBook(self, guiObject):
-        self.bookEditor.loadEditor()
+        self.bookEditor.loadEditor(self.theBook)
         self.bookEditor.dlgWin.show()
         return
 

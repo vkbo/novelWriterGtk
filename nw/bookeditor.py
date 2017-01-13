@@ -17,11 +17,11 @@ from nw            import *
 
 class BookEditor():
 
-    def __init__(self, book):
+    def __init__(self):
 
         self.mainConf   = CONFIG
         self.guiBuilder = BUILDER
-        self.theBook    = book
+        self.theBook    = None
         self.getObject  = self.guiBuilder.get_object
 
         self.dlgWin     = self.getObject("dlgEditBook")
@@ -29,10 +29,14 @@ class BookEditor():
 
         return
 
-    def loadEditor(self):
+    def loadEditor(self, theBook):
+
+        if not theBook.bookLoaded:
+            return
 
         logger.debug("Book Editor: Load")
 
+        self.theBook = theBook
         self.theBook.loadBook(self.theBook.bookFolder)
 
         self.getObject("entryWorkingTitle").set_text(self.theBook.bookTitle)
@@ -53,7 +57,15 @@ class BookEditor():
 
         self.theBook.setTitle(bookTitle)
         self.theBook.setAuthor(bookAuthor)
-        self.theBook.setBookFolder(bookFolder)
+        if self.theBook.bookFolder == "":
+            self.theBook.setBookFolder(bookFolder)
+
+        appName   = self.mainConf.appName
+        bookTitle = self.theBook.bookTitle
+        bookDraft = self.theBook.bookDraft
+
+        winTitle = "%s: %s (Draft %d)" % (appName,bookTitle,bookDraft)
+        self.getObject("winMain").set_title(winTitle)
 
         self.theBook.saveBook()
         self.dlgWin.hide()
