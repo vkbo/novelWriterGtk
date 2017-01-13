@@ -15,6 +15,7 @@ from gi.repository import Gtk
 from os            import path
 from datetime      import datetime
 from nw.config     import Config
+from book          import Book
 
 # ==================================================================================================================== #
 # Begin Initialisation
@@ -23,6 +24,7 @@ logger.basicConfig(format="%(levelname)s: %(message)s",level=logger.DEBUG)
 
 # Global Classes
 CONFIG  = Config()
+BOOK    = Book(CONFIG)
 BUILDER = Gtk.Builder()
 
 BUILDER.add_from_file(path.join(CONFIG.guiPath,"novelWriter.glade"))
