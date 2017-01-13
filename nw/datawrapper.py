@@ -14,6 +14,7 @@ from hashlib import sha256
 from time    import time
 from re      import sub
 from bleach  import clean
+from html    import unescape
 from nw      import *
 
 # ==================================================================================================================== #
@@ -56,16 +57,21 @@ class BookData():
     #  Load Functions
     ##
 
-    def loadBook(self, loadPath):
+    def loadBook(self, bookFolder):
 
-        if loadPath == "": return
+        if bookFolder == "" or bookFolder is None: return
 
         logger.debug("BookData: Loadeing book metadata")
 
-        self.bookFolder = loadPath
+        bookPath = path.join(bookFolder,"bookData.nwf")
 
+        if not path.isfile(bookPath):
+            logger.error("BookData: No novelWriter book found in %s" % bookFolder)
+            return
+        
+        self.bookFolder = bookFolder
         confParser = configparser.ConfigParser()
-        confParser.readfp(open(path.join(self.bookFolder,"metadata.cnf")))
+        confParser.readfp(open(bookPath,"r"))
 
         # Get Variables
         cnfSec = "Book"
@@ -111,7 +117,7 @@ class BookData():
         confParser.set(cnfSec,"Draft",  str(self.bookDraft))
 
         # Write File
-        confParser.write(open(path.join(self.bookFolder,"metadata.cnf"),"w"))
+        confParser.write(open(path.join(self.bookFolder,"bookData.nwf"),"w"))
         self.mainConf.setLastBook(self.bookFolder)
         self.bookChanged = False
 
@@ -643,12 +649,15 @@ class TextFile():
 
         if srcText[0:3] != "<p>": srcText = "<p>"+srcText+"</p>"
 
-        srcText  = srcText.replace("<p></p>","")
-        srcText  = srcText.replace("</p>","</p>\n")
-        srcText  = srcText.replace('style=""',"")
-        srcText  = srcText.replace("style=''","")
-        srcText  = srcText.replace(" >",">")
-        srcText  = srcText.replace("\n ","\n")
+        srcText = unescape(srcText)
+        srcText = srcText.replace("</p> ","</p>")
+        srcText = srcText.replace("<p></p>","")
+        srcText = srcText.replace("</p>","</p>\n")
+        srcText = srcText.replace('style=""',"")
+        srcText = srcText.replace("style=''","")
+        srcText = srcText.replace(" >",">")
+        srcText = srcText.replace("\u00A0"," ")
+        srcText = srcText.replace("\n ","\n")
 
         return srcText
     

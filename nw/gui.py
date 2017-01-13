@@ -49,10 +49,14 @@ class GUI():
             "onClickPreferences"       :  self.onEditBook,
             "onClickSceneAdd"          :  self.onSceneAdd,
             "onSelectTreeScene"        :  self.onSceneSelect,
+            "onMainTabChange"          :  self.onMainTabChange,
             "onDestroyWindow"          :  self.onGuiDestroy,
             "onMainWinChange"          :  self.onWinChange,
             # WebKit Editor Signals
             "onToggleEditable"         :  self.webEditor.onToggleEditable,
+            "onClickEditRefresh"       :  self.webEditor.onEditRefresh,
+            "onClickEditUndo"          : (self.webEditor.onEditAction,"undo"),
+            "onClickEditRedo"          : (self.webEditor.onEditAction,"redo"),
             "onClickEditCut"           :  self.webEditor.onEditCut,
             "onClickEditCopy"          :  self.webEditor.onEditCopy,
             "onClickEditPaste"         :  self.webEditor.onEditPaste,
@@ -73,6 +77,7 @@ class GUI():
 
         # Prepare Editor
         self.getObject("scrollEditor").add(self.webEditor)
+        self.getObject("textSource").set_editable(False)
 
         # Set Up Timers
         self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
@@ -218,6 +223,17 @@ class GUI():
         
         return
 
+    def loadSourceView(self):
+
+        scnText = self.webEditor.getText()
+        self.theBook.theScene.setText(scnText)
+        scnText = self.theBook.theScene.getText()
+
+        tmpBuffer = self.getObject("textSource").get_buffer()
+        tmpBuffer.set_text(scnText)
+
+        return
+
     ##
     #  Update Functions
     ##
@@ -243,6 +259,22 @@ class GUI():
         return
 
     def onOpenBook(self, guiObject):
+
+        guiDialog = Gtk.FileChooserDialog("Open Book Folder",None,Gtk.FileChooserAction.SELECT_FOLDER,(
+            Gtk.STOCK_CANCEL,Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN,Gtk.ResponseType.OK))
+        guiDialog.set_default_response(Gtk.ResponseType.OK)
+
+        #~ fileFilter = Gtk.FileFilter()
+        #~ fileFilter.set_name("novelWriter files")
+        #~ fileFilter.add_pattern("*.nwf")
+        #~ guiDialog.add_filter(fileFilter)
+
+        dlgReturn = guiDialog.run()
+        if dlgReturn == Gtk.ResponseType.OK:
+            self.loadBook(guiDialog.get_filename())
+
+        guiDialog.destroy()
+
         return
 
     def onSaveBook(self, guiObject):
@@ -288,17 +320,33 @@ class GUI():
     #  Main Window Events
     ##
 
+    def onMainTabChange(self, guiObject, guiChild, tabIdx):
+        logger.debug("GUI: Main tab change")
+        if tabIdx == MAIN_DETAILS:
+            return
+        if tabIdx == MAIN_EDITOR:
+            return
+        if tabIdx == MAIN_SOURCE:
+            self.loadSourceView()
+        return
+
     def onGuiDestroy(self, guiObject):
+
         logger.debug("GUI: Exiting")
+
         mainPane = self.getObject("panedContent").get_position()
         sidePane = self.getObject("panedSide").get_position()
         self.mainConf.setMainPane(mainPane)
         self.mainConf.setSidePane(sidePane)
         self.mainConf.saveConfig()
-        self.guiTimer.stopTimer()
-        self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
-        self.webEditor.saveText()
+
+        if self.theBook.bookLoaded:
+            self.guiTimer.stopTimer()
+            self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
+            self.webEditor.saveText()
+
         Gtk.main_quit()
+
         return
 
     def onWinChange(self, guiObject, guiEvent):

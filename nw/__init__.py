@@ -50,6 +50,11 @@ DATE_TIME = 2
 DATE_DATE = 3
 DATE_FULL = 4
 
+# Tab Indices
+MAIN_DETAILS = 0
+MAIN_EDITOR  = 1
+MAIN_SOURCE  = 2
+
 # End Global Constants
 # ==================================================================================================================== #
 # Begin Global Functions

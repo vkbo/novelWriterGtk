@@ -64,10 +64,11 @@ class Editor(WebKit.WebView):
 
         self.theBook = theBook
 
+        self.guiTimer.stopTimer()
+        self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
+        self.guiTimer.resetTimer()
+
         if not self.textSaved:
-            self.guiTimer.stopTimer()
-            self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
-            self.guiTimer.resetTimer()
             self.saveText()
 
         self.theBook.loadScene(fileHandle)
@@ -182,6 +183,9 @@ class Editor(WebKit.WebView):
         
         return
 
+    def onEditRefresh(self, guiObject):
+        self.setText(self.getText())
+        return
 
     def onEditAction(self, guiObject, theCommand):
         logger.debug("Editor: Action %s" % theCommand)

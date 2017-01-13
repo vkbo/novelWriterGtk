@@ -1044,6 +1044,7 @@
                   <object class="GtkNotebook" id="nbContent">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="switch-page" handler="onMainTabChange" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="boxDetails">
                         <property name="visible">True</property>
@@ -1208,7 +1209,7 @@
                                         <property name="can_focus">True</property>
                                         <property name="wrap_mode">word</property>
                                         <property name="left_margin">8</property>
-                                        <property name="right_margin">7</property>
+                                        <property name="right_margin">8</property>
                                         <property name="top_margin">8</property>
                                         <property name="bottom_margin">8</property>
                                         <property name="input_purpose">phone</property>
@@ -1553,6 +1554,21 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkToolButton" id="btnEditRefresh">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Refresh Text (Cleans Up Formatting)</property>
+                                <property name="label" translatable="yes">Refresh</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-refresh</property>
+                                <signal name="clicked" handler="onClickEditRefresh" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkSeparatorToolItem" id="sepEdit1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -1570,6 +1586,7 @@
                                 <property name="label" translatable="yes">Undo</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-undo</property>
+                                <signal name="clicked" handler="onClickEditUndo" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1584,6 +1601,7 @@
                                 <property name="label" translatable="yes">Redo</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-redo</property>
+                                <signal name="clicked" handler="onClickEditRedo" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1801,6 +1819,11 @@
                           <object class="GtkTextView" id="textSource">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="wrap_mode">word</property>
+                            <property name="left_margin">8</property>
+                            <property name="right_margin">8</property>
+                            <property name="top_margin">8</property>
+                            <property name="bottom_margin">8</property>
                           </object>
                         </child>
                       </object>
