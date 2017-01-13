@@ -33,15 +33,17 @@ class Editor(WebKit.WebView):
         self.ledGrey    = self.mainConf.guiPath+"/led-grey.png"
         self.ledGreen   = self.mainConf.guiPath+"/led-green.png"
         self.ledRed     = self.mainConf.guiPath+"/led-red.png"
+        self.htmlRoot   = "file://"+self.mainConf.guiPath.replace("\\","/")
 
         # Set Up Editor
         self.set_editable(False)
         self.connect("user-changed-contents",self.onContentChanged)
-        self.load_html_string("", "file:///")
+        self.load_html_string("",self.htmlRoot)
         self.fileStatus.set_from_file(self.ledGrey)
 
         # Properties
         self.textSaved  = True
+        self.showPars   = False
 
         return
 
@@ -49,7 +51,7 @@ class Editor(WebKit.WebView):
 
         if not self.textSaved: return False
 
-        self.load_html_string("", "file:///")
+        self.load_html_string("",self.htmlRoot)
         self.fileStatus.set_from_file(self.ledGrey)
 
         return True
@@ -122,23 +124,39 @@ class Editor(WebKit.WebView):
 
         if not self.textSaved: return False
 
-        fontSize   = str(self.mainConf.fontSize)
-        lineHeight = str(self.mainConf.lineHeight/100.0)
-        lineIndent = str(self.mainConf.lineIndent/100.0)
-        parMargin  = str(self.mainConf.parMargin)
+        fontSize   = self.mainConf.fontSize
+        lineHeight = self.mainConf.lineHeight/100.0
+        lineIndent = self.mainConf.lineIndent/100.0
+        parMargin  = self.mainConf.parMargin
+        pageMargin = self.mainConf.pageMargin
+
+        cssPath   = path.join(self.mainConf.guiPath,"editor.css")
+        fileObj   = open(cssPath,"r")
+        cssStyles = fileObj.read()
+        fileObj.close()
+
+        if self.showPars: parMargin -= 1
+
+        cssStyles = cssStyles.replace("%fontSize%",str(fontSize))
+        cssStyles = cssStyles.replace("%lineHeight%",str(lineHeight))
+        cssStyles = cssStyles.replace("%lineIndent%",str(lineIndent))
+        cssStyles = cssStyles.replace("%parMargin%",str(parMargin))
+        cssStyles = cssStyles.replace("%pageMargin%",str(pageMargin))
+
+        if self.showPars:
+            cssStyles += "\n"
+            cssStyles += "p {border: 1px dashed #aaaaaa;}\n"
 
         srcHtml  = "<html>"
         srcHtml += "<head>"
-        srcHtml += "  <style>"
-        srcHtml += "    body {font-size: "+fontSize+"px; padding: 40px; line-height: "+lineHeight+"em;}"
-        srcHtml += "    p    {margin: "+parMargin+"px 0; text-align: justify;}"
-        srcHtml += "    p+p  {text-indent: "+lineIndent+"em;}"
-        srcHtml += "  </style>"
+        srcHtml += "<style>"
+        srcHtml += cssStyles
+        srcHtml += "</style>"
         srcHtml += "</head>"
         srcHtml += "<body>"+srcText+"</body>"
         srcHtml += "</html>"
 
-        self.load_html_string(srcHtml,"file:///")
+        self.load_html_string(srcHtml,self.htmlRoot)
         self.setEditable(False)
 
         return True
@@ -164,9 +182,10 @@ class Editor(WebKit.WebView):
         
         return
 
-    def onEditAction(self, guiObject):
-        logger.debug("Editor: Action %s" % guiObject.get_name())
-        self.execute_script("document.execCommand('%s',false,false);" % guiObject.get_name())
+
+    def onEditAction(self, guiObject, theCommand):
+        logger.debug("Editor: Action %s" % theCommand)
+        self.execute_script("document.execCommand('%s',false,false);" % theCommand)
         return
 
     def onEditCopy(self, guiObject):
@@ -179,6 +198,12 @@ class Editor(WebKit.WebView):
 
     def onEditPaste(self, guiObject):
         self.paste_clipboard()
+        return
+
+    def onShowParagraphs(self, guiObject):
+        logger.debug("Editor: Toggle show paragraphs")
+        self.showPars = guiObject.get_active()
+        self.setText(self.getText())
         return
 
     def onContentChanged(self, guiObject):

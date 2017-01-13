@@ -380,7 +380,7 @@ class SceneData():
 
     def saveTiming(self, timeValue):
 
-        if timeValue < 30: return
+        if timeValue < self.mainConf.minTime: return
 
         logger.debug("SceneData: Saving timing information")
 

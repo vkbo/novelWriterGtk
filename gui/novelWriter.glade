@@ -1608,6 +1608,7 @@
                                 <property name="label" translatable="yes">Cut</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-cut</property>
+                                <signal name="clicked" handler="onClickEditCut" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1622,6 +1623,7 @@
                                 <property name="label" translatable="yes">Copy</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-copy</property>
+                                <signal name="clicked" handler="onClickEditCopy" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1636,6 +1638,7 @@
                                 <property name="label" translatable="yes">Paste</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-paste</property>
+                                <signal name="clicked" handler="onClickEditPaste" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1660,6 +1663,7 @@
                                 <property name="label" translatable="yes">Bold</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-bold</property>
+                                <signal name="clicked" handler="onClickEditBold" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1674,6 +1678,7 @@
                                 <property name="label" translatable="yes">Italic</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-italic</property>
+                                <signal name="clicked" handler="onClickEditItalic" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1688,6 +1693,7 @@
                                 <property name="label" translatable="yes">Underline</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-underline</property>
+                                <signal name="clicked" handler="onClickEditUnderline" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1702,6 +1708,7 @@
                                 <property name="label" translatable="yes">Strikethrough</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-strikethrough</property>
+                                <signal name="clicked" handler="onClickEditStrikethrough" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1732,6 +1739,21 @@
                                 <property name="homogeneous">True</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkToggleToolButton" id="btnEditShowPara">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Show Paragraph Boundaries</property>
+                                <property name="label" translatable="yes">ShowPara</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-zoom-fit</property>
+                                <signal name="toggled" handler="onToggleShowPara" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1743,6 +1765,7 @@
                           <object class="GtkScrolledWindow" id="scrollEditor">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="hscrollbar_policy">never</property>
                             <child>
                               <placeholder/>
                             </child>

@@ -43,19 +43,27 @@ class GUI():
         # Set Up Event Handlers
         guiHandlers = {
             # Main GUI
-            "onClickNew"         : self.onNewBook,
-            "onClickOpen"        : self.onOpenBook,
-            "onClickSave"        : self.onSaveBook,
-            "onClickPreferences" : self.onEditBook,
-            "onClickSceneAdd"    : self.onSceneAdd,
-            "onSelectTreeScene"  : self.onSceneSelect,
-            "onDestroyWindow"    : self.onGuiDestroy,
-            "onMainWinChange"    : self.onWinChange,
+            "onClickNew"               :  self.onNewBook,
+            "onClickOpen"              :  self.onOpenBook,
+            "onClickSave"              :  self.onSaveBook,
+            "onClickPreferences"       :  self.onEditBook,
+            "onClickSceneAdd"          :  self.onSceneAdd,
+            "onSelectTreeScene"        :  self.onSceneSelect,
+            "onDestroyWindow"          :  self.onGuiDestroy,
+            "onMainWinChange"          :  self.onWinChange,
             # WebKit Editor Signals
-            "onToggleEditable"   : self.webEditor.onToggleEditable,
+            "onToggleEditable"         :  self.webEditor.onToggleEditable,
+            "onClickEditCut"           :  self.webEditor.onEditCut,
+            "onClickEditCopy"          :  self.webEditor.onEditCopy,
+            "onClickEditPaste"         :  self.webEditor.onEditPaste,
+            "onClickEditBold"          : (self.webEditor.onEditAction,"bold"),
+            "onClickEditItalic"        : (self.webEditor.onEditAction,"italic"),
+            "onClickEditUnderline"     : (self.webEditor.onEditAction,"underline"),
+            "onClickEditStrikethrough" : (self.webEditor.onEditAction,"strikethrough"),
+            "onToggleShowPara"         :  self.webEditor.onShowParagraphs,
             # Book Editor Signals
-            "onClickBookCancel"  : self.bookEditor.onBookCancel,
-            "onClickBookSave"    : self.bookEditor.onBookSave,
+            "onClickBookCancel"        :  self.bookEditor.onBookCancel,
+            "onClickBookSave"          :  self.bookEditor.onBookSave,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
@@ -82,6 +90,10 @@ class GUI():
         ##
         #  Finalise GUI Setup
         ##
+
+        # Remove Widgets Not In Use Yet
+        boxDetails = self.getObject("boxDetails")
+        boxDetails.remove(self.getObject("boxCharsNTime"))
 
         # Prepare Main Window
         self.winMain.set_title(self.mainConf.appName)

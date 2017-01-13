@@ -1,0 +1,23 @@
+
+html {
+    max-width: 100% !important;
+    #border: 1px solid #ff0000; 
+}
+
+body {
+    margin: %pageMargin%px;
+    font-size: %fontSize%px;
+    line-height: %lineHeight%em;
+    #border: 1px solid #0000ff; 
+}
+
+p {
+    margin: 0px;
+    padding: %parMargin%px;
+    text-align: justify;
+    word-wrap: normal;
+}
+
+p+p {
+    text-indent: %lineIndent%em;
+}

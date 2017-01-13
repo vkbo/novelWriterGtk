@@ -48,9 +48,11 @@ class Config:
         self.lineHeight  = 150  # Percent
         self.lineIndent  = 400  # Percent
         self.parMargin   = 4    # Pixels
+        self.pageMargin  = 40   # Pixels
 
         ## Timer
         self.autoPause   = 60   # Seconds
+        self.minTime     = 10   # Seconds
 
         ## Paths
         self.lastBook    = ""
@@ -94,12 +96,14 @@ class Config:
             if confParser.has_option(cnfSec,"lineHeight"): self.lineHeight = confParser.getint(cnfSec,"lineHeight")
             if confParser.has_option(cnfSec,"lineIndent"): self.lineIndent = confParser.getint(cnfSec,"lineIndent")
             if confParser.has_option(cnfSec,"parMargin"):  self.parMargin  = confParser.getint(cnfSec,"parMargin")
+            if confParser.has_option(cnfSec,"pageMargin"): self.pageMargin = confParser.getint(cnfSec,"pageMargin")
 
         ## Timer
         cnfSec = "Timer"
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"autoPause"):  self.autoPause  = confParser.getint(cnfSec,"autoPause")
-
+            if confParser.has_option(cnfSec,"minTime"):    self.minTime    = confParser.getint(cnfSec,"minTime")
+ 
         ## Path
         cnfSec = "Path"
         if confParser.has_section(cnfSec):
@@ -131,11 +135,13 @@ class Config:
         confParser.set(cnfSec,"lineHeight", str(self.lineHeight))
         confParser.set(cnfSec,"lineIndent", str(self.lineIndent))
         confParser.set(cnfSec,"parMargin",  str(self.parMargin))
+        confParser.set(cnfSec,"pageMargin", str(self.pageMargin))
 
         ## Timer
         cnfSec = "Timer"
         confParser.add_section(cnfSec)
         confParser.set(cnfSec,"autoPause",  str(self.autoPause))
+        confParser.set(cnfSec,"minTime",    str(self.minTime))
 
         ## Path
         cnfSec = "Path"
