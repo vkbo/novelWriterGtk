@@ -38,8 +38,13 @@ class Editor(WebKit.WebView):
         # Set Up Editor
         self.set_editable(False)
         self.connect("user-changed-contents",self.onContentChanged)
+        self.connect("notify::load-status",self.onLoadStatusChange)
         self.load_html_string("",self.htmlRoot)
         self.fileStatus.set_from_file(self.ledGrey)
+
+        setEditor = self.get_settings()
+        setEditor.set_property("enable-default-context-menu",False)
+        self.set_settings(setEditor)
 
         # Properties
         self.textSaved  = True
@@ -219,6 +224,11 @@ class Editor(WebKit.WebView):
         if self.textSaved:
             self.textSaved = False
             self.fileStatus.set_from_file(self.ledRed)
+        return
+
+    def onLoadStatusChange(self, guiObject, loadStatus):
+        if WebKit.LoadStatus.FINISHED:
+            print("Editor: Loading finished")
         return
 
 # End Class Editor
