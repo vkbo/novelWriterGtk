@@ -9,7 +9,6 @@
 import logging as logger
 import configparser
 
-from hashlib import sha256
 from time    import time
 from nw      import *
 
@@ -23,13 +22,11 @@ class SceneMeta():
 
         # Saved Attributes
         self.sceneTitle   = ""
-        self.sceneHandle  = sha256(str(time()).encode()).hexdigest()[0:12]
         self.sceneCreated = formatDateTime()
         self.sceneUpdated = formatDateTime()
-        self.sceneVersion = 1
         self.sceneSection = 0
-        self.sceneChapter = 0
-        self.sceneNumber  = 0
+        self.sceneChapter = 1
+        self.sceneNumber  = 1
         self.sceneWords   = 0
         self.sceneChars   = 0
 
@@ -39,13 +36,11 @@ class SceneMeta():
 
         # Clear Saved Attributes
         self.sceneTitle   = ""
-        self.sceneHandle  = sha256(str(time()).encode()).hexdigest()[0:12]
         self.sceneCreated = formatDateTime()
         self.sceneUpdated = formatDateTime()
-        self.sceneVersion = 1
         self.sceneSection = 0
-        self.sceneChapter = 0
-        self.sceneNumber  = 0
+        self.sceneChapter = 1
+        self.sceneNumber  = 1
         self.sceneWords   = 0
         self.sceneChars   = 0
 

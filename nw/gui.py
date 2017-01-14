@@ -148,30 +148,31 @@ class GUI():
 
         logger.debug("GUI: Loading scene")
 
-        self.webEditor.loadText(sceneHandle,self.theBook)
+        self.theBook.loadScene(sceneHandle)
+        #~ self.webEditor.loadText(sceneHandle,self.theBook)
 
         # Load Summary
-        tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
-        tmpBuffer.set_text(self.theBook.getSummary())
+        #~ tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
+        #~ tmpBuffer.set_text(self.theBook.getSummary())
 
         # Load Scene Data
-        scnTitle   = self.theBook.theScene.fileTitle
-        scnSection = self.theBook.theScene.fileSection
-        scnChapter = self.theBook.theScene.fileChapter
-        scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileCreated))
-        scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileUpdated))
-        scnVersion = "Draft %d, Version %d" % (self.theBook.bookDraft,self.theBook.theScene.fileVersion)
+        #~ scnTitle   = self.theBook.theScene.fileTitle
+        #~ scnSection = self.theBook.theScene.fileSection
+        #~ scnChapter = self.theBook.theScene.fileChapter
+        #~ scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileCreated))
+        #~ scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileUpdated))
+        #~ scnVersion = "Draft %d, Version %d" % (self.theBook.bookDraft,self.theBook.theScene.fileVersion)
 
         # Set GUI Elements
-        self.getObject("lblSceneTitle").set_label(scnTitle)
-        self.getObject("lblSceneCreated").set_label(scnCreated)
-        self.getObject("lblSceneUpdated").set_label(scnUpdated)
-        self.getObject("lblSceneVersion").set_label(scnVersion)
-        self.getObject("entrySceneTitle").set_text(scnTitle)
-        self.getObject("cmbSceneSection").set_active(scnSection)
-        self.getObject("numSceneChapter").set_value(scnChapter)
+        #~ self.getObject("lblSceneTitle").set_label(scnTitle)
+        #~ self.getObject("lblSceneCreated").set_label(scnCreated)
+        #~ self.getObject("lblSceneUpdated").set_label(scnUpdated)
+        #~ self.getObject("lblSceneVersion").set_label(scnVersion)
+        #~ self.getObject("entrySceneTitle").set_text(scnTitle)
+        #~ self.getObject("cmbSceneSection").set_active(scnSection)
+        #~ self.getObject("numSceneChapter").set_value(scnChapter)
 
-        self.updateWordCount()
+        #~ self.updateWordCount()
 
         return
 

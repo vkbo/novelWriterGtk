@@ -9,6 +9,7 @@
 import logging as logger
 
 from os                   import listdir
+from hashlib              import sha256
 from nw                   import *
 from nw.book.scenemeta    import SceneMeta
 from nw.book.scenetext    import SceneText
@@ -36,6 +37,26 @@ class Scene():
         self.theText.clearContent()
         self.theSummary.clearContent()
         self.theTiming.clearContent()
+
+        return
+
+    ##
+    #  Create, Load and Save
+    ##
+
+    def createScene(self, sceneTitle, sceneNumber):
+
+        logger.debug("Scene.createScene: Creating new scene")
+
+        sceneHandle = sha256(str(time()).encode()).hexdigest()[0:12]
+        self.theOpt.setSceneHandle(sceneHandle)
+
+
+        #self.theScene = SceneData()
+        self.theMeta.setTitle(sceneTitle)
+        self.theMeta.setNumber(sceneNumber)
+        #self.theScene.setText("New Scene")
+        #self.theScene.saveScene()
 
         return
 

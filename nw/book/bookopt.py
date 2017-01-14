@@ -16,21 +16,25 @@ class BookOpt():
     def __init__(self):
 
         # Core Objects
-        self.mainConf    = CONFIG
+        self.mainConf     = CONFIG
 
         # Attributes
-        self.bookFolder  = None
-        self.sceneFolder = None
-        self.sceneIndex  = {}
+        self.bookFolder   = None
+        self.sceneFolder  = None
+        self.sceneIndex   = {}
+        self.sceneHandle  = ""
+        self.sceneVersion = 1
         
         return
 
     def clearContent(self):
 
         # Clear Attributes
-        self.bookFolder  = None
-        self.sceneFolder = None
-        self.sceneIndex  = {}
+        self.bookFolder   = None
+        self.sceneFolder  = None
+        self.sceneIndex   = {}
+        self.sceneHandle  = ""
+        self.sceneVersion = 1
 
         return
 
@@ -56,6 +60,20 @@ class BookOpt():
         self.sceneIndex = sceneIndex
         return
 
+    def setSceneHandle(self, sceneHandle):
+        if len(sceneHandl) == 12:
+            self.sceneHandle = sceneHandle
+        else:
+            logger.debug("BookOpt.setSceneHandle: Invalid scene handle '%s'" % sceneHandle)
+        return
+
+    def setSceneVersion(self, sceneVersion):
+        if sceneVersion > 0:
+            self.sceneVersion = sceneVersion
+        else:
+            logger.debug("BookOpt.setSceneVersion: Invalid scene version")
+        return
+
     ##
     #  Getters
     ##
@@ -68,5 +86,11 @@ class BookOpt():
 
     def getSceneIndex(self):
         return self.sceneIndex
+
+    def getSceneHandle(self):
+        return self.sceneHandle
+
+    def getSceneVersion(self):
+        return self.sceneVersion
 
 # End Class BookOpt

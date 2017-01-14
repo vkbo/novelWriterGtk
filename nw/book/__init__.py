@@ -35,15 +35,20 @@ class Book():
         self.setBookTitle   = self.theMeta.setTitle
         self.setBookAuthor  = self.theMeta.setAuthor
         self.setBookDraft   = self.theMeta.setDraft
+        self.setSceneText   = self.theScene.theText.setText
 
         # Connect to Getters
         self.getBookTitle   = self.theMeta.getTitle
         self.getBookAuthor  = self.theMeta.getAuthor
         self.getBookDraft   = self.theMeta.getDraft
         self.getSceneIndex  = self.theOpt.getSceneIndex
+        self.getSceneHandle = self.theOpt.getSceneHandle
+        self.getSceneText   = self.theScene.theText.getText
 
         # Connect to Methods
         self.makeSceneIndex = self.theScene.makeIndex
+        self.countWords     = self.theScene.theText.countWords
+        self.htmlCleanUp    = self.theScene.theText.htmlCleanUp
         
         return
 
