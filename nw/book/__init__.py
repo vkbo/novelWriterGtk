@@ -32,18 +32,20 @@ class Book():
         self.bookLoaded = False
 
         # Connect to Setters
-        self.setBookTitle   = self.theMeta.setTitle
-        self.setBookAuthor  = self.theMeta.setAuthor
-        self.setBookDraft   = self.theMeta.setDraft
-        self.setSceneText   = self.theScene.theText.setText
+        self.setBookTitle    = self.theMeta.setTitle
+        self.setBookAuthor   = self.theMeta.setAuthor
+        self.setBookDraft    = self.theMeta.setDraft
+        self.setSceneText    = self.theScene.theText.setText
+        self.setSceneSummary = self.theScene.theSummary.setSummary
 
         # Connect to Getters
-        self.getBookTitle   = self.theMeta.getTitle
-        self.getBookAuthor  = self.theMeta.getAuthor
-        self.getBookDraft   = self.theMeta.getDraft
-        self.getSceneIndex  = self.theOpt.getSceneIndex
-        self.getSceneHandle = self.theOpt.getSceneHandle
-        self.getSceneText   = self.theScene.theText.getText
+        self.getBookTitle    = self.theMeta.getTitle
+        self.getBookAuthor   = self.theMeta.getAuthor
+        self.getBookDraft    = self.theMeta.getDraft
+        self.getSceneIndex   = self.theOpt.getSceneIndex
+        self.getSceneHandle  = self.theOpt.getSceneHandle
+        self.getSceneText    = self.theScene.theText.getText
+        self.getSceneSummary = self.theScene.theSummary.getSummary
 
         # Connect to Methods
         self.makeSceneIndex = self.theScene.makeIndex
