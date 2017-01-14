@@ -102,17 +102,18 @@ class SceneTree():
         self.chapCount = {}
 
         self.chapCount[makeSortString(0,0,0)] = 0
-        theBook.makeIndex()
+        theBook.makeSceneIndex()
+        sceneIndex = theBook.getSceneIndex()
 
-        for itemHandle in theBook.fileIndex.keys():
+        for itemHandle in sceneIndex.keys():
 
-            itemData   = theBook.fileIndex[itemHandle]
+            itemData   = sceneIndex[itemHandle]
 
-            tmpTitle   = itemData[theBook.IDX_TITLE]
-            tmpWords   = itemData[theBook.IDX_WORDS]
-            tmpSection = itemData[theBook.IDX_SECTION]
-            tmpChapter = itemData[theBook.IDX_CHAPTER]
-            tmpNumber  = itemData[theBook.IDX_NUMBER]
+            tmpTitle   = itemData[SCIDX_TITLE]
+            tmpWords   = itemData[SCIDX_WORDS]
+            tmpSection = itemData[SCIDX_SECTION]
+            tmpChapter = itemData[SCIDX_CHAPTER]
+            tmpNumber  = itemData[SCIDX_NUMBER]
 
             scnNum     = makeSortString(tmpSection,tmpChapter,tmpNumber)
             scnSec     = makeSortString(tmpSection,tmpChapter,0)

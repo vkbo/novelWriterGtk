@@ -10,14 +10,15 @@ import logging as logger
 import configparser
 
 from os import path, mkdir
+from nw import *
 
 class BookMeta():
 
     def __init__(self, theOpt):
 
         # Core Objects
+        self.mainConf    = CONFIG
         self.theOpt      = theOpt
-        self.mainConf    = theOpt.mainConf
 
         # Saved Attributes
         self.bookTitle   = ""

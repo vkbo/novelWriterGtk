@@ -9,13 +9,14 @@
 import logging as logger
 
 from os import path
+from nw import *
 
 class BookOpt():
 
-    def __init__(self, parConfig):
+    def __init__(self):
 
         # Core Objects
-        self.mainConf    = parConfig
+        self.mainConf    = CONFIG
 
         # Attributes
         self.bookFolder  = None
@@ -54,5 +55,18 @@ class BookOpt():
     def setSceneIndex(self, sceneIndex):
         self.sceneIndex = sceneIndex
         return
+
+    ##
+    #  Getters
+    ##
+
+    def getBookFolder(self):
+        return self.bookFolder
+
+    def getSceneFolder(self):
+        return self.sceneFolder
+
+    def getSceneIndex(self):
+        return self.sceneIndex
 
 # End Class BookOpt

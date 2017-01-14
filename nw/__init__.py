@@ -55,6 +55,15 @@ MAIN_DETAILS = 0
 MAIN_EDITOR  = 1
 MAIN_SOURCE  = 2
 
+# Scene Index Columns
+SCIDX_TITLE   = 0
+SCIDX_NUMBER  = 1
+SCIDX_WORDS   = 2
+SCIDX_SECTION = 3
+SCIDX_CHAPTER = 4
+SCIDX_NUMBER  = 5
+SCIDX_COUNT   = 6
+
 # End Global Constants
 # ==================================================================================================================== #
 # Begin Global Functions

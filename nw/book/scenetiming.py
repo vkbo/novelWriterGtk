@@ -8,13 +8,21 @@
 
 import logging as logger
 
+from nw import *
+
 class SceneTiming():
 
     def __init__(self, theOpt):
 
-        # Inherited Data
-        self.theOpt      = theOpt
-        self.mainConf    = theOpt.mainConf
+        # Core Objects
+        self.mainConf = CONFIG
+        self.theOpt   = theOpt
+
+        return
+
+    def clearContent(self):
+
+        # Clear Objects
 
         return
 

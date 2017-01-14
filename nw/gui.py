@@ -130,7 +130,7 @@ class GUI():
 
         #self.theBook = BookData()
         self.theBook.loadBook(bookFolder)
-        #self.sceneTree.loadContent(self.theBook)
+        self.sceneTree.loadContent(self.theBook)
 
         self.updateWindowTitle()
 
