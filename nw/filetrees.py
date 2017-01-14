@@ -94,7 +94,7 @@ class SceneTree():
         self.treeStore.clear()
 
         if not theBook.bookLoaded:
-            logger.debug("SceneTree: No book loaded")
+            logger.debug("SceneTree.loadContent: No book loaded")
             return
 
         self.iterMap   = {}
@@ -102,7 +102,6 @@ class SceneTree():
         self.chapCount = {}
 
         self.chapCount[makeSortString(0,0,0)] = 0
-        #theBook.makeSceneIndex()
         sceneIndex = theBook.getSceneIndex()
 
         for itemHandle in sceneIndex.keys():

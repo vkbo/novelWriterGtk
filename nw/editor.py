@@ -197,7 +197,7 @@ class Editor(WebKit.WebView):
         return
 
     def onEditAction(self, guiObject, theCommand):
-        logger.debug("Editor: Action %s" % theCommand)
+        logger.debug("Editor.onEditAction: Action %s" % theCommand)
         self.execute_script("document.execCommand('%s',false,false);" % theCommand)
         return
 
@@ -214,7 +214,7 @@ class Editor(WebKit.WebView):
         return
 
     def onShowParagraphs(self, guiObject):
-        logger.debug("Editor: Toggle show paragraphs")
+        logger.debug("Editor.onShowParagraphs: Toggle show paragraphs")
         self.showPars = guiObject.get_active()
         self.setText(self.getText())
         return
@@ -228,7 +228,7 @@ class Editor(WebKit.WebView):
 
     def onLoadStatusChange(self, guiObject, loadStatus):
         if WebKit.LoadStatus.FINISHED:
-            print("Editor: Loading finished")
+            print("Editor.onLoadStatusChange: Loading finished")
         return
 
 # End Class Editor

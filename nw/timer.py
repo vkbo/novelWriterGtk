@@ -109,7 +109,7 @@ class Timer():
 
     def startTimer(self):
 
-        logger.debug("Timer: Started")
+        logger.debug("Timer.startTimer: Started")
 
         self.timerOn    = True
         self.timeOffset = time()
@@ -123,7 +123,7 @@ class Timer():
 
     def pauseTimer(self):
 
-        logger.debug("Timer: Paused")
+        logger.debug("Timer.pauseTimer: Paused")
 
         self.timerOn    = False
         self.timeBuffer = self.timeBuffer + time() - self.timeOffset
@@ -135,7 +135,7 @@ class Timer():
 
     def stopTimer(self):
 
-        logger.debug("Timer: Stopped")
+        logger.debug("Timer.stopTimer: Stopped")
 
         self.timerOn    = False
         self.timeBuffer = 0.0

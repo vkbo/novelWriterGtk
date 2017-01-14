@@ -125,7 +125,7 @@ class GUI():
         if bookFolder == "":
             return
 
-        logger.debug("GUI: Loading book")
+        logger.debug("GUI.loadBook: Loading book")
 
         self.theBook.loadBook(bookFolder)
         self.sceneTree.loadContent(self.theBook)
@@ -136,14 +136,14 @@ class GUI():
     def saveBook(self):
 
         if self.theBook.bookLoaded:
-            logger.debug("GUI: Saving book")
+            logger.debug("GUI.saveBook: Saving book")
             self.theBook.saveBook()
 
         return
 
     def loadScene(self, sceneHandle):
 
-        logger.debug("GUI: Loading scene")
+        logger.debug("GUI.loadScene: Loading scene")
 
         # Load Scene in Editor
         self.webEditor.loadText(sceneHandle,self.theBook)
@@ -175,7 +175,7 @@ class GUI():
 
     def saveScene(self):
 
-        logger.debug("GUI: Saving scene")
+        logger.debug("GUI.saveScene: Saving scene")
 
         # Get Scene Values
         prevSection = self.theBook.getSceneSection()
@@ -219,8 +219,8 @@ class GUI():
     def loadSourceView(self):
 
         scnText = self.webEditor.getText()
-        self.theBook.theScene.setText(scnText)
-        scnText = self.theBook.theScene.getText()
+        self.theBook.setSceneText(scnText)
+        scnText = self.theBook.getSceneText()
 
         tmpBuffer = self.getObject("textSource").get_buffer()
         tmpBuffer.set_text(scnText)
@@ -252,7 +252,7 @@ class GUI():
         bookDraft = self.theBook.getBookDraft()
 
         if self.theBook.bookLoaded:
-            winTitle = "%s: %s (Draft %d)" % (appName,bookTitle,bookDraft)
+            winTitle = "%s - %s (Draft %d)" % (appName,bookTitle,bookDraft)
             self.getObject("winMain").set_title(winTitle)
 
         return
@@ -303,7 +303,7 @@ class GUI():
 
     def onSceneSelect(self, guiObject):
 
-        logger.debug("GUI: Select scene")
+        logger.debug("GUI.onSceneSelect: Select scene")
 
         itemHandle = ""
 
@@ -323,7 +323,7 @@ class GUI():
     ##
 
     def onMainTabChange(self, guiObject, guiChild, tabIdx):
-        logger.debug("GUI: Main tab change")
+        logger.debug("GUI.onMainTabChange: Main tab change")
         if tabIdx == MAIN_DETAILS:
             return
         if tabIdx == MAIN_EDITOR:
@@ -334,7 +334,7 @@ class GUI():
 
     def onGuiDestroy(self, guiObject):
 
-        logger.debug("GUI: Exiting")
+        logger.debug("GUI.onGuiDestroy: Exiting")
 
         mainPane = self.getObject("panedContent").get_position()
         sidePane = self.getObject("panedSide").get_position()
