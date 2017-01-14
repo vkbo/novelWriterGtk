@@ -9,22 +9,35 @@
 import logging as logger
 import configparser
 
-from os import path
+from os import path, mkdir
 
 class BookMeta():
 
     def __init__(self, theOpt):
 
-        # Inherited Data
+        # Core Objects
         self.theOpt      = theOpt
         self.mainConf    = theOpt.mainConf
 
-        # Saved Properties
+        # Saved Attributes
         self.bookTitle   = ""
         self.bookAuthor  = ""
         self.bookDraft   = 1
 
-        # Runtime Properties
+        # Runtime Attributes
+        self.bookLoaded  = False
+        self.bookChanged = False
+
+        return
+
+    def clearContent(self):
+
+        # Clear Saved Attributes
+        self.bookTitle   = ""
+        self.bookAuthor  = ""
+        self.bookDraft   = 1
+
+        # Clear Runtime Attributes
         self.bookLoaded  = False
         self.bookChanged = False
 
@@ -46,6 +59,7 @@ class BookMeta():
             logger.debug("BookMeta.loadData: File not found %s" % bookPath)
             return
 
+        logger.debug("BookMeta.loadData: Loading book %s" % bookPath)
         confParser = configparser.ConfigParser()
         confParser.readfp(open(bookPath,"r"))
 
@@ -56,9 +70,10 @@ class BookMeta():
             if confParser.has_option(cnfSec,"Author"): self.bookAuthor = confParser.get(cnfSec,"Author")
             if confParser.has_option(cnfSec,"Draft"):  self.bookDraft  = confParser.getint(cnfSec,"Draft")
 
-        #self.makeIndex()
-
-        self.mainConf.setLastBook(self.bookFolder)
+        self.verifyDraftFolder()
+        sceneFolder = self.getDraftFolder()
+        self.theOpt.setSceneFolder(sceneFolder)
+        self.mainConf.setLastBook(bookFolder)
         self.bookLoaded = True
         
         return
@@ -106,6 +121,12 @@ class BookMeta():
         self.bookChanged = True
         return
 
+    def setDraft(self, newDraft):
+        if newDraft > 0:
+            self.bookDraft   = newDraft
+            self.bookChanged = True
+        return
+
     ##
     #  Getters
     ##
@@ -115,5 +136,22 @@ class BookMeta():
 
     def getAuthor(self):
         return self.bookAuthor
+
+    def getDraft(self):
+        return self.bookDraft
+
+    def getDraftFolder(self):
+        return path.join(self.theOpt.bookFolder,"Draft %d" % self.bookDraft)
+
+    ##
+    #  Methods
+    ##
+
+    def verifyDraftFolder(self):
+        sceneFolder = self.getDraftFolder()
+        if not path.isdir(sceneFolder):
+            mkdir(sceneFolder)
+            logger.debug("BookMeta.verifyDraftFolder: Created folder %s" % sceneFolder)
+        return
 
 # End Class BookMeta

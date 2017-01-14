@@ -34,7 +34,7 @@ class GUI():
         self.winMain    = self.getObject("winMain")
 
         # Prepare GUI Classes
-        self.theBook    = BookData()
+        self.theBook    = BOOK
         self.guiTimer   = Timer()
         self.webEditor  = Editor(self.guiTimer)
         self.bookEditor = BookEditor()
@@ -127,9 +127,9 @@ class GUI():
 
         logger.debug("GUI: Loading book")
 
-        self.theBook = BookData()
+        #self.theBook = BookData()
         self.theBook.loadBook(bookFolder)
-        self.sceneTree.loadContent(self.theBook)
+        #self.sceneTree.loadContent(self.theBook)
 
         self.updateWindowTitle()
 
@@ -247,8 +247,8 @@ class GUI():
     def updateWindowTitle(self):
         
         appName   = self.mainConf.appName
-        bookTitle = self.theBook.bookTitle
-        bookDraft = self.theBook.bookDraft
+        bookTitle = self.theBook.getBookTitle()
+        bookDraft = self.theBook.getBookDraft()
 
         if self.theBook.bookLoaded:
             winTitle = "%s: %s (Draft %d)" % (appName,bookTitle,bookDraft)
@@ -341,10 +341,10 @@ class GUI():
         self.mainConf.setSidePane(sidePane)
         self.mainConf.saveConfig()
 
-        if self.theBook.bookLoaded:
-            self.guiTimer.stopTimer()
-            self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
-            self.webEditor.saveText()
+        #if self.theBook.bookLoaded:
+        #    self.guiTimer.stopTimer()
+        #    self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
+        #    self.webEditor.saveText()
 
         Gtk.main_quit()
 
