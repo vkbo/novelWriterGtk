@@ -16,7 +16,6 @@ from os             import path
 from nw             import *
 from nw.editor      import Editor
 from nw.bookeditor  import BookEditor
-from nw.datawrapper import BookData, SceneData
 from nw.filetrees   import SceneTree
 from nw.timer       import Timer
 from nw.book        import Book
@@ -128,10 +127,8 @@ class GUI():
 
         logger.debug("GUI: Loading book")
 
-        #self.theBook = BookData()
         self.theBook.loadBook(bookFolder)
         self.sceneTree.loadContent(self.theBook)
-
         self.updateWindowTitle()
 
         return
@@ -345,10 +342,10 @@ class GUI():
         self.mainConf.setSidePane(sidePane)
         self.mainConf.saveConfig()
 
-        #if self.theBook.bookLoaded:
-        #    self.guiTimer.stopTimer()
-        #    self.theBook.theScene.saveTiming(self.guiTimer.sessionTime)
-        #    self.webEditor.saveText()
+        if self.theBook.bookLoaded:
+            self.guiTimer.stopTimer()
+            self.theBook.saveTiming(self.guiTimer.sessionTime)
+            self.webEditor.saveText()
 
         Gtk.main_quit()
 

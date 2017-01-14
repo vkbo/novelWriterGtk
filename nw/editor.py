@@ -102,10 +102,10 @@ class Editor(WebKit.WebView):
         if self.theBook is None: return
 
         if not self.textSaved:
-            logger.debug("Editor: Autsaving")
+            logger.debug("Editor.doAutoSave: Saving")
             scnText = self.getText()
             self.theBook.setSceneText(scnText)
-            self.theBook.doAutoSave()
+            self.theBook.saveScene()
             self.fileStatus.set_from_file(self.ledGreen)
             self.textSaved = True
             
