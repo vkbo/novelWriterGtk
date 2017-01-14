@@ -101,6 +101,7 @@ class Timer():
         self.autoOffset  = 0.0
         self.autoTime    = 0.0
 
+        self.progTimer.set_fraction(0.0)
         self.timeSession.set_label(self.formatTime(0))
         self.timeTotal.set_label(self.formatTime(0))
 

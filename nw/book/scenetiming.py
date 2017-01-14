@@ -72,7 +72,9 @@ class SceneTiming():
 
         return
 
-    def saveTiming(self, timeValue, theText):
+    def saveTiming(self, timeValue):
+
+        if timeValue < self.mainConf.minTime: return
 
         sceneFolder  = self.theOpt.sceneFolder
         sceneHandle  = self.theOpt.sceneHandle

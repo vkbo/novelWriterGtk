@@ -101,7 +101,7 @@ class SceneSummary():
 
     def setSummary(self, newSummary):
         newSummary = newSummary.strip()
-        if len(newSummary) > 0:
+        if len(newSummary) > 0 and not newSummary == self.summary:
             self.summary    = newSummary
             self.hasSummary = True
         return

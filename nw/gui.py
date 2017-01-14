@@ -148,8 +148,8 @@ class GUI():
 
         logger.debug("GUI: Loading scene")
 
-        self.theBook.loadScene(sceneHandle)
-        self.webEditor.loadText(self.theBook)
+        # Load Scene in Editor
+        self.webEditor.loadText(sceneHandle,self.theBook)
 
         # Load Summary
         tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
@@ -181,9 +181,9 @@ class GUI():
         logger.debug("GUI: Saving scene")
 
         # Get Scene Values
-        prevSection = self.theBook.theScene.fileSection
-        prevChapter = self.theBook.theScene.fileChapter
-        prevNumber  = self.theBook.theScene.fileNumber
+        prevSection = self.theBook.getSceneSection()
+        prevChapter = self.theBook.getSceneChapter()
+        prevNumber  = self.theBook.getSceneNumber()
         scnTitle    = self.getObject("entrySceneTitle").get_text()
         scnSection  = self.getObject("cmbSceneSection").get_active()
         scnChapter  = self.getObject("numSceneChapter").get_value()
@@ -207,11 +207,11 @@ class GUI():
         scnSummary = tmpBuffer.get_text(tmpStart,tmpEnd,True)
 
         # Set Scene Data
-        self.theBook.theScene.setTitle(scnTitle)
-        self.theBook.theScene.setSection(scnSection)
-        self.theBook.theScene.setChapter(scnChapter)
-        self.theBook.theScene.setNumber(scnNumber)
-        self.theBook.theScene.setSummary(scnSummary)
+        self.theBook.setSceneTitle(scnTitle)
+        self.theBook.setSceneSection(scnSection)
+        self.theBook.setSceneChapter(scnChapter)
+        self.theBook.setSceneNumber(scnNumber)
+        self.theBook.setSceneSummary(scnSummary)
 
         self.webEditor.saveText()
         self.sceneTree.loadContent(self.theBook)

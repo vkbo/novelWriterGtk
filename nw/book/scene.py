@@ -27,7 +27,7 @@ class Scene():
         self.theMeta     = SceneMeta(theOpt)
         self.theText     = SceneText(theOpt)
         self.theSummary  = SceneSummary(theOpt)
-        self.theTiming   = SceneTiming(theOpt,seøf.theText)
+        self.theTiming   = SceneTiming(theOpt,self.theText)
 
         # Runtime Attributes
         self.sceneLoaded = False

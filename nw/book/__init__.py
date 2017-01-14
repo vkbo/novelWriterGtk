@@ -40,6 +40,7 @@ class Book():
         self.createScene     = self.theScene.createScene
         self.loadScene       = self.theScene.loadScene
         self.saveScene       = self.theScene.saveScene
+        self.saveTiming      = self.theScene.theTiming.saveTiming
 
         # Connect to Setters
         self.setBookTitle    = self.theMeta.setTitle
@@ -71,6 +72,7 @@ class Book():
         self.getSceneWords   = self.theScene.theText.getWordCount
         self.getSceneChars   = self.theScene.theText.getCharCount
         self.getSceneSummary = self.theScene.theSummary.getSummary
+        self.getSceneTime    = self.theScene.theTiming.getTimeTotal
 
         # Connect to Methods
         self.makeSceneIndex  = self.theScene.makeIndex

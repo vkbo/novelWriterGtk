@@ -144,6 +144,7 @@ class SceneMeta():
 
     def setTitle(self, newTitle):
         newTitle = newTitle.strip()
+        if newTitle == self.sceneTitle: return
         if len(newTitle) > 0:
             self.sceneTitle   = newTitle
             self.sceneChanged = True
@@ -152,6 +153,7 @@ class SceneMeta():
         return
         
     def setUpdated(self, newDate):
+        if newDate == self.sceneUpdated: return
         if len(newDate) > 0:
             self.sceneUpdated = newDate
             self.sceneChanged = True
@@ -160,6 +162,7 @@ class SceneMeta():
         return
         
     def setSection(self, sceneSection):
+        if sceneSection == self.sceneSection: return
         if sceneSection < 0: sceneSection = 0
         if sceneSection > 3: sceneSection = 3
         self.sceneSection = sceneSection
@@ -168,6 +171,7 @@ class SceneMeta():
         return
 
     def setChapter(self, sceneChapter):
+        if sceneChapter == self.sceneChapter: return
         if sceneChapter < 1:  sceneChapter = 1
         if sceneChapter > 99: sceneChapter = 99
         if self.sceneChapter != 2: sceneChapter = 0
@@ -176,6 +180,7 @@ class SceneMeta():
         return
 
     def setNumber(self, sceneNumber):
+        if sceneNumber == self.sceneNumber: return
         if sceneNumber < 1:   sceneNumber = 1
         if sceneNumber > 999: sceneNumber = 999
         self.sceneNumber  = sceneNumber
@@ -183,12 +188,14 @@ class SceneMeta():
         return
 
     def setWords(self, sceneWords):
+        if sceneWords == self.sceneWords: return
         if sceneWords < 0: sceneWords = 0
         self.sceneWords   = sceneWords
         self.sceneChanged = True
         return
 
     def setChars(self, sceneChars):
+        if sceneChars == self.sceneChars: return
         if sceneChars < 0: sceneChars = 0
         self.sceneChars   = sceneChars
         self.sceneChanged = True
