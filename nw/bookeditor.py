@@ -17,11 +17,11 @@ from nw            import *
 
 class BookEditor():
 
-    def __init__(self):
+    def __init__(self, theBook):
 
         self.mainConf   = CONFIG
         self.guiBuilder = BUILDER
-        self.theBook    = None
+        self.theBook    = theBook
         self.getObject  = self.guiBuilder.get_object
 
         self.dlgWin     = self.getObject("dlgEditBook")
@@ -29,43 +29,46 @@ class BookEditor():
 
         return
 
-    def loadEditor(self, theBook):
+    def clearEditor(self):
 
-        if not theBook.bookLoaded:
+        logger.debug("BookEditor.clearEditor: Clearing book data")
+
+        self.getObject("entryWorkingTitle").set_text("")
+        self.getObject("entryAuthor").set_text("")
+        self.getObject("filechooserPath").set_visible(True)
+        self.getObject("filechooserPath").set_filename(self.mainConf.homePath)
+        self.getObject("entryPath").set_visible(False)
+        self.getObject("entryPath").set_text("")
+
+        return
+
+    def loadEditor(self):
+
+        if not self.theBook.bookLoaded:
             return
 
-        logger.debug("Book Editor: Load")
+        logger.debug("BookEditor.loadEditor: Loading book data")
 
-        self.theBook = theBook
-        self.theBook.loadBook(self.theBook.bookFolder)
-
-        self.getObject("entryWorkingTitle").set_text(self.theBook.bookTitle)
-        self.getObject("entryAuthor").set_text(self.theBook.bookAuthor)
-        self.getObject("filechooserPath").set_filename(self.theBook.bookFolder)
-
-        self.mainConf.setLastBook(self.theBook.bookFolder)
+        self.getObject("entryWorkingTitle").set_text(self.theBook.getBookTitle())
+        self.getObject("entryAuthor").set_text(self.theBook.getBookAuthor())
+        self.getObject("filechooserPath").set_visible(False)
+        self.getObject("filechooserPath").set_filename(self.theBook.getBookFolder())
+        self.getObject("entryPath").set_visible(True)
+        self.getObject("entryPath").set_text(self.theBook.getBookFolder())
 
         return
 
     def saveEditor(self):
 
-        logger.debug("Book Editor: Save")
+        logger.debug("BookEditor: Saving book data")
 
         bookTitle  = self.getObject("entryWorkingTitle").get_text()
         bookAuthor = self.getObject("entryAuthor").get_text()
         bookFolder = self.getObject("filechooserPath").get_filename()
 
-        self.theBook.setTitle(bookTitle)
-        self.theBook.setAuthor(bookAuthor)
-        if self.theBook.bookFolder == "":
-            self.theBook.setBookFolder(bookFolder)
-
-        appName   = self.mainConf.appName
-        bookTitle = self.theBook.bookTitle
-        bookDraft = self.theBook.bookDraft
-
-        winTitle = "%s: %s (Draft %d)" % (appName,bookTitle,bookDraft)
-        self.getObject("winMain").set_title(winTitle)
+        self.theBook.setBookTitle(bookTitle)
+        self.theBook.setBookAuthor(bookAuthor)
+        self.theBook.setBookFolder(bookFolder)
 
         self.theBook.saveBook()
         self.dlgWin.hide()
@@ -85,7 +88,6 @@ class BookEditor():
         return
 
     def onBookSave(self, guiObject):
-        logger.debug("Book Save")
         self.saveEditor()
         return
 

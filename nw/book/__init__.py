@@ -46,6 +46,7 @@ class Book():
         self.setBookTitle    = self.theMeta.setTitle
         self.setBookAuthor   = self.theMeta.setAuthor
         self.setBookRecent   = self.theMeta.setRecent
+        self.setBookFolder   = self.theOpt.setBookFolder
         self.setBookDraft    = self.theOpt.setBookDraft
         self.setSceneTitle   = self.theScene.theMeta.setTitle
         self.setSceneSection = self.theScene.theMeta.setSection
@@ -58,6 +59,7 @@ class Book():
         self.getBookTitle    = self.theMeta.getTitle
         self.getBookAuthor   = self.theMeta.getAuthor
         self.getBookRecent   = self.theMeta.getRecent
+        self.getBookFolder   = self.theOpt.getBookFolder
         self.getBookDraft    = self.theOpt.getBookDraft
         self.getSceneIndex   = self.theOpt.getSceneIndex
         self.getSceneHandle  = self.theOpt.getSceneHandle

@@ -229,7 +229,7 @@ class Editor(WebKit.WebView):
 
     def onLoadStatusChange(self, guiObject, loadStatus):
         if WebKit.LoadStatus.FINISHED:
-            print("Editor.onLoadStatusChange: Loading finished")
+            logger.debug("Editor.onLoadStatusChange: Loading finished")
         return
 
 # End Class Editor

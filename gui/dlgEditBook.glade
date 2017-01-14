@@ -186,11 +186,36 @@
                     <property name="bottom_padding">2</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkFileChooserButton" id="filechooserPath">
+                      <object class="GtkBox" id="boxPath">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="action">select-folder</property>
-                        <property name="title" translatable="yes">Select a Folder</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkFileChooserButton" id="filechooserPath">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="action">select-folder</property>
+                            <property name="title" translatable="yes">Select a Folder</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="entryPath">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                     </child>
                   </object>

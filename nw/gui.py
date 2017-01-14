@@ -37,7 +37,7 @@ class GUI():
         self.theBook    = Book()
         self.guiTimer   = Timer()
         self.webEditor  = Editor(self.guiTimer)
-        self.bookEditor = BookEditor()
+        self.bookEditor = BookEditor(self.theBook)
         self.sceneTree  = SceneTree()
 
         # Set Up Event Handlers
@@ -267,6 +267,7 @@ class GUI():
     ##
 
     def onNewBook(self, guiObject):
+        self.bookEditor.clearEditor()
         self.bookEditor.dlgWin.show()
         return
 
@@ -290,7 +291,7 @@ class GUI():
         return
 
     def onEditBook(self, guiObject):
-        self.bookEditor.loadEditor(self.theBook)
+        self.bookEditor.loadEditor()
         self.bookEditor.dlgWin.show()
         return
 
@@ -302,7 +303,6 @@ class GUI():
         scnSort  = makeSortString(0,0,0)
         sceneNum = self.sceneTree.chapCount[scnSort] + 1
         self.theBook.createScene("New Scene",sceneNum)
-        #~ self.theBook.makeIndex()
         self.sceneTree.loadContent(self.theBook)
         return
 

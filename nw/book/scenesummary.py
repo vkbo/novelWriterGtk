@@ -8,6 +8,7 @@
 
 import logging as logger
 
+from os      import path, rename, remove
 from nw import *
 
 class SceneSummary():
@@ -43,16 +44,16 @@ class SceneSummary():
         sceneVersion = self.theOpt.sceneVersion
 
         if not path.isdir(sceneFolder):
-            logger.debug("SceneText.loadSummary: Folder not found %s" % sceneFolder)
+            logger.debug("SceneSummary.loadSummary: Folder not found %s" % sceneFolder)
             return
 
-        logger.debug("SceneText.loadSummary: Loading scene summary")
+        logger.debug("SceneSummary.loadSummary: Loading scene summary")
 
         fileName  = "%s-summary-%03d.txt" % (sceneHandle,sceneVersion)
         filePath  = path.join(sceneFolder,fileName)
 
         if not path.isfile(filePath):
-            logger.debug("SceneText.loadSummary: File not found %s" % filePath)
+            logger.debug("SceneSummary.loadSummary: File not found %s" % filePath)
             return
 
         fileObj      = open(filePath,encoding="utf-8",mode="r")
@@ -66,7 +67,7 @@ class SceneSummary():
     def saveSummary(self):
 
         if not self.hasSummary:
-            logger.debug("saveSummary.saveSummary: No text to save")
+            logger.debug("SceneSummary.saveSummary: No text to save")
             return
 
         sceneFolder  = self.theOpt.sceneFolder
@@ -74,18 +75,18 @@ class SceneSummary():
         sceneVersion = self.theOpt.sceneVersion
 
         if not path.isdir(sceneFolder):
-            logger.debug("saveSummary.saveSummary: Folder not found %s" % sceneFolder)
+            logger.debug("SceneSummary.saveSummary: Folder not found %s" % sceneFolder)
             return
 
         if not len(sceneHandle) == 12:
-            logger.debug("saveSummary.saveSummary: Invalid scene handle '%s'" % sceneHandle)
+            logger.debug("SceneSummary.saveSummary: Invalid scene handle '%s'" % sceneHandle)
             return
 
         if not sceneVersion > 0:
-            logger.debug("saveSummary.saveSummary: Invalid scene version %d" % sceneVersion)
+            logger.debug("SceneSummary.saveSummary: Invalid scene version %d" % sceneVersion)
             return
 
-        logger.debug("saveSummary.saveSummary: Saving scene text")
+        logger.debug("SceneSummary.saveSummary: Saving scene text")
 
         fileName = "%s-summary-%03d.txt" % (sceneHandle,sceneVersion)
         tempName = "%s-summary-%03d.bak" % (sceneHandle,sceneVersion)
