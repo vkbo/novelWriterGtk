@@ -8,7 +8,7 @@
 
 import logging as logger
 
-from os      import path
+from os      import path, rename, remove
 from hashlib import sha256
 from re      import sub
 from bleach  import clean
@@ -113,7 +113,14 @@ class SceneText():
         logger.debug("SceneText.saveText: Saving scene text")
 
         fileName = "%s-scene-%03d.txt" % (sceneHandle,sceneVersion)
+        tempName = "%s-scene-%03d.bak" % (sceneHandle,sceneVersion)
         filePath = path.join(sceneFolder,fileName)
+        tempPath = path.join(sceneFolder,tempName)
+
+        # Back up old file
+        if path.isfile(tempPath): remove(tempPath)
+        rename(filePath,tempPath)
+
         fileObj  = open(filePath,encoding="utf-8",mode="w")
         fileObj.write(self.text)
         fileObj.close()

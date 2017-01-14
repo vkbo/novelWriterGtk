@@ -88,7 +88,14 @@ class SceneSummary():
         logger.debug("saveSummary.saveSummary: Saving scene text")
 
         fileName = "%s-summary-%03d.txt" % (sceneHandle,sceneVersion)
+        tempName = "%s-summary-%03d.bak" % (sceneHandle,sceneVersion)
         filePath = path.join(sceneFolder,fileName)
+        tempPath = path.join(sceneFolder,tempName)
+
+        # Back up old file
+        if path.isfile(tempPath): remove(tempPath)
+        rename(filePath,tempPath)
+
         fileObj  = open(filePath,encoding="utf-8",mode="w")
         fileObj.write(self.summary)
         fileObj.close()

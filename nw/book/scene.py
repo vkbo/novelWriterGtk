@@ -152,7 +152,7 @@ class Scene():
         for listItem in dirContent:
             itemPath = path.join(sceneFolder,listItem)
             if path.isfile(itemPath):
-                if len(listItem) > 18 and listItem[12:19] == "-scene-":
+                if len(listItem) > 18 and listItem[12:19] == "-scene-" and listItem[-3:] == "txt":
                     itemHandle = listItem[:12]
                     sceneIndex[itemHandle][SCIDX_COUNT] += 1
 
