@@ -23,7 +23,7 @@ class BookMeta():
         # Saved Attributes
         self.bookTitle   = ""
         self.bookAuthor  = ""
-        self.bookDraft   = 1
+        self.recentScene = ""
 
         # Runtime Attributes
         self.bookLoaded  = False
@@ -36,7 +36,7 @@ class BookMeta():
         # Clear Saved Attributes
         self.bookTitle   = ""
         self.bookAuthor  = ""
-        self.bookDraft   = 1
+        self.lastScene   = ""
 
         # Clear Runtime Attributes
         self.bookLoaded  = False
@@ -49,6 +49,13 @@ class BookMeta():
     ##
 
     def loadData(self):
+
+        """
+        Description:
+            Loads the config variables for the currently loaded book speciefied in tyhe BookOpt object.
+            Verifies that the draft folder for the scenes exists.
+            Sets scene folder to the latest draft.
+        """
 
         bookFolder = self.theOpt.bookFolder
         if bookFolder is None:
@@ -67,19 +74,27 @@ class BookMeta():
         # Get Variables
         cnfSec = "Book"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"Title"):  self.bookTitle  = confParser.get(cnfSec,"Title")
-            if confParser.has_option(cnfSec,"Author"): self.bookAuthor = confParser.get(cnfSec,"Author")
-            if confParser.has_option(cnfSec,"Draft"):  self.bookDraft  = confParser.getint(cnfSec,"Draft")
+            if confParser.has_option(cnfSec,"Title"):  self.bookTitle   = confParser.get(cnfSec,"Title")
+            if confParser.has_option(cnfSec,"Author"): self.bookAuthor  = confParser.get(cnfSec,"Author")
+
+        cnfSec = "Scene"
+        if confParser.has_section(cnfSec):
+            if confParser.has_option(cnfSec,"Recent"): self.recentScene = confParser.get(cnfSec,"Recent")
 
         self.verifyDraftFolder()
         sceneFolder = self.getDraftFolder()
         self.theOpt.setSceneFolder(sceneFolder)
-        self.mainConf.setLastBook(bookFolder)
+
         self.bookLoaded = True
         
         return
 
     def saveData(self):
+
+        """
+        Description:
+            Simply saves the config data to the core book metadata file.
+        """
 
         bookFolder = self.theOpt.bookFolder
         if bookFolder is None:
@@ -94,11 +109,13 @@ class BookMeta():
         confParser.add_section(cnfSec)
         confParser.set(cnfSec,"Title",  str(self.bookTitle))
         confParser.set(cnfSec,"Author", str(self.bookAuthor))
-        confParser.set(cnfSec,"Draft",  str(self.bookDraft))
+
+        cnfSec = "Scene"
+        confParser.add_section(cnfSec)
+        confParser.set(cnfSec,"Recent", str(self.recentScene))
 
         # Write File
         confParser.write(open(bookPath,"w"))
-        self.mainConf.setLastBook(self.bookFolder)
         self.bookChanged = False
 
         return
@@ -122,10 +139,8 @@ class BookMeta():
         self.bookChanged = True
         return
 
-    def setDraft(self, newDraft):
-        if newDraft > 0:
-            self.bookDraft   = newDraft
-            self.bookChanged = True
+    def setRecent(self, sceneHandle):
+        slef.recentScene = sceneHandle
         return
 
     ##
@@ -138,11 +153,11 @@ class BookMeta():
     def getAuthor(self):
         return self.bookAuthor
 
-    def getDraft(self):
-        return self.bookDraft
+    def getRecent(self):
+        return self.recentScene
 
     def getDraftFolder(self):
-        return path.join(self.theOpt.bookFolder,"Draft %d" % self.bookDraft)
+        return path.join(self.theOpt.bookFolder,"Draft %d" % self.theOpt.bookDraft)
 
     ##
     #  Methods

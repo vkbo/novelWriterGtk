@@ -102,7 +102,7 @@ class SceneTree():
         self.chapCount = {}
 
         self.chapCount[makeSortString(0,0,0)] = 0
-        theBook.makeSceneIndex()
+        #theBook.makeSceneIndex()
         sceneIndex = theBook.getSceneIndex()
 
         for itemHandle in sceneIndex.keys():

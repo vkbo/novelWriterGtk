@@ -13,6 +13,12 @@ from nw import *
 
 class BookOpt():
 
+    """
+    Description:
+        A container shared between all book methods.
+        It holds the indices of drafts and scenes, as well as which one is currently loaded
+    """
+
     def __init__(self):
 
         # Core Objects
@@ -20,10 +26,12 @@ class BookOpt():
 
         # Attributes
         self.bookFolder   = None
+        self.bookIndex    = {}
+        self.bookDraft    = 0
         self.sceneFolder  = None
         self.sceneIndex   = {}
         self.sceneHandle  = ""
-        self.sceneVersion = 1
+        self.sceneVersion = 0
         
         return
 
@@ -31,10 +39,12 @@ class BookOpt():
 
         # Clear Attributes
         self.bookFolder   = None
+        self.bookIndex    = {}
+        self.bookDraft    = 0
         self.sceneFolder  = None
         self.sceneIndex   = {}
         self.sceneHandle  = ""
-        self.sceneVersion = 1
+        self.sceneVersion = 0
 
         return
 
@@ -49,6 +59,17 @@ class BookOpt():
             logger.debug("BookOpt.setBookFolder: Folder not found %s" % bookFolder)
         return
 
+    def setBookIndex(self, bookIndex):
+        self.bookIndex = bookIndex
+        return
+
+    def setBookDraft(self, bookDraft):
+        if bookDraft > 0:
+            self.bookDraft = bookDraft
+        else:
+            logger.debug("BookOpt.setBookDraft: Invalid book draft")
+        return
+
     def setSceneFolder(self, sceneFolder):
         if path.isdir(sceneFolder):
             self.sceneFolder = sceneFolder
@@ -61,8 +82,9 @@ class BookOpt():
         return
 
     def setSceneHandle(self, sceneHandle):
-        if len(sceneHandl) == 12:
-            self.sceneHandle = sceneHandle
+        if len(sceneHandle) == 12 and sceneHandle in self.sceneIndex:
+            self.sceneHandle  = sceneHandle
+            self.sceneVersion = self.sceneIndex[sceneHandle][SCIDX_COUNT]
         else:
             logger.debug("BookOpt.setSceneHandle: Invalid scene handle '%s'" % sceneHandle)
         return
@@ -80,6 +102,9 @@ class BookOpt():
 
     def getBookFolder(self):
         return self.bookFolder
+
+    def getBookDraft(self):
+        return self.bookDraft
 
     def getSceneFolder(self):
         return self.sceneFolder

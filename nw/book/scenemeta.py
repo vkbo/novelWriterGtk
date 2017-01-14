@@ -57,10 +57,12 @@ class SceneMeta():
     #  Load and Save
     ##
 
-    def loadData(self):
+    def loadData(self, altHandle=None):
 
         sceneFolder = self.theOpt.sceneFolder
         sceneHandle = self.theOpt.sceneHandle
+
+        if altHandle is not None: sceneHandle = altHandle
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneMeta.loadData: Folder not found %s" % sceneFolder)
@@ -70,7 +72,7 @@ class SceneMeta():
             logger.error("SceneMeta.loadData: File handle missing")
             return
 
-        fileName = "%s-metadata.cnf" % self.sceneHandle
+        fileName = "%s-metadata.cnf" % sceneHandle
         filePath = path.join(sceneFolder,fileName)
 
         if not path.isfile(filePath):
@@ -113,7 +115,7 @@ class SceneMeta():
 
         logger.debug("SceneMeta.saveScene: Saving scene metadata")
 
-        fileName   = "%s-metadata.cnf" % self.sceneHandle
+        fileName   = "%s-metadata.cnf" % sceneHandle
         filePath   = path.join(sceneFolder,fileName)
         confParser = configparser.ConfigParser()
 

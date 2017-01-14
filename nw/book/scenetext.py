@@ -78,7 +78,7 @@ class SceneText():
         self.text = fileObj.read()
         fileObj.close()
 
-        words, chars     = self.countWords()
+        words, chars     = self.countWords(self.text)
         self.wordsOnLoad = words
         self.charsOnLoad = chars
         self.wordsLatest = words

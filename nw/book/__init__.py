@@ -8,7 +8,7 @@
 
 import logging as logger
 
-from os                   import path, mkdir
+from os                   import path, mkdir, listdir
 from nw                   import *
 from nw.book.scene        import Scene
 from nw.book.bookopt      import BookOpt
@@ -22,35 +22,55 @@ class Book():
 
     def __init__(self):
 
+        """
+        Description:
+            Creates meta object and scene object.
+            Links sub class functions.
+        """
         # Core Objects
         self.mainConf = CONFIG
         self.theOpt   = BookOpt()
         self.theMeta  = BookMeta(self.theOpt)
         self.theScene = Scene(self.theOpt)
 
-        # Attributes
+        # Runtime Attributes
         self.bookLoaded = False
+
+        # Connect to Scene Functions
+        self.createScene     = self.theScene.createScene
+        self.loadScene       = self.theScene.loadScene
+        self.saveScene       = self.theScene.saveScene
 
         # Connect to Setters
         self.setBookTitle    = self.theMeta.setTitle
         self.setBookAuthor   = self.theMeta.setAuthor
-        self.setBookDraft    = self.theMeta.setDraft
+        self.setBookDraft    = self.theOpt.setBookDraft
+        self.setSceneTitle   = self.theScene.theMeta.setTitle
+        self.setSceneSection = self.theScene.theMeta.setSection
+        self.setSceneChapter = self.theScene.theMeta.setChapter
+        self.setSceneNumber  = self.theScene.theMeta.setNumber
         self.setSceneText    = self.theScene.theText.setText
         self.setSceneSummary = self.theScene.theSummary.setSummary
 
         # Connect to Getters
         self.getBookTitle    = self.theMeta.getTitle
         self.getBookAuthor   = self.theMeta.getAuthor
-        self.getBookDraft    = self.theMeta.getDraft
+        self.getBookDraft    = self.theOpt.getBookDraft
         self.getSceneIndex   = self.theOpt.getSceneIndex
         self.getSceneHandle  = self.theOpt.getSceneHandle
+        self.getSceneTitle   = self.theScene.theMeta.getTitle
+        self.getSceneSection = self.theScene.theMeta.getSection
+        self.getSceneChapter = self.theScene.theMeta.getChapter
+        self.getSceneNumber  = self.theScene.theMeta.getNumber
+        self.getSceneWords   = self.theScene.theMeta.getWords
+        self.getSceneChars   = self.theScene.theMeta.getChars
         self.getSceneText    = self.theScene.theText.getText
         self.getSceneSummary = self.theScene.theSummary.getSummary
 
         # Connect to Methods
-        self.makeSceneIndex = self.theScene.makeIndex
-        self.countWords     = self.theScene.theText.countWords
-        self.htmlCleanUp    = self.theScene.theText.htmlCleanUp
+        self.makeSceneIndex  = self.theScene.makeIndex
+        self.countWords      = self.theScene.theText.countWords
+        self.htmlCleanUp     = self.theScene.theText.htmlCleanUp
         
         return
 
@@ -60,6 +80,13 @@ class Book():
 
     def createBook(self, rootFolder):
 
+        """
+        Description:
+            Requires book title to be set.
+            Creates a folder based on the book title.
+            Sets the draft number to 1, which will ensure the folder is created when metadata is reloaded.
+            Saves the book, and reloads it causing the metadata file to be written and indices to be updated.
+        """
         bookTitle = self.getBookTitle()
         if bookTitle == "":
             logger.debug("Book.createBook: Set title before creating new book")
@@ -70,12 +97,25 @@ class Book():
             mkdir(bookFolder)
             logger.debug("Book.createBook: Created folder %s" % bookFolder)
 
+        self.theOpt.setBookDraft(1)
+        self.saveBook()
+        self.loadBook(bookFolder)
+
         return
 
     def loadBook(self, bookFolder):
 
-        # Clear Attributes
-        self.bookLoaded = False
+        """
+        Description:
+            Clears the content of all subclasses.
+            Sets the current book folder and checks that it's valid.
+            Generates book index which looks for draft folders and sets the draft to load to the latest.
+            Generates scene index from the latest draft folder.
+            If a recent scene is listed, load it
+            Sets last loaded book in config
+        """
+
+        logger.debug("Book.loadBook: Loading book from %s" % bookFolder)
 
         # Clear Objects
         self.theOpt.clearContent()
@@ -86,12 +126,60 @@ class Book():
         self.theOpt.setBookFolder(bookFolder)
         if self.theOpt.bookFolder is None: return
 
+        # Load Book Data
+        self.makeIndex()
         self.theMeta.loadData()
+        self.theScene.makeIndex()
+
+        # Load Recent Scene
+        if len(self.theMeta.recentScene) == 12:
+            self.theScene.loadScene(self.theMeta.recentScene)
+
+        self.mainConf.setLastBook(bookFolder)
         self.bookLoaded = self.theMeta.bookLoaded
         
         return
 
     def saveBook(self):
+
+        """
+        Description:
+            Saves meta data. Scene data must be saved separately.
+        """
+
+        logger.debug("Book.saveBook: Saving book")
+        self.theMeta.saveData()
+
+        return
+
+    ##
+    #  Methods
+    ##
+
+    def makeIndex(self):
+
+        bookIndex  = {}
+        bookFolder = self.theOpt.bookFolder
+
+        if bookFolder is None:
+            logger.debug("Book.makeIndex: Path not found %s" % bookFolder)
+            return
+
+        logger.debug("Book.makeIndex: Scanning folder %s" % bookFolder)
+            
+        dirContent = listdir(bookFolder)
+        for listItem in dirContent:
+            itemPath = path.join(bookFolder,listItem)
+            if path.isdir(itemPath):
+                if listItem[:5] == "Draft":
+                    bookDraft = int(listItem[6:])
+                    bookIndex[bookDraft] = [listItem,0]
+
+        print(bookIndex)
+
+        self.theOpt.setBookIndex(bookIndex)
+        self.theOpt.setBookDraft(len(bookIndex))
+
         return
 
 # End Class Book
