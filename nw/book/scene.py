@@ -9,6 +9,7 @@
 import logging as logger
 
 from os                   import listdir
+from time                 import time
 from hashlib              import sha256
 from nw                   import *
 from nw.book.scenemeta    import SceneMeta
@@ -68,6 +69,7 @@ class Scene():
         self.theMeta.setNumber(sceneNumber)
         self.theText.setText("New Scene")
         self.saveScene()
+        self.makeIndex()
         self.sceneLoaded = True
 
         return
@@ -76,7 +78,8 @@ class Scene():
 
         """
         Description:
-            Verifies scene handle. 
+            Verifies scene handle.
+            Triggers load in all submodules.
         """
 
         self.theOpt.setSceneHandle(sceneHandle)
@@ -91,6 +94,21 @@ class Scene():
         return
 
     def saveScene(self):
+
+        """
+        Description:
+            Updates metadata.
+            Triggers save in all submodules.
+        """
+
+        self.theMeta.setUpdated(formatDateTime())
+        self.theMeta.setWords(self.theText.wordsLatest)
+        self.theMeta.setChars(self.theText.charsLatest)
+
+        self.theMeta.saveData()
+        self.theText.saveText()
+        self.theSummary.saveSummary()
+
         return
 
     ##

@@ -66,7 +66,7 @@ class SceneSummary():
     def saveSummary(self):
 
         if not self.hasSummary:
-            logger.debug("saveSummary.saveText: No text to save")
+            logger.debug("saveSummary.saveSummary: No text to save")
             return
 
         sceneFolder  = self.theOpt.sceneFolder
@@ -74,10 +74,18 @@ class SceneSummary():
         sceneVersion = self.theOpt.sceneVersion
 
         if not path.isdir(sceneFolder):
-            logger.debug("saveSummary.saveText: Folder not found %s" % sceneFolder)
+            logger.debug("saveSummary.saveSummary: Folder not found %s" % sceneFolder)
             return
 
-        logger.debug("saveSummary.saveText: Saving scene text")
+        if not len(sceneHandle) == 12:
+            logger.debug("saveSummary.saveSummary: Invalid scene handle '%s'" % sceneHandle)
+            return
+
+        if not sceneVersion > 0:
+            logger.debug("saveSummary.saveSummary: Invalid scene version %d" % sceneVersion)
+            return
+
+        logger.debug("saveSummary.saveSummary: Saving scene text")
 
         fileName = "%s-summary-%03d.txt" % (sceneHandle,sceneVersion)
         filePath = path.join(sceneFolder,fileName)

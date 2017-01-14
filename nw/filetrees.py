@@ -118,20 +118,22 @@ class SceneTree():
             scnNum     = makeSortString(tmpSection,tmpChapter,tmpNumber)
             scnSec     = makeSortString(tmpSection,tmpChapter,0)
 
-            if tmpSection == 0:
-                parIter = None
+            #~ if tmpSection == 0:
+                #~ parIter = None
+                #~ self.chapCount[scnSec] += 1
+            #~ else:
+            if scnSec in self.chapMap:
+                parIter = self.chapMap[scnSec]
                 self.chapCount[scnSec] += 1
             else:
-                if scnSec in self.chapMap:
-                    parIter = self.chapMap[scnSec]
-                    self.chapCount[scnSec] += 1
-                else:
-                    if tmpSection == 1: scnChapter = "<b>Prologue</b>"
-                    if tmpSection == 2: scnChapter = "<b>Chapter %d</b>" % tmpChapter
-                    if tmpSection == 3: scnChapter = "<b>Epilogue</b>"
-                    parIter = self.treeStore.append(None,[scnChapter,None,None,scnSec,None])
-                    self.chapMap[scnSec]   = parIter
-                    self.chapCount[scnSec] = 1
+                if tmpSection == 0: scnChapter = "<b>Unassigned</b>"
+                if tmpSection == 1: scnChapter = "<b>Prologue</b>"
+                if tmpSection == 2: scnChapter = "<b>Chapter %d</b>" % tmpChapter
+                if tmpSection == 3: scnChapter = "<b>Epilogue</b>"
+                if tmpSection == 9: scnChapter = "<b>Archived</b>"
+                parIter = self.treeStore.append(None,[scnChapter,None,None,scnSec,None])
+                self.chapMap[scnSec]   = parIter
+                self.chapCount[scnSec] = 1
 
             tmpData = [tmpTitle,str(tmpNumber),str(tmpWords),scnNum,itemHandle]
             tmpIter = self.treeStore.append(parIter,tmpData)

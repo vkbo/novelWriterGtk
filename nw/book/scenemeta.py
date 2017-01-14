@@ -43,7 +43,7 @@ class SceneMeta():
         self.sceneCreated = formatDateTime()
         self.sceneUpdated = formatDateTime()
         self.sceneSection = 0
-        self.sceneChapter = 1
+        self.sceneChapter = 0
         self.sceneNumber  = 1
         self.sceneWords   = 0
         self.sceneChars   = 0
@@ -152,7 +152,7 @@ class SceneMeta():
         return
         
     def setUpdated(self, newDate):
-        if len(newTitle) > 0:
+        if len(newDate) > 0:
             self.sceneUpdated = newDate
             self.sceneChanged = True
         else:

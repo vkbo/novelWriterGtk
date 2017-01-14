@@ -64,6 +64,11 @@ SCIDX_CHAPTER = 4
 SCIDX_NUMBER  = 5
 SCIDX_COUNT   = 6
 
+# Word or Char Count
+COUNT_ONLOAD = 0
+COUNT_ADDED  = 1
+COUNT_LATEST = 2
+
 # End Global Constants
 # ==================================================================================================================== #
 # Begin Global Functions

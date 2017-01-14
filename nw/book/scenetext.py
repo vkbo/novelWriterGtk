@@ -102,6 +102,14 @@ class SceneText():
             logger.debug("SceneText.saveText: Folder not found %s" % sceneFolder)
             return
 
+        if not len(sceneHandle) == 12:
+            logger.debug("SceneText.saveText: Invalid scene handle '%s'" % sceneHandle)
+            return
+
+        if not sceneVersion > 0:
+            logger.debug("SceneText.saveText: Invalid scene version %d" % sceneVersion)
+            return
+
         logger.debug("SceneText.saveText: Saving scene text")
 
         fileName = "%s-scene-%03d.txt" % (sceneHandle,sceneVersion)
@@ -139,6 +147,12 @@ class SceneText():
 
     def getText(self):
         return self.text
+
+    def getWordCount(self):
+        return [self.wordsOnLoad,self.wordsAdded,self.wordsLatest]
+
+    def getCharCount(self):
+        return [self.charsOnLoad,self.charsAdded,self.charsLatest]
 
     ##
     #  Methods

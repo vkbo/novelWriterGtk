@@ -149,30 +149,30 @@ class GUI():
         logger.debug("GUI: Loading scene")
 
         self.theBook.loadScene(sceneHandle)
-        #~ self.webEditor.loadText(sceneHandle,self.theBook)
+        self.webEditor.loadText(self.theBook)
 
         # Load Summary
-        #~ tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
-        #~ tmpBuffer.set_text(self.theBook.getSummary())
+        tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
+        tmpBuffer.set_text(self.theBook.getSceneSummary())
 
         # Load Scene Data
-        #~ scnTitle   = self.theBook.theScene.fileTitle
-        #~ scnSection = self.theBook.theScene.fileSection
-        #~ scnChapter = self.theBook.theScene.fileChapter
-        #~ scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileCreated))
-        #~ scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.theScene.fileUpdated))
-        #~ scnVersion = "Draft %d, Version %d" % (self.theBook.bookDraft,self.theBook.theScene.fileVersion)
+        scnTitle   = self.theBook.getSceneTitle()
+        scnSection = self.theBook.getSceneSection()
+        scnChapter = self.theBook.getSceneChapter()
+        scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getSceneCreated()))
+        scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getSceneUpdated()))
+        scnVersion = "Draft %d, Version %d" % (self.theBook.getBookDraft(),self.theBook.getSceneVersion())
 
         # Set GUI Elements
-        #~ self.getObject("lblSceneTitle").set_label(scnTitle)
-        #~ self.getObject("lblSceneCreated").set_label(scnCreated)
-        #~ self.getObject("lblSceneUpdated").set_label(scnUpdated)
-        #~ self.getObject("lblSceneVersion").set_label(scnVersion)
-        #~ self.getObject("entrySceneTitle").set_text(scnTitle)
-        #~ self.getObject("cmbSceneSection").set_active(scnSection)
-        #~ self.getObject("numSceneChapter").set_value(scnChapter)
+        self.getObject("lblSceneTitle").set_label(scnTitle)
+        self.getObject("lblSceneCreated").set_label(scnCreated)
+        self.getObject("lblSceneUpdated").set_label(scnUpdated)
+        self.getObject("lblSceneVersion").set_label(scnVersion)
+        self.getObject("entrySceneTitle").set_text(scnTitle)
+        self.getObject("cmbSceneSection").set_active(scnSection)
+        self.getObject("numSceneChapter").set_value(scnChapter)
 
-        #~ self.updateWordCount()
+        self.updateWordCount()
 
         return
 
@@ -236,8 +236,10 @@ class GUI():
 
     def updateWordCount(self):
 
-        sessionWords = str(self.theBook.theScene.theText.wordsAdded)
-        totalWords   = str(self.theBook.theScene.theText.wordsLatest)
+        wordCount    = self.theBook.getSceneWords()
+
+        sessionWords = str(wordCount[COUNT_ADDED])
+        totalWords   = str(wordCount[COUNT_LATEST])
 
         self.getObject("lblWordsSessionValue").set_label(sessionWords)
         self.getObject("lblWordsTotalValue").set_label(totalWords)
@@ -297,8 +299,8 @@ class GUI():
     def onSceneAdd(self, guiObject):
         scnSort  = makeSortString(0,0,0)
         sceneNum = self.sceneTree.chapCount[scnSort] + 1
-        self.theBook.makeNewScene("New Scene",sceneNum)
-        self.theBook.makeIndex()
+        self.theBook.createScene("New Scene",sceneNum)
+        #~ self.theBook.makeIndex()
         self.sceneTree.loadContent(self.theBook)
         return
 

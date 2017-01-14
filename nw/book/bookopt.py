@@ -82,9 +82,12 @@ class BookOpt():
         return
 
     def setSceneHandle(self, sceneHandle):
-        if len(sceneHandle) == 12 and sceneHandle in self.sceneIndex:
+        if len(sceneHandle) == 12:
             self.sceneHandle  = sceneHandle
-            self.sceneVersion = self.sceneIndex[sceneHandle][SCIDX_COUNT]
+            if sceneHandle in self.sceneIndex:
+                self.sceneVersion = self.sceneIndex[sceneHandle][SCIDX_COUNT]
+            else:
+                self.sceneVersion = 1
         else:
             logger.debug("BookOpt.setSceneHandle: Invalid scene handle '%s'" % sceneHandle)
         return

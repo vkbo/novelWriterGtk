@@ -58,13 +58,18 @@ class Book():
         self.getBookDraft    = self.theOpt.getBookDraft
         self.getSceneIndex   = self.theOpt.getSceneIndex
         self.getSceneHandle  = self.theOpt.getSceneHandle
+        self.getSceneVersion = self.theOpt.getSceneVersion
         self.getSceneTitle   = self.theScene.theMeta.getTitle
         self.getSceneSection = self.theScene.theMeta.getSection
+        self.getSceneCreated = self.theScene.theMeta.getCreated
+        self.getSceneUpdated = self.theScene.theMeta.getUpdated
         self.getSceneChapter = self.theScene.theMeta.getChapter
         self.getSceneNumber  = self.theScene.theMeta.getNumber
         self.getSceneWords   = self.theScene.theMeta.getWords
         self.getSceneChars   = self.theScene.theMeta.getChars
         self.getSceneText    = self.theScene.theText.getText
+        self.getSceneWords   = self.theScene.theText.getWordCount
+        self.getSceneChars   = self.theScene.theText.getCharCount
         self.getSceneSummary = self.theScene.theSummary.getSummary
 
         # Connect to Methods
