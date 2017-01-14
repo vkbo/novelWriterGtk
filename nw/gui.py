@@ -131,6 +131,10 @@ class GUI():
         self.sceneTree.loadContent(self.theBook)
         self.updateWindowTitle()
 
+        recentHandle = self.theBook.getBookRecent()
+        if not recentHandle == "":
+            self.loadScene(recentHandle)
+
         return
 
     def saveBook(self):
@@ -149,8 +153,9 @@ class GUI():
         self.webEditor.loadText(sceneHandle,self.theBook)
 
         # Load Summary
+        scnSummary = self.theBook.getSceneSummary()
         tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
-        tmpBuffer.set_text(self.theBook.getSceneSummary())
+        tmpBuffer.set_text(scnSummary)
 
         # Load Scene Data
         scnTitle   = self.theBook.getSceneTitle()
@@ -344,8 +349,9 @@ class GUI():
 
         if self.theBook.bookLoaded:
             self.guiTimer.stopTimer()
-            self.theBook.saveTiming(self.guiTimer.sessionTime)
             self.webEditor.saveText()
+            self.theBook.saveTiming(self.guiTimer.sessionTime)
+            self.theBook.saveBook()
 
         Gtk.main_quit()
 

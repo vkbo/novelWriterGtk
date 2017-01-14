@@ -140,7 +140,8 @@ class BookMeta():
         return
 
     def setRecent(self, sceneHandle):
-        slef.recentScene = sceneHandle
+        self.recentScene = sceneHandle
+        self.bookChanged = True
         return
 
     ##

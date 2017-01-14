@@ -15,7 +15,7 @@ from gi.repository import Gtk
 from nw            import *
 
 # Set to true to show sorting in all treeviews
-debugShowSort = True
+debugShowSort = False
 
 # ==================================================================================================================== #
 # Begin Class SceneTree

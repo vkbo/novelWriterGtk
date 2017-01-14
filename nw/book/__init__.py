@@ -45,6 +45,7 @@ class Book():
         # Connect to Setters
         self.setBookTitle    = self.theMeta.setTitle
         self.setBookAuthor   = self.theMeta.setAuthor
+        self.setBookRecent   = self.theMeta.setRecent
         self.setBookDraft    = self.theOpt.setBookDraft
         self.setSceneTitle   = self.theScene.theMeta.setTitle
         self.setSceneSection = self.theScene.theMeta.setSection
@@ -56,6 +57,7 @@ class Book():
         # Connect to Getters
         self.getBookTitle    = self.theMeta.getTitle
         self.getBookAuthor   = self.theMeta.getAuthor
+        self.getBookRecent   = self.theMeta.getRecent
         self.getBookDraft    = self.theOpt.getBookDraft
         self.getSceneIndex   = self.theOpt.getSceneIndex
         self.getSceneHandle  = self.theOpt.getSceneHandle
@@ -181,8 +183,6 @@ class Book():
                 if listItem[:5] == "Draft":
                     bookDraft = int(listItem[6:])
                     bookIndex[bookDraft] = [listItem,0]
-
-        print(bookIndex)
 
         self.theOpt.setBookIndex(bookIndex)
         self.theOpt.setBookDraft(len(bookIndex))

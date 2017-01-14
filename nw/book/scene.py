@@ -87,6 +87,8 @@ class Scene():
             logger.debug("Scene.loadScene: Invalid scene handle '%s'" % sceneHandle)
             return
 
+        self.clearContent()
+
         self.theMeta.loadData()
         self.theText.loadText()
         self.theSummary.loadSummary()
@@ -143,7 +145,6 @@ class Scene():
                         tmpScene.sceneWords,
                         tmpScene.sceneSection,
                         tmpScene.sceneChapter,
-                        tmpScene.sceneNumber,
                         0
                     ]
 
@@ -154,8 +155,6 @@ class Scene():
                 if len(listItem) > 18 and listItem[12:19] == "-scene-":
                     itemHandle = listItem[:12]
                     sceneIndex[itemHandle][SCIDX_COUNT] += 1
-
-        print(sceneIndex)
 
         self.theOpt.setSceneIndex(sceneIndex)
 

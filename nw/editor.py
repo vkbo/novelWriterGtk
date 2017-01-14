@@ -77,6 +77,7 @@ class Editor(WebKit.WebView):
             self.saveText()
 
         self.theBook.loadScene(sceneHandle)
+        self.theBook.setBookRecent(sceneHandle)
         self.setText(self.theBook.getSceneText())
         self.guiTimer.setPreviousTotal(self.theBook.getSceneTime())
         self.fileStatus.set_from_file(self.ledGreen)
