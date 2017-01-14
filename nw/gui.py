@@ -19,6 +19,7 @@ from nw.bookeditor  import BookEditor
 from nw.datawrapper import BookData, SceneData
 from nw.filetrees   import SceneTree
 from nw.timer       import Timer
+from nw.book        import Book
 
 class GUI():
 
@@ -34,7 +35,7 @@ class GUI():
         self.winMain    = self.getObject("winMain")
 
         # Prepare GUI Classes
-        self.theBook    = BOOK
+        self.theBook    = Book()
         self.guiTimer   = Timer()
         self.webEditor  = Editor(self.guiTimer)
         self.bookEditor = BookEditor()

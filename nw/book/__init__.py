@@ -8,13 +8,14 @@
 
 import logging as logger
 
-from os                import path, mkdir
-from book.bookopt      import BookOpt
-from book.bookmeta     import BookMeta
-from book.scenemeta    import SceneMeta
-from book.scenetext    import SceneText
-from book.scenesummary import SceneSummary
-from book.scenetiming  import SceneTiming
+from os                   import path, mkdir
+from nw                   import *
+from nw.book.bookopt      import BookOpt
+from nw.book.bookmeta     import BookMeta
+from nw.book.scenemeta    import SceneMeta
+from nw.book.scenetext    import SceneText
+from nw.book.scenesummary import SceneSummary
+from nw.book.scenetiming  import SceneTiming
 
 # Constants
 IDX_TITLE   = 0
@@ -30,10 +31,10 @@ IDX_COUNT   = 6
 
 class Book():
 
-    def __init__(self, parConfig):
+    def __init__(self):
 
         # Core Objects
-        self.mainConf = parConfig
+        self.mainConf = CONFIG
         self.theOpt   = BookOpt(self.mainConf)
         self.theMeta  = BookMeta(self.theOpt)
         self.theScene = Scene(self.theOpt)
