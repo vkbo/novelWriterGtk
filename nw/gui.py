@@ -11,7 +11,7 @@ import logging as logger
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository  import Gtk, Gdk, GLib, GdkPixbuf
+from gi.repository  import Gtk, GLib
 from os             import path
 from nw             import *
 from nw.editor      import Editor
