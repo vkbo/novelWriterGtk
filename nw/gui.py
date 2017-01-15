@@ -299,6 +299,8 @@ class GUI():
         self.getObject("lblWordsSessionValue").set_label(sessionWords)
         self.getObject("lblWordsTotalValue").set_label(totalWords)
 
+        self.sceneTree.setValue(self.theBook.getSceneHandle(),self.sceneTree.COL_WORDS,totalWords)
+
         self.sceneTree.sumWords()
 
         return
