@@ -30,9 +30,6 @@ class Editor(WebKit.WebView):
         self.lblStatus  = self.getObject("lblStatusFile")
 
         # Paths
-        self.ledGrey    = self.mainConf.guiPath+"/led-grey.png"
-        self.ledGreen   = self.mainConf.guiPath+"/led-green.png"
-        self.ledRed     = self.mainConf.guiPath+"/led-red.png"
         self.htmlRoot   = "file://"+self.mainConf.guiPath.replace("\\","/")
 
         # Set Up Editor
@@ -40,7 +37,7 @@ class Editor(WebKit.WebView):
         self.connect("user-changed-contents",self.onContentChanged)
         self.connect("notify::load-status",self.onLoadStatusChange)
         self.load_html_string("",self.htmlRoot)
-        self.fileStatus.set_from_file(self.ledGrey)
+        self.fileStatus.set_from_pixbuf(getIconWidget("icon-grey",16).get_pixbuf())
 
         setEditor = self.get_settings()
         setEditor.set_property("enable-default-context-menu",False)
@@ -80,7 +77,7 @@ class Editor(WebKit.WebView):
         self.theBook.setBookRecent(sceneHandle)
         self.setText(self.theBook.getSceneText())
         self.guiTimer.setPreviousTotal(self.theBook.getSceneTime())
-        self.fileStatus.set_from_file(self.ledGreen)
+        self.fileStatus.set_from_pixbuf(getIconWidget("icon-green",16).get_pixbuf())
         self.setEditable(False)
         self.textSaved = True
             
@@ -93,7 +90,7 @@ class Editor(WebKit.WebView):
         scnText = self.getText()
         self.theBook.setSceneText(scnText)
         self.theBook.saveScene()
-        self.fileStatus.set_from_file(self.ledGreen)
+        self.fileStatus.set_from_pixbuf(getIconWidget("icon-green",16).get_pixbuf())
         self.textSaved = True
 
         return
@@ -107,7 +104,7 @@ class Editor(WebKit.WebView):
             scnText = self.getText()
             self.theBook.setSceneText(scnText)
             self.theBook.saveScene()
-            self.fileStatus.set_from_file(self.ledGreen)
+            self.fileStatus.set_from_pixbuf(getIconWidget("icon-green",16).get_pixbuf())
             self.textSaved = True
             
         return
@@ -229,7 +226,7 @@ class Editor(WebKit.WebView):
         self.guiTimer.resetAutoPause()
         if self.textSaved:
             self.textSaved = False
-            self.fileStatus.set_from_file(self.ledRed)
+            self.fileStatus.set_from_pixbuf(getIconWidget("icon-red",16).get_pixbuf())
         return
 
     def onLoadStatusChange(self, guiObject, loadStatus):
