@@ -45,12 +45,26 @@ class GUI():
             "onClickNew"               :  self.onNewBook,
             "onClickOpen"              :  self.onOpenBook,
             "onClickSave"              :  self.onSaveBook,
-            "onClickPreferences"       :  self.onEditBook,
+            "onClickEdit"              :  self.onEditBook,
+            "onClickPreferences"       :  self.onShowPreferences,
             "onClickSceneAdd"          :  self.onSceneAdd,
             "onSelectTreeScene"        :  self.onSceneSelect,
             "onMainTabChange"          :  self.onMainTabChange,
             "onDestroyWindow"          :  self.onGuiDestroy,
             "onMainWinChange"          :  self.onWinChange,
+            # Main Menu
+            "onMenuFileNew"            :  self.onNewBook,
+            "onMenuFileOpen"           :  self.onOpenBook,
+            "onMenuFileSave"           :  self.onSaveBook,
+            "onMenuFilePreferences"    :  self.onEditBook,
+            "onMenuFileQuit"           :  self.onGuiDestroy,
+            "onMenuEditUndo"           : (self.webEditor.onEditAction,"undo"),
+            "onMenuEditRedo"           : (self.webEditor.onEditAction,"redo"),
+            "onMenuEditCut"            :  self.webEditor.onEditCut,
+            "onMenuEditCopy"           :  self.webEditor.onEditCopy,
+            "onMenuEditPaste"          :  self.webEditor.onEditPaste,
+            "onMenuEditPreferences"    :  self.onShowPreferences,
+            "onMenuHelpAbout"          :  self.onShowAbout,
             # WebKit Editor Signals
             "onToggleEditable"         :  self.webEditor.onToggleEditable,
             "onClickEditRefresh"       :  self.webEditor.onEditRefresh,
@@ -362,6 +376,12 @@ class GUI():
     ##
     #  Main Window Events
     ##
+
+    def onShowAbout(self, guiObject):
+        return
+
+    def onShowPreferences(self, guiObjects):
+        return
 
     def onMainTabChange(self, guiObject, guiChild, tabIdx):
         logger.debug("GUI.onMainTabChange: Main tab change")
