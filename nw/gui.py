@@ -11,7 +11,7 @@ import logging as logger
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository  import Gtk, GLib
+from gi.repository  import Gtk, Gdk, GLib, GdkPixbuf
 from os             import path
 from nw             import *
 from nw.editor      import Editor
@@ -59,6 +59,7 @@ class GUI():
             "onClickEditCut"           :  self.webEditor.onEditCut,
             "onClickEditCopy"          :  self.webEditor.onEditCopy,
             "onClickEditPaste"         :  self.webEditor.onEditPaste,
+            "onClickEditInsertPara"    : (self.webEditor.onEditFormat,"p"),
             "onClickEditBold"          : (self.webEditor.onEditAction,"bold"),
             "onClickEditItalic"        : (self.webEditor.onEditAction,"italic"),
             "onClickEditUnderline"     : (self.webEditor.onEditAction,"underline"),
@@ -74,6 +75,14 @@ class GUI():
         # Prepare Editor
         self.getObject("scrollEditor").add(self.webEditor)
         self.getObject("textSource").set_editable(False)
+
+        # Custom Icons
+        self.getObject("btnEditInsertPara").set_icon_widget(getIconWidget("icon-paragraph",24))
+        self.getObject("btnMainNew").set_icon_widget(getIconWidget("icon-book-new",28))
+        #~ self.getObject("btnMainOpen").set_icon_widget(getIconWidget("icon-book-open",28))
+        #~ self.getObject("btnMainSave").set_icon_widget(getIconWidget("icon-book-save",28))
+        #~ self.getObject("btnMainEdit").set_icon_widget(getIconWidget("icon-book-edit",28))
+        #~ self.getObject("btnMainExport").set_icon_widget(getIconWidget("icon-book-export",28))
 
         # Set Up Timers
         self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)

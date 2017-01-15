@@ -202,6 +202,11 @@ class Editor(WebKit.WebView):
         self.execute_script("document.execCommand('%s',false,false);" % theCommand)
         return
 
+    def onEditFormat(self, guiObject, theCommand):
+        logger.debug("Editor.onEditFormat: Setting format %s" % theCommand)
+        self.execute_script("document.execCommand('formatBlock',false,'%s');" % theCommand)
+        return
+
     def onEditCopy(self, guiObject):
         self.copy_clipboard()
         return

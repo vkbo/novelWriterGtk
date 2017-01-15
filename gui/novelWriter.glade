@@ -232,7 +232,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolButton" id="btnMainPreferences">
+                  <object class="GtkToolButton" id="btnMainEdit">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Book Preferences</property>
@@ -1674,6 +1674,31 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkToolButton" id="btnEditInsertPara">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Insert Paragraph</property>
+                                <property name="label" translatable="yes">Paragraph</property>
+                                <property name="use_underline">True</property>
+                                <property name="stock_id">gtk-about</property>
+                                <signal name="clicked" handler="onClickEditInsertPara" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSeparatorToolItem" id="sepEdit4">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="homogeneous">True</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkToolButton" id="btnEditBold">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -1734,7 +1759,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSeparatorToolItem" id="sepEdit4">
+                              <object class="GtkSeparatorToolItem" id="sepEdit5">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                               </object>

@@ -11,7 +11,7 @@ import logging as logger
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 from os            import path
 from datetime      import datetime
 from nw.config     import Config
@@ -108,6 +108,24 @@ def dateFromStamp(dateString):
 
 def makeSortString(section,chapter,number):
     return "%01d.%02d.%03d" % (section,chapter,number)
+
+def getIconWidget(iconID, iconSize):
+
+    guiPath  = CONFIG.guiPath
+    iconFile = "%s-%s.png" % (iconID, str(iconSize))
+    iconPath = path.join(guiPath,"icons",iconFile)
+    gtkImage = Gtk.Image()
+
+    if path.isfile(iconPath):
+        gtkImage.set_from_file(iconPath)
+    else:
+        iconFile = "%s-256.png" % iconID
+        iconPath = path.join(guiPath,"icons",iconFile)
+        if path.isfile(iconPath):
+            pixBuffer = GdkPixbuf.Pixbuf.new_from_file(iconPath)
+            gtkImage.set_from_pixbuf(pixBuffer.scale_simple(iconSize,iconSize,GdkPixbuf.InterpType.BILINEAR))
+    
+    return gtkImage
 
 # End Global Functions
 # ==================================================================================================================== #
