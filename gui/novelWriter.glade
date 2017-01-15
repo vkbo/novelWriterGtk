@@ -4,6 +4,7 @@
   <requires lib="gtk+" version="3.12"/>
   <object class="GtkApplicationWindow" id="winMain">
     <property name="can_focus">False</property>
+    <property name="icon">icons/novelWriter-256.png</property>
     <signal name="configure-event" handler="onMainWinChange" swapped="no"/>
     <signal name="destroy" handler="onDestroyWindow" swapped="no"/>
     <child>

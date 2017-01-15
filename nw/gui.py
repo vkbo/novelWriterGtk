@@ -140,6 +140,8 @@ class GUI():
         if not recentHandle == "":
             self.loadScene(recentHandle)
 
+        self.updateWindowTitle()
+
         return
 
     def saveBook(self):
@@ -292,7 +294,7 @@ class GUI():
 
     def onOpenBook(self, guiObject):
 
-        guiDialog = Gtk.FileChooserDialog("Open Book Folder",None,Gtk.FileChooserAction.SELECT_FOLDER,(
+        guiDialog = Gtk.FileChooserDialog("Open Book Folder",self.winMain,Gtk.FileChooserAction.SELECT_FOLDER,(
             Gtk.STOCK_CANCEL,Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN,Gtk.ResponseType.OK))
         guiDialog.set_default_response(Gtk.ResponseType.OK)
 
