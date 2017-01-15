@@ -1,6 +1,6 @@
 # novelWriter
 
-**Version Dev0.2**
+**Version 0.2**
 
 *Under initial development*
 
