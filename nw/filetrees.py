@@ -167,7 +167,7 @@ class SceneTree():
         return
 
     def getIter(self, itemHandle):
-        if itemHandle in self.iterMap:  return self.iterMap[itemHandle]
+        if itemHandle in self.iterMap: return self.iterMap[itemHandle]
         return None
 
     def setValue(self, itemHandle, colIdx, newValue):

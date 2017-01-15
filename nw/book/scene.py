@@ -62,6 +62,8 @@ class Scene():
 
         logger.debug("Scene.createScene: Creating new scene")
 
+        self.clearContent()
+
         sceneHandle = sha256(str(time()).encode()).hexdigest()[0:12]
         self.theOpt.setSceneHandle(sceneHandle)
 
@@ -82,11 +84,11 @@ class Scene():
             Triggers load in all submodules.
         """
 
-        self.theOpt.setSceneHandle(sceneHandle)
-        if not len(self.theOpt.sceneHandle) == 12:
+        if not self.theOpt.isValidHandle(sceneHandle):
             logger.debug("Scene.loadScene: Invalid scene handle '%s'" % sceneHandle)
             return
 
+        self.theOpt.setSceneHandle(sceneHandle)
         self.clearContent()
 
         self.theMeta.loadData()

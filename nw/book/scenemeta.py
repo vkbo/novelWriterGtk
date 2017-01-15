@@ -166,7 +166,7 @@ class SceneMeta():
         if sceneSection < 0: sceneSection = 0
         if sceneSection > 3: sceneSection = 3
         self.sceneSection = sceneSection
-        if sceneSection != 2: self.sceneSection = 0
+        if sceneSection != 2: self.sceneChapter = 0
         self.sceneChanged = True
         return
 
@@ -174,7 +174,7 @@ class SceneMeta():
         if sceneChapter == self.sceneChapter: return
         if sceneChapter < 1:  sceneChapter = 1
         if sceneChapter > 99: sceneChapter = 99
-        if self.sceneChapter != 2: sceneChapter = 0
+        if self.sceneSection != 2: sceneChapter = 0
         self.sceneChapter = sceneChapter
         self.sceneChanged = True
         return
@@ -228,5 +228,8 @@ class SceneMeta():
 
     def getChars(self):
         return self.sceneChars
+
+    def getSceneChanged(self):
+        return self.sceneChanged
 
 # End Class SceneMeta

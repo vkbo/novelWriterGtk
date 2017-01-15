@@ -143,6 +143,23 @@ class GUI():
 
         return
 
+    def clearContent(self):
+
+        self.webEditor.clearEditor()
+
+        tmpBuffer = self.getObject("textSceneSummary").get_buffer()
+        tmpBuffer.set_text("")
+
+        self.getObject("lblSceneTitle").set_label("No file loaded")
+        self.getObject("lblSceneCreated").set_label("Created")
+        self.getObject("lblSceneUpdated").set_label("Updated")
+        self.getObject("lblSceneVersion").set_label("")
+        self.getObject("entrySceneTitle").set_text("")
+        self.getObject("cmbSceneSection").set_active(0)
+        self.getObject("numSceneChapter").set_value(1)
+
+        return
+
     ##
     #  Load and Save Functions
     ##
@@ -157,6 +174,7 @@ class GUI():
 
         logger.debug("GUI.loadBook: Loading book")
 
+        self.clearContent()
         self.theBook.loadBook(bookFolder)
         self.sceneTree.loadContent(self.theBook)
         self.updateWindowTitle()
@@ -164,8 +182,6 @@ class GUI():
         recentHandle = self.theBook.getBookRecent()
         if not recentHandle == "":
             self.loadScene(recentHandle)
-
-        self.updateWindowTitle()
 
         return
 
@@ -247,9 +263,14 @@ class GUI():
         self.theBook.setSceneNumber(scnNumber)
         self.theBook.setSceneSummary(scnSummary)
 
+        refreshTree = self.theBook.getSceneChanged()
+
         self.webEditor.saveText()
-        self.sceneTree.loadContent(self.theBook)
         self.updateWordCount()
+
+        if refreshTree:
+            self.theBook.makeSceneIndex()
+            self.sceneTree.loadContent(self.theBook)
         
         return
 
@@ -366,10 +387,20 @@ class GUI():
     ##
 
     def onSceneAdd(self, guiObject):
+
+        self.guiTimer.stopTimer()
+        self.theBook.saveTiming(self.guiTimer.sessionTime)
+        self.guiTimer.resetTimer()
+        self.saveScene()
+
+        self.clearContent()
+
         scnSort  = makeSortString(0,0,0)
         sceneNum = self.sceneTree.chapCount[scnSort] + 1
         self.theBook.createScene("New Scene",sceneNum)
         self.sceneTree.loadContent(self.theBook)
+        self.loadScene(self.theBook.getSceneHandle())
+
         return
 
     def onSceneSelect(self, guiObject):

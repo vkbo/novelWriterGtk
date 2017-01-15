@@ -72,6 +72,7 @@ class Book():
         self.getSceneNumber  = self.theScene.theMeta.getNumber
         self.getSceneWords   = self.theScene.theMeta.getWords
         self.getSceneChars   = self.theScene.theMeta.getChars
+        self.getSceneChanged = self.theScene.theMeta.getSceneChanged
         self.getSceneText    = self.theScene.theText.getText
         self.getSceneWords   = self.theScene.theText.getWordCount
         self.getSceneChars   = self.theScene.theText.getCharCount

@@ -27,11 +27,11 @@ class BookOpt():
         # Attributes
         self.bookFolder   = None
         self.bookIndex    = {}
-        self.bookDraft    = 0
+        self.bookDraft    = 1
         self.sceneFolder  = None
         self.sceneIndex   = {}
         self.sceneHandle  = ""
-        self.sceneVersion = 0
+        self.sceneVersion = 1
         
         return
 
@@ -40,11 +40,11 @@ class BookOpt():
         # Clear Attributes
         self.bookFolder   = None
         self.bookIndex    = {}
-        self.bookDraft    = 0
+        self.bookDraft    = 1
         self.sceneFolder  = None
         self.sceneIndex   = {}
         self.sceneHandle  = ""
-        self.sceneVersion = 0
+        self.sceneVersion = 1
 
         return
 
@@ -120,5 +120,13 @@ class BookOpt():
 
     def getSceneVersion(self):
         return self.sceneVersion
+
+    ##
+    #  Checkers
+    ##
+
+    def isValidHandle(self, sceneHandle):
+        if sceneHandle in self.sceneIndex.keys(): return True
+        return False
 
 # End Class BookOpt

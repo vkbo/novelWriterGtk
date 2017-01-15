@@ -54,7 +54,7 @@ class Editor(WebKit.WebView):
         if not self.textSaved: return False
 
         self.load_html_string("",self.htmlRoot)
-        self.fileStatus.set_from_file(self.ledGrey)
+        self.fileStatus.set_from_pixbuf(getIconWidget("icon-grey",16).get_pixbuf())
 
         return True
 

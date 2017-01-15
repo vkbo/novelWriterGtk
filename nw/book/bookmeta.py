@@ -83,6 +83,7 @@ class BookMeta():
 
         self.bookLoaded = True
         
+        self.verifyDraftFolder()
         sceneFolder = self.getDraftFolder()
         self.theOpt.setSceneFolder(sceneFolder)
 
