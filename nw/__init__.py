@@ -26,6 +26,8 @@ CONFIG  = Config()
 BUILDER = Gtk.Builder()
 
 BUILDER.add_from_file(path.join(CONFIG.guiPath,"novelWriter.glade"))
+CONFIG.setBuilder(BUILDER)
+CONFIG.updateRecentList()
 
 # End Initialisation
 # ==================================================================================================================== #

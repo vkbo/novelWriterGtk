@@ -65,6 +65,17 @@ class GUI():
             "onMenuEditPaste"          :  self.webEditor.onEditPaste,
             "onMenuEditPreferences"    :  self.onShowPreferences,
             "onMenuHelpAbout"          :  self.onShowAbout,
+            # Main Menu Recent List
+            "onMenuRecent0"            : (self.onOpenRecent,0),
+            "onMenuRecent1"            : (self.onOpenRecent,1),
+            "onMenuRecent2"            : (self.onOpenRecent,2),
+            "onMenuRecent3"            : (self.onOpenRecent,3),
+            "onMenuRecent4"            : (self.onOpenRecent,4),
+            "onMenuRecent5"            : (self.onOpenRecent,5),
+            "onMenuRecent6"            : (self.onOpenRecent,6),
+            "onMenuRecent7"            : (self.onOpenRecent,7),
+            "onMenuRecent8"            : (self.onOpenRecent,8),
+            "onMenuRecent9"            : (self.onOpenRecent,9),
             # WebKit Editor Signals
             "onToggleEditable"         :  self.webEditor.onToggleEditable,
             "onClickEditRefresh"       :  self.webEditor.onEditRefresh,
@@ -139,7 +150,7 @@ class GUI():
     def loadBook(self, bookFolder=None):
 
         if bookFolder is None:
-            bookFolder = self.mainConf.lastBook
+            bookFolder = self.mainConf.getLastBook()
 
         if bookFolder == "":
             return
@@ -318,6 +329,11 @@ class GUI():
 
         guiDialog.destroy()
 
+        return
+
+    def onOpenRecent(self, guiObject, recentIdx):
+        logger.debug("GUI.onOpenRecent: Open recent book %d" % recentIdx)
+        self.loadBook(self.mainConf.recentBook[recentIdx])
         return
 
     def onSaveBook(self, guiObject):
