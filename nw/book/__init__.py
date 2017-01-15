@@ -89,6 +89,15 @@ class Book():
     #  Create, Load and Save
     ##
 
+    def clearContent(self):
+        
+        # Clear Objects
+        self.theOpt.clearContent()
+        self.theMeta.clearContent()
+        self.theScene.clearContent()
+
+        return
+
     def createBook(self, rootFolder):
 
         """
@@ -108,9 +117,9 @@ class Book():
             mkdir(bookFolder)
             logger.debug("Book.createBook: Created folder %s" % bookFolder)
 
+        self.theOpt.setBookFolder(bookFolder)
         self.theOpt.setBookDraft(1)
         self.saveBook()
-        self.loadBook(bookFolder)
 
         return
 

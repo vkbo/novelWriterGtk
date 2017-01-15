@@ -26,7 +26,6 @@ CONFIG  = Config()
 BUILDER = Gtk.Builder()
 
 BUILDER.add_from_file(path.join(CONFIG.guiPath,"novelWriter.glade"))
-BUILDER.add_from_file(path.join(CONFIG.guiPath,"dlgEditBook.glade"))
 
 # End Initialisation
 # ==================================================================================================================== #
@@ -67,6 +66,14 @@ SCIDX_COUNT   = 5
 COUNT_ONLOAD = 0
 COUNT_ADDED  = 1
 COUNT_LATEST = 2
+
+# Actions
+ACTION_NONE   = 0
+ACTION_CANCEL = 1
+ACTION_LOAD   = 2
+ACTION_SAVE   = 3
+ACTION_EDIT   = 4
+ACTION_NEW    = 5
 
 # End Global Constants
 # ==================================================================================================================== #

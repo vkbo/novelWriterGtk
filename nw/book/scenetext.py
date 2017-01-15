@@ -119,7 +119,7 @@ class SceneText():
 
         # Back up old file
         if path.isfile(tempPath): remove(tempPath)
-        rename(filePath,tempPath)
+        if path.isfile(filePath): rename(filePath,tempPath)
 
         fileObj  = open(filePath,encoding="utf-8",mode="w")
         fileObj.write(self.text)

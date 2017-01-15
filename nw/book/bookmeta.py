@@ -36,7 +36,7 @@ class BookMeta():
         # Clear Saved Attributes
         self.bookTitle   = ""
         self.bookAuthor  = ""
-        self.lastScene   = ""
+        self.recentScene = ""
 
         # Clear Runtime Attributes
         self.bookLoaded  = False
@@ -81,12 +81,11 @@ class BookMeta():
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"Recent"): self.recentScene = confParser.get(cnfSec,"Recent")
 
-        self.verifyDraftFolder()
+        self.bookLoaded = True
+        
         sceneFolder = self.getDraftFolder()
         self.theOpt.setSceneFolder(sceneFolder)
 
-        self.bookLoaded = True
-        
         return
 
     def saveData(self):
@@ -117,6 +116,8 @@ class BookMeta():
         # Write File
         confParser.write(open(bookPath,"w"))
         self.bookChanged = False
+
+        self.verifyDraftFolder()
 
         return
 

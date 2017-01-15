@@ -15,7 +15,7 @@ from gi.repository  import Gtk, GLib
 from os             import path
 from nw             import *
 from nw.editor      import Editor
-from nw.bookeditor  import BookEditor
+from nw.dialogs     import EditBookDialog
 from nw.filetrees   import SceneTree
 from nw.timer       import Timer
 from nw.book        import Book
@@ -37,7 +37,6 @@ class GUI():
         self.theBook    = Book()
         self.guiTimer   = Timer()
         self.webEditor  = Editor(self.guiTimer)
-        self.bookEditor = BookEditor(self.theBook)
         self.sceneTree  = SceneTree()
 
         # Set Up Event Handlers
@@ -65,9 +64,6 @@ class GUI():
             "onClickEditUnderline"     : (self.webEditor.onEditAction,"underline"),
             "onClickEditStrikethrough" : (self.webEditor.onEditAction,"strikethrough"),
             "onToggleShowPara"         :  self.webEditor.onShowParagraphs,
-            # Book Editor Signals
-            "onClickBookCancel"        :  self.bookEditor.onBookCancel,
-            "onClickBookSave"          :  self.bookEditor.onBookSave,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
@@ -267,8 +263,22 @@ class GUI():
     ##
 
     def onNewBook(self, guiObject):
-        self.bookEditor.clearEditor()
-        self.bookEditor.dlgWin.show()
+
+        guiDialog = EditBookDialog(ACTION_NEW)
+
+        dlgReturn = guiDialog.run()
+        if dlgReturn == Gtk.ResponseType.ACCEPT:
+            bookTitle  = guiDialog.entryBookTitle.get_text()
+            bookAuthor = guiDialog.entryBookAuthor.get_text()
+            rootFolder = guiDialog.fileBookPath.get_filename()
+            self.theBook.clearContent()
+            self.theBook.setBookTitle(bookTitle)
+            self.theBook.setBookAuthor(bookAuthor)
+            self.theBook.createBook(rootFolder)
+            self.loadBook(self.theBook.getBookFolder())
+
+        guiDialog.destroy()
+
         return
 
     def onOpenBook(self, guiObject):
@@ -291,8 +301,23 @@ class GUI():
         return
 
     def onEditBook(self, guiObject):
-        self.bookEditor.loadEditor()
-        self.bookEditor.dlgWin.show()
+
+        guiDialog = EditBookDialog(ACTION_EDIT)
+        guiDialog.entryBookTitle.set_text(self.theBook.getBookTitle())
+        guiDialog.entryBookAuthor.set_text(self.theBook.getBookAuthor())
+        guiDialog.entryBookPath.set_text(self.theBook.getBookFolder())
+
+        dlgReturn = guiDialog.run()
+        if dlgReturn == Gtk.ResponseType.ACCEPT:
+            bookTitle  = guiDialog.entryBookTitle.get_text()
+            bookAuthor = guiDialog.entryBookAuthor.get_text()
+            self.theBook.setBookTitle(bookTitle)
+            self.theBook.setBookAuthor(bookAuthor)
+            self.saveBook()
+            self.updateWindowTitle()
+
+        guiDialog.destroy()
+
         return
 
     ##
