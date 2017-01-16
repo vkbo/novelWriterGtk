@@ -41,11 +41,12 @@ class Editor(WebKit.WebView):
 
         setEditor = self.get_settings()
         setEditor.set_property("enable-default-context-menu",False)
+        setEditor.set_property("spell-checking-languages",self.mainConf.spellCheck)
         self.set_settings(setEditor)
 
         # Properties
-        self.textSaved  = True
-        self.showPars   = False
+        self.textSaved = True
+        self.showPars  = False
 
         return
 
@@ -171,7 +172,6 @@ class Editor(WebKit.WebView):
 
     def setEditable(self, editState):
         self.getObject("btnEditable").set_active(editState)
-        #self.set_editable(editState)
         return
 
     ##
@@ -183,10 +183,25 @@ class Editor(WebKit.WebView):
         editState = guiObject.get_active()
         self.set_editable(editState)
 
+        setEditor = self.get_settings()
+        setEditor.set_property("enable-default-context-menu",editState)
+        self.set_settings(setEditor)
+
         if editState:
             self.guiTimer.startTimer()
         else:
             self.guiTimer.pauseTimer()
+        
+        return
+
+    def onToggleSpellCheck(self, guiObject):
+
+        logger.debug("Editor.onToggleSpellCheck: Toggled")
+        spchState = guiObject.get_active()
+
+        setEditor = self.get_settings()
+        setEditor.set_property("enable-spell-checking",spchState)
+        self.set_settings(setEditor)
         
         return
 

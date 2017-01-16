@@ -1922,6 +1922,7 @@
                                 <property name="label" translatable="yes">SpellCheck</property>
                                 <property name="use_underline">True</property>
                                 <property name="stock_id">gtk-spell-check</property>
+                                <signal name="toggled" handler="onToggleSpellCheck" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

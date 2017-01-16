@@ -90,6 +90,7 @@ class GUI():
             "onClickEditUnderline"     : (self.webEditor.onEditAction,"underline"),
             "onClickEditStrikethrough" : (self.webEditor.onEditAction,"strikethrough"),
             "onToggleShowPara"         :  self.webEditor.onShowParagraphs,
+            "onToggleSpellCheck"       :  self.webEditor.onToggleSpellCheck,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 

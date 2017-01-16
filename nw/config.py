@@ -54,6 +54,7 @@ class Config:
         self.lineIndent  = 400  # Percent
         self.parMargin   = 4    # Pixels
         self.pageMargin  = 40   # Pixels
+        self.spellCheck  = "en_GB"
 
         ## Timer
         self.autoPause   = 60   # Seconds
@@ -101,6 +102,7 @@ class Config:
             if confParser.has_option(cnfSec,"lineIndent"): self.lineIndent   = confParser.getint(cnfSec,"lineIndent")
             if confParser.has_option(cnfSec,"parMargin"):  self.parMargin    = confParser.getint(cnfSec,"parMargin")
             if confParser.has_option(cnfSec,"pageMargin"): self.pageMargin   = confParser.getint(cnfSec,"pageMargin")
+            if confParser.has_option(cnfSec,"spellCheck"): self.spellCheck   = confParser.get(cnfSec,"spellCheck")
 
         ## Timer
         cnfSec = "Timer"
@@ -148,6 +150,7 @@ class Config:
         confParser.set(cnfSec,"lineIndent", str(self.lineIndent))
         confParser.set(cnfSec,"parMargin",  str(self.parMargin))
         confParser.set(cnfSec,"pageMargin", str(self.pageMargin))
+        confParser.set(cnfSec,"spellCheck", str(self.spellCheck))
 
         ## Timer
         cnfSec = "Timer"
