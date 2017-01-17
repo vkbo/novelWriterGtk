@@ -77,6 +77,10 @@ ACTION_SAVE   = 3
 ACTION_EDIT   = 4
 ACTION_NEW    = 5
 
+# Editor Paste Type
+PASTE_PLAIN = 0
+PASTE_CLEAN = 1
+
 # End Global Constants
 # ==================================================================================================================== #
 # Begin Global Functions

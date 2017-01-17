@@ -231,6 +231,9 @@ class Editor(WebKit.WebView):
         self.paste_clipboard()
         return
 
+    def onEditPasteProcess(self, guiObject, pasteType):
+        return
+
     def onShowParagraphs(self, guiObject):
         logger.debug("Editor.onShowParagraphs: Toggle show paragraphs")
         self.showPars = guiObject.get_active()

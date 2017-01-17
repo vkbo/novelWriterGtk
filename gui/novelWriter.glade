@@ -157,29 +157,6 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkSeparatorMenuItem" id="sepMenuFile1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="menuFilePreferences">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Edit Book</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="onMenuFilePreferences" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="menuFileExport">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Export Book</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkSeparatorMenuItem" id="sepMenuFile2">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -209,23 +186,21 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="menuEditUndo">
+                      <object class="GtkMenuItem" id="menuEditPastePlain">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Undo</property>
+                        <property name="label" translatable="yes">Paste Plain Text</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="onMenuEditUndo" swapped="no"/>
-                        <accelerator key="z" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="onMenuEditPastePlain" swapped="no"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="menuEditRedo">
+                      <object class="GtkMenuItem" id="menuEditPasteClean">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Redo</property>
+                        <property name="label" translatable="yes">Paste Clean HTML</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="onMenuEditRedo" swapped="no"/>
-                        <accelerator key="y" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="onMenuEditPasteClean" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -235,33 +210,12 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="menuEditCut">
+                      <object class="GtkMenuItem" id="menuEditBook">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Cut</property>
+                        <property name="label" translatable="yes">Edit Book Settings</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="onMenuEditCut" swapped="no"/>
-                        <accelerator key="x" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="menuEditCopy">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Copy</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="onMenuEditCopy" swapped="no"/>
-                        <accelerator key="c" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="menuEditPaste">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Paste</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="onMenuEditPaste" swapped="no"/>
-                        <accelerator key="v" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="onMenuEditBook" swapped="no"/>
                       </object>
                     </child>
                     <child>
