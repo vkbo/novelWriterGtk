@@ -233,7 +233,11 @@ class Config:
 
     def updateRecentList(self):
         for n in range(10):
-            self.getObject("menuFileRecent%d" % n).set_label("%d: %s" % (n,self.recentBook[n]))
+            if self.recentBook[n] == "":
+                self.getObject("menuFileRecent%d" % n).set_visible(False)
+            else:
+                self.getObject("menuFileRecent%d" % n).set_visible(True)
+                self.getObject("menuFileRecent%d" % n).set_label(self.recentBook[n])
         return
 
 # End Class Config

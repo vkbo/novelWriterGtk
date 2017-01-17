@@ -57,7 +57,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent0">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">0:</property>
+                                <property name="label" translatable="yes">0</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent0" swapped="no"/>
                               </object>
@@ -66,7 +66,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">1:</property>
+                                <property name="label" translatable="yes">1</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent1" swapped="no"/>
                               </object>
@@ -75,7 +75,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">2:</property>
+                                <property name="label" translatable="yes">2</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent2" swapped="no"/>
                               </object>
@@ -84,7 +84,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent3">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">3:</property>
+                                <property name="label" translatable="yes">3</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent3" swapped="no"/>
                               </object>
@@ -93,7 +93,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent4">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">4:</property>
+                                <property name="label" translatable="yes">4</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent4" swapped="no"/>
                               </object>
@@ -102,7 +102,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent5">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">5:</property>
+                                <property name="label" translatable="yes">5</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent5" swapped="no"/>
                               </object>
@@ -111,7 +111,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent6">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">6:</property>
+                                <property name="label" translatable="yes">6</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent6" swapped="no"/>
                               </object>
@@ -120,7 +120,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent7">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">7:</property>
+                                <property name="label" translatable="yes">7</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent7" swapped="no"/>
                               </object>
@@ -129,7 +129,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent8">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">8:</property>
+                                <property name="label" translatable="yes">8</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent8" swapped="no"/>
                               </object>
@@ -138,7 +138,7 @@
                               <object class="GtkMenuItem" id="menuFileRecent9">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">9:</property>
+                                <property name="label" translatable="yes">9</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="onMenuRecent9" swapped="no"/>
                               </object>
