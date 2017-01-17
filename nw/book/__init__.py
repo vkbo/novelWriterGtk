@@ -31,7 +31,7 @@ class Book():
         self.mainConf = CONFIG
         self.theOpt   = BookOpt()
         self.theMeta  = BookMeta(self.theOpt)
-        self.theScene = Scene(self.theOpt)
+        self.theScene = Scene(self.theOpt,self.theMeta)
 
         # Runtime Attributes
         self.bookLoaded = False
@@ -39,6 +39,7 @@ class Book():
         # Connect to Scene Functions
         self.createScene     = self.theScene.createScene
         self.loadScene       = self.theScene.loadScene
+        self.closeScene      = self.theScene.closeScene
         self.saveScene       = self.theScene.saveScene
         self.saveTiming      = self.theScene.theTiming.saveTiming
 
@@ -54,6 +55,7 @@ class Book():
         self.setSceneNumber  = self.theScene.theMeta.setNumber
         self.setSceneText    = self.theScene.theText.setText
         self.setSceneSummary = self.theScene.theSummary.setSummary
+        self.setSceneTime    = self.theScene.theTiming.setTime
 
         # Connect to Getters
         self.getBookTitle    = self.theMeta.getTitle
@@ -91,11 +93,20 @@ class Book():
     ##
 
     def clearContent(self):
+
+        """
+        Description:
+            Clears book options
+            Clears book metadata
+            Clears scene content
+        """
         
         # Clear Objects
         self.theOpt.clearContent()
         self.theMeta.clearContent()
         self.theScene.clearContent()
+
+        self.bookLoaded = False
 
         return
 
@@ -104,14 +115,18 @@ class Book():
         """
         Description:
             Requires book title to be set.
+            Close current book, if any
             Creates a folder based on the book title.
             Sets the draft number to 1, which will ensure the folder is created when metadata is reloaded.
             Saves the book, and reloads it causing the metadata file to be written and indices to be updated.
         """
+        
         bookTitle = self.getBookTitle()
         if bookTitle == "":
             logger.debug("Book.createBook: Set title before creating new book")
             return
+
+        self.closeBook()
 
         bookFolder = path.join(rootFolder,bookTitle)
         if not path.isdir(bookFolder):
@@ -128,7 +143,7 @@ class Book():
 
         """
         Description:
-            Clears the content of all subclasses.
+            Closes the current book
             Sets the current book folder and checks that it's valid.
             Generates book index which looks for draft folders and sets the draft to load to the latest.
             Generates scene index from the latest draft folder.
@@ -138,10 +153,8 @@ class Book():
 
         logger.debug("Book.loadBook: Loading book from %s" % bookFolder)
 
-        # Clear Objects
-        self.theOpt.clearContent()
-        self.theMeta.clearContent()
-        self.theScene.clearContent()
+        # Close Current Book
+        self.closeBook()
 
         # Load Book
         self.theOpt.setBookFolder(bookFolder)
@@ -158,6 +171,25 @@ class Book():
 
         self.mainConf.setLastBook(bookFolder)
         self.bookLoaded = self.theMeta.bookLoaded
+        
+        return
+
+    def closeBook(self):
+
+        """
+        Description:
+            Check if a book is loaded
+            Save current book and scene (close scene)
+            Clear content
+        """
+
+        if not self.bookLoaded:
+            logger.debug("Book.closeBook: No book loaded")
+            return
+            
+        self.saveBook()
+        self.theScene.closeScene()
+        self.clearContent()
         
         return
 

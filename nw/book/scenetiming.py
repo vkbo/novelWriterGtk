@@ -20,6 +20,7 @@ class SceneTiming():
         self.theText  = theText
 
         # Runtime Attributes
+        self.timeCurrent = 0.0
         self.timeTotal   = 0.0
         self.timeList    = []
 
@@ -61,8 +62,9 @@ class SceneTiming():
         tmpData = fileObj.read()
         fileObj.close()
 
-        self.timeList  = []
-        self.timeTotal = 0.0
+        self.timeList    = []
+        self.timeTotal   = 0.0
+        self.timeCurrent = 0.0
         tmpLines = tmpData.split("\n")
         for tmpLine in tmpLines:
             tmpValues = tmpLine.split(",")
@@ -72,12 +74,12 @@ class SceneTiming():
 
         return
 
-    def saveTiming(self, timeValue):
+    def saveTiming(self):
 
-        if timeValue < self.mainConf.minTime: return
+        if self.timeCurrent < self.mainConf.minTime: return
 
-        sceneFolder  = self.theOpt.sceneFolder
-        sceneHandle  = self.theOpt.sceneHandle
+        sceneFolder = self.theOpt.sceneFolder
+        sceneHandle = self.theOpt.sceneHandle
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneTiming.saveTiming: Folder not found %s" % sceneFolder)
@@ -92,10 +94,10 @@ class SceneTiming():
 
         logger.debug("SceneTiming.saveTiming: Saving timing information")
 
-        self.timeTotal += timeValue
+        self.timeTotal += self.timeCurrent
 
         timeStamp = formatDateTime()
-        timeValue = str(timeValue)
+        timeValue = str(self.timeCurrent)
         wordCount = str(self.theText.wordsLatest)
         charCount = str(self.theText.charsLatest)
 
@@ -107,6 +109,14 @@ class SceneTiming():
         fileObj.write(timeSet)
         fileObj.close()
 
+        return
+
+    ##
+    #  Setters
+    ##
+
+    def setTime(self, timeValue):
+        self.timeCurrent = timeValue
         return
 
     ##

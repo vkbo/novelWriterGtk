@@ -17,11 +17,12 @@ from nw            import *
 
 class Timer():
 
-    def __init__(self):
+    def __init__(self, theBook):
 
-        # Connect to GUI
+        # Connect to GUI and Data
         self.mainConf    = CONFIG
         self.getObject   = BUILDER.get_object
+        self.theBook     = theBook
 
         self.timeSession = self.getObject("lblTimeSession")
         self.timeTotal   = self.getObject("lblTimeTotal")
@@ -49,8 +50,8 @@ class Timer():
     #  Setters
     ##
 
-    def setPreviousTotal(self, timeValue):
-        self.prevTotal = timeValue
+    def setPreviousTotal(self):
+        self.prevTotal = self.theBook.getSceneTime()
         self.timeTotal.set_label(self.formatTime(self.prevTotal))
         return
 
@@ -63,6 +64,7 @@ class Timer():
         self.sessionTime = time() - self.timeOffset + self.timeBuffer
         self.totalTime   = self.sessionTime + self.prevTotal
 
+        self.theBook.setSceneTime(self.sessionTime)
         self.timeSession.set_label(self.formatTime(self.sessionTime))
         self.timeTotal.set_label(self.formatTime(self.totalTime))
 

@@ -36,7 +36,7 @@ class GUI():
 
         # Prepare GUI Classes
         self.theBook    = Book()
-        self.guiTimer   = Timer()
+        self.guiTimer   = Timer(self.theBook)
         self.statusBar  = StatusBar()
         self.webEditor  = Editor(self.guiTimer,self.statusBar)
         self.sceneTree  = SceneTree()
@@ -104,10 +104,6 @@ class GUI():
         # Custom Icons
         self.getObject("btnEditInsertPara").set_icon_widget(getIconWidget("icon-paragraph",24))
         self.getObject("btnMainNew").set_icon_widget(getIconWidget("icon-book-new",28))
-        #~ self.getObject("btnMainOpen").set_icon_widget(getIconWidget("icon-book-open",28))
-        #~ self.getObject("btnMainSave").set_icon_widget(getIconWidget("icon-book-save",28))
-        #~ self.getObject("btnMainEdit").set_icon_widget(getIconWidget("icon-book-edit",28))
-        #~ self.getObject("btnMainExport").set_icon_widget(getIconWidget("icon-book-export",28))
 
         # Set Up Timers
         self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
@@ -199,8 +195,10 @@ class GUI():
 
         logger.debug("GUI.loadScene: Loading scene")
 
-        # Load Scene in Editor
-        self.webEditor.loadText(sceneHandle,self.theBook)
+        # Load Scene and Update Editor
+        self.webEditor.saveText()
+        self.theBook.loadScene(sceneHandle)
+        self.webEditor.loadText(self.theBook)
 
         # Load Summary
         scnSummary = self.theBook.getSceneSummary()
@@ -268,7 +266,8 @@ class GUI():
 
         refreshTree = self.theBook.getSceneChanged()
 
-        self.webEditor.saveText()
+        self.webEditor.saveText() # Pushes text buffer into data wrapper
+        self.theBook.saveScene()  # Saves data buffer
         self.updateWordCount()
 
         if refreshTree:
@@ -454,12 +453,8 @@ class GUI():
         self.mainConf.setMainPane(mainPane)
         self.mainConf.setSidePane(sidePane)
         self.mainConf.saveConfig()
-
-        if self.theBook.bookLoaded:
-            self.guiTimer.stopTimer()
-            self.webEditor.saveText()
-            self.theBook.saveTiming(self.guiTimer.sessionTime)
-            self.theBook.saveBook()
+        self.saveScene()
+        self.theBook.closeBook()
 
         Gtk.main_quit()
 

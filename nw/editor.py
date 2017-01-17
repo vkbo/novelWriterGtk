@@ -63,21 +63,13 @@ class Editor(WebKit.WebView):
     #  Loading and Saving
     ##
 
-    def loadText(self, sceneHandle, theBook):
+    def loadText(self, theBook):
 
         self.theBook = theBook
 
-        self.guiTimer.stopTimer()
-        self.theBook.saveTiming(self.guiTimer.sessionTime)
         self.guiTimer.resetTimer()
-
-        if not self.textSaved:
-            self.saveText()
-
-        self.theBook.loadScene(sceneHandle)
-        self.theBook.setBookRecent(sceneHandle)
         self.setText(self.theBook.getSceneText())
-        self.guiTimer.setPreviousTotal(self.theBook.getSceneTime())
+        self.guiTimer.setPreviousTotal()
         self.statusBar.setLED(LED_GREEN)
         self.setEditable(False)
         self.textSaved = True
@@ -86,12 +78,12 @@ class Editor(WebKit.WebView):
 
     def saveText(self):
 
-        if self.theBook is None: return
+        if self.theBook is None:
+            logger.debug("Editor.saveText: No book loaded")
+            return
 
         scnText = self.getText()
         self.theBook.setSceneText(scnText)
-        self.theBook.saveScene()
-        self.statusBar.setLED(LED_GREEN)
         self.textSaved = True
 
         return

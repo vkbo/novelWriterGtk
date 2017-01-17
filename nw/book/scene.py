@@ -19,10 +19,11 @@ from nw.book.scenetiming  import SceneTiming
 
 class Scene():
 
-    def __init__(self, theOpt):
+    def __init__(self, theOpt, bookMeta):
 
         # Core Objects
         self.mainConf    = CONFIG
+        self.bookMeta    = bookMeta
         self.theOpt      = theOpt
         self.theMeta     = SceneMeta(theOpt)
         self.theText     = SceneText(theOpt)
@@ -80,14 +81,28 @@ class Scene():
 
         """
         Description:
-            Verifies scene handle.
-            Triggers load in all submodules.
+            Verifies scene handle
+            Checks if we're actually loading a new file
+            If we are, save the current buffer including timing information
+            Set new scene handle and clear all scene content
+            Triggers load in all submodules
         """
 
         if not self.theOpt.isValidHandle(sceneHandle):
             logger.debug("Scene.loadScene: Invalid scene handle '%s'" % sceneHandle)
             return
 
+        currHandle = self.theOpt.getSceneHandle()
+        logger.debug("Scene.loadScene: Switching from handle '%s' to '%s'" % (currHandle,sceneHandle))
+
+        if currHandle == sceneHandle:
+            logger.debug("Scene.loadScene: Nothing to load")
+            return
+
+        # Close Old Scene
+        self.closeScene()
+
+        # Load New Scene
         self.theOpt.setSceneHandle(sceneHandle)
         self.clearContent()
 
@@ -96,6 +111,21 @@ class Scene():
         self.theSummary.loadSummary()
         self.theTiming.loadTiming()
 
+        self.bookMeta.setRecent(sceneHandle)
+
+        return
+
+    def closeScene(self):
+
+        """
+        Description:
+            If the scene handle is valid, save scene buffer and timing information
+        """
+        
+        if self.theOpt.isValidHandle(self.theOpt.getSceneHandle()):
+            self.saveScene()
+            self.theTiming.saveTiming()
+
         return
 
     def saveScene(self):
@@ -103,7 +133,7 @@ class Scene():
         """
         Description:
             Updates metadata.
-            Triggers save in all submodules.
+            Triggers save in all submodules, except timing which is only saved on exit or close
         """
 
         self.theMeta.setUpdated(formatDateTime())
