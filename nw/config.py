@@ -55,6 +55,8 @@ class Config:
         self.parMargin   = 4    # Pixels
         self.pageMargin  = 40   # Pixels
         self.spellCheck  = "en_GB"
+        self.spellState  = False
+        self.showPara    = False
 
         ## Timer
         self.autoPause   = 60   # Seconds
@@ -103,6 +105,8 @@ class Config:
             if confParser.has_option(cnfSec,"parMargin"):  self.parMargin    = confParser.getint(cnfSec,"parMargin")
             if confParser.has_option(cnfSec,"pageMargin"): self.pageMargin   = confParser.getint(cnfSec,"pageMargin")
             if confParser.has_option(cnfSec,"spellCheck"): self.spellCheck   = confParser.get(cnfSec,"spellCheck")
+            if confParser.has_option(cnfSec,"spellState"): self.spellState   = confParser.getboolean(cnfSec,"spellState")
+            if confParser.has_option(cnfSec,"showPara"):   self.showPara     = confParser.getboolean(cnfSec,"showPara")
 
         ## Timer
         cnfSec = "Timer"
@@ -151,6 +155,8 @@ class Config:
         confParser.set(cnfSec,"parMargin",  str(self.parMargin))
         confParser.set(cnfSec,"pageMargin", str(self.pageMargin))
         confParser.set(cnfSec,"spellCheck", str(self.spellCheck))
+        confParser.set(cnfSec,"spellState", str(self.spellState))
+        confParser.set(cnfSec,"showPara",   str(self.showPara))
 
         ## Timer
         cnfSec = "Timer"
@@ -209,6 +215,14 @@ class Config:
         if position != self.sidePane:
             self.sidePane    = position
             self.confChanged = True
+        return
+
+    def setSpellState(self, state):
+        self.spellState = state
+        return
+
+    def setShowParagraph(self, state):
+        self.showPara = state
         return
 
     def setLastBook(self, bookPath):

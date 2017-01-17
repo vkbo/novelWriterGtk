@@ -44,9 +44,11 @@ class Editor(WebKit.WebView):
         self.statusBar.setLanguage(self.mainConf.spellCheck)
         self.set_settings(setEditor)
 
+        self.getObject("btnEditSpellCheck").set_active(self.mainConf.spellState)
+        self.getObject("btnEditShowPara").set_active(self.mainConf.showPara)
+
         # Properties
         self.textSaved = True
-        self.showPars  = False
 
         return
 
@@ -136,7 +138,7 @@ class Editor(WebKit.WebView):
         cssStyles = fileObj.read()
         fileObj.close()
 
-        if self.showPars: parMargin -= 1
+        if self.mainConf.showPara: parMargin -= 1
 
         cssStyles = cssStyles.replace("%fontSize%",str(fontSize))
         cssStyles = cssStyles.replace("%lineHeight%",str(lineHeight))
@@ -144,7 +146,7 @@ class Editor(WebKit.WebView):
         cssStyles = cssStyles.replace("%parMargin%",str(parMargin))
         cssStyles = cssStyles.replace("%pageMargin%",str(pageMargin))
 
-        if self.showPars:
+        if self.mainConf.showPara:
             cssStyles += "\n"
             cssStyles += "p {border: 1px dashed #aaaaaa;}\n"
 
@@ -194,6 +196,8 @@ class Editor(WebKit.WebView):
         setEditor = self.get_settings()
         setEditor.set_property("enable-spell-checking",spchState)
         self.set_settings(setEditor)
+
+        self.mainConf.setSpellState(spchState)
         
         return
 
@@ -228,7 +232,7 @@ class Editor(WebKit.WebView):
 
     def onShowParagraphs(self, guiObject):
         logger.debug("Editor.onShowParagraphs: Toggle show paragraphs")
-        self.showPars = guiObject.get_active()
+        self.mainConf.setShowParagraph(guiObject.get_active())
         self.setText(self.getText())
         return
 
