@@ -101,6 +101,8 @@ class Book():
             Clears scene content
         """
         
+        logger.debug("Book.clearContent: Clearing content")
+
         # Clear Objects
         self.theOpt.clearContent()
         self.theMeta.clearContent()
@@ -187,6 +189,8 @@ class Book():
             logger.debug("Book.closeBook: No book loaded")
             return
             
+        logger.debug("Book.closeBook: Closing book")
+
         self.saveBook()
         self.theScene.closeScene()
         self.clearContent()

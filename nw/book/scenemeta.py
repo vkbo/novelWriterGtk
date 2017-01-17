@@ -38,6 +38,8 @@ class SceneMeta():
 
     def clearContent(self):
 
+        logger.debug("SceneMeta.clearContent: Clearing content")
+
         # Clear Saved Attributes
         self.sceneTitle   = ""
         self.sceneCreated = formatDateTime()

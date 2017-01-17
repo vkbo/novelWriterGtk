@@ -392,12 +392,9 @@ class GUI():
 
     def onSceneAdd(self, guiObject):
 
-        self.guiTimer.stopTimer()
-        self.theBook.saveTiming(self.guiTimer.sessionTime)
-        self.guiTimer.resetTimer()
         self.saveScene()
-
         self.clearContent()
+        self.webEditor.clearEditor()
 
         scnSort  = makeSortString(0,0,0)
         sceneNum = self.sceneTree.chapCount[scnSort] + 1
@@ -464,6 +461,7 @@ class GUI():
     def doAutoTasks(self):
         self.mainConf.doAutoSave()
         self.webEditor.doAutoSave()
+        self.theBook.saveScene()
         self.updateWordCount()
         return True
 

@@ -38,6 +38,8 @@ class SceneText():
 
     def clearContent(self):
 
+        logger.debug("SceneText.clearContent: Clearing content")
+
         # Clear Attributes
         self.text        = ""
         self.textHash    = ""

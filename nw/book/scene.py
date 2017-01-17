@@ -37,6 +37,8 @@ class Scene():
 
     def clearContent(self):
 
+        logger.debug("Scene.clearContent: Clearing content")
+
         # Clear Objects
         self.theMeta.clearContent()
         self.theText.clearContent()
@@ -125,6 +127,7 @@ class Scene():
         if self.theOpt.isValidHandle(self.theOpt.getSceneHandle()):
             self.saveScene()
             self.theTiming.saveTiming()
+            self.clearContent()
 
         return
 

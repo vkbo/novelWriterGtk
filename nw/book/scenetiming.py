@@ -28,9 +28,11 @@ class SceneTiming():
 
     def clearContent(self):
 
+        logger.debug("SceneTiming.clearContent: Clearing content")
+
         # Clear Runtime Attributes
-        self.timeTotal   = 0.0
-        self.timeList    = []
+        self.timeTotal = 0.0
+        self.timeList  = []
 
         return
 
@@ -40,8 +42,8 @@ class SceneTiming():
 
     def loadTiming(self):
 
-        sceneFolder  = self.theOpt.sceneFolder
-        sceneHandle  = self.theOpt.sceneHandle
+        sceneFolder = self.theOpt.sceneFolder
+        sceneHandle = self.theOpt.sceneHandle
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneTiming.loadTiming: Folder not found %s" % sceneFolder)
