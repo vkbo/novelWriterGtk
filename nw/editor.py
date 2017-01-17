@@ -17,7 +17,7 @@ from nw            import *
 
 class Editor(WebKit.WebView):
 
-    def __init__(self, timer):
+    def __init__(self, timer, statusBar):
 
         WebKit.WebView.__init__(self)
 
@@ -25,9 +25,8 @@ class Editor(WebKit.WebView):
         self.mainConf   = CONFIG
         self.getObject  = BUILDER.get_object
         self.guiTimer   = timer
+        self.statusBar  = statusBar
         self.theBook    = None
-        self.fileStatus = self.getObject("imgStatusFile")
-        self.lblStatus  = self.getObject("lblStatusFile")
 
         # Paths
         self.htmlRoot   = "file://"+self.mainConf.guiPath.replace("\\","/")
@@ -37,7 +36,7 @@ class Editor(WebKit.WebView):
         self.connect("user-changed-contents",self.onContentChanged)
         self.connect("notify::load-status",self.onLoadStatusChange)
         self.load_html_string("",self.htmlRoot)
-        self.fileStatus.set_from_pixbuf(getIconWidget("icon-grey",16).get_pixbuf())
+        self.statusBar.setLED(LED_GREY)
 
         setEditor = self.get_settings()
         setEditor.set_property("enable-default-context-menu",False)
@@ -55,7 +54,7 @@ class Editor(WebKit.WebView):
         if not self.textSaved: return False
 
         self.load_html_string("",self.htmlRoot)
-        self.fileStatus.set_from_pixbuf(getIconWidget("icon-grey",16).get_pixbuf())
+        self.statusBar.setLED(LED_GREY)
 
         return True
 
@@ -78,7 +77,7 @@ class Editor(WebKit.WebView):
         self.theBook.setBookRecent(sceneHandle)
         self.setText(self.theBook.getSceneText())
         self.guiTimer.setPreviousTotal(self.theBook.getSceneTime())
-        self.fileStatus.set_from_pixbuf(getIconWidget("icon-green",16).get_pixbuf())
+        self.statusBar.setLED(LED_GREEN)
         self.setEditable(False)
         self.textSaved = True
             
@@ -91,7 +90,7 @@ class Editor(WebKit.WebView):
         scnText = self.getText()
         self.theBook.setSceneText(scnText)
         self.theBook.saveScene()
-        self.fileStatus.set_from_pixbuf(getIconWidget("icon-green",16).get_pixbuf())
+        self.statusBar.setLED(LED_GREEN)
         self.textSaved = True
 
         return
@@ -105,7 +104,7 @@ class Editor(WebKit.WebView):
             scnText = self.getText()
             self.theBook.setSceneText(scnText)
             self.theBook.saveScene()
-            self.fileStatus.set_from_pixbuf(getIconWidget("icon-green",16).get_pixbuf())
+            self.statusBar.setLED(LED_GREEN)
             self.textSaved = True
             
         return
@@ -244,7 +243,7 @@ class Editor(WebKit.WebView):
         self.guiTimer.resetAutoPause()
         if self.textSaved:
             self.textSaved = False
-            self.fileStatus.set_from_pixbuf(getIconWidget("icon-red",16).get_pixbuf())
+            self.statusBar.setLED(LED_RED)
         return
 
     def onLoadStatusChange(self, guiObject, loadStatus):

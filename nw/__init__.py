@@ -81,6 +81,13 @@ ACTION_NEW    = 5
 PASTE_PLAIN = 0
 PASTE_CLEAN = 1
 
+# StatusBar LED Colours
+LED_GREY   = "icon-grey"
+LED_GREEN  = "icon-green"
+LED_YELLOW = "icon-yellow"
+LED_RED    = "icon-red"
+LED_BLUE   = "icon-blue"
+
 # End Global Constants
 # ==================================================================================================================== #
 # Begin Global Functions

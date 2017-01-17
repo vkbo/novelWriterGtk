@@ -19,6 +19,7 @@ from nw.dialogs     import EditBookDialog
 from nw.filetrees   import SceneTree
 from nw.timer       import Timer
 from nw.book        import Book
+from nw.statusbar   import StatusBar
 
 class GUI():
 
@@ -36,7 +37,8 @@ class GUI():
         # Prepare GUI Classes
         self.theBook    = Book()
         self.guiTimer   = Timer()
-        self.webEditor  = Editor(self.guiTimer)
+        self.statusBar  = StatusBar()
+        self.webEditor  = Editor(self.guiTimer,self.statusBar)
         self.sceneTree  = SceneTree()
 
         # Set Up Event Handlers
@@ -181,6 +183,8 @@ class GUI():
         if not recentHandle == "":
             self.loadScene(recentHandle)
 
+        self.statusBar.setActiveFile(self.theBook)
+
         return
 
     def saveBook(self):
@@ -221,6 +225,7 @@ class GUI():
         self.getObject("numSceneChapter").set_value(scnChapter)
 
         self.updateWordCount()
+        self.statusBar.setActiveFile(self.theBook)
 
         return
 
