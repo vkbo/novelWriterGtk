@@ -48,7 +48,7 @@ class GUI():
             "onClickOpen"              :  self.onOpenBook,
             "onClickSave"              :  self.onSaveBook,
             "onClickEdit"              :  self.onEditBook,
-            "onClickPreferences"       :  self.onShowPreferences,
+            "onClickPreferences"       :  self.mainConf.onLoad,
             "onClickSceneAdd"          :  self.onSceneAdd,
             "onSelectTreeScene"        :  self.onSceneSelect,
             "onMainTabChange"          :  self.onMainTabChange,
@@ -62,7 +62,7 @@ class GUI():
             "onMenuEditPastePlain"     : (self.webEditor.onEditPasteProcess,PASTE_PLAIN),
             "onMenuEditPasteClean"     : (self.webEditor.onEditPasteProcess,PASTE_CLEAN),
             "onMenuEditBook"           :  self.onEditBook,
-            "onMenuEditPreferences"    :  self.onShowPreferences,
+            "onMenuEditPreferences"    :  self.mainConf.onLoad,
             "onMenuHelpAbout"          :  self.onShowAbout,
             # Main Menu Recent List
             "onMenuRecent0"            : (self.onOpenRecent,0),
@@ -429,9 +429,6 @@ class GUI():
     ##
 
     def onShowAbout(self, guiObject):
-        return
-
-    def onShowPreferences(self, guiObjects):
         return
 
     def onMainTabChange(self, guiObject, guiChild, tabIdx):

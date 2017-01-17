@@ -19,6 +19,8 @@ class Config:
 
         # Connect to GUI
         self.getObject  = None
+        self.dlgBuilder = Gtk.Builder()
+        self.dlgObject  = self.dlgBuilder.get_object
 
         # Set Application Variables
         self.appName    = "novelWriter"
@@ -252,6 +254,60 @@ class Config:
             else:
                 self.getObject("menuFileRecent%d" % n).set_visible(True)
                 self.getObject("menuFileRecent%d" % n).set_label(self.recentBook[n])
+        return
+
+    ##
+    #  GUI Actions
+    ##
+
+    def onLoad(self, guiObject=None):
+
+        self.dlgBuilder.add_from_file(path.join(self.guiPath,"dlgPreferences.glade"))
+
+        dlgPrefs = self.dlgObject("dlgPreferences")
+
+        guiHandlers = {
+            "onClickConfigSave"   : self.onSave,
+            "onClickConfigCancel" : self.onClose,
+            "onClickConfigClose"  : self.onClose,
+        }
+        self.dlgBuilder.connect_signals(guiHandlers)
+
+        # Load Current Values
+        self.dlgObject("spinFontSIze").set_value(self.fontSize)
+        self.dlgObject("spinLineHeight").set_value(self.lineHeight/100.0)
+        self.dlgObject("spinLineIndent").set_value(self.lineIndent/100.0)
+        self.dlgObject("spinParSpacing").set_value(self.parMargin)
+        self.dlgObject("spinPageMargin").set_value(self.pageMargin)
+        self.dlgObject("entryLanguage").set_text(self.spellCheck)
+        self.dlgObject("spinAutoSave").set_value(self.autoSave)
+        self.dlgObject("spinAutoPause").set_value(self.autoPause)
+        self.dlgObject("spinMinTime").set_value(self.minTime)
+
+        dlgPrefs.set_transient_for(self.getObject("winMain"))
+        dlgPrefs.show_all()
+        
+        return
+
+    def onSave(self, guiObject=None):
+
+        self.fontSize   = int(self.dlgObject("spinFontSIze").get_value())
+        self.lineHeight = int(self.dlgObject("spinLineHeight").get_value()*100.0)
+        self.lineIndent = int(self.dlgObject("spinLineIndent").get_value()*100.0)
+        self.parMargin  = int(self.dlgObject("spinParSpacing").get_value())
+        self.pageMargin = int(self.dlgObject("spinPageMargin").get_value())
+        self.spellCheck = str(self.dlgObject("entryLanguage").get_text())
+        self.autoSave   = int(self.dlgObject("spinAutoSave").get_value())
+        self.autoPause  = int(self.dlgObject("spinAutoPause").get_value())
+        self.minTime    = int(self.dlgObject("spinMinTime").get_value())
+
+        self.saveConfig()
+        dlgPrefs = self.dlgObject("dlgPreferences").destroy()
+
+        return
+
+    def onClose(self, guiObject=None):
+        dlgPrefs = self.dlgObject("dlgPreferences").destroy()
         return
 
 # End Class Config
