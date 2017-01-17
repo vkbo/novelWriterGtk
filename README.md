@@ -2,6 +2,8 @@
 
 **Version Dev0.3**
 
+Latest pre-release: [Version 0.2.1](https://github.com/Jadzia626/novelWriter/releases/tag/v0.2.1)
+
 *Under initial development*
 
 A simple editor for writing books by providing a simple editor with basic formatting.
