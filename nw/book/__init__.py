@@ -27,6 +27,7 @@ class Book():
             Creates meta object and scene object.
             Links sub class functions.
         """
+        
         # Core Objects
         self.mainConf = CONFIG
         self.theOpt   = BookOpt()
@@ -168,8 +169,8 @@ class Book():
         self.theScene.makeIndex()
 
         # Load Recent Scene
-        if len(self.theMeta.recentScene) == 12:
-            self.theScene.loadScene(self.theMeta.recentScene)
+        #~ if len(self.theMeta.recentScene) == 12:
+            #~ self.theScene.loadScene(self.theMeta.recentScene)
 
         self.mainConf.setLastBook(bookFolder)
         self.bookLoaded = self.theMeta.bookLoaded

@@ -113,8 +113,6 @@ class Scene():
         self.theSummary.loadSummary()
         self.theTiming.loadTiming()
 
-        self.bookMeta.setRecent(sceneHandle)
-
         return
 
     def closeScene(self):

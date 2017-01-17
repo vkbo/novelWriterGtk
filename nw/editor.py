@@ -58,7 +58,7 @@ class Editor(WebKit.WebView):
 
         logger.debug("Editor.clearEditor: Clearing editor")
 
-        self.setText("")
+        self.load_html_string("",self.htmlRoot)
         self.statusBar.setLED(LED_GREY)
 
         return True
@@ -101,6 +101,7 @@ class Editor(WebKit.WebView):
             logger.debug("Editor.doAutoSave: Saving")
             scnText = self.getText()
             self.theBook.setSceneText(scnText)
+            self.theBook.saveScene()
             self.statusBar.setLED(LED_YELLOW)
             self.textSaved = True
             
