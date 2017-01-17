@@ -69,11 +69,12 @@ class Editor(WebKit.WebView):
 
         self.theBook = theBook
 
+        self.setEditable(False)
+        self.guiTimer.stopTimer()
         self.guiTimer.resetTimer()
         self.setText(self.theBook.getSceneText())
         self.guiTimer.setPreviousTotal()
         self.statusBar.setLED(LED_GREEN)
-        self.setEditable(False)
         self.textSaved = True
             
         return

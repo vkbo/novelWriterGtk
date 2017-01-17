@@ -106,6 +106,7 @@ class Timer():
         self.progTimer.set_fraction(0.0)
         self.timeSession.set_label(self.formatTime(0))
         self.timeTotal.set_label(self.formatTime(0))
+        self.theBook.setSceneTime(self.sessionTime)
 
         return
 
@@ -145,6 +146,7 @@ class Timer():
         self.progTimer.set_fraction(0.0)
         self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#aa0000"))
         self.timerStatus.set_label("STOPPED")
+        self.theBook.setSceneTime(self.sessionTime)
 
         return
 

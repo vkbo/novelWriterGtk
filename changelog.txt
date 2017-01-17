@@ -4,6 +4,7 @@
 
   Version 0.3 - 00.00.0000
  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  * [GUI] The state of the spell checker and show paragraph buttons are now saved between sessions.
   * [Code] Moved a lot of the checks to make sure data is saved properly into the book subpackage so that the checks and
     logic all exists in the most natural place in the code.
 
