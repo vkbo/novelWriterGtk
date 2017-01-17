@@ -41,6 +41,7 @@ class Editor(WebKit.WebView):
         setEditor = self.get_settings()
         setEditor.set_property("enable-default-context-menu",False)
         setEditor.set_property("spell-checking-languages",self.mainConf.spellCheck)
+        self.statusBar.setLanguage(self.mainConf.spellCheck)
         self.set_settings(setEditor)
 
         # Properties
@@ -104,7 +105,7 @@ class Editor(WebKit.WebView):
             scnText = self.getText()
             self.theBook.setSceneText(scnText)
             self.theBook.saveScene()
-            self.statusBar.setLED(LED_GREEN)
+            self.statusBar.setLED(LED_YELLOW)
             self.textSaved = True
             
         return

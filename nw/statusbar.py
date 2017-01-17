@@ -19,13 +19,15 @@ class StatusBar():
     def __init__(self):
 
         # Connect to Global Objects
-        self.mainConf    = CONFIG
-        self.getObject   = BUILDER.get_object
+        self.mainConf     = CONFIG
+        self.getObject    = BUILDER.get_object
 
         # Connect to GUI Elements
-        self.statusImage = self.getObject("imgStatusFile")
-        self.statusText  = self.getObject("lblStatusFile")
-        self.statusProg  = self.getObject("progressStatus")
+        self.statusImage  = self.getObject("imgStatusFile")
+        self.statusText   = self.getObject("lblStatusFile")
+        self.statusHandle = self.getObject("lblStatusHandle")
+        self.statusLang   = self.getObject("lblStatusLang")
+        self.statusProg   = self.getObject("progressStatus")
         
         return
 
@@ -47,14 +49,19 @@ class StatusBar():
         sceneHandle = theBook.getSceneHandle()
         sceneTitle  = theBook.getSceneTitle()
         if len(sceneHandle) == 12:
-            fileLabel += sepText+("[%s] %s" % (sceneHandle,sceneTitle))
+            fileLabel += sepText+(sceneTitle)
 
         sceneVersion = theBook.getSceneVersion()
         if sceneVersion > 0:
             fileLabel += sepText+("Version %d" % sceneVersion)
 
         self.statusText.set_label(fileLabel)
+        self.statusHandle.set_label("[%s]" % sceneHandle)
 
+        return
+
+    def setLanguage(self, langText):
+        self.statusLang.set_label("[%s]" % langText)
         return
 
 # End Class StatusBar

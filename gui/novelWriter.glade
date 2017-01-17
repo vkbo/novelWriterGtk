@@ -2001,6 +2001,8 @@
               <object class="GtkImage" id="imgStatusFile">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">File Status</property>
+                <property name="valign">center</property>
                 <property name="stock">gtk-about</property>
               </object>
               <packing>
@@ -2013,8 +2015,17 @@
               <object class="GtkLabel" id="lblStatusFile">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Current File</property>
+                <property name="valign">center</property>
+                <property name="margin_left">4</property>
+                <property name="margin_right">4</property>
+                <property name="margin_top">2</property>
+                <property name="margin_bottom">2</property>
                 <property name="label" translatable="yes">None</property>
                 <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="scale" value="0.90000000000000002"/>
+                </attributes>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -2023,14 +2034,67 @@
               </packing>
             </child>
             <child>
-              <object class="GtkProgressBar" id="progressStatus">
+              <object class="GtkLabel" id="lblStatusHandle">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">File Handle</property>
+                <property name="valign">center</property>
+                <property name="margin_left">4</property>
+                <property name="margin_right">4</property>
+                <property name="margin_top">2</property>
+                <property name="margin_bottom">2</property>
+                <property name="label" translatable="yes">[000000000000]</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="scale" value="0.90000000000000002"/>
+                  <attribute name="foreground" value="#20204a4a8787"/>
+                </attributes>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lblStatusLang">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Spell Checker Language</property>
+                <property name="valign">center</property>
+                <property name="margin_left">4</property>
+                <property name="margin_right">4</property>
+                <property name="margin_top">2</property>
+                <property name="margin_bottom">2</property>
+                <property name="label" translatable="yes">LANG</property>
+                <property name="ellipsize">middle</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="medium"/>
+                  <attribute name="scale" value="0.90000000000000002"/>
+                  <attribute name="foreground" value="#20204a4a8787"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkProgressBar" id="progressStatus">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="valign">center</property>
+                <property name="margin_left">4</property>
+                <property name="margin_right">4</property>
+                <property name="margin_top">2</property>
+                <property name="margin_bottom">2</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>
