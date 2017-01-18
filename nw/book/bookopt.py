@@ -33,6 +33,17 @@ class BookOpt():
 
         return
 
+    def clearContent(self):
+
+        # Clear Attributes
+        self.bookFolder   = None
+        self.bookIndex    = {}
+        self.bookDraft    = 0
+        self.sceneFolder  = None
+        self.sceneIndex   = {}
+
+        return
+
     ##
     #  Setters
     ##

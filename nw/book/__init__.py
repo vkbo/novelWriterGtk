@@ -39,26 +39,10 @@ class Book():
         # Runtime Attributes
         self.bookLoaded = False
 
-        # Connect to Scene Functions
-        # self.createScene     = self.theScene.createScene
-        # self.loadScene       = self.theScene.loadScene
-        # self.closeScene      = self.theScene.closeScene
-        # self.saveScene       = self.theScene.saveScene
-        # self.saveTiming      = self.theScene.theTiming.saveTiming
-
         # Connect to Setters
         self.setBookTitle    = self.theMeta.setTitle
         self.setBookAuthor   = self.theMeta.setAuthor
         self.setBookRecent   = self.theMeta.setRecent
-        # self.setBookFolder   = self.theOpt.setBookFolder
-        # self.setBookDraft    = self.theOpt.setBookDraft
-        # self.setSceneTitle   = self.theScene.theMeta.setTitle
-        # self.setSceneSection = self.theScene.theMeta.setSection
-        # self.setSceneChapter = self.theScene.theMeta.setChapter
-        # self.setSceneNumber  = self.theScene.theMeta.setNumber
-        # self.setSceneText    = self.theScene.theText.setText
-        # self.setSceneSummary = self.theScene.theSummary.setSummary
-        # self.setSceneTime    = self.theScene.theTiming.setTime
 
         # Connect to Getters
         self.getBookTitle    = self.theMeta.getTitle
@@ -67,53 +51,12 @@ class Book():
         self.getBookFolder   = self.theOpt.getBookFolder
         self.getBookDraft    = self.theOpt.getBookDraft
         self.getSceneIndex   = self.theOpt.getSceneIndex
-        # self.getSceneHandle  = self.theOpt.getSceneHandle
-        # self.getSceneVersion = self.theOpt.getSceneVersion
-        # self.getSceneTitle   = self.theScene.theMeta.getTitle
-        # self.getSceneSection = self.theScene.theMeta.getSection
-        # self.getSceneCreated = self.theScene.theMeta.getCreated
-        # self.getSceneUpdated = self.theScene.theMeta.getUpdated
-        # self.getSceneChapter = self.theScene.theMeta.getChapter
-        # self.getSceneNumber  = self.theScene.theMeta.getNumber
-        # self.getSceneWords   = self.theScene.theMeta.getWords
-        # self.getSceneChars   = self.theScene.theMeta.getChars
-        # self.getSceneChanged = self.theScene.theMeta.getSceneChanged
-        # self.getSceneText    = self.theScene.theText.getText
-        # self.getSceneWords   = self.theScene.theText.getWordCount
-        # self.getSceneChars   = self.theScene.theText.getCharCount
-        # self.getSceneSummary = self.theScene.theSummary.getSummary
-        # self.getSceneTime    = self.theScene.theTiming.getTimeTotal
-
-        # Connect to Methods
-        # self.makeSceneIndex  = self.theScene.makeIndex
-        # self.countWords      = self.theScene.theText.countWords
-        # self.htmlCleanUp     = self.theScene.theText.htmlCleanUp
 
         return
 
     ##
     #  Create, Load and Save Book
     ##
-
-    def clearContent(self):
-
-        """
-        Description:
-            Clears book options
-            Clears book metadata
-            Clears scene content
-        """
-
-        logger.debug("Book.clearContent: Clearing content")
-
-        # Clear Objects
-        self.theOpt.clearContent()
-        self.theMeta.clearContent()
-        self.theScene.clearContent()
-
-        self.bookLoaded = False
-
-        return
 
     def createBook(self, rootFolder):
 
@@ -182,6 +125,18 @@ class Book():
 
         return
 
+    def saveBook(self):
+
+        """
+        Description:
+            Saves meta data. Scene data must be saved separately.
+        """
+
+        logger.debug("Book.saveBook: Saving book")
+        self.theMeta.saveData()
+
+        return
+
     def closeBook(self):
 
         """
@@ -202,17 +157,10 @@ class Book():
         for sceneHandle in sceneHandles:
             self.closeScene(sceneHandle)
 
-        return
+        self.theOpt.clearContent()
+        self.theMeta.clearContent()
 
-    def saveBook(self):
-
-        """
-        Description:
-            Saves meta data. Scene data must be saved separately.
-        """
-
-        logger.debug("Book.saveBook: Saving book")
-        self.theMeta.saveData()
+        self.bookLoaded = False
 
         return
 
@@ -254,7 +202,7 @@ class Book():
 
     def saveScene(self, sceneHandle, saveAll=False):
         logger.debug("Book.saveScene: Saving scene %s" % sceneHandle)
-        self.allScenes[sceneHandle].saveScene(saveTiming)
+        self.allScenes[sceneHandle].saveScene(saveAll)
         return
 
     def closeScene(self, sceneHandle):

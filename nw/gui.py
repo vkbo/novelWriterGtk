@@ -282,7 +282,7 @@ class GUI():
 
         refreshTree = self.theBook.getSceneChanged(self.currHandle)
 
-        self.webEditor.saveText(self.currHandle)
+        self.webEditor.saveText()
         self.theBook.saveScene(self.currHandle)
         self.updateWordCount()
 
