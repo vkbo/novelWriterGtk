@@ -51,6 +51,9 @@ class GUI():
             "onClickEdit"              :  self.onEditBook,
             "onClickPreferences"       :  self.mainConf.onLoad,
             "onClickSceneAdd"          :  self.onSceneAdd,
+            "onClickSceneRemove"       :  self.onSceneRemove,
+            "onClickSceneMoveUp"       :  self.onSceneMoveUp,
+            "onClickSceneMoveDown"     :  self.onSceneMoveDown,
             "onSelectTreeScene"        :  self.onSceneSelect,
             "onMainTabChange"          :  self.onMainTabChange,
             "onDestroyWindow"          :  self.onGuiDestroy,
@@ -402,6 +405,29 @@ class GUI():
         self.sceneTree.loadContent(self.theBook)
         self.loadScene(self.theBook.getSceneHandle())
 
+        return
+
+    def onSceneRemove(self, guiObject):
+
+        scnSort = makeSortString(SCN_ARCH,0,0)
+        if scnSort in self.sceneTree.chapCount:
+            scnNumber = self.sceneTree.chapCount[scnSort] + 1
+        else:
+            scnNumber = 1
+
+        self.theBook.setSceneSection(SCN_ARCH)
+        self.theBook.setSceneNumber(scnNumber)
+        self.webEditor.saveText()
+        self.theBook.saveScene()
+        self.theBook.makeSceneIndex()
+        self.sceneTree.loadContent(self.theBook)
+
+        return
+
+    def onSceneMoveUp(self, guiObject):
+        return
+
+    def onSceneMoveDown(self, guiObject):
         return
 
     def onSceneSelect(self, guiObject):

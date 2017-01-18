@@ -64,6 +64,13 @@ SCIDX_SECTION = 3
 SCIDX_CHAPTER = 4
 SCIDX_COUNT   = 5
 
+# Scene Sections
+SCN_NONE = 0
+SCN_PRO  = 1
+SCN_CHAP = 2
+SCN_EPI  = 3
+SCN_ARCH = 4
+
 # Word or Char Count
 COUNT_ONLOAD = 0
 COUNT_ADDED  = 1

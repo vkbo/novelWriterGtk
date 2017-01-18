@@ -549,6 +549,7 @@
                             <property name="label" translatable="yes">Delete</property>
                             <property name="use_underline">True</property>
                             <property name="stock_id">gtk-remove</property>
+                            <signal name="clicked" handler="onClickSceneRemove" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -563,6 +564,7 @@
                             <property name="label" translatable="yes">Move Up</property>
                             <property name="use_underline">True</property>
                             <property name="stock_id">gtk-go-up</property>
+                            <signal name="clicked" handler="onClickSceneMoveUp" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -577,6 +579,7 @@
                             <property name="label" translatable="yes">Move Down</property>
                             <property name="use_underline">True</property>
                             <property name="stock_id">gtk-go-down</property>
+                            <signal name="clicked" handler="onClickSceneMoveDown" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1228,6 +1231,7 @@
                                               <item id="1" translatable="yes">Prologue</item>
                                               <item id="2" translatable="yes">Chapter</item>
                                               <item id="3" translatable="yes">Epilogue</item>
+                                              <item id="4" translatable="yes">Archived</item>
                                             </items>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="entrySceneSection">

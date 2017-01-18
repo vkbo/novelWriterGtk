@@ -166,7 +166,7 @@ class SceneMeta():
     def setSection(self, sceneSection):
         if sceneSection == self.sceneSection: return
         if sceneSection < 0: sceneSection = 0
-        if sceneSection > 3: sceneSection = 3
+        if sceneSection > 4: sceneSection = 4
         self.sceneSection = sceneSection
         if sceneSection != 2: self.sceneChapter = 0
         self.sceneChanged = True

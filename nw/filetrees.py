@@ -28,8 +28,8 @@ class SceneTree():
         Tree Store Structure:
         Col 1 : String : Scene title
         Col 2 : String : Scene number
-        Col 4 : String : Word count
-        Col 5 : String : List sorting column
+        Col 3 : String : Word count
+        Col 4 : String : List sorting column
         Col 5 : String : File handle
         """
 
@@ -125,14 +125,17 @@ class SceneTree():
                 parIter = self.chapMap[scnSec]
                 self.chapCount[scnSec] += 1
             else:
-                if tmpSection == 0: scnChapter = "<b>Unassigned</b>"
-                if tmpSection == 1: scnChapter = "<b>Prologue</b>"
-                if tmpSection == 2: scnChapter = "<b>Chapter %d</b>" % tmpChapter
-                if tmpSection == 3: scnChapter = "<b>Epilogue</b>"
-                if tmpSection == 9: scnChapter = "<b>Archived</b>"
+                if tmpSection == SCN_NONE: scnChapter = "<b>Unassigned</b>"
+                if tmpSection == SCN_PRO:  scnChapter = "<b>Prologue</b>"
+                if tmpSection == SCN_CHAP: scnChapter = "<b>Chapter %d</b>" % tmpChapter
+                if tmpSection == SCN_EPI:  scnChapter = "<b>Epilogue</b>"
+                if tmpSection == SCN_ARCH: scnChapter = "<b>Archived</b>"
                 parIter = self.treeStore.append(None,[scnChapter,None,None,scnSec,None])
                 self.chapMap[scnSec]   = parIter
                 self.chapCount[scnSec] = 1
+
+            if tmpSection == SCN_ARCH:
+                tmpTitle = "<span foreground='red'>"+str(tmpTitle)+"</span>"
 
             tmpData = [tmpTitle,str(tmpNumber),str(tmpWords),scnNum,itemHandle]
             tmpIter = self.treeStore.append(parIter,tmpData)
