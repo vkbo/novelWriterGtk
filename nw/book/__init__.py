@@ -168,10 +168,6 @@ class Book():
         self.theMeta.loadData()
         self.theScene.makeIndex()
 
-        # Load Recent Scene
-        #~ if len(self.theMeta.recentScene) == 12:
-            #~ self.theScene.loadScene(self.theMeta.recentScene)
-
         self.mainConf.setLastBook(bookFolder)
         self.bookLoaded = self.theMeta.bookLoaded
         

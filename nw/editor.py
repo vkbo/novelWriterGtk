@@ -54,14 +54,18 @@ class Editor(WebKit.WebView):
 
     def clearEditor(self):
 
-        if not self.textSaved: return False
+        if not self.textSaved: return
 
         logger.debug("Editor.clearEditor: Clearing editor")
 
         self.load_html_string("",self.htmlRoot)
         self.statusBar.setLED(LED_GREY)
 
-        return True
+        # Wait until clearing is done
+        while Gtk.events_pending():
+            Gtk.main_iteration_do(False)
+
+        return
 
     ##
     #  Loading and Saving

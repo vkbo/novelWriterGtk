@@ -12,6 +12,7 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository  import Gtk, GLib
+from time           import sleep
 from os             import path
 from nw             import *
 from nw.editor      import Editor
@@ -394,7 +395,6 @@ class GUI():
 
         self.saveScene()
         self.clearContent()
-        self.webEditor.clearEditor()
 
         scnSort  = makeSortString(0,0,0)
         sceneNum = self.sceneTree.chapCount[scnSort] + 1
