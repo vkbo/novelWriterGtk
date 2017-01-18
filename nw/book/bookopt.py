@@ -8,7 +8,7 @@
 
 import logging as logger
 
-from os import path
+from os import path, mkdir
 from nw import *
 
 class BookOpt():
@@ -27,24 +27,9 @@ class BookOpt():
         # Attributes
         self.bookFolder   = None
         self.bookIndex    = {}
-        self.bookDraft    = 1
+        self.bookDraft    = 0
         self.sceneFolder  = None
         self.sceneIndex   = {}
-        self.sceneHandle  = ""
-        self.sceneVersion = 1
-        
-        return
-
-    def clearContent(self):
-
-        # Clear Attributes
-        self.bookFolder   = None
-        self.bookIndex    = {}
-        self.bookDraft    = 1
-        self.sceneFolder  = None
-        self.sceneIndex   = {}
-        self.sceneHandle  = ""
-        self.sceneVersion = 1
 
         return
 
@@ -64,10 +49,7 @@ class BookOpt():
         return
 
     def setBookDraft(self, bookDraft):
-        if bookDraft > 0:
-            self.bookDraft = bookDraft
-        else:
-            logger.debug("BookOpt.setBookDraft: Invalid book draft")
+        self.bookDraft = bookDraft
         return
 
     def setSceneFolder(self, sceneFolder):
@@ -81,27 +63,12 @@ class BookOpt():
         self.sceneIndex = sceneIndex
         return
 
-    def setSceneHandle(self, sceneHandle):
-        if len(sceneHandle) == 12:
-            self.sceneHandle  = sceneHandle
-            if sceneHandle in self.sceneIndex:
-                self.sceneVersion = self.sceneIndex[sceneHandle][SCIDX_COUNT]
-            else:
-                self.sceneVersion = 1
-        else:
-            logger.debug("BookOpt.setSceneHandle: Invalid scene handle '%s'" % sceneHandle)
-        return
-
-    def setSceneVersion(self, sceneVersion):
-        if sceneVersion > 0:
-            self.sceneVersion = sceneVersion
-        else:
-            logger.debug("BookOpt.setSceneVersion: Invalid scene version")
-        return
-
     ##
     #  Getters
     ##
+
+    def getLastDraft(self):
+        return max(self.bookIndex.keys())
 
     def getBookFolder(self):
         return self.bookFolder
@@ -115,18 +82,19 @@ class BookOpt():
     def getSceneIndex(self):
         return self.sceneIndex
 
-    def getSceneHandle(self):
-        return self.sceneHandle
-
-    def getSceneVersion(self):
-        return self.sceneVersion
+    def setSceneIndexEntry(self, sceneHandle, sceneValues):
+        self.sceneIndex[sceneHandle] = sceneValues
+        return
 
     ##
-    #  Checkers
+    #  Other Methods
     ##
 
     def isValidHandle(self, sceneHandle):
         if sceneHandle in self.sceneIndex.keys(): return True
         return False
+
+    def removeSceneIndexEntry(self, sceneHandle):
+        return self.sceneIndex.pop(sceneHandle,False)
 
 # End Class BookOpt

@@ -38,20 +38,20 @@ class SceneMeta():
 
     def clearContent(self):
 
-        logger.debug("SceneMeta.clearContent: Clearing content")
-
-        # Clear Saved Attributes
-        self.sceneTitle   = ""
-        self.sceneCreated = formatDateTime()
-        self.sceneUpdated = formatDateTime()
-        self.sceneSection = 0
-        self.sceneChapter = 0
-        self.sceneNumber  = 1
-        self.sceneWords   = 0
-        self.sceneChars   = 0
-
-        # Runtime Attributes
-        self.sceneChanged = False
+        # logger.debug("SceneMeta.clearContent: Clearing content")
+        #
+        # # Clear Saved Attributes
+        # self.sceneTitle   = ""
+        # self.sceneCreated = formatDateTime()
+        # self.sceneUpdated = formatDateTime()
+        # self.sceneSection = 0
+        # self.sceneChapter = 0
+        # self.sceneNumber  = 1
+        # self.sceneWords   = 0
+        # self.sceneChars   = 0
+        #
+        # # Runtime Attributes
+        # self.sceneChanged = False
 
         return
 
@@ -59,12 +59,10 @@ class SceneMeta():
     #  Load and Save
     ##
 
-    def loadData(self, altHandle=None):
+    def loadData(self):
 
         sceneFolder = self.theOpt.sceneFolder
         sceneHandle = self.theOpt.sceneHandle
-
-        if altHandle is not None: sceneHandle = altHandle
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneMeta.loadData: Folder not found %s" % sceneFolder)
@@ -89,14 +87,22 @@ class SceneMeta():
         # Get Variables
         cnfSec = "Scene"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"Title"):   self.sceneTitle   = confParser.get(cnfSec,"Title")
-            if confParser.has_option(cnfSec,"Created"): self.sceneCreated = confParser.get(cnfSec,"Created")
-            if confParser.has_option(cnfSec,"Updated"): self.sceneUpdated = confParser.get(cnfSec,"Updated")
-            if confParser.has_option(cnfSec,"Section"): self.sceneSection = confParser.getint(cnfSec,"Section")
-            if confParser.has_option(cnfSec,"Chapter"): self.sceneChapter = confParser.getint(cnfSec,"Chapter")
-            if confParser.has_option(cnfSec,"Number"):  self.sceneNumber  = confParser.getint(cnfSec,"Number")
-            if confParser.has_option(cnfSec,"Words"):   self.sceneWords   = confParser.getint(cnfSec,"Words")
-            if confParser.has_option(cnfSec,"Chars"):   self.sceneChars   = confParser.getint(cnfSec,"Chars")
+            if confParser.has_option(cnfSec,"Title"):
+                self.sceneTitle   = confParser.get(cnfSec,"Title")
+            if confParser.has_option(cnfSec,"Created"):
+                self.sceneCreated = confParser.get(cnfSec,"Created")
+            if confParser.has_option(cnfSec,"Updated"):
+                self.sceneUpdated = confParser.get(cnfSec,"Updated")
+            if confParser.has_option(cnfSec,"Section"):
+                self.sceneSection = confParser.getint(cnfSec,"Section")
+            if confParser.has_option(cnfSec,"Chapter"):
+                self.sceneChapter = confParser.getint(cnfSec,"Chapter")
+            if confParser.has_option(cnfSec,"Number"):
+                self.sceneNumber  = confParser.getint(cnfSec,"Number")
+            if confParser.has_option(cnfSec,"Words"):
+                self.sceneWords   = confParser.getint(cnfSec,"Words")
+            if confParser.has_option(cnfSec,"Chars"):
+                self.sceneChars   = confParser.getint(cnfSec,"Chars")
 
         self.sceneChanged = False
 
@@ -231,7 +237,7 @@ class SceneMeta():
     def getChars(self):
         return self.sceneChars
 
-    def getSceneChanged(self):
+    def getChanged(self):
         return self.sceneChanged
 
 # End Class SceneMeta

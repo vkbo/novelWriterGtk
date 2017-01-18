@@ -27,11 +27,11 @@ class SceneSummary():
 
     def clearContent(self):
 
-        logger.debug("SceneSummary.clearContent: Clearing content")
-
-        # Clear Attributes
-        self.summary    = ""
-        self.hasSummary = False
+        # logger.debug("SceneSummary.clearContent: Clearing content")
+        #
+        # # Clear Attributes
+        # self.summary    = ""
+        # self.hasSummary = False
 
         return
 

@@ -28,11 +28,11 @@ class SceneTiming():
 
     def clearContent(self):
 
-        logger.debug("SceneTiming.clearContent: Clearing content")
-
-        # Clear Runtime Attributes
-        self.timeTotal = 0.0
-        self.timeList  = []
+        # logger.debug("SceneTiming.clearContent: Clearing content")
+        #
+        # # Clear Runtime Attributes
+        # self.timeTotal = 0.0
+        # self.timeList  = []
 
         return
 

@@ -28,7 +28,7 @@ class StatusBar():
         self.statusHandle = self.getObject("lblStatusHandle")
         self.statusLang   = self.getObject("lblStatusLang")
         self.statusProg   = self.getObject("progressStatus")
-        
+
         return
 
     def setLED(self, ledColour):
@@ -46,17 +46,17 @@ class StatusBar():
         if bookDraft > 0:
             fileLabel += sepText+("Draft %d" % bookDraft)
 
-        sceneHandle = theBook.getSceneHandle()
-        sceneTitle  = theBook.getSceneTitle()
-        if len(sceneHandle) == 12:
-            fileLabel += sepText+(sceneTitle)
-
-        sceneVersion = theBook.getSceneVersion()
-        if sceneVersion > 0:
-            fileLabel += sepText+("Version %d" % sceneVersion)
+        # sceneHandle = theBook.getSceneHandle()
+        # sceneTitle  = theBook.getSceneTitle()
+        # if len(sceneHandle) == 12:
+        #     fileLabel += sepText+(sceneTitle)
+        #
+        # sceneVersion = theBook.getSceneVersion()
+        # if sceneVersion > 0:
+        #     fileLabel += sepText+("Version %d" % sceneVersion)
 
         self.statusText.set_label(fileLabel)
-        self.statusHandle.set_label("[%s]" % sceneHandle)
+        # self.statusHandle.set_label("[%s]" % sceneHandle)
 
         return
 

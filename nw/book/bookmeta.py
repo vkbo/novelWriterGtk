@@ -82,10 +82,10 @@ class BookMeta():
             if confParser.has_option(cnfSec,"Recent"): self.recentScene = confParser.get(cnfSec,"Recent")
 
         self.bookLoaded = True
-        
-        self.verifyDraftFolder()
-        sceneFolder = self.getDraftFolder()
-        self.theOpt.setSceneFolder(sceneFolder)
+
+        # self.verifyDraftFolder()
+        # sceneFolder = self.getDraftFolder()
+        # self.theOpt.setSceneFolder(sceneFolder)
 
         return
 

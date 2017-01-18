@@ -38,18 +38,18 @@ class SceneText():
 
     def clearContent(self):
 
-        logger.debug("SceneText.clearContent: Clearing content")
-
-        # Clear Attributes
-        self.text        = ""
-        self.textHash    = ""
-        self.hasText     = False
-        self.wordsOnLoad = 0
-        self.charsOnLoad = 0
-        self.wordsAdded  = 0
-        self.charsAdded  = 0
-        self.wordsLatest = 0
-        self.charsLatest = 0
+        # logger.debug("SceneText.clearContent: Clearing content")
+        #
+        # # Clear Attributes
+        # self.text        = ""
+        # self.textHash    = ""
+        # self.hasText     = False
+        # self.wordsOnLoad = 0
+        # self.charsOnLoad = 0
+        # self.wordsAdded  = 0
+        # self.charsAdded  = 0
+        # self.wordsLatest = 0
+        # self.charsLatest = 0
 
         return
 

@@ -180,8 +180,8 @@ class GUI():
         self.updateWindowTitle()
 
         recentHandle = self.theBook.getBookRecent()
-        if not recentHandle == "":
-            self.loadScene(recentHandle)
+        # if not recentHandle == "":
+        #     self.loadScene(recentHandle)
 
         self.statusBar.setActiveFile(self.theBook)
 
@@ -277,7 +277,7 @@ class GUI():
         if refreshTree:
             self.theBook.makeSceneIndex()
             self.sceneTree.loadContent(self.theBook)
-        
+
         return
 
     def loadSourceView(self):
@@ -312,7 +312,7 @@ class GUI():
         return
 
     def updateWindowTitle(self):
-        
+
         appName   = self.mainConf.appName
         bookTitle = self.theBook.getBookTitle()
         bookDraft = self.theBook.getBookDraft()
@@ -473,7 +473,7 @@ class GUI():
         self.mainConf.setMainPane(mainPane)
         self.mainConf.setSidePane(sidePane)
         self.mainConf.saveConfig()
-        self.saveScene()
+        # self.saveScene()
         self.theBook.closeBook()
 
         Gtk.main_quit()
