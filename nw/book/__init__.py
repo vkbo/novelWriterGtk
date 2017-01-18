@@ -198,7 +198,8 @@ class Book():
         logger.debug("Book.closeBook: Closing book")
 
         self.saveBook()
-        for sceneHandle in self.allScenes.keys():
+        sceneHandles = list(self.allScenes.keys())
+        for sceneHandle in sceneHandles:
             self.closeScene(sceneHandle)
 
         return
@@ -264,6 +265,84 @@ class Book():
         return
 
     ##
+    #  Scene Forward Setters
+    ##
+
+    def setSceneTitle(self, sceneHandle, newTitle):
+        self.allScenes[sceneHandle].setTitle(newTitle)
+        return
+
+    def setSceneSection(self, sceneHandle, sceneSection):
+        self.allScenes[sceneHandle].setSection(sceneSection)
+        return
+
+    def setSceneChapter(self, sceneHandle, sceneChapter):
+        self.allScenes[sceneHandle].setChapter(sceneChapter)
+        return
+
+    def setSceneNumber(self, sceneHandle, sceneNumber):
+        self.allScenes[sceneHandle].setNumber(sceneNumber)
+        return
+
+    def setSceneText(self, sceneHandle, srcText):
+        self.allScenes[sceneHandle].setText(srcText)
+        return
+
+    def setSceneSummary(self, sceneHandle, newSummary):
+        self.allScenes[sceneHandle].setSummary(newSummary)
+        return
+
+    def setSceneTime(self, sceneHandle, timeValue):
+        self.allScenes[sceneHandle].setTime(timeValue)
+        return
+
+    ##
+    #  Scene Forward Getters
+    ##
+
+    def getSceneVersion(self, sceneHandle):
+        return self.allScenes[sceneHandle].getVersion()
+
+    def getSceneTitle(self, sceneHandle):
+        return self.allScenes[sceneHandle].getTitle()
+
+    def getSceneCreated(self, sceneHandle):
+        return self.allScenes[sceneHandle].getCreated()
+
+    def getSceneUpdated(self, sceneHandle):
+        return self.allScenes[sceneHandle].getUpdated()
+
+    def getSceneSection(self, sceneHandle):
+        return self.allScenes[sceneHandle].getSection()
+
+    def getSceneChapter(self, sceneHandle):
+        return self.allScenes[sceneHandle].getChapter()
+
+    def getSceneNumber(self, sceneHandle):
+        return self.allScenes[sceneHandle].getNumber()
+
+    def getSceneChanged(self, sceneHandle):
+        return self.allScenes[sceneHandle].getChanged()
+
+    def getSceneText(self, sceneHandle):
+        return self.allScenes[sceneHandle].getText()
+
+    def getSceneWords(self, sceneHandle):
+        return self.allScenes[sceneHandle].getWordCount()
+
+    def getSceneChars(self, sceneHandle):
+        return self.allScenes[sceneHandle].getCharCount()
+
+    def getSceneSummary(self, sceneHandle):
+        return self.allScenes[sceneHandle].getSummary()
+
+    def getSceneTimeTotal(self, sceneHandle):
+        return self.allScenes[sceneHandle].getTimeTotal()
+
+    def getSceneTimeList(self, sceneHandle):
+        return self.allScenes[sceneHandle].getTimeList()
+
+    ##
     #  Methods
     ##
 
@@ -319,7 +398,8 @@ class Book():
                         self.allScenes[itemHandle].getChapter(),
                         0
                     ]
-                    self.closeScene(itemHandle)
+                    if self.allScenes[itemHandle].readOnly:
+                        self.closeScene(itemHandle)
 
         # Count File Versions
         for listItem in dirContent:

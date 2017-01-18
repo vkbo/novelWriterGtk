@@ -21,6 +21,7 @@ from nw.filetrees   import SceneTree
 from nw.timer       import Timer
 from nw.book        import Book
 from nw.statusbar   import StatusBar
+from nw.scenebuffer import SceneBuffer
 
 class GUI():
 
@@ -29,18 +30,22 @@ class GUI():
         self.guiLoaded  = False
 
         # Define Core Objects
-        self.mainConf   = CONFIG
-        self.guiBuilder = BUILDER
+        self.mainConf    = CONFIG
+        self.guiBuilder  = BUILDER
 
-        self.getObject  = self.guiBuilder.get_object
-        self.winMain    = self.getObject("winMain")
+        self.getObject   = self.guiBuilder.get_object
+        self.winMain     = self.getObject("winMain")
 
         # Prepare GUI Classes
-        self.theBook    = Book()
-        self.guiTimer   = Timer(self.theBook)
-        self.statusBar  = StatusBar()
-        self.webEditor  = Editor(self.guiTimer,self.statusBar)
-        self.sceneTree  = SceneTree()
+        self.theBook     = Book()
+        self.guiTimer    = Timer(self.theBook)
+        self.statusBar   = StatusBar()
+        self.webEditor   = Editor(self.guiTimer,self.statusBar)
+        self.sceneTree   = SceneTree()
+        self.sceneBuffer = SceneBuffer(self.theBook)
+
+        # Runtime Properties
+        self.currHandle = ""
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -67,6 +72,7 @@ class GUI():
             "onMenuEditPasteClean"     : (self.webEditor.onEditPasteProcess,PASTE_CLEAN),
             "onMenuEditBook"           :  self.onEditBook,
             "onMenuEditPreferences"    :  self.mainConf.onLoad,
+            "onMenuViewSceneBuffer"    :  self.onViewSceneBuffer,
             "onMenuHelpAbout"          :  self.onShowAbout,
             # Main Menu Recent List
             "onMenuRecent0"            : (self.onOpenRecent,0),
@@ -110,7 +116,7 @@ class GUI():
         self.getObject("btnMainNew").set_icon_widget(getIconWidget("icon-book-new",28))
 
         # Set Up Timers
-        self.timerID    = GLib.timeout_add(200,self.guiTimer.onTick)
+        self.timerID    = GLib.timeout_add(200,self.onTick)
         self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.doAutoTasks)
 
         ##
@@ -200,22 +206,28 @@ class GUI():
         logger.debug("GUI.loadScene: Loading scene")
 
         # Load Scene and Update Editor
-        self.webEditor.saveText()
-        self.theBook.loadScene(sceneHandle)
-        self.webEditor.loadText(self.theBook)
+        self.currHandle = sceneHandle
+        self.theBook.loadScene(self.currHandle)
+        self.webEditor.loadText(self.theBook,self.currHandle)
 
         # Load Summary
-        scnSummary = self.theBook.getSceneSummary()
+        scnSummary = self.theBook.getSceneSummary(self.currHandle)
         tmpBuffer  = self.getObject("textSceneSummary").get_buffer()
         tmpBuffer.set_text(scnSummary)
 
         # Load Scene Data
-        scnTitle   = self.theBook.getSceneTitle()
-        scnSection = self.theBook.getSceneSection()
-        scnChapter = self.theBook.getSceneChapter()
-        scnCreated = "Created "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getSceneCreated()))
-        scnUpdated = "Updated "+formatDateTime(DATE_DATE,dateFromStamp(self.theBook.getSceneUpdated()))
-        scnVersion = "Draft %d, Version %d" % (self.theBook.getBookDraft(),self.theBook.getSceneVersion())
+        scnTitle   = self.theBook.getSceneTitle(self.currHandle)
+        scnSection = self.theBook.getSceneSection(self.currHandle)
+        scnChapter = self.theBook.getSceneChapter(self.currHandle)
+        scnCreated = "Created "+formatDateTime(
+            DATE_DATE,dateFromStamp(self.theBook.getSceneCreated(self.currHandle))
+        )
+        scnUpdated = "Updated "+formatDateTime(
+            DATE_DATE,dateFromStamp(self.theBook.getSceneUpdated(self.currHandle))
+        )
+        scnVersion = "Draft %d, Version %d" % (
+            self.theBook.getBookDraft(),self.theBook.getSceneVersion(self.currHandle)
+        )
 
         # Set GUI Elements
         self.getObject("lblSceneTitle").set_label(scnTitle)
@@ -236,9 +248,9 @@ class GUI():
         logger.debug("GUI.saveScene: Saving scene")
 
         # Get Scene Values
-        prevSection = self.theBook.getSceneSection()
-        prevChapter = self.theBook.getSceneChapter()
-        prevNumber  = self.theBook.getSceneNumber()
+        prevSection = self.theBook.getSceneSection(self.currHandle)
+        prevChapter = self.theBook.getSceneChapter(self.currHandle)
+        prevNumber  = self.theBook.getSceneNumber(self.currHandle)
         scnTitle    = self.getObject("entrySceneTitle").get_text()
         scnSection  = self.getObject("cmbSceneSection").get_active()
         scnChapter  = self.getObject("numSceneChapter").get_value()
@@ -262,16 +274,16 @@ class GUI():
         scnSummary = tmpBuffer.get_text(tmpStart,tmpEnd,True)
 
         # Set Scene Data
-        self.theBook.setSceneTitle(scnTitle)
-        self.theBook.setSceneSection(scnSection)
-        self.theBook.setSceneChapter(scnChapter)
-        self.theBook.setSceneNumber(scnNumber)
-        self.theBook.setSceneSummary(scnSummary)
+        self.theBook.setSceneTitle(self.currHandle,scnTitle)
+        self.theBook.setSceneSection(self.currHandle,scnSection)
+        self.theBook.setSceneChapter(self.currHandle,scnChapter)
+        self.theBook.setSceneNumber(self.currHandle,scnNumber)
+        self.theBook.setSceneSummary(self.currHandle,scnSummary)
 
-        refreshTree = self.theBook.getSceneChanged()
+        refreshTree = self.theBook.getSceneChanged(self.currHandle)
 
-        self.webEditor.saveText() # Pushes text buffer into data wrapper
-        self.theBook.saveScene()  # Saves data buffer
+        self.webEditor.saveText(self.currHandle)
+        self.theBook.saveScene(self.currHandle)
         self.updateWordCount()
 
         if refreshTree:
@@ -283,8 +295,8 @@ class GUI():
     def loadSourceView(self):
 
         scnText = self.webEditor.getText()
-        self.theBook.setSceneText(scnText)
-        scnText = self.theBook.getSceneText()
+        # self.theBook.setSceneText(scnText)
+        # scnText = self.theBook.getSceneText()
 
         tmpBuffer = self.getObject("textSource").get_buffer()
         tmpBuffer.set_text(scnText)
@@ -297,7 +309,7 @@ class GUI():
 
     def updateWordCount(self):
 
-        wordCount    = self.theBook.getSceneWords()
+        wordCount    = self.theBook.getSceneWords(self.currHandle)
 
         sessionWords = str(wordCount[COUNT_ADDED])
         totalWords   = str(wordCount[COUNT_LATEST])
@@ -305,7 +317,7 @@ class GUI():
         self.getObject("lblWordsSessionValue").set_label(sessionWords)
         self.getObject("lblWordsTotalValue").set_label(totalWords)
 
-        self.sceneTree.setValue(self.theBook.getSceneHandle(),self.sceneTree.COL_WORDS,totalWords)
+        self.sceneTree.setValue(self.currHandle,self.sceneTree.COL_WORDS,totalWords)
 
         self.sceneTree.sumWords()
 
@@ -348,8 +360,12 @@ class GUI():
 
     def onOpenBook(self, guiObject):
 
-        guiDialog = Gtk.FileChooserDialog("Open Book Folder",self.winMain,Gtk.FileChooserAction.SELECT_FOLDER,(
-            Gtk.STOCK_CANCEL,Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN,Gtk.ResponseType.OK))
+        guiDialog = Gtk.FileChooserDialog("Open Book Folder",self.winMain,
+            Gtk.FileChooserAction.SELECT_FOLDER,(
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OPEN,   Gtk.ResponseType.OK
+            )
+        )
         guiDialog.set_default_response(Gtk.ResponseType.OK)
 
         dlgReturn = guiDialog.run()
@@ -451,6 +467,10 @@ class GUI():
     #  Main Window Events
     ##
 
+    def onViewSceneBuffer(self, guiObject):
+        self.sceneBuffer.showGUI()
+        return
+
     def onShowAbout(self, guiObject):
         return
 
@@ -468,12 +488,14 @@ class GUI():
 
         logger.debug("GUI.onGuiDestroy: Exiting")
 
+        self.sceneBuffer.destroyGUI()
+
         mainPane = self.getObject("panedContent").get_position()
         sidePane = self.getObject("panedSide").get_position()
         self.mainConf.setMainPane(mainPane)
         self.mainConf.setSidePane(sidePane)
         self.mainConf.saveConfig()
-        # self.saveScene()
+
         self.theBook.closeBook()
 
         Gtk.main_quit()
@@ -484,10 +506,15 @@ class GUI():
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
 
+    def onTick(self):
+        self.guiTimer.onTick()
+        self.sceneBuffer.onUpdate()
+        return True
+
     def doAutoTasks(self):
         self.mainConf.doAutoSave()
         self.webEditor.doAutoSave()
-        self.theBook.saveScene()
+        # self.theBook.saveScene()
         self.updateWordCount()
         return True
 

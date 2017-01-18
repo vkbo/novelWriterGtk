@@ -40,6 +40,7 @@ class Timer():
         self.autoPause   = self.mainConf.autoPause
         self.autoOffset  = 0.0
         self.autoTime    = 0.0
+        self.currHandle  = ""
 
         self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#aa0000"))
         self.timerStatus.set_label("STOPPED")
@@ -50,8 +51,9 @@ class Timer():
     #  Setters
     ##
 
-    def setPreviousTotal(self):
-        self.prevTotal = self.theBook.getSceneTime()
+    def setPreviousTotal(self, sceneHandle):
+        self.currHandle = sceneHandle
+        self.prevTotal  = self.theBook.getSceneTimeTotal(sceneHandle)
         self.timeTotal.set_label(self.formatTime(self.prevTotal))
         return
 
@@ -64,9 +66,11 @@ class Timer():
         self.sessionTime = time() - self.timeOffset + self.timeBuffer
         self.totalTime   = self.sessionTime + self.prevTotal
 
-        self.theBook.setSceneTime(self.sessionTime)
         self.timeSession.set_label(self.formatTime(self.sessionTime))
         self.timeTotal.set_label(self.formatTime(self.totalTime))
+
+        if not self.currHandle == "":
+            self.theBook.setSceneTime(self.currHandle,self.sessionTime)
 
         return
 
@@ -106,7 +110,9 @@ class Timer():
         self.progTimer.set_fraction(0.0)
         self.timeSession.set_label(self.formatTime(0))
         self.timeTotal.set_label(self.formatTime(0))
-        self.theBook.setSceneTime(self.sessionTime)
+
+        if not self.currHandle == "":
+            self.theBook.setSceneTime(self.currHandle,self.sessionTime)
 
         return
 
@@ -146,7 +152,10 @@ class Timer():
         self.progTimer.set_fraction(0.0)
         self.timerStatus.modify_fg(Gtk.StateType.NORMAL,Gdk.color_parse("#aa0000"))
         self.timerStatus.set_label("STOPPED")
-        self.theBook.setSceneTime(self.sessionTime)
+
+        if not self.currHandle == "":
+            self.theBook.setSceneTime(self.currHandle,self.sessionTime)
+            self.currHandle = ""
 
         return
 

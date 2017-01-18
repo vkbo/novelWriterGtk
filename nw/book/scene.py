@@ -41,17 +41,31 @@ class Scene():
         # Connect Functions
 
         ## Setters
+        self.setTitle     = self.theMeta.setTitle
+        self.setSection   = self.theMeta.setSection
+        self.setChapter   = self.theMeta.setChapter
+        self.setNumber    = self.theMeta.setNumber
+        self.setText      = self.theText.setText
+        self.setSummary   = self.theSummary.setSummary
+        self.setTime      = self.theTiming.setTime
 
         ## Getters
-        self.getTitle   = self.theMeta.getTitle
-        self.getCreated = self.theMeta.getCreated
-        self.getUpdated = self.theMeta.getUpdated
-        self.getSection = self.theMeta.getSection
-        self.getChapter = self.theMeta.getChapter
-        self.getNumber  = self.theMeta.getNumber
-        self.getWords   = self.theMeta.getWords
-        self.getChars   = self.theMeta.getChars
-        self.getChanged = self.theMeta.getChanged
+        self.getVersion   = self.theOpt.getSceneVersion
+        self.getTitle     = self.theMeta.getTitle
+        self.getCreated   = self.theMeta.getCreated
+        self.getUpdated   = self.theMeta.getUpdated
+        self.getSection   = self.theMeta.getSection
+        self.getChapter   = self.theMeta.getChapter
+        self.getNumber    = self.theMeta.getNumber
+        self.getWords     = self.theMeta.getWords
+        self.getChars     = self.theMeta.getChars
+        self.getChanged   = self.theMeta.getChanged
+        self.getText      = self.theText.getText
+        self.getWordCount = self.theText.getWordCount
+        self.getCharCount = self.theText.getCharCount
+        self.getSummary   = self.theSummary.getSummary
+        self.getTimeTotal = self.theTiming.getTimeTotal
+        self.getTimeList  = self.theTiming.getTimeList
 
         return
 

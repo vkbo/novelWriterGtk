@@ -47,14 +47,16 @@ class Editor(WebKit.WebView):
         self.getObject("btnEditSpellCheck").set_active(self.mainConf.spellState)
         self.getObject("btnEditShowPara").set_active(self.mainConf.showPara)
 
-        # Properties
-        self.textSaved = True
+        # Runtime Properties
+        self.currHandle = ""
+        self.textSaved  = True
 
         return
 
     def clearEditor(self):
 
-        if not self.textSaved: return
+        if not self.textSaved:
+            return
 
         logger.debug("Editor.clearEditor: Clearing editor")
 
@@ -71,18 +73,25 @@ class Editor(WebKit.WebView):
     #  Loading and Saving
     ##
 
-    def loadText(self, theBook):
+    def loadText(self, theBook, sceneHandle):
 
-        self.theBook = theBook
+        if not self.currHandle == "" and not self.currHandle == sceneHandle:
+            logger.debug("Editor.loadText: Switching from %s to %s" % (
+                self.currHandle, sceneHandle
+            ))
+            self.saveText()
+
+        self.currHandle = sceneHandle
+        self.theBook    = theBook
 
         self.setEditable(False)
         self.guiTimer.stopTimer()
         self.guiTimer.resetTimer()
-        self.setText(self.theBook.getSceneText())
-        self.guiTimer.setPreviousTotal()
+        self.setText(self.theBook.getSceneText(self.currHandle))
+        self.guiTimer.setPreviousTotal(sceneHandle)
         self.statusBar.setLED(LED_GREEN)
         self.textSaved = True
-            
+
         return
 
     def saveText(self):
@@ -92,7 +101,7 @@ class Editor(WebKit.WebView):
             return
 
         scnText = self.getText()
-        self.theBook.setSceneText(scnText)
+        self.theBook.setSceneText(self.currHandle,scnText)
         self.textSaved = True
 
         return
@@ -108,7 +117,7 @@ class Editor(WebKit.WebView):
             self.theBook.saveScene()
             self.statusBar.setLED(LED_YELLOW)
             self.textSaved = True
-            
+
         return
 
     ##
@@ -192,7 +201,7 @@ class Editor(WebKit.WebView):
             self.guiTimer.startTimer()
         else:
             self.guiTimer.pauseTimer()
-        
+
         return
 
     def onToggleSpellCheck(self, guiObject):
@@ -205,7 +214,7 @@ class Editor(WebKit.WebView):
         self.set_settings(setEditor)
 
         self.mainConf.setSpellState(spchState)
-        
+
         return
 
     def onEditRefresh(self, guiObject):
