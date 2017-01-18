@@ -153,7 +153,7 @@ class SceneMeta():
         else:
             logger.error("SceneMeta.setTitle: Invalid scene title '%s'" % newTitle)
         return
-        
+
     def setUpdated(self, newDate):
         if newDate == self.sceneUpdated: return
         if len(newDate) > 0:
@@ -162,7 +162,7 @@ class SceneMeta():
         else:
             logger.error("SceneMeta.setUpdated: Invalid date")
         return
-        
+
     def setSection(self, sceneSection):
         if sceneSection == self.sceneSection: return
         if sceneSection < 0: sceneSection = 0
