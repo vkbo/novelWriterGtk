@@ -25,7 +25,7 @@ class Config:
         # Set Application Variables
         self.appName    = "novelWriter"
         self.appHandle  = "novelwriter"
-        self.appVersion = "Dev0.3"
+        self.appVersion = "0.3"
         self.appURL     = "https://github.com/Jadzia626/novelWriter"
 
         # Set Paths

@@ -2,7 +2,7 @@
    novelWriter Change Log
  ==========================
 
-  Version 0.3 - 00.00.0000
+  Version 0.3 - 19.01.2017
  ~~~~~~~~~~~~~~~~~~~~~~~~~~
   * [GUI] The state of the spell checker and show paragraph buttons are now saved
     between sessions.
