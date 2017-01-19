@@ -207,6 +207,7 @@ class GUI():
 
         # Load Scene and Update Editor
         self.currHandle = sceneHandle
+        self.theBook.setCurrHandle(self.currHandle)
         self.theBook.loadScene(self.currHandle)
         self.webEditor.loadText(self.theBook,self.currHandle)
 
@@ -513,8 +514,8 @@ class GUI():
 
     def doAutoTasks(self):
         self.mainConf.doAutoSave()
-        self.webEditor.doAutoSave()
-        # self.theBook.saveScene()
+        self.webEditor.saveText()
+        self.theBook.autoSave()
         self.updateWordCount()
         return True
 

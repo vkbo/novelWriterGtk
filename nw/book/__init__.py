@@ -31,13 +31,14 @@ class Book():
         """
 
         # Core Objects
-        self.mainConf  = CONFIG
-        self.theOpt    = BookOpt()
-        self.theMeta   = BookMeta(self.theOpt)
-        self.allScenes = {}
+        self.mainConf   = CONFIG
+        self.theOpt     = BookOpt()
+        self.theMeta    = BookMeta(self.theOpt)
+        self.allScenes  = {}
 
         # Runtime Attributes
         self.bookLoaded = False
+        self.currHandle = ""
 
         # Connect to Setters
         self.setBookTitle    = self.theMeta.setTitle
@@ -209,7 +210,43 @@ class Book():
         logger.debug("Book.closeScene: Closing scene %s" % sceneHandle)
         self.allScenes[sceneHandle].saveScene(True)
         self.allScenes.pop(sceneHandle,None)
-        self.theOpt.removeSceneIndexEntry(sceneHandle)
+        return
+
+    ##
+    #  Events
+    ##
+
+    def autoSave(self):
+
+        self.saveBook()
+
+        sceneHandles = list(self.allScenes.keys())
+        for sceneHandle in sceneHandles:
+            sceneAge = time()-self.allScenes[sceneHandle].getOpenTime()
+            if sceneAge > 60 and sceneHandle != self.currHandle:
+                self.closeScene(sceneHandle)
+            else:
+                self.allScenes[sceneHandle].autoSave()
+
+        return
+
+    ##
+    #  Setters
+    ##
+
+    def setCurrHandle(self, currHandle):
+        if self.isValidHandle(currHandle):
+            self.allScenes[self.currHandle].resetOpenTime()
+        self.currHandle = currHandle
+        return
+
+    ##
+    #  Scene Forward Save and Loading
+    ##
+
+    def saveSceneTiming(self, sceneHandle):
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].saveTiming(False)
         return
 
     ##
@@ -217,31 +254,38 @@ class Book():
     ##
 
     def setSceneTitle(self, sceneHandle, newTitle):
-        self.allScenes[sceneHandle].setTitle(newTitle)
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].setTitle(newTitle)
         return
 
     def setSceneSection(self, sceneHandle, sceneSection):
-        self.allScenes[sceneHandle].setSection(sceneSection)
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].setSection(sceneSection)
         return
 
     def setSceneChapter(self, sceneHandle, sceneChapter):
-        self.allScenes[sceneHandle].setChapter(sceneChapter)
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].setChapter(sceneChapter)
         return
 
     def setSceneNumber(self, sceneHandle, sceneNumber):
-        self.allScenes[sceneHandle].setNumber(sceneNumber)
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].setNumber(sceneNumber)
         return
 
     def setSceneText(self, sceneHandle, srcText):
-        self.allScenes[sceneHandle].setText(srcText)
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].setText(srcText)
         return
 
     def setSceneSummary(self, sceneHandle, newSummary):
-        self.allScenes[sceneHandle].setSummary(newSummary)
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].setSummary(newSummary)
         return
 
     def setSceneTime(self, sceneHandle, timeValue):
-        self.allScenes[sceneHandle].setTime(timeValue)
+        if self.isValidHandle(sceneHandle):
+            self.allScenes[sceneHandle].setTime(timeValue)
         return
 
     ##
@@ -249,50 +293,87 @@ class Book():
     ##
 
     def getSceneVersion(self, sceneHandle):
-        return self.allScenes[sceneHandle].getVersion()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getVersion()
+        return None
 
     def getSceneTitle(self, sceneHandle):
-        return self.allScenes[sceneHandle].getTitle()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getTitle()
+        return None
 
     def getSceneCreated(self, sceneHandle):
-        return self.allScenes[sceneHandle].getCreated()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getCreated()
+        return None
 
     def getSceneUpdated(self, sceneHandle):
-        return self.allScenes[sceneHandle].getUpdated()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getUpdated()
+        return None
 
     def getSceneSection(self, sceneHandle):
-        return self.allScenes[sceneHandle].getSection()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getSection()
+        return None
 
     def getSceneChapter(self, sceneHandle):
-        return self.allScenes[sceneHandle].getChapter()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getChapter()
+        return None
 
     def getSceneNumber(self, sceneHandle):
-        return self.allScenes[sceneHandle].getNumber()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getNumber()
+        return None
 
     def getSceneChanged(self, sceneHandle):
-        return self.allScenes[sceneHandle].getChanged()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getChanged()
+        return None
 
     def getSceneText(self, sceneHandle):
-        return self.allScenes[sceneHandle].getText()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getText()
+        return None
 
     def getSceneWords(self, sceneHandle):
-        return self.allScenes[sceneHandle].getWordCount()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getWordCount()
+        return None
 
     def getSceneChars(self, sceneHandle):
-        return self.allScenes[sceneHandle].getCharCount()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getCharCount()
+        return None
 
     def getSceneSummary(self, sceneHandle):
-        return self.allScenes[sceneHandle].getSummary()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getSummary()
+        return None
 
     def getSceneTimeTotal(self, sceneHandle):
-        return self.allScenes[sceneHandle].getTimeTotal()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getTimeTotal()
+        return None
 
     def getSceneTimeList(self, sceneHandle):
-        return self.allScenes[sceneHandle].getTimeList()
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getTimeList()
+        return None
+
+    def getSceneOpenTime(self, sceneHandle):
+        if self.isValidHandle(sceneHandle):
+            return self.allScenes[sceneHandle].getOpenTime()
+        return None
 
     ##
     #  Methods
     ##
+
+    def isValidHandle(self, sceneHandle):
+        if sceneHandle in self.allScenes.keys(): return True
+        return False
 
     def makeDraftIndex(self):
 

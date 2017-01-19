@@ -105,7 +105,4 @@ class BookOpt():
         if sceneHandle in self.sceneIndex.keys(): return True
         return False
 
-    def removeSceneIndexEntry(self, sceneHandle):
-        return self.sceneIndex.pop(sceneHandle,False)
-
 # End Class BookOpt

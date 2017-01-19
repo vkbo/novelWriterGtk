@@ -13,6 +13,7 @@ gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
 from os            import path
+from time          import time
 from nw            import *
 
 class SceneBuffer():
@@ -42,7 +43,7 @@ class SceneBuffer():
 
         # Core objects
         self.treeView   = self.winObject("treeBuffer")
-        self.treeStore  = Gtk.TreeStore(str,str,str)
+        self.treeStore  = Gtk.TreeStore(str,str,str,str,str,str)
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
@@ -53,16 +54,28 @@ class SceneBuffer():
         cellCol0 = Gtk.CellRendererText()
         cellCol1 = Gtk.CellRendererText()
         cellCol2 = Gtk.CellRendererText()
+        cellCol3 = Gtk.CellRendererText()
+        cellCol4 = Gtk.CellRendererText()
+        cellCol5 = Gtk.CellRendererText()
         treeCol0 = self.treeView.get_column(0)
         treeCol1 = self.treeView.get_column(1)
         treeCol2 = self.treeView.get_column(2)
+        treeCol3 = self.treeView.get_column(3)
+        treeCol4 = self.treeView.get_column(4)
+        treeCol5 = self.treeView.get_column(5)
 
         treeCol0.pack_start(cellCol0,True)
         treeCol1.pack_start(cellCol1,False)
         treeCol2.pack_start(cellCol2,False)
+        treeCol3.pack_start(cellCol3,False)
+        treeCol4.pack_start(cellCol4,False)
+        treeCol5.pack_start(cellCol5,False)
         treeCol0.add_attribute(cellCol0,"text",0)
         treeCol1.add_attribute(cellCol1,"text",1)
         treeCol2.add_attribute(cellCol2,"text",2)
+        treeCol3.add_attribute(cellCol3,"text",3)
+        treeCol4.add_attribute(cellCol4,"text",4)
+        treeCol5.add_attribute(cellCol5,"text",5)
 
         guiHandlers = {
             "onClickSceneBufferDestroy" : self.destroyGUI,
@@ -92,10 +105,18 @@ class SceneBuffer():
 
         allScenes = self.theBook.allScenes
         for sceneHandle in allScenes.keys():
+            scnTitle     = allScenes[sceneHandle].getTitle()
+            scnStatus    = ""
+            scnWords     = str(allScenes[sceneHandle].getWords())
+            scnTotalTime = formatTime(allScenes[sceneHandle].getTimeTotal())
+            scnOpenTime  = "%0d" % (time()-allScenes[sceneHandle].getOpenTime())
             self.treeStore.append(None,[
                 sceneHandle,
-                "",
-                str(allScenes[sceneHandle].getWords()),
+                scnTitle,
+                scnStatus,
+                scnWords,
+                scnTotalTime,
+                scnOpenTime,
             ])
 
         self.tickCount = 0

@@ -9,8 +9,7 @@
 import logging as logger
 
 from os                   import listdir
-# from time                 import time
-# from hashlib              import sha256
+from time                 import time
 from nw                   import *
 from nw.book.sceneopt     import SceneOpt
 from nw.book.scenemeta    import SceneMeta
@@ -33,12 +32,16 @@ class Scene():
         # Runtime Attributes
         self.sceneLoaded = False
         self.readOnly    = False
+        self.openTime    = time()
 
         # Set Options
         self.theOpt.setSceneHandle(sceneHandle)
         self.theOpt.setSceneFolder(bookOpt.getSceneFolder())
 
         # Connect Functions
+
+        ## Load and Save
+        self.saveTiming   = self.theTiming.saveTiming
 
         ## Setters
         self.setTitle     = self.theMeta.setTitle
@@ -101,6 +104,32 @@ class Scene():
 
         if saveAll:
             self.theTiming.saveTiming()
+
+        return
+
+    ##
+    #  Getters
+    ##
+
+    def getOpenTime(self):
+        return self.openTime
+
+    ##
+    #  Other Actions
+    ##
+
+    def resetOpenTime(self):
+        self.openTime = time()
+        return
+
+    ##
+    #  Events
+    ##
+
+    def autoSave(self):
+
+        self.saveScene(False)
+        self.theTiming.saveTiming(True)
 
         return
 

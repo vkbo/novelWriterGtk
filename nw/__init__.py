@@ -120,7 +120,7 @@ def formatDateTime(dateFormat=DATE_NUM1, timeValue=None, localFormat="dd.mm.yyyy
     if dateFormat == DATE_TIME: return timeString
     if dateFormat == DATE_DATE: return dateString
     if dateFormat == DATE_FULL: return timeString+" "+dateString
-    
+
     return None
 
 def dateFromStamp(dateString):
@@ -144,8 +144,15 @@ def getIconWidget(iconID, iconSize):
         if path.isfile(iconPath):
             pixBuffer = GdkPixbuf.Pixbuf.new_from_file(iconPath)
             gtkImage.set_from_pixbuf(pixBuffer.scale_simple(iconSize,iconSize,GdkPixbuf.InterpType.BILINEAR))
-    
+
     return gtkImage
+
+def formatTime(timeValue):
+
+    minute, second = divmod(timeValue, 60)
+    hour,   minute = divmod(minute, 60)
+
+    return "%02d:%02d:%02d" % (hour, minute, second)
 
 # End Global Functions
 # ==================================================================================================================== #

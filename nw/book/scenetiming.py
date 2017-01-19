@@ -8,6 +8,7 @@
 
 import logging as logger
 
+from os import path, remove
 from nw import *
 
 class SceneTiming():
@@ -53,8 +54,24 @@ class SceneTiming():
             logger.debug("SceneTiming.loadTiming: Invalid scene handle '%s'" % sceneHandle)
             return
 
+        tempName = "%s-timing.tmp" % sceneHandle
+        tempPath = path.join(sceneFolder,tempName)
+
         fileName = "%s-timing.csv" % sceneHandle
         filePath = path.join(sceneFolder,fileName)
+
+        if path.isfile(tempPath):
+            logger.debug("SceneTiming.loadTiming: Appending autosaved timing")
+
+            fileObj = open(tempPath,"r")
+            tmpPrev = fileObj.read()
+            fileObj.close()
+
+            fileObj = open(filePath,"a+")
+            fileObj.write(tmpPrev)
+            fileObj.close()
+
+            remove(tempPath)
 
         if not path.isfile(filePath): return
 
@@ -76,7 +93,7 @@ class SceneTiming():
 
         return
 
-    def saveTiming(self):
+    def saveTiming(self, autoSave=False):
 
         if self.timeCurrent < self.mainConf.minTime: return
 
@@ -91,12 +108,21 @@ class SceneTiming():
             logger.debug("SceneTiming.saveTiming: Invalid scene handle '%s'" % sceneHandle)
             return
 
+        tempName = "%s-timing.tmp" % sceneHandle
+        tempPath = path.join(sceneFolder,tempName)
+
         fileName = "%s-timing.csv" % sceneHandle
         filePath = path.join(sceneFolder,fileName)
 
-        logger.debug("SceneTiming.saveTiming: Saving timing information")
-
-        self.timeTotal += self.timeCurrent
+        if autoSave:
+            logger.debug("SceneTiming.saveTiming: Autosaving timing information")
+            fileMode = "w+"
+            savePath = tempPath
+        else:
+            logger.debug("SceneTiming.saveTiming: Saving timing information")
+            self.timeTotal += self.timeCurrent
+            fileMode = "a+"
+            savePath = filePath
 
         timeStamp = formatDateTime()
         timeValue = str(self.timeCurrent)
@@ -106,10 +132,14 @@ class SceneTiming():
         self.timeList.append([timeStamp,timeValue,wordCount,charCount])
 
         # Write File
-        timeSet  = timeStamp+","+timeValue+","+wordCount+","+charCount+"\n"
-        fileObj  = open(filePath,"a+")
+        timeSet = timeStamp+","+timeValue+","+wordCount+","+charCount+"\n"
+        fileObj = open(savePath,fileMode)
         fileObj.write(timeSet)
         fileObj.close()
+
+        if path.isfile(tempPath) and not autoSave:
+            logger.debug("SceneTiming.saveTiming: Deleting temp timing")
+            remove(tempPath)
 
         return
 

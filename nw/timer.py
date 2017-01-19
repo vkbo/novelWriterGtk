@@ -54,7 +54,7 @@ class Timer():
     def setPreviousTotal(self, sceneHandle):
         self.currHandle = sceneHandle
         self.prevTotal  = self.theBook.getSceneTimeTotal(sceneHandle)
-        self.timeTotal.set_label(self.formatTime(self.prevTotal))
+        self.timeTotal.set_label(formatTime(self.prevTotal))
         return
 
     ##
@@ -66,8 +66,8 @@ class Timer():
         self.sessionTime = time() - self.timeOffset + self.timeBuffer
         self.totalTime   = self.sessionTime + self.prevTotal
 
-        self.timeSession.set_label(self.formatTime(self.sessionTime))
-        self.timeTotal.set_label(self.formatTime(self.totalTime))
+        self.timeSession.set_label(formatTime(self.sessionTime))
+        self.timeTotal.set_label(formatTime(self.totalTime))
 
         if not self.currHandle == "":
             self.theBook.setSceneTime(self.currHandle,self.sessionTime)
@@ -108,8 +108,8 @@ class Timer():
         self.autoTime    = 0.0
 
         self.progTimer.set_fraction(0.0)
-        self.timeSession.set_label(self.formatTime(0))
-        self.timeTotal.set_label(self.formatTime(0))
+        self.timeSession.set_label(formatTime(0))
+        self.timeTotal.set_label(formatTime(0))
 
         if not self.currHandle == "":
             self.theBook.setSceneTime(self.currHandle,self.sessionTime)
@@ -172,16 +172,5 @@ class Timer():
                 self.updateAutoTime()
 
         return True
-
-    ##
-    #  Internal Methods
-    ##
-
-    def formatTime(self, timeValue):
-
-        minute, second = divmod(timeValue, 60)
-        hour,   minute = divmod(minute, 60)
-
-        return "%02d:%02d:%02d" % (hour, minute, second)
 
 # End Class Timer
