@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*
 
 ##
-#  novelWriter – Version 0.3
-# ===========================
+#  novelWriter – Version Dev0.4
+# ==============================
 #  Simple text editor for structuring and writing novels
 #  By: Veronica Berglyd Olsen
 ##

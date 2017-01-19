@@ -1,6 +1,6 @@
 # novelWriter
 
-**Version 0.3**
+**Version Dev0.4**
 
 Latest pre-release: [Version 0.3](https://github.com/Jadzia626/novelWriter/releases/tag/v0.3)
 
