@@ -75,7 +75,9 @@ class Book():
             logger.debug("Book.createBook: Set title before creating new book")
             return
 
-        self.closeBook()
+        # Close Current Book
+        if self.bookLoaded:
+            self.closeBook()
 
         bookFolder = path.join(rootFolder,bookTitle)
         if not path.isdir(bookFolder):
@@ -308,77 +310,77 @@ class Book():
     def getSceneVersion(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getVersion()
-        return None
+        return 0
 
     def getSceneTitle(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getTitle()
-        return None
+        return ""
 
     def getSceneCreated(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getCreated()
-        return None
+        return ""
 
     def getSceneUpdated(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getUpdated()
-        return None
+        return ""
 
     def getSceneSection(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getSection()
-        return None
+        return 0
 
     def getSceneChapter(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getChapter()
-        return None
+        return 0
 
     def getSceneNumber(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getNumber()
-        return None
+        return 0
 
     def getSceneChanged(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getChanged()
-        return None
+        return False
 
     def getSceneText(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getText()
-        return None
+        return ""
 
     def getSceneWords(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getWordCount()
-        return None
+        return [0,0,0]
 
     def getSceneChars(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getCharCount()
-        return None
+        return [0,0,0]
 
     def getSceneSummary(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getSummary()
-        return None
+        return ""
 
     def getSceneTimeTotal(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getTimeTotal()
-        return None
+        return 0
 
     def getSceneTimeList(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getTimeList()
-        return None
+        return []
 
     def getSceneOpenTime(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             return self.allScenes[sceneHandle].getOpenTime()
-        return None
+        return 0
 
     ##
     #  Methods

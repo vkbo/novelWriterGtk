@@ -152,6 +152,7 @@ class GUI():
     def clearContent(self):
 
         self.webEditor.clearEditor()
+        self.guiTimer.resetTimer()
 
         tmpBuffer = self.getObject("textSceneSummary").get_buffer()
         tmpBuffer.set_text("")
@@ -186,8 +187,8 @@ class GUI():
         self.updateWindowTitle()
 
         recentHandle = self.theBook.getBookRecent()
-        # if not recentHandle == "":
-        #     self.loadScene(recentHandle)
+        if not recentHandle == "":
+            self.loadScene(recentHandle)
 
         self.statusBar.setActiveFile(self.theBook,"")
 
@@ -357,7 +358,7 @@ class GUI():
             bookTitle  = guiDialog.entryBookTitle.get_text()
             bookAuthor = guiDialog.entryBookAuthor.get_text()
             rootFolder = guiDialog.fileBookPath.get_filename()
-            self.theBook.clearContent()
+
             self.theBook.setBookTitle(bookTitle)
             self.theBook.setBookAuthor(bookAuthor)
             self.theBook.createBook(rootFolder)
