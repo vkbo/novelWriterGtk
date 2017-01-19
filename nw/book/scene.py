@@ -53,6 +53,7 @@ class Scene():
         self.setTime      = self.theTiming.setTime
 
         ## Getters
+        self.getHandle    = self.theOpt.getSceneHandle
         self.getVersion   = self.theOpt.getSceneVersion
         self.getTitle     = self.theMeta.getTitle
         self.getCreated   = self.theMeta.getCreated

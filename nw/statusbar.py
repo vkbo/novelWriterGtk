@@ -35,7 +35,7 @@ class StatusBar():
         self.statusImage.set_from_pixbuf(getIconWidget(ledColour,16).get_pixbuf())
         return
 
-    def setActiveFile(self, theBook):
+    def setActiveFile(self, theBook, sceneHandle):
 
         sepText   = " ► "
 
@@ -46,17 +46,15 @@ class StatusBar():
         if bookDraft > 0:
             fileLabel += sepText+("Draft %d" % bookDraft)
 
-        # sceneHandle = theBook.getSceneHandle()
-        # sceneTitle  = theBook.getSceneTitle()
-        # if len(sceneHandle) == 12:
-        #     fileLabel += sepText+(sceneTitle)
-        #
-        # sceneVersion = theBook.getSceneVersion()
-        # if sceneVersion > 0:
-        #     fileLabel += sepText+("Version %d" % sceneVersion)
+        sceneTitle = theBook.getSceneTitle(sceneHandle)
+        if len(sceneHandle) == 12:
+            fileLabel += sepText+(sceneTitle)
+            sceneVersion = theBook.getSceneVersion(sceneHandle)
+            if sceneVersion > 0:
+                fileLabel += sepText+("Version %d" % sceneVersion)
 
         self.statusText.set_label(fileLabel)
-        # self.statusHandle.set_label("[%s]" % sceneHandle)
+        self.statusHandle.set_label("[%s]" % sceneHandle)
 
         return
 

@@ -178,11 +178,22 @@ class Book():
             Append new scene to scene index
         """
 
-        sceneHandle = sha256(str(time()).encode()).hexdigest()[0:12]
-        self.allScenes[sceneHandle]  = Scene(self.theOpt,sceneHandle)
-        self.theOpt.setSceneIndexEntry(sceneHandle,[sceneTitle,sceneNumber,0,0,0,1])
+        sceneTitle = sceneTitle.strip()
+        if sceneTitle == "":
+            logger.debug("Book.createScene: Title cannot be empty")
+            return
 
-        return
+        sceneHandle = sha256(str(time()).encode()).hexdigest()[0:12]
+        self.allScenes[sceneHandle] = Scene(self.theOpt,sceneHandle)
+        self.allScenes[sceneHandle].setTitle(sceneTitle)
+        self.allScenes[sceneHandle].setSection(0)
+        self.allScenes[sceneHandle].setChapter(0)
+        self.allScenes[sceneHandle].setNumber(sceneNumber)
+        self.allScenes[sceneHandle].setText("<p>"+sceneTitle+"</p>")
+        self.allScenes[sceneHandle].saveScene()
+        self.makeSceneIndex()
+
+        return sceneHandle
 
     def loadScene(self, sceneHandle, metaOnly=False, skipVerify=False, readOnly=False):
 
@@ -235,7 +246,7 @@ class Book():
     ##
 
     def setCurrHandle(self, currHandle):
-        if self.isValidHandle(currHandle):
+        if self.isValidHandle(self.currHandle):
             self.allScenes[self.currHandle].resetOpenTime()
         self.currHandle = currHandle
         return

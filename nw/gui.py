@@ -189,7 +189,7 @@ class GUI():
         # if not recentHandle == "":
         #     self.loadScene(recentHandle)
 
-        self.statusBar.setActiveFile(self.theBook)
+        self.statusBar.setActiveFile(self.theBook,"")
 
         return
 
@@ -240,7 +240,7 @@ class GUI():
         self.getObject("numSceneChapter").set_value(scnChapter)
 
         self.updateWordCount()
-        self.statusBar.setActiveFile(self.theBook)
+        self.statusBar.setActiveFile(self.theBook,self.currHandle)
 
         return
 
@@ -413,14 +413,10 @@ class GUI():
 
     def onSceneAdd(self, guiObject):
 
-        self.saveScene()
-        self.clearContent()
-
         scnSort  = makeSortString(0,0,0)
         sceneNum = self.sceneTree.chapCount[scnSort] + 1
         self.theBook.createScene("New Scene",sceneNum)
         self.sceneTree.loadContent(self.theBook)
-        self.loadScene(self.theBook.getSceneHandle())
 
         return
 
