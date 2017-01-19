@@ -75,22 +75,27 @@ class Editor(WebKit.WebView):
 
     def loadText(self, theBook, sceneHandle):
 
+        # Set Book Object
+        if self.theBook is None:
+            self.theBook = theBook
+
+        # Save Current Scene if Exists
         if not self.currHandle == "" and not self.currHandle == sceneHandle:
             logger.debug("Editor.loadText: Switching from %s to %s" % (
                 self.currHandle, sceneHandle
             ))
             self.saveText()
+            self.guiTimer.stopTimer()
+            self.theBook.saveSceneTiming(self.currHandle)
 
+        # Load New Scene
         self.currHandle = sceneHandle
-        self.theBook    = theBook
-
-        self.setEditable(False)
-        self.guiTimer.stopTimer()
-        self.guiTimer.resetTimer()
         self.setText(self.theBook.getSceneText(self.currHandle))
-        self.guiTimer.setPreviousTotal(sceneHandle)
+        self.guiTimer.resetTimer()
+        self.guiTimer.setPreviousTotal(self.currHandle)
         self.statusBar.setLED(LED_GREEN)
         self.textSaved = True
+        self.setEditable(False)
 
         return
 
@@ -106,12 +111,16 @@ class Editor(WebKit.WebView):
 
         return
 
-    def doAutoSave(self):
+    ##
+    #  Events
+    ##
+
+    def onAutoSave(self):
 
         if self.theBook is None: return
 
         if not self.textSaved:
-            logger.debug("Editor.doAutoSave: Saving")
+            logger.debug("Editor.onAutoSave: Autosaving")
             scnText = self.getText()
             self.theBook.setSceneText(scnText)
             self.theBook.saveScene()

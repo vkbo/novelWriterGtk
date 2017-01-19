@@ -115,7 +115,7 @@ class Config:
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"autoPause"):  self.autoPause    = confParser.getint(cnfSec,"autoPause")
             if confParser.has_option(cnfSec,"minTime"):    self.minTime      = confParser.getint(cnfSec,"minTime")
- 
+
         ## Path
         cnfSec = "Path"
         if confParser.has_section(cnfSec):
@@ -186,7 +186,11 @@ class Config:
 
         return
 
-    def doAutoSave(self):
+    ##
+    #  Events
+    ##
+
+    def onAutoSave(self):
         if self.confChanged:
             logger.debug("Config: Autosaving")
             self.saveConfig()
@@ -286,7 +290,7 @@ class Config:
 
         dlgPrefs.set_transient_for(self.getObject("winMain"))
         dlgPrefs.show_all()
-        
+
         return
 
     def onSave(self, guiObject=None):

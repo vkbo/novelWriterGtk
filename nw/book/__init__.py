@@ -227,17 +227,18 @@ class Book():
     #  Events
     ##
 
-    def autoSave(self):
+    def onAutoSave(self):
 
         self.saveBook()
 
         sceneHandles = list(self.allScenes.keys())
         for sceneHandle in sceneHandles:
+            logger.debug("Book.onAutoSave: Autosave")
             sceneAge = time()-self.allScenes[sceneHandle].getOpenTime()
-            if sceneAge > 60 and sceneHandle != self.currHandle:
+            if sceneAge > 300 and sceneHandle != self.currHandle:
                 self.closeScene(sceneHandle)
             else:
-                self.allScenes[sceneHandle].autoSave()
+                self.allScenes[sceneHandle].onAutoSave()
 
         return
 
@@ -258,6 +259,7 @@ class Book():
     def saveSceneTiming(self, sceneHandle):
         if self.isValidHandle(sceneHandle):
             self.allScenes[sceneHandle].saveTiming(False)
+            self.allScenes[sceneHandle].loadTiming()
         return
 
     ##

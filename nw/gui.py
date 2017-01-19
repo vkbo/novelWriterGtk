@@ -167,7 +167,7 @@ class GUI():
         return
 
     ##
-    #  Load and Save Functions
+    #  Book Functions
     ##
 
     def loadBook(self, bookFolder=None):
@@ -200,6 +200,10 @@ class GUI():
             self.theBook.saveBook()
 
         return
+
+    ##
+    #  Scene Functions
+    ##
 
     def loadScene(self, sceneHandle):
 
@@ -292,6 +296,10 @@ class GUI():
             self.sceneTree.loadContent(self.theBook)
 
         return
+
+    ##
+    #  Source View
+    ##
 
     def loadSourceView(self):
 
@@ -509,9 +517,9 @@ class GUI():
         return True
 
     def doAutoTasks(self):
-        self.mainConf.doAutoSave()
+        self.mainConf.onAutoSave()
         self.webEditor.saveText()
-        self.theBook.autoSave()
+        self.theBook.onAutoSave()
         self.updateWordCount()
         return True
 

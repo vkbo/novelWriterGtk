@@ -41,6 +41,7 @@ class Scene():
         # Connect Functions
 
         ## Load and Save
+        self.loadTiming   = self.theTiming.loadTiming
         self.saveTiming   = self.theTiming.saveTiming
 
         ## Setters
@@ -127,8 +128,9 @@ class Scene():
     #  Events
     ##
 
-    def autoSave(self):
+    def onAutoSave(self):
 
+        logger.debug("Scene.onAutoSave: Autosave")
         self.saveScene(False)
         self.theTiming.saveTiming(True)
 
