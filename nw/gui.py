@@ -27,7 +27,7 @@ class GUI():
 
     def __init__(self):
 
-        self.guiLoaded  = False
+        self.guiLoaded   = False
 
         # Define Core Objects
         self.mainConf    = CONFIG
@@ -226,14 +226,11 @@ class GUI():
         scnSection = self.theBook.getSceneSection(self.currHandle)
         scnChapter = self.theBook.getSceneChapter(self.currHandle)
         scnCreated = "Created "+formatDateTime(
-            DATE_DATE,dateFromStamp(self.theBook.getSceneCreated(self.currHandle))
-        )
+            DATE_DATE,dateFromStamp(self.theBook.getSceneCreated(self.currHandle)))
         scnUpdated = "Updated "+formatDateTime(
-            DATE_DATE,dateFromStamp(self.theBook.getSceneUpdated(self.currHandle))
-        )
+            DATE_DATE,dateFromStamp(self.theBook.getSceneUpdated(self.currHandle)))
         scnVersion = "Draft %d, Version %d" % (
-            self.theBook.getBookDraft(),self.theBook.getSceneVersion(self.currHandle)
-        )
+            self.theBook.getBookDraft(),self.theBook.getSceneVersion(self.currHandle))
 
         # Set GUI Elements
         self.getObject("lblSceneTitle").set_label(scnTitle)
@@ -304,10 +301,7 @@ class GUI():
 
     def loadSourceView(self):
 
-        scnText = self.webEditor.getText()
-        # self.theBook.setSceneText(scnText)
-        # scnText = self.theBook.getSceneText()
-
+        scnText   = self.webEditor.getText()
         tmpBuffer = self.getObject("textSource").get_buffer()
         tmpBuffer.set_text(scnText)
 
@@ -320,7 +314,6 @@ class GUI():
     def updateWordCount(self):
 
         wordCount    = self.theBook.getSceneWords(self.currHandle)
-
         sessionWords = str(wordCount[COUNT_ADDED])
         totalWords   = str(wordCount[COUNT_LATEST])
 
@@ -328,7 +321,6 @@ class GUI():
         self.getObject("lblWordsTotalValue").set_label(totalWords)
 
         self.sceneTree.setValue(self.currHandle,self.sceneTree.COL_WORDS,totalWords)
-
         self.sceneTree.sumWords()
 
         return

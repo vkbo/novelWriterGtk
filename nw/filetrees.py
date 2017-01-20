@@ -117,10 +117,6 @@ class SceneTree():
             scnNum     = makeSortString(tmpSection,tmpChapter,tmpNumber)
             scnSec     = makeSortString(tmpSection,tmpChapter,0)
 
-            #~ if tmpSection == 0:
-                #~ parIter = None
-                #~ self.chapCount[scnSec] += 1
-            #~ else:
             if scnSec in self.chapMap:
                 parIter = self.chapMap[scnSec]
                 self.chapCount[scnSec] += 1

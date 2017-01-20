@@ -16,7 +16,7 @@ from os            import path
 from datetime      import datetime
 from nw.config     import Config
 
-# ==================================================================================================================== #
+# ================================================================================================ #
 # Begin Initialisation
 
 logger.basicConfig(format="%(levelname)s: %(message)s",level=logger.DEBUG)
@@ -30,7 +30,7 @@ CONFIG.setBuilder(BUILDER)
 CONFIG.updateRecentList()
 
 # End Initialisation
-# ==================================================================================================================== #
+# ================================================================================================ #
 # Begin Global Constant
 
 # Date Formats
@@ -96,7 +96,7 @@ LED_RED    = "icon-red"
 LED_BLUE   = "icon-blue"
 
 # End Global Constants
-# ==================================================================================================================== #
+# ================================================================================================ #
 # Begin Global Functions
 
 def formatDateTime(dateFormat=DATE_NUM1, timeValue=None, localFormat="dd.mm.yyyy"):
@@ -143,7 +143,8 @@ def getIconWidget(iconID, iconSize):
         iconPath = path.join(guiPath,"icons",iconFile)
         if path.isfile(iconPath):
             pixBuffer = GdkPixbuf.Pixbuf.new_from_file(iconPath)
-            gtkImage.set_from_pixbuf(pixBuffer.scale_simple(iconSize,iconSize,GdkPixbuf.InterpType.BILINEAR))
+            gtkImage.set_from_pixbuf(pixBuffer.scale_simple(
+                iconSize,iconSize,GdkPixbuf.InterpType.BILINEAR))
 
     return gtkImage
 
@@ -155,4 +156,4 @@ def formatTime(timeValue):
     return "%02d:%02d:%02d" % (hour, minute, second)
 
 # End Global Functions
-# ==================================================================================================================== #
+# ================================================================================================ #
