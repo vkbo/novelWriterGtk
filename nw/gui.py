@@ -17,7 +17,7 @@ from os             import path
 from nw             import *
 from nw.editor      import Editor
 from nw.dialogs     import EditBookDialog
-from nw.filetrees   import SceneTree
+from nw.scenetree   import SceneTree
 from nw.timer       import Timer
 from nw.book        import Book
 from nw.statusbar   import StatusBar
