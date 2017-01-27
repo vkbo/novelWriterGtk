@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*
 
 ##
-#  novelWriter – File Tree Classed
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Wrapper classes for all the Gtk.TreeView objects in the main GUI.
+#  novelWriter – Scene Tree Class
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Wrapper class for the scene tree in the main GUI.
 ##
 
 import logging as logger
@@ -16,9 +16,6 @@ from nw            import *
 
 # Set to true to show sorting in all treeviews
 debugShowSort = False
-
-# ==================================================================================================================== #
-# Begin Class SceneTree
 
 class SceneTree():
 
@@ -176,4 +173,3 @@ class SceneTree():
         return
 
 # End Class SceneTree
-# ==================================================================================================================== #
