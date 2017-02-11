@@ -14,7 +14,7 @@ gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 from nw            import *
 
-# Set to true to show sorting in all treeviews
+# Set to true to show sorting in treeview
 debugShowSort = False
 
 class SceneTree():
