@@ -511,6 +511,7 @@ class GUI():
 
     def doAutoTasks(self):
         self.mainConf.onAutoSave()
+        self.saveScene()
         self.webEditor.saveText()
         self.theBook.onAutoSave()
         self.updateWordCount()

@@ -31,27 +31,27 @@ class Book():
         """
 
         # Core Objects
-        self.mainConf   = CONFIG
-        self.theOpt     = BookOpt()
-        self.theMeta    = BookMeta(self.theOpt)
-        self.allScenes  = {}
+        self.mainConf      = CONFIG
+        self.theOpt        = BookOpt()
+        self.theMeta       = BookMeta(self.theOpt)
+        self.allScenes     = {}
 
         # Runtime Attributes
-        self.bookLoaded = False
-        self.currHandle = ""
+        self.bookLoaded    = False
+        self.currHandle    = ""
 
         # Connect to Setters
-        self.setBookTitle    = self.theMeta.setTitle
-        self.setBookAuthor   = self.theMeta.setAuthor
-        self.setBookRecent   = self.theMeta.setRecent
+        self.setBookTitle  = self.theMeta.setTitle
+        self.setBookAuthor = self.theMeta.setAuthor
+        self.setBookRecent = self.theMeta.setRecent
 
         # Connect to Getters
-        self.getBookTitle    = self.theMeta.getTitle
-        self.getBookAuthor   = self.theMeta.getAuthor
-        self.getBookRecent   = self.theMeta.getRecent
-        self.getBookFolder   = self.theOpt.getBookFolder
-        self.getBookDraft    = self.theOpt.getBookDraft
-        self.getSceneIndex   = self.theOpt.getSceneIndex
+        self.getBookTitle  = self.theMeta.getTitle
+        self.getBookAuthor = self.theMeta.getAuthor
+        self.getBookRecent = self.theMeta.getRecent
+        self.getBookFolder = self.theOpt.getBookFolder
+        self.getBookDraft  = self.theOpt.getBookDraft
+        self.getSceneIndex = self.theOpt.getSceneIndex
 
         return
 

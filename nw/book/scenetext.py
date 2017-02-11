@@ -36,23 +36,6 @@ class SceneText():
 
         return
 
-    def clearContent(self):
-
-        # logger.debug("SceneText.clearContent: Clearing content")
-        #
-        # # Clear Attributes
-        # self.text        = ""
-        # self.textHash    = ""
-        # self.hasText     = False
-        # self.wordsOnLoad = 0
-        # self.charsOnLoad = 0
-        # self.wordsAdded  = 0
-        # self.charsAdded  = 0
-        # self.wordsLatest = 0
-        # self.charsLatest = 0
-
-        return
-
     ##
     #  Load and Save
     ##
@@ -94,7 +77,11 @@ class SceneText():
 
         if not self.hasText:
             logger.debug("SceneText.saveText: No text to save")
-            return
+            return False
+
+        if self.textHash == sha256(str(self.text).encode()).hexdigest():
+            logger.debug("SceneText.saveText: No changes to save")
+            return False
 
         sceneFolder  = self.theOpt.sceneFolder
         sceneHandle  = self.theOpt.sceneHandle
@@ -102,15 +89,15 @@ class SceneText():
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneText.saveText: Folder not found %s" % sceneFolder)
-            return
+            return False
 
         if not len(sceneHandle) == 12:
             logger.debug("SceneText.saveText: Invalid scene handle '%s'" % sceneHandle)
-            return
+            return False
 
         if not sceneVersion > 0:
             logger.debug("SceneText.saveText: Invalid scene version %d" % sceneVersion)
-            return
+            return False
 
         logger.debug("SceneText.saveText: Saving scene text")
 
@@ -123,7 +110,7 @@ class SceneText():
         if path.isfile(tempPath): remove(tempPath)
         if path.isfile(filePath): rename(filePath,tempPath)
 
-        fileObj  = open(filePath,encoding="utf-8",mode="w")
+        fileObj = open(filePath,encoding="utf-8",mode="w")
         fileObj.write(self.text)
         fileObj.close()
 
@@ -132,7 +119,7 @@ class SceneText():
         self.charsLatest = chars
         self.textHash    = sha256(str(self.text).encode()).hexdigest()
 
-        return
+        return True
 
     ##
     #  Setters
@@ -179,7 +166,7 @@ class SceneText():
 
     def htmlCleanUp(self, srcText):
 
-        okTags   = ["p","b","i","u","strike","ul","ol","li","h2","h3","h4","pre"]
+        okTags   = ["p","b","i","u","strike"]
         okAttr   = {"*" : ["style"]}
         okStyles = ["text-align"]
 

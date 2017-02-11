@@ -93,16 +93,19 @@ class Scene():
     def saveScene(self, saveAll=False):
 
         if self.readOnly:
-            logger.debug("Scene.saveScene: Scene is read only. Skipping")
+            logger.debug("Scene.saveScene: Scene is read only")
             return
 
-        self.theMeta.setUpdated(formatDateTime())
-        self.theMeta.setWords(self.theText.wordsLatest)
-        self.theMeta.setChars(self.theText.charsLatest)
+        textSaved    = self.theText.saveText()
+        summarySaved = self.theSummary.saveSummary()
+
+        if textSaved or summarySaved:
+            self.theMeta.setUpdated(formatDateTime())
+        if textSaved:
+            self.theMeta.setWords(self.theText.wordsLatest)
+            self.theMeta.setChars(self.theText.charsLatest)
 
         self.theMeta.saveData()
-        self.theText.saveText()
-        self.theSummary.saveSummary()
 
         if saveAll:
             self.theTiming.saveTiming()

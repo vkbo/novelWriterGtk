@@ -9,19 +9,21 @@
 import logging as logger
 
 from os      import path, rename, remove
-from nw import *
+from hashlib import sha256
+from nw      import *
 
 class SceneSummary():
 
     def __init__(self, theOpt):
 
         # Core Objects
-        self.mainConf   = CONFIG
-        self.theOpt     = theOpt
+        self.mainConf    = CONFIG
+        self.theOpt      = theOpt
 
         # Attributes
-        self.summary    = ""
-        self.hasSummary = False
+        self.summary     = ""
+        self.summaryHash = ""
+        self.hasSummary  = False
 
         return
 
@@ -52,7 +54,8 @@ class SceneSummary():
         self.summary = fileObj.read()
         fileObj.close()
 
-        self.hasSummary = True
+        self.summaryHash = sha256(str(self.summary).encode()).hexdigest()
+        self.hasSummary  = True
 
         return
 
@@ -60,7 +63,11 @@ class SceneSummary():
 
         if not self.hasSummary:
             logger.debug("SceneSummary.saveSummary: No text to save")
-            return
+            return False
+
+        if self.summaryHash == sha256(str(self.summary).encode()).hexdigest():
+            logger.debug("SceneSummary.saveSummary: No changes to save")
+            return False
 
         sceneFolder  = self.theOpt.sceneFolder
         sceneHandle  = self.theOpt.sceneHandle
@@ -68,15 +75,15 @@ class SceneSummary():
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneSummary.saveSummary: Folder not found %s" % sceneFolder)
-            return
+            return False
 
         if not len(sceneHandle) == 12:
             logger.debug("SceneSummary.saveSummary: Invalid scene handle '%s'" % sceneHandle)
-            return
+            return False
 
         if not sceneVersion > 0:
             logger.debug("SceneSummary.saveSummary: Invalid scene version %d" % sceneVersion)
-            return
+            return False
 
         logger.debug("SceneSummary.saveSummary: Saving scene text")
 
@@ -93,7 +100,9 @@ class SceneSummary():
         fileObj.write(self.summary)
         fileObj.close()
 
-        return
+        self.summaryHash = sha256(str(self.summary).encode()).hexdigest()
+
+        return True
 
     ##
     #  Setters

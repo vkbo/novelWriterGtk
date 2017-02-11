@@ -36,25 +36,6 @@ class SceneMeta():
 
         return
 
-    def clearContent(self):
-
-        # logger.debug("SceneMeta.clearContent: Clearing content")
-        #
-        # # Clear Saved Attributes
-        # self.sceneTitle   = ""
-        # self.sceneCreated = formatDateTime()
-        # self.sceneUpdated = formatDateTime()
-        # self.sceneSection = 0
-        # self.sceneChapter = 0
-        # self.sceneNumber  = 1
-        # self.sceneWords   = 0
-        # self.sceneChars   = 0
-        #
-        # # Runtime Attributes
-        # self.sceneChanged = False
-
-        return
-
     ##
     #  Load and Save
     ##
@@ -114,14 +95,18 @@ class SceneMeta():
         sceneHandle = self.theOpt.sceneHandle
 
         if not path.isdir(sceneFolder):
-            logger.debug("SceneMeta.saveScene: Folder not found %s" % sceneFolder)
+            logger.debug("SceneMeta.saveData: Folder not found %s" % sceneFolder)
             return
 
         if sceneHandle == "" or sceneHandle is None:
-            logger.error("SceneMeta.saveScene: File handle missing")
+            logger.error("SceneMeta.saveData: File handle missing")
             return
 
-        logger.debug("SceneMeta.saveScene: Saving scene metadata")
+        if not self.sceneChanged:
+            logger.debug("SceneMeta.saveData: No changes to save")
+            return
+
+        logger.debug("SceneMeta.saveData: Saving scene metadata")
 
         fileName   = "%s-metadata.cnf" % sceneHandle
         filePath   = path.join(sceneFolder,fileName)

@@ -19,7 +19,11 @@ from nw.config     import Config
 # ================================================================================================ #
 # Begin Initialisation
 
-logger.basicConfig(format="%(levelname)s: %(message)s",level=logger.DEBUG)
+logger.basicConfig(
+    format  = "[%(asctime)s] %(levelname)s: %(message)s",
+    level   = logger.DEBUG,
+    datefmt = "%H:%M:%S",
+)
 
 # Global Classes
 CONFIG  = Config()
