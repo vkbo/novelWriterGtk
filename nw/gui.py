@@ -470,6 +470,20 @@ class GUI():
         return
 
     def onShowAbout(self, guiObject):
+
+        dlgAbout = Gtk.AboutDialog()
+
+        dlgAbout.set_transient_for(self.winMain)
+        dlgAbout.set_program_name(self.mainConf.appName)
+        dlgAbout.set_version(self.mainConf.appVersion)
+        dlgAbout.set_logo(getIconWidget("novelWriter",64).get_pixbuf())
+        dlgAbout.set_website(self.mainConf.appURL)
+        dlgAbout.set_comments("A simple editor for writing novels.")
+        dlgAbout.set_authors(["Veronica Berglyd Olsen"])
+
+        dlgAbout.run()
+        dlgAbout.destroy()
+
         return
 
     def onMainTabChange(self, guiObject, guiChild, tabIdx):
