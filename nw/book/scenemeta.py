@@ -30,6 +30,7 @@ class SceneMeta():
         self.sceneNumber  = 1
         self.sceneWords   = 0
         self.sceneChars   = 0
+        self.sceneTime    = 0
 
         # Runtime Attributes
         self.sceneChanged = False
@@ -84,6 +85,8 @@ class SceneMeta():
                 self.sceneWords   = confParser.getint(cnfSec,"Words")
             if confParser.has_option(cnfSec,"Chars"):
                 self.sceneChars   = confParser.getint(cnfSec,"Chars")
+            if confParser.has_option(cnfSec,"Time"):
+                self.sceneTime    = confParser.getfloat(cnfSec,"Time")
 
         self.sceneChanged = False
 
@@ -123,6 +126,7 @@ class SceneMeta():
         confParser.set(cnfSec,"Number",  str(self.sceneNumber))
         confParser.set(cnfSec,"Words",   str(self.sceneWords))
         confParser.set(cnfSec,"Chars",   str(self.sceneChars))
+        confParser.set(cnfSec,"Time",    str(self.sceneTime))
 
         # Write File
         confParser.write(open(filePath,"w"))
@@ -194,6 +198,12 @@ class SceneMeta():
         self.sceneChanged = True
         return
 
+    def setTime(self, sceneTime):
+        if sceneTime == self.sceneTime: return
+        self.sceneTime    = sceneTime
+        self.sceneChanged = True
+        return
+
     ##
     #  Getters
     ##
@@ -221,6 +231,9 @@ class SceneMeta():
 
     def getChars(self):
         return self.sceneChars
+
+    def getTime(self):
+        return self.sceneTime
 
     def getChanged(self):
         return self.sceneChanged

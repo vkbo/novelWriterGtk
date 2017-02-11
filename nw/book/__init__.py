@@ -440,6 +440,7 @@ class Book():
                         self.allScenes[itemHandle].getWords(),
                         self.allScenes[itemHandle].getSection(),
                         self.allScenes[itemHandle].getChapter(),
+                        self.allScenes[itemHandle].getMetaTime(),
                         0
                     ]
                     if self.allScenes[itemHandle].readOnly:

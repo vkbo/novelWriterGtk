@@ -64,6 +64,7 @@ class Scene():
         self.getNumber    = self.theMeta.getNumber
         self.getWords     = self.theMeta.getWords
         self.getChars     = self.theMeta.getChars
+        self.getMetaTime  = self.theMeta.getTime
         self.getChanged   = self.theMeta.getChanged
         self.getText      = self.theText.getText
         self.getWordCount = self.theText.getWordCount
@@ -101,9 +102,10 @@ class Scene():
 
         if textSaved or summarySaved:
             self.theMeta.setUpdated(formatDateTime())
-        if textSaved:
-            self.theMeta.setWords(self.theText.wordsLatest)
-            self.theMeta.setChars(self.theText.charsLatest)
+
+        self.theMeta.setWords(self.theText.wordsLatest)
+        self.theMeta.setChars(self.theText.charsLatest)
+        self.theMeta.setTime(self.theTiming.timeCurrent)
 
         self.theMeta.saveData()
 

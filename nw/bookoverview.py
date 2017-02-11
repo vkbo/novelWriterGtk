@@ -148,6 +148,7 @@ class BookOverview():
             tmpSection = itemData[SCIDX_SECTION]
             tmpChapter = itemData[SCIDX_CHAPTER]
             tmpNumber  = itemData[SCIDX_NUMBER]
+            tmpTime    = itemData[SCIDX_TIME]
 
             scnNum     = makeSortString(tmpSection,tmpChapter,tmpNumber)
             scnSec     = makeSortString(tmpSection,tmpChapter,0)
@@ -168,7 +169,7 @@ class BookOverview():
             if tmpSection == SCN_ARCH:
                 tmpTitle = "<span foreground='red'>"+str(tmpTitle)+"</span>"
 
-            tmpData = [tmpTitle,str(tmpNumber),str(tmpWords),"","",scnNum]
+            tmpData = [tmpTitle,str(tmpNumber),str(tmpWords),str(tmpTime),"",scnNum]
             tmpIter = self.treeStore.append(parIter,tmpData)
             self.iterMap[itemHandle] = tmpIter
 
