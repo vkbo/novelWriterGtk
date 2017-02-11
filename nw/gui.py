@@ -11,41 +11,43 @@ import logging as logger
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository  import Gtk, GLib
-from time           import sleep
-from os             import path
-from nw             import *
-from nw.editor      import Editor
-from nw.dialogs     import EditBookDialog
-from nw.scenetree   import SceneTree
-from nw.timer       import Timer
-from nw.book        import Book
-from nw.statusbar   import StatusBar
-from nw.scenebuffer import SceneBuffer
+from gi.repository   import Gtk, GLib
+from time            import sleep
+from os              import path
+from nw              import *
+from nw.editor       import Editor
+from nw.dialogs      import EditBookDialog
+from nw.scenetree    import SceneTree
+from nw.timer        import Timer
+from nw.book         import Book
+from nw.statusbar    import StatusBar
+from nw.bookoverview import BookOverview
+from nw.scenebuffer  import SceneBuffer
 
 class GUI():
 
     def __init__(self):
 
-        self.guiLoaded   = False
+        self.guiLoaded    = False
 
         # Define Core Objects
-        self.mainConf    = CONFIG
-        self.guiBuilder  = BUILDER
+        self.mainConf     = CONFIG
+        self.guiBuilder   = BUILDER
 
-        self.getObject   = self.guiBuilder.get_object
-        self.winMain     = self.getObject("winMain")
+        self.getObject    = self.guiBuilder.get_object
+        self.winMain      = self.getObject("winMain")
 
         # Prepare GUI Classes
-        self.theBook     = Book()
-        self.guiTimer    = Timer(self.theBook)
-        self.statusBar   = StatusBar()
-        self.webEditor   = Editor(self.guiTimer,self.statusBar)
-        self.sceneTree   = SceneTree()
-        self.sceneBuffer = SceneBuffer(self.theBook)
+        self.theBook      = Book()
+        self.guiTimer     = Timer(self.theBook)
+        self.statusBar    = StatusBar()
+        self.webEditor    = Editor(self.guiTimer,self.statusBar)
+        self.sceneTree    = SceneTree()
+        self.sceneBuffer  = SceneBuffer(self.theBook)
+        self.bookOverview = BookOverview(self.theBook)
 
         # Runtime Properties
-        self.currHandle = ""
+        self.currHandle   = ""
 
         # Set Up Event Handlers
         guiHandlers = {
@@ -72,6 +74,7 @@ class GUI():
             "onMenuEditPasteClean"     : (self.webEditor.onEditPasteProcess,PASTE_CLEAN),
             "onMenuEditBook"           :  self.onEditBook,
             "onMenuEditPreferences"    :  self.mainConf.onLoad,
+            "onMenuViewBookOverview"   :  self.onViewBookOverview,
             "onMenuViewSceneBuffer"    :  self.onViewSceneBuffer,
             "onMenuHelpAbout"          :  self.onShowAbout,
             # Main Menu Recent List
@@ -464,6 +467,10 @@ class GUI():
     ##
     #  Main Window Events
     ##
+
+    def onViewBookOverview(self, guiObject):
+        self.bookOverview.showGUI()
+        return
 
     def onViewSceneBuffer(self, guiObject):
         self.sceneBuffer.showGUI()

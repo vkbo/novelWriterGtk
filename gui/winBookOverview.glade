@@ -7,7 +7,7 @@
     <property name="title" translatable="yes">Scene Buffer</property>
     <property name="default_width">600</property>
     <property name="default_height">250</property>
-    <signal name="destroy-event" handler="onClickSceneBufferDestroy" swapped="no"/>
+    <signal name="destroy-event" handler="onClickBookOverviewDestroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="boxOuter">
         <property name="visible">True</property>
@@ -76,6 +76,11 @@
                     <child>
                       <object class="GtkTreeViewColumn" id="treeBookRate">
                         <property name="title" translatable="yes">Rate</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="treeBookSort">
+                        <property name="title" translatable="yes">Sort</property>
                       </object>
                     </child>
                   </object>
