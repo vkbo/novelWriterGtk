@@ -1,6 +1,6 @@
 ## novelWriter Change Log
 
-** Version 0.4 - Under development **
+#### Version 0.4 - Under development
 * **GUI:** Added about dialog.
 * **Code:** Book files are now only saved when there is an actual change in data. Previously it would simply just overwrite files, which is not ideal when using file sync software.
 
