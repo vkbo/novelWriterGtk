@@ -456,7 +456,7 @@ class Book():
             if path.isfile(itemPath):
                 if len(listItem) > 18 and listItem[12:19] == "-scene-" and listItem[-3:] == "txt":
                     itemHandle = listItem[:12]
-                    sceneIndex[itemHandle][SCIDX_COUNT] += 1
+                    sceneIndex[itemHandle][nw.SCIDX_COUNT] += 1
 
         self.theOpt.setSceneIndex(sceneIndex)
 

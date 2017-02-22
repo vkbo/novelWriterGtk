@@ -13,7 +13,8 @@ Created: 2017-01-14 [0.2.0]
 import logging as logger
 import nw
 
-from os import path, remove
+from os           import path, remove
+from nw.functions import formatDateTime
 
 class SceneTiming():
 

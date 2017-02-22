@@ -15,6 +15,7 @@ import nw
 
 from os                   import listdir
 from time                 import time
+from nw.functions         import formatDateTime
 from nw.book.sceneopt     import SceneOpt
 from nw.book.scenemeta    import SceneMeta
 from nw.book.scenetext    import SceneText

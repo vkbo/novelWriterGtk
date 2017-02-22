@@ -18,7 +18,7 @@ gi.require_version("Gtk","3.0")
 from gi.repository   import Gtk, GLib
 from time            import sleep
 from os              import path
-from nw.functions    import getIconWidget, formatDateTime, dateFromStamp
+from nw.functions    import getIconWidget, formatDateTime, dateFromStamp, makeSortString
 from nw.editor       import Editor
 from nw.dialogs      import EditBookDialog
 from nw.scenetree    import SceneTree
@@ -499,11 +499,11 @@ class GUI():
 
     def onMainTabChange(self, guiObject, guiChild, tabIdx):
         logger.debug("GUI.onMainTabChange: Main tab change")
-        if tabIdx == MAIN_DETAILS:
+        if tabIdx == nw.MAIN_DETAILS:
             return
-        if tabIdx == MAIN_EDITOR:
+        if tabIdx == nw.MAIN_EDITOR:
             return
-        if tabIdx == MAIN_SOURCE:
+        if tabIdx == nw.MAIN_SOURCE:
             self.loadSourceView()
         return
 

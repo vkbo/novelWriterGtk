@@ -11,11 +11,14 @@ Created: 2017-01-10 [0.1.0]
 """
 
 import logging as logger
-import nw
 import configparser
+import nw
+import gi
+gi.require_version("Gtk","3.0")
 
-from os      import path, mkdir, getcwd
-from appdirs import user_config_dir
+from gi.repository import Gtk
+from os            import path, mkdir, getcwd
+from appdirs       import user_config_dir
 
 class Config:
 

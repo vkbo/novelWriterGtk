@@ -12,6 +12,13 @@ Created: 2017-02-22 [0.4.0]
 
 import logging as logger
 import nw
+import gi
+
+gi.require_version("Gtk","3.0")
+
+from gi.repository import Gtk, GdkPixbuf
+from os            import path
+from datetime      import datetime
 
 def formatDateTime(dateFormat=nw.DATE_NUM1, timeValue=None, localFormat="dd.mm.yyyy"):
 

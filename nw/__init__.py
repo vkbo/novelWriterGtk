@@ -17,7 +17,6 @@ gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk, GdkPixbuf
 from os            import path
-from datetime      import datetime
 from nw.config     import Config
 
 __author__     = "Veronica Berglyd Olsen"

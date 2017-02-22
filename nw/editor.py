@@ -17,7 +17,7 @@ gi.require_version("Gtk","3.0")
 gi.require_version("WebKit","3.0")
 
 from gi.repository import Gtk, WebKit
-#from nw            import *
+from os            import path
 
 class Editor(WebKit.WebView):
 
@@ -65,7 +65,7 @@ class Editor(WebKit.WebView):
         logger.debug("Editor.clearEditor: Clearing editor")
 
         self.load_html_string("",self.htmlRoot)
-        self.statusBar.setLED(LED_GREY)
+        self.statusBar.setLED(nw.LED_GREY)
 
         # Wait until clearing is done
         while Gtk.events_pending():
@@ -97,7 +97,7 @@ class Editor(WebKit.WebView):
         self.setText(self.theBook.getSceneText(self.currHandle))
         self.guiTimer.resetTimer()
         self.guiTimer.setPreviousTotal(self.currHandle)
-        self.statusBar.setLED(LED_GREEN)
+        self.statusBar.setLED(nw.LED_GREEN)
         self.textSaved = True
         self.setEditable(False)
 
@@ -269,7 +269,7 @@ class Editor(WebKit.WebView):
         self.guiTimer.resetAutoPause()
         if self.textSaved:
             self.textSaved = False
-            self.statusBar.setLED(LED_RED)
+            self.statusBar.setLED(nw.LED_RED)
         return
 
     def onLoadStatusChange(self, guiObject, loadStatus):
