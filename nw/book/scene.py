@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*
+"""novelWriter Scene Class
 
-##
-#  novelWriter – Scene Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the scene of the loaded book
-##
+novelWriter – Scene Class
+====================================
+Holds the scene of the loaded book
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
+import nw
 
 from os                   import listdir
 from time                 import time
-from nw                   import *
 from nw.book.sceneopt     import SceneOpt
 from nw.book.scenemeta    import SceneMeta
 from nw.book.scenetext    import SceneText
@@ -22,7 +26,7 @@ class Scene():
     def __init__(self, bookOpt, sceneHandle):
 
         # Core Objects
-        self.mainConf    = CONFIG
+        self.mainConf    = nw.CONFIG
         self.theOpt      = SceneOpt()
         self.theMeta     = SceneMeta(self.theOpt)
         self.theText     = SceneText(self.theOpt)

@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*
+"""novelWriter Dialog Class
 
-##
-#  novelWriter – Dialog Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Wrapper class for GUI dialogs.
-##
+novelWriter – Dialog Class
+==========================
+Wrapper class for GUI dialogs
+
+File History:
+Created: 2017-01-11 [0.1.0]
+
+"""
 
 import logging as logger
-
+import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from os            import path
 from gi.repository import Gtk
-from nw            import *
 
 class EditBookDialog(Gtk.Dialog):
 
@@ -22,7 +25,7 @@ class EditBookDialog(Gtk.Dialog):
         Gtk.Dialog.__init__(self,"",BUILDER.get_object("winMain"),0,
             ("Cancel",Gtk.ResponseType.CANCEL,"Save",Gtk.ResponseType.ACCEPT))
 
-        self.mainConf = CONFIG
+        self.mainConf = nw.CONFIG
 
         # Title
         lblTitle = Gtk.Label("")
@@ -66,12 +69,12 @@ class EditBookDialog(Gtk.Dialog):
         alignBookPath.set_size_request(400,-1)
         fmeBookPath.add(alignBookPath)
 
-        if nwAction == ACTION_NEW:
+        if nwAction == nw.ACTION_NEW:
             self.fileBookPath = Gtk.FileChooserButton("Open Book Folder")
             self.fileBookPath.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
             alignBookPath.add(self.fileBookPath)
 
-        if nwAction == ACTION_EDIT:
+        if nwAction == nw.ACTION_EDIT:
             self.entryBookPath = Gtk.Entry()
             self.entryBookPath.set_editable(False)
             alignBookPath.add(self.entryBookPath)
@@ -91,7 +94,7 @@ class EditBookDialog(Gtk.Dialog):
         guiBox.add(fmeBookPath)
 
         self.show_all()
-        
+
         return
 
 # End Class EditBookDialog

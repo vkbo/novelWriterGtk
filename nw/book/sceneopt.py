@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*
+"""novelWriter Scene Options Class
 
-##
-#  novelWriter – Scene Options Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the data options of the loaded scene
-##
+novelWriter – Scene Options Class
+====================================
+Holds the data options of the loaded scene
+
+File History:
+Created: 2017-01-18 [0.3.0]
+
+"""
 
 import logging as logger
+import nw
 
 from os import path
-from nw import *
 
 class SceneOpt():
 

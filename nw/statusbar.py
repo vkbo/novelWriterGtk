@@ -1,26 +1,30 @@
 # -*- coding: utf-8 -*
+"""novelWriter StatusBar Class
 
-##
-#  novelWriter – StatusBar Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Main wrapper class for the GUI status bar
-##
+novelWriter – StatusBar Class
+=============================
+Main wrapper class for the GUI status bar
+
+File History:
+Created: 2017-01-17 [0.2.1]
+
+"""
 
 import logging as logger
-
+import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
-from nw            import *
+from nw.functions  import getIconWidget
 
 class StatusBar():
 
     def __init__(self):
 
         # Connect to Global Objects
-        self.mainConf     = CONFIG
-        self.getObject    = BUILDER.get_object
+        self.mainConf     = nw.CONFIG
+        self.getObject    = nw.BUILDER.get_object
 
         # Connect to GUI Elements
         self.statusImage  = self.getObject("imgStatusFile")

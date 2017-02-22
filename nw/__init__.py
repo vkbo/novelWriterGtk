@@ -1,20 +1,34 @@
 # -*- coding: utf-8 -*
+"""novelWriter Init
 
-##
-#  novelWriter – Init File
-# ~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Application initialisation
-##
+novelWriter – Init File
+=======================
+Application initialisation
+
+File History:
+Created: 2017-01-10 [0.1.0]
+
+"""
 
 import logging as logger
-
 import gi
+
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk, GdkPixbuf
 from os            import path
 from datetime      import datetime
 from nw.config     import Config
+
+__author__     = "Veronica Berglyd Olsen"
+__copyright__  = "Copyright 2016-2017, Veronica Berglyd Olsen"
+__credits__    = ["Veronica Berglyd Olsen"]
+__license__    = "GPLv3"
+__version__    = "0.4.0"
+__date__       = "2017"
+__maintainer__ = "Veronica Berglyd Olsen"
+__email__      = "code@jadzia626.net"
+__status__     = "Development"
 
 # ================================================================================================ #
 # Begin Initialisation
@@ -38,17 +52,6 @@ CONFIG.updateRecentList()
 # Begin Global Constant
 
 # Date Formats
-DATEFORMAT = {
-    "dd.mm.yyyy" : ["DMY","."],
-    "dd/mm/yyyy" : ["DMY","/"],
-    "dd-mm-yyyy" : ["DMY","-"],
-    "mm.dd.yyyy" : ["MDY","."],
-    "mm/dd/yyyy" : ["MDY","/"],
-    "mm-dd-yyyy" : ["MDY","-"],
-    "yyyy.mm.dd" : ["YMD","."],
-    "yyyy/mm/dd" : ["YMD","/"],
-    "yyyy-mm-dd" : ["YMD","-"],
-}
 DATE_NUM1 = 0
 DATE_NUM2 = 1
 DATE_TIME = 2
@@ -101,64 +104,4 @@ LED_RED    = "icon-red"
 LED_BLUE   = "icon-blue"
 
 # End Global Constants
-# ================================================================================================ #
-# Begin Global Functions
-
-def formatDateTime(dateFormat=DATE_NUM1, timeValue=None, localFormat="dd.mm.yyyy"):
-
-    if timeValue is None: timeValue = datetime.now()
-
-    if dateFormat == DATE_NUM1: return "{:%Y%m%d%H%M%S}".format(timeValue)
-    if dateFormat == DATE_NUM2: return "{:%Y%m%d-%H%M%S}".format(timeValue)
-
-    timeString = "{:%H%M%S}".format(timeValue)
-
-    dtSeq = DATEFORMAT[localFormat][0]
-    dtSep = DATEFORMAT[localFormat][1]
-
-    if dtSeq == "DMY": dateString = "{:%d.%m.%Y}".format(timeValue)
-    if dtSeq == "MDY": dateString = "{:%m.%d.%Y}".format(timeValue)
-    if dtSeq == "YMD": dateString = "{:%Y.%m.%d}".format(timeValue)
-
-    dateString.replace(".",dtSep)
-
-    if dateFormat == DATE_TIME: return timeString
-    if dateFormat == DATE_DATE: return dateString
-    if dateFormat == DATE_FULL: return timeString+" "+dateString
-
-    return None
-
-def dateFromStamp(dateString):
-    return datetime.strptime(dateString,"%Y%m%d%H%M%S")
-
-def makeSortString(section,chapter,number):
-    return "%01d.%02d.%03d" % (section,chapter,number)
-
-def getIconWidget(iconID, iconSize):
-
-    guiPath  = CONFIG.guiPath
-    iconFile = "%s-%s.png" % (iconID, str(iconSize))
-    iconPath = path.join(guiPath,"icons",iconFile)
-    gtkImage = Gtk.Image()
-
-    if path.isfile(iconPath):
-        gtkImage.set_from_file(iconPath)
-    else:
-        iconFile = "%s-256.png" % iconID
-        iconPath = path.join(guiPath,"icons",iconFile)
-        if path.isfile(iconPath):
-            pixBuffer = GdkPixbuf.Pixbuf.new_from_file(iconPath)
-            gtkImage.set_from_pixbuf(pixBuffer.scale_simple(
-                iconSize,iconSize,GdkPixbuf.InterpType.BILINEAR))
-
-    return gtkImage
-
-def formatTime(timeValue):
-
-    minute, second = divmod(timeValue, 60)
-    hour,   minute = divmod(minute, 60)
-
-    return "%02d:%02d:%02d" % (hour, minute, second)
-
-# End Global Functions
 # ================================================================================================ #

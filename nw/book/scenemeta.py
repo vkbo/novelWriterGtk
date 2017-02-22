@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*
+"""novelWriter Scene Meta Class
 
-##
-#  novelWriter – Scene Meta Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the metadata of the loaded scene
-##
+novelWriter – Scene Meta Class
+====================================
+Holds the metadata of the loaded scene
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
 import configparser
+import nw
 
 from time import time
 from os   import path
-from nw   import *
 
 class SceneMeta():
 
     def __init__(self, theOpt):
 
         # Core Objects
-        self.mainConf     = CONFIG
+        self.mainConf     = nw.CONFIG
         self.theOpt       = theOpt
 
         # Saved Attributes

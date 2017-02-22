@@ -1,27 +1,31 @@
 # -*- coding: utf-8 -*
+"""novelWriter Timer Class
 
-##
-#  novelWriter – Timer Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Main wrapper class for the GUI timer and its related functions
-##
+novelWriter – Timer Class
+=======================
+Wrapper class for the GUI timer and its related functions
+
+File History:
+Created: 2017-01-12 [0.1.0]
+
+"""
 
 import logging as logger
-
+import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk, Gdk
 from time          import time, strftime
-from nw            import *
+from nw.functions  import formatTime
 
 class Timer():
 
     def __init__(self, theBook):
 
         # Connect to GUI and Data
-        self.mainConf    = CONFIG
-        self.getObject   = BUILDER.get_object
+        self.mainConf    = nw.CONFIG
+        self.getObject   = nw.BUILDER.get_object
         self.theBook     = theBook
 
         self.timeSession = self.getObject("lblTimeSession")

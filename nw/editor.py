@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*
+"""novelWriter Web Editor Class
 
-##
-#  novelWriter – Editor Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Main wrapper class for the GUI text editor.
-##
+novelWriter – Web Editor Class
+==============================
+Main wrapper class for the GUI text editor
+
+File History:
+Created: 2017-01-10 [0.1.0]
+
+"""
 
 import logging as logger
-
+import nw
 import gi
 gi.require_version("Gtk","3.0")
 gi.require_version("WebKit","3.0")
 
 from gi.repository import Gtk, WebKit
-from nw            import *
+#from nw            import *
 
 class Editor(WebKit.WebView):
 
@@ -22,8 +26,8 @@ class Editor(WebKit.WebView):
         WebKit.WebView.__init__(self)
 
         # Connect to GUI
-        self.mainConf   = CONFIG
-        self.getObject  = BUILDER.get_object
+        self.mainConf   = nw.CONFIG
+        self.getObject  = nw.BUILDER.get_object
         self.guiTimer   = timer
         self.statusBar  = statusBar
         self.theBook    = None
@@ -36,7 +40,7 @@ class Editor(WebKit.WebView):
         self.connect("user-changed-contents",self.onContentChanged)
         self.connect("notify::load-status",self.onLoadStatusChange)
         self.load_html_string("",self.htmlRoot)
-        self.statusBar.setLED(LED_GREY)
+        self.statusBar.setLED(nw.LED_GREY)
 
         setEditor = self.get_settings()
         setEditor.set_property("enable-default-context-menu",False)

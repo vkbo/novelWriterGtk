@@ -1,23 +1,27 @@
 # -*- coding: utf-8 -*
+"""novelWriter Scene Summary Class
 
-##
-#  novelWriter – Scene Summary Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the summary of the loaded scene
-##
+novelWriter – Scene Summary Class
+====================================
+Holds the summary of the loaded scene
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
+import nw
 
 from os      import path, rename, remove
 from hashlib import sha256
-from nw      import *
 
 class SceneSummary():
 
     def __init__(self, theOpt):
 
         # Core Objects
-        self.mainConf    = CONFIG
+        self.mainConf    = nw.CONFIG
         self.theOpt      = theOpt
 
         # Attributes

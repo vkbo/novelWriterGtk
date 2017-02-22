@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*
+"""novelWriter Book Overview Window
 
-##
-#  novelWriter – Book Overview Window
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Shows the scene list with more details than the main window
-##
+novelWriter – Book Overview Window
+==================================
+Shows the scene list with more details than the main window
+
+File History:
+Created: 2017-02-11 [0.4.0]
+
+"""
 
 import logging as logger
-
+import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
 from os            import path
 from time          import time
-from nw            import *
+from nw.functions  import makeSortString
 
 # Set to true to show sorting in treeview
 debugShowSort = True
@@ -42,7 +46,7 @@ class BookOverview():
         self.COL_SORT   = 5
 
         # Connect to GUI
-        self.mainConf   = CONFIG
+        self.mainConf   = nw.CONFIG
         self.winBuilder = Gtk.Builder()
         self.winObject  = self.winBuilder.get_object
 
@@ -143,12 +147,12 @@ class BookOverview():
 
             itemData   = sceneIndex[itemHandle]
 
-            tmpTitle   = itemData[SCIDX_TITLE]
-            tmpWords   = itemData[SCIDX_WORDS]
-            tmpSection = itemData[SCIDX_SECTION]
-            tmpChapter = itemData[SCIDX_CHAPTER]
-            tmpNumber  = itemData[SCIDX_NUMBER]
-            tmpTime    = itemData[SCIDX_TIME]
+            tmpTitle   = itemData[nw.SCIDX_TITLE]
+            tmpWords   = itemData[nw.SCIDX_WORDS]
+            tmpSection = itemData[nw.SCIDX_SECTION]
+            tmpChapter = itemData[nw.SCIDX_CHAPTER]
+            tmpNumber  = itemData[nw.SCIDX_NUMBER]
+            tmpTime    = itemData[nw.SCIDX_TIME]
 
             scnNum     = makeSortString(tmpSection,tmpChapter,tmpNumber)
             scnSec     = makeSortString(tmpSection,tmpChapter,0)
@@ -157,16 +161,16 @@ class BookOverview():
                 parIter = self.chapMap[scnSec]
                 self.chapCount[scnSec] += 1
             else:
-                if tmpSection == SCN_NONE: scnChapter = "<b>Unassigned</b>"
-                if tmpSection == SCN_PRO:  scnChapter = "<b>Prologue</b>"
-                if tmpSection == SCN_CHAP: scnChapter = "<b>Chapter %d</b>" % tmpChapter
-                if tmpSection == SCN_EPI:  scnChapter = "<b>Epilogue</b>"
-                if tmpSection == SCN_ARCH: scnChapter = "<b>Archived</b>"
+                if tmpSection == nw.SCN_NONE: scnChapter = "<b>Unassigned</b>"
+                if tmpSection == nw.SCN_PRO:  scnChapter = "<b>Prologue</b>"
+                if tmpSection == nw.SCN_CHAP: scnChapter = "<b>Chapter %d</b>" % tmpChapter
+                if tmpSection == nw.SCN_EPI:  scnChapter = "<b>Epilogue</b>"
+                if tmpSection == nw.SCN_ARCH: scnChapter = "<b>Archived</b>"
                 parIter = self.treeStore.append(None,[scnChapter,None,None,None,None,scnSec])
                 self.chapMap[scnSec]   = parIter
                 self.chapCount[scnSec] = 1
 
-            if tmpSection == SCN_ARCH:
+            if tmpSection == nw.SCN_ARCH:
                 tmpTitle = "<span foreground='red'>"+str(tmpTitle)+"</span>"
 
             tmpData = [tmpTitle,str(tmpNumber),str(tmpWords),str(tmpTime),"",scnNum]

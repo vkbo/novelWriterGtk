@@ -1,27 +1,30 @@
 # -*- coding: utf-8 -*
+"""novelWriter Scene Buffer Window
 
-##
-#  novelWriter – Scene Buffer Window
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Shows a small window with the state of the scene buffer
-##
+novelWriter – Scene Buffer Window
+=================================
+Shows a small window with the state of the scene buffer
+
+File History:
+Created: 2017-01-17 [0.3.0]
+
+"""
 
 import logging as logger
-
+import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
 from os            import path
 from time          import time
-from nw            import *
 
 class SceneBuffer():
 
     def __init__(self, theBook):
 
         # Connect to GUI
-        self.mainConf   = CONFIG
+        self.mainConf   = nw.CONFIG
         self.winBuilder = Gtk.Builder()
         self.winObject  = self.winBuilder.get_object
 

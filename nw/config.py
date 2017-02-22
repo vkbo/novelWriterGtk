@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*
+"""novelWriter Config Class
 
-##
-#  novelWriter – Config Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  This class reads and store the main preferences of the application.
-##
+novelWriter – Config Class
+==========================
+This class reads and store the main preferences of the application
+
+File History:
+Created: 2017-01-10 [0.1.0]
+
+"""
 
 import logging as logger
+import nw
 import configparser
 
 from os      import path, mkdir, getcwd
 from appdirs import user_config_dir
-from nw      import *
 
 class Config:
 

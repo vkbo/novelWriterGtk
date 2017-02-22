@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*
+"""novelWriter Scene Timing Class
 
-##
-#  novelWriter – Scene Timing Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the timing of the loaded scene
-##
+novelWriter – Scene Timing Class
+====================================
+Holds the timing of the loaded scene
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
+import nw
 
 from os import path, remove
-from nw import *
 
 class SceneTiming():
 
     def __init__(self, theOpt, theText):
 
         # Core Objects
-        self.mainConf = CONFIG
-        self.theOpt   = theOpt
-        self.theText  = theText
+        self.mainConf    = nw.CONFIG
+        self.theOpt      = theOpt
+        self.theText     = theText
 
         # Runtime Attributes
         self.timeCurrent = 0.0

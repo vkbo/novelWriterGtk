@@ -1,23 +1,27 @@
 # -*- coding: utf-8 -*
+"""novelWriter Book Meta Class
 
-##
-#  novelWriter – Book Meta Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the metadata of the loaded book
-##
+novelWriter – Book Meta Class
+=============================
+Holds the metadata of the loaded book
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
 import configparser
+import nw
 
 from os import path, mkdir
-from nw import *
 
 class BookMeta():
 
     def __init__(self, theOpt):
 
         # Core Objects
-        self.mainConf    = CONFIG
+        self.mainConf    = nw.CONFIG
         self.theOpt      = theOpt
 
         # Saved Attributes

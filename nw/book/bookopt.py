@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*
+"""novelWriter Book Options Class
 
-##
-#  novelWriter – Book Options Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the data options of the loaded book
-##
+novelWriter – Book Options Class
+====================================
+Holds the data options of the loaded book
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
+import nw
 
 from os import path, mkdir
-from nw import *
 
 class BookOpt():
 
@@ -22,7 +26,7 @@ class BookOpt():
     def __init__(self):
 
         # Core Objects
-        self.mainConf     = CONFIG
+        self.mainConf     = nw.CONFIG
 
         # Attributes
         self.bookFolder   = None

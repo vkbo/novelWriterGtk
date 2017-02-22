@@ -1,26 +1,30 @@
 # -*- coding: utf-8 -*
+"""novelWriter Scene Text Class
 
-##
-#  novelWriter – Scene Text Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Holds the text of the loaded scene
-##
+novelWriter – Scene Text Class
+====================================
+Holds the text of the loaded scene
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
+import nw
 
 from os      import path, rename, remove
 from hashlib import sha256
 from re      import sub
 from bleach  import clean
 from html    import unescape
-from nw      import *
 
 class SceneText():
 
     def __init__(self, theOpt):
 
         # Core Objects
-        self.mainConf    = CONFIG
+        self.mainConf    = nw.CONFIG
         self.theOpt      = theOpt
 
         # Attributes

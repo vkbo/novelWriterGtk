@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*
+"""novelWriter Main GUI Class
 
-##
-#  novelWriter – Main GUI Class
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Sets up the main GUI and holds action and event functions
-##
+novelWriter – Main GUI Class
+============================
+Sets up the main GUI and holds action and event functions
+
+File History:
+Created: 2017-01-10 [0.1.0]
+
+"""
 
 import logging as logger
-
+import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository   import Gtk, GLib
 from time            import sleep
 from os              import path
-from nw              import *
+from nw.functions    import getIconWidget, formatDateTime, dateFromStamp
 from nw.editor       import Editor
 from nw.dialogs      import EditBookDialog
 from nw.scenetree    import SceneTree
@@ -31,8 +35,8 @@ class GUI():
         self.guiLoaded    = False
 
         # Define Core Objects
-        self.mainConf     = CONFIG
-        self.guiBuilder   = BUILDER
+        self.mainConf     = nw.CONFIG
+        self.guiBuilder   = nw.BUILDER
 
         self.getObject    = self.guiBuilder.get_object
         self.winMain      = self.getObject("winMain")
@@ -70,8 +74,8 @@ class GUI():
             "onMenuFileOpen"           :  self.onOpenBook,
             "onMenuFileSave"           :  self.onSaveBook,
             "onMenuFileQuit"           :  self.onGuiDestroy,
-            "onMenuEditPastePlain"     : (self.webEditor.onEditPasteProcess,PASTE_PLAIN),
-            "onMenuEditPasteClean"     : (self.webEditor.onEditPasteProcess,PASTE_CLEAN),
+            "onMenuEditPastePlain"     : (self.webEditor.onEditPasteProcess,nw.PASTE_PLAIN),
+            "onMenuEditPasteClean"     : (self.webEditor.onEditPasteProcess,nw.PASTE_CLEAN),
             "onMenuEditBook"           :  self.onEditBook,
             "onMenuEditPreferences"    :  self.mainConf.onLoad,
             "onMenuViewBookOverview"   :  self.onViewBookOverview,
@@ -229,9 +233,9 @@ class GUI():
         scnSection = self.theBook.getSceneSection(self.currHandle)
         scnChapter = self.theBook.getSceneChapter(self.currHandle)
         scnCreated = "Created "+formatDateTime(
-            DATE_DATE,dateFromStamp(self.theBook.getSceneCreated(self.currHandle)))
+            nw.DATE_DATE,dateFromStamp(self.theBook.getSceneCreated(self.currHandle)))
         scnUpdated = "Updated "+formatDateTime(
-            DATE_DATE,dateFromStamp(self.theBook.getSceneUpdated(self.currHandle)))
+            nw.DATE_DATE,dateFromStamp(self.theBook.getSceneUpdated(self.currHandle)))
         scnVersion = "Draft %d, Version %d" % (
             self.theBook.getBookDraft(),self.theBook.getSceneVersion(self.currHandle))
 
@@ -317,8 +321,8 @@ class GUI():
     def updateWordCount(self):
 
         wordCount    = self.theBook.getSceneWords(self.currHandle)
-        sessionWords = str(wordCount[COUNT_ADDED])
-        totalWords   = str(wordCount[COUNT_LATEST])
+        sessionWords = str(wordCount[nw.COUNT_ADDED])
+        totalWords   = str(wordCount[nw.COUNT_LATEST])
 
         self.getObject("lblWordsSessionValue").set_label(sessionWords)
         self.getObject("lblWordsTotalValue").set_label(totalWords)
@@ -482,11 +486,11 @@ class GUI():
 
         dlgAbout.set_transient_for(self.winMain)
         dlgAbout.set_program_name(self.mainConf.appName)
-        dlgAbout.set_version(self.mainConf.appVersion)
+        dlgAbout.set_version(nw.__version__)
         dlgAbout.set_logo(getIconWidget("novelWriter",64).get_pixbuf())
         dlgAbout.set_website(self.mainConf.appURL)
         dlgAbout.set_comments("A simple editor for writing novels.")
-        dlgAbout.set_authors(["Veronica Berglyd Olsen"])
+        dlgAbout.set_authors(nw.__credits__)
 
         dlgAbout.run()
         dlgAbout.destroy()

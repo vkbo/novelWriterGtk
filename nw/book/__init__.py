@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*
+"""novelWriter Data Wrapper Init File
 
-##
-#  novelWriter – Data Wrapper Init File
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#  Data Wrapper initialisation
-##
+novelWriter – Data Wrapper Init File
+====================================
+Data Wrapper initialisation for book data
+
+File History:
+Created: 2017-01-14 [0.2.0]
+
+"""
 
 import logging as logger
+import nw
 
 from os                   import path, mkdir, listdir
 from time                 import time
 from hashlib              import sha256
-from nw                   import *
 from nw.book.scene        import Scene
 from nw.book.bookopt      import BookOpt
 from nw.book.bookmeta     import BookMeta
@@ -31,7 +35,7 @@ class Book():
         """
 
         # Core Objects
-        self.mainConf      = CONFIG
+        self.mainConf      = nw.CONFIG
         self.theOpt        = BookOpt()
         self.theMeta       = BookMeta(self.theOpt)
         self.allScenes     = {}
