@@ -111,6 +111,7 @@ class Editor(WebKit.WebView):
 
         scnText = self.getText()
         self.theBook.setSceneText(self.currHandle,scnText)
+        self.statusBar.setLED(nw.LED_GREEN)
         self.textSaved = True
 
         return

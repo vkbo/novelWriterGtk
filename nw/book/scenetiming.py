@@ -28,6 +28,7 @@ class SceneTiming():
         # Runtime Attributes
         self.timeCurrent = 0.0
         self.timeTotal   = 0.0
+        self.timeTemp    = 0.0
         self.timeList    = []
 
         return
@@ -110,9 +111,14 @@ class SceneTiming():
         filePath = path.join(sceneFolder,fileName)
 
         if autoSave:
-            logger.debug("SceneTiming.saveTiming: Autosaving timing information")
-            fileMode = "w+"
-            savePath = tempPath
+            if self.timeCurrent == self.timeTemp:
+                logger.debug("SceneTiming.saveTiming: Timing not changed")
+                return
+            else:
+                logger.debug("SceneTiming.saveTiming: Autosaving timing information")
+                self.timeTemp = self.timeCurrent
+                fileMode = "w+"
+                savePath = tempPath
         else:
             logger.debug("SceneTiming.saveTiming: Saving timing information")
             self.timeTotal += self.timeCurrent

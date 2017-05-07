@@ -28,6 +28,7 @@ class BookMeta():
         self.bookTitle   = ""
         self.bookAuthor  = ""
         self.recentScene = ""
+        self.versionUsed = ""
 
         # Runtime Attributes
         self.bookLoaded  = False
@@ -56,7 +57,7 @@ class BookMeta():
 
         """
         Description:
-            Loads the config variables for the currently loaded book speciefied in tyhe BookOpt object.
+            Loads the config variables for the currently loaded book speciefied in the BookOpt object.
             Verifies that the draft folder for the scenes exists.
             Sets scene folder to the latest draft.
         """
@@ -85,6 +86,10 @@ class BookMeta():
         if confParser.has_section(cnfSec):
             if confParser.has_option(cnfSec,"Recent"): self.recentScene = confParser.get(cnfSec,"Recent")
 
+        cnfSec = "Meta"
+        if confParser.has_section(cnfSec):
+            if confParser.has_option(cnfSec,"SWVersion"): self.versionUsed = confParser.get(cnfSec,"SWVersion")
+
         self.bookLoaded = True
 
         # self.verifyDraftFolder()
@@ -105,6 +110,10 @@ class BookMeta():
             logger.debug("BookMeta.saveData: bookFolder = None")
             return
 
+        if not self.bookChanged:
+            logger.debug("BookMeta.saveData: No changes to save")
+            return
+
         bookPath   = path.join(bookFolder,"bookData.nwf")
         confParser = configparser.ConfigParser()
 
@@ -117,6 +126,10 @@ class BookMeta():
         cnfSec = "Scene"
         confParser.add_section(cnfSec)
         confParser.set(cnfSec,"Recent", str(self.recentScene))
+
+        cnfSec = "Meta"
+        confParser.add_section(cnfSec)
+        confParser.set(cnfSec,"SWVersion", str(nw.__version__))
 
         # Write File
         confParser.write(open(bookPath,"w"))

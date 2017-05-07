@@ -115,7 +115,6 @@ class SceneSummary():
     def setSummary(self, newSummary):
         self.summary    = newSummary.strip()
         self.hasSummary = True
-        return
 
     ##
     #  Getters
