@@ -48,7 +48,7 @@ class SceneSummary():
         logger.debug("SceneSummary.loadSummary: Loading scene summary")
 
         fileName  = "%s-summary-%03d.txt" % (sceneHandle,sceneVersion)
-        filePath  = path.join(sceneFolder,fileName)
+        filePath  = path.join(sceneFolder,sceneHandle,fileName)
 
         if not path.isfile(filePath):
             logger.debug("SceneSummary.loadSummary: File not found %s" % filePath)
@@ -93,8 +93,8 @@ class SceneSummary():
 
         fileName = "%s-summary-%03d.txt" % (sceneHandle,sceneVersion)
         tempName = "%s-summary-%03d.bak" % (sceneHandle,sceneVersion)
-        filePath = path.join(sceneFolder,fileName)
-        tempPath = path.join(sceneFolder,tempName)
+        filePath = path.join(sceneFolder,sceneHandle,fileName)
+        tempPath = path.join(sceneFolder,sceneHandle,tempName)
 
         # Back up old file
         if path.isfile(tempPath): remove(tempPath)

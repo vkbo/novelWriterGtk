@@ -13,7 +13,7 @@ Created: 2017-01-14 [0.2.0]
 import logging as logger
 import nw
 
-from os                   import listdir
+from os                   import path, mkdir, listdir
 from time                 import time
 from nw.functions         import formatDateTime
 from nw.book.sceneopt     import SceneOpt
@@ -101,6 +101,14 @@ class Scene():
         if self.readOnly:
             logger.debug("Scene.saveScene: Scene is read only")
             return
+
+        sceneFolder = self.theOpt.sceneFolder
+        sceneHandle = self.theOpt.sceneHandle
+        sceneStore  = path.join(sceneFolder,sceneHandle)
+
+        if not path.isdir(sceneStore):
+            mkdir(sceneStore)
+            logger.debug("Scene.saveScene: Folder created '%s'" % sceneStore)
 
         textSaved    = self.theText.saveText()
         summarySaved = self.theSummary.saveSummary()

@@ -60,7 +60,7 @@ class SceneMeta():
             return
 
         fileName = "%s-metadata.cnf" % sceneHandle
-        filePath = path.join(sceneFolder,fileName)
+        filePath = path.join(sceneFolder,sceneHandle,fileName)
 
         if not path.isfile(filePath):
             logger.error("SceneMeta.loadData: File not found %s" % filePath)
@@ -117,7 +117,7 @@ class SceneMeta():
         logger.debug("SceneMeta.saveData: Saving scene metadata")
 
         fileName   = "%s-metadata.cnf" % sceneHandle
-        filePath   = path.join(sceneFolder,fileName)
+        filePath   = path.join(sceneFolder,sceneHandle,fileName)
         confParser = configparser.ConfigParser()
 
         # Set Variables

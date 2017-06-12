@@ -57,7 +57,7 @@ class SceneText():
         logger.debug("SceneText.loadText: Loading scene text")
 
         fileName  = "%s-scene-%03d.txt" % (sceneHandle,sceneVersion)
-        filePath  = path.join(sceneFolder,fileName)
+        filePath  = path.join(sceneFolder,sceneHandle,fileName)
 
         if not path.isfile(filePath):
             logger.debug("SceneText.loadText: File not found %s" % filePath)
@@ -107,8 +107,8 @@ class SceneText():
 
         fileName = "%s-scene-%03d.txt" % (sceneHandle,sceneVersion)
         tempName = "%s-scene-%03d.bak" % (sceneHandle,sceneVersion)
-        filePath = path.join(sceneFolder,fileName)
-        tempPath = path.join(sceneFolder,tempName)
+        filePath = path.join(sceneFolder,sceneHandle,fileName)
+        tempPath = path.join(sceneFolder,sceneHandle,tempName)
 
         # Back up old file
         if path.isfile(tempPath): remove(tempPath)

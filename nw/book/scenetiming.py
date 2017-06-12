@@ -50,11 +50,11 @@ class SceneTiming():
             logger.debug("SceneTiming.loadTiming: Invalid scene handle '%s'" % sceneHandle)
             return
 
-        tempName = "%s-timing.tmp" % sceneHandle
-        tempPath = path.join(sceneFolder,tempName)
+        tempName = "timing.tmp"
+        tempPath = path.join(sceneFolder,sceneHandle,tempName)
 
         fileName = "%s-timing.csv" % sceneHandle
-        filePath = path.join(sceneFolder,fileName)
+        filePath = path.join(sceneFolder,sceneHandle,fileName)
 
         if path.isfile(tempPath):
             logger.debug("SceneTiming.loadTiming: Appending autosaved timing")
@@ -105,10 +105,10 @@ class SceneTiming():
             return
 
         tempName = "%s-timing.tmp" % sceneHandle
-        tempPath = path.join(sceneFolder,tempName)
+        tempPath = path.join(sceneFolder,sceneHandle,tempName)
 
         fileName = "%s-timing.csv" % sceneHandle
-        filePath = path.join(sceneFolder,fileName)
+        filePath = path.join(sceneFolder,sceneHandle,fileName)
 
         if autoSave:
             if self.timeCurrent == self.timeTemp:
