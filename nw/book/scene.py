@@ -104,11 +104,11 @@ class Scene():
 
         sceneFolder = self.theOpt.sceneFolder
         sceneHandle = self.theOpt.sceneHandle
-        sceneStore  = path.join(sceneFolder,sceneHandle)
+        scenePath   = path.join(sceneFolder,sceneHandle)
 
-        if not path.isdir(sceneStore):
-            mkdir(sceneStore)
-            logger.debug("Scene.saveScene: Folder created '%s'" % sceneStore)
+        if not path.isdir(scenePath):
+            mkdir(scenePath)
+            logger.debug("Scene.saveScene: Folder created '%s'" % scenePath)
 
         textSaved    = self.theText.saveText()
         summarySaved = self.theSummary.saveSummary()

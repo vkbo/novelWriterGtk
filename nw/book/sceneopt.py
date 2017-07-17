@@ -30,7 +30,7 @@ class SceneOpt():
     ##
 
     def setSceneHandle(self, sceneHandle):
-        if len(sceneHandle) == 12:
+        if len(sceneHandle) == 20:
             self.sceneHandle = sceneHandle
         else:
             logger.debug("SceneOpt.setSceneHandle: Invalid handle %s" % sceneHandle)

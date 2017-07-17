@@ -49,15 +49,20 @@ class SceneText():
         sceneFolder  = self.theOpt.sceneFolder
         sceneHandle  = self.theOpt.sceneHandle
         sceneVersion = self.theOpt.sceneVersion
+        scenePath    = path.join(sceneFolder,sceneHandle)
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneText.loadText: Folder not found %s" % sceneFolder)
             return
 
+        if not path.isdir(scenePath):
+            logger.error("SceneText.loadText: Scene handle invalid")
+            return
+
         logger.debug("SceneText.loadText: Loading scene text")
 
-        fileName  = "%s-scene-%03d.txt" % (sceneHandle,sceneVersion)
-        filePath  = path.join(sceneFolder,sceneHandle,fileName)
+        fileName = "scene-%03d.txt" % sceneVersion
+        filePath = path.join(sceneFolder,sceneHandle,fileName)
 
         if not path.isfile(filePath):
             logger.debug("SceneText.loadText: File not found %s" % filePath)
@@ -90,13 +95,18 @@ class SceneText():
         sceneFolder  = self.theOpt.sceneFolder
         sceneHandle  = self.theOpt.sceneHandle
         sceneVersion = self.theOpt.sceneVersion
+        scenePath    = path.join(sceneFolder,sceneHandle)
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneText.saveText: Folder not found %s" % sceneFolder)
             return False
 
-        if not len(sceneHandle) == 12:
-            logger.debug("SceneText.saveText: Invalid scene handle '%s'" % sceneHandle)
+        if not path.isdir(scenePath):
+            logger.debug("SceneSummary.saveText: Unknown scene handle '%s'" % sceneHandle)
+            return
+
+        if not len(sceneHandle) == 20:
+            logger.debug("SceneSummary.saveText: Invalid scene handle '%s'" % sceneHandle)
             return False
 
         if not sceneVersion > 0:
@@ -105,8 +115,8 @@ class SceneText():
 
         logger.debug("SceneText.saveText: Saving scene text")
 
-        fileName = "%s-scene-%03d.txt" % (sceneHandle,sceneVersion)
-        tempName = "%s-scene-%03d.bak" % (sceneHandle,sceneVersion)
+        fileName = "scene-%03d.txt" % sceneVersion
+        tempName = "scene-%03d.bak" % sceneVersion
         filePath = path.join(sceneFolder,sceneHandle,fileName)
         tempPath = path.join(sceneFolder,sceneHandle,tempName)
 

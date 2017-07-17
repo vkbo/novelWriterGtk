@@ -50,16 +50,17 @@ class SceneMeta():
 
         sceneFolder = self.theOpt.sceneFolder
         sceneHandle = self.theOpt.sceneHandle
+        scenePath   = path.join(sceneFolder,sceneHandle)
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneMeta.loadData: Folder not found %s" % sceneFolder)
             return
 
-        if sceneHandle == "" or sceneHandle is None:
-            logger.error("SceneMeta.loadData: File handle missing")
+        if not path.isdir(scenePath):
+            logger.error("SceneMeta.loadData: Scene handle invalid")
             return
 
-        fileName = "%s-metadata.cnf" % sceneHandle
+        fileName = "metadata.cnf"
         filePath = path.join(sceneFolder,sceneHandle,fileName)
 
         if not path.isfile(filePath):
@@ -101,14 +102,19 @@ class SceneMeta():
 
         sceneFolder = self.theOpt.sceneFolder
         sceneHandle = self.theOpt.sceneHandle
+        scenePath   = path.join(sceneFolder,sceneHandle)
 
         if not path.isdir(sceneFolder):
             logger.debug("SceneMeta.saveData: Folder not found %s" % sceneFolder)
             return
 
-        if sceneHandle == "" or sceneHandle is None:
-            logger.error("SceneMeta.saveData: File handle missing")
+        if not path.isdir(scenePath):
+            logger.debug("SceneSummary.saveData: Unknown scene handle '%s'" % sceneHandle)
             return
+
+        if not len(sceneHandle) == 20:
+            logger.debug("SceneSummary.saveData: Invalid scene handle '%s'" % sceneHandle)
+            return False
 
         if not self.sceneChanged:
             logger.debug("SceneMeta.saveData: No changes to save")
@@ -116,7 +122,7 @@ class SceneMeta():
 
         logger.debug("SceneMeta.saveData: Saving scene metadata")
 
-        fileName   = "%s-metadata.cnf" % sceneHandle
+        fileName   = "metadata.cnf"
         filePath   = path.join(sceneFolder,sceneHandle,fileName)
         confParser = configparser.ConfigParser()
 

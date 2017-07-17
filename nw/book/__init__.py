@@ -189,7 +189,7 @@ class Book():
             logger.debug("Book.createScene: Title cannot be empty")
             return
 
-        sceneHandle = sha256(str(time()).encode()).hexdigest()[0:12]
+        sceneHandle = sha256(str(time()).encode()).hexdigest()[0:20]
         self.allScenes[sceneHandle] = Scene(self.theOpt,sceneHandle)
         self.allScenes[sceneHandle].setTitle(sceneTitle)
         self.allScenes[sceneHandle].setSection(0)
@@ -434,21 +434,19 @@ class Book():
         # Scene Book Folder
         for listItem in dirContent:
             itemPath = path.join(sceneFolder,listItem)
-            if path.isfile(itemPath):
-                if len(listItem) == 25 and listItem[-12:] == "metadata.cnf":
-                    itemHandle = listItem[:12]
-                    self.loadScene(itemHandle,True,True,True)
-                    sceneIndex[itemHandle] = [
-                        self.allScenes[itemHandle].getTitle(),
-                        self.allScenes[itemHandle].getNumber(),
-                        self.allScenes[itemHandle].getWords(),
-                        self.allScenes[itemHandle].getSection(),
-                        self.allScenes[itemHandle].getChapter(),
-                        self.allScenes[itemHandle].getMetaTime(),
-                        0
-                    ]
-                    if self.allScenes[itemHandle].readOnly:
-                        self.closeScene(itemHandle)
+            if path.isdir(itemPath) and len(listItem) == 20:
+                self.loadScene(listItem,True,True,True)
+                sceneIndex[listItem] = [
+                    self.allScenes[listItem].getTitle(),
+                    self.allScenes[listItem].getNumber(),
+                    self.allScenes[listItem].getWords(),
+                    self.allScenes[listItem].getSection(),
+                    self.allScenes[listItem].getChapter(),
+                    self.allScenes[listItem].getMetaTime(),
+                    0
+                ]
+                if self.allScenes[listItem].readOnly:
+                    self.closeScene(listItem)
 
         # Count File Versions
         for listItem in dirContent:
