@@ -20,7 +20,7 @@ from gi.repository import Gtk
 from os            import path
 from textwrap      import dedent
 from nw.config     import Config
-from nw.gui        import GUI
+from nw.main       import NovelWriter
 
 __author__     = "Veronica Berglyd Olsen"
 __copyright__  = "Copyright 2016-2017, Veronica Berglyd Olsen"
@@ -161,7 +161,7 @@ def main(sysArgs):
                 debugLevel = logging.INFO
             elif inArg == "DEBUG":
                 debugLevel = logging.DEBUG
-                debugStr   = "[{asctime} | {name:12s}:{lineno:4d}] {levelname:8s}  {message}"
+                debugStr   = "[{asctime} | {name:15s}:{lineno:4d}] {levelname:8s}  {message}"
             else:
                 print("Invalid debug level")
                 exit(2)
@@ -197,7 +197,7 @@ def main(sysArgs):
     
     logger.setLevel(debugLevel)
 
-    GUI()
+    NovelWriter()
     Gtk.main()
     
     return
