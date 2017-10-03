@@ -43,6 +43,7 @@ class Config:
         self.homePath   = path.expanduser("~")
         self.appPath    = path.dirname(__file__)
         self.guiPath    = path.join(self.appPath,"gui")
+        self.themePath  = path.join(self.appPath,"themes")
 
         # If config folder does not exist, make it.
         # This assumes that the os config folder itself exists.
@@ -57,6 +58,7 @@ class Config:
         self.winHeight   = 700
         self.mainPane    = 200
         self.sidePane    = 200
+        self.theTheme    = "default"
 
         ## Editor
         self.autoSave    = 30   # Seconds

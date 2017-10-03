@@ -1,0 +1,71 @@
+/**
+ *  novelWriter – GUI Main StyleSheet
+ * ===================================
+ *  Stylesheet for the main window
+ *
+ *  File History:
+ *  Created: 2017-10-03 [0.4.0]
+ */
+
+* {
+    /*background-color: #cbdde9;*/
+    /*background-color: transparent;*/
+}
+
+/*winMain {*/
+    /*background-image: url('/home/vkbo/Code/novelWriter/nw/themes/default/background.jpg');*/
+    /*background-color: #cbdde9;*/
+/*}*/
+
+/*GtkLayout {*/
+    /*background-color: #cbdde9;*/
+    /*background-color: transparent;*/
+/*}*/
+
+/*GtkViewport {*/
+    /*background-color: #cbdde9;*/
+    /*background-color: transparent;*/
+/*}*/
+
+#boxOuter {
+    /*background-image: url('/home/vkbo/Code/novelWriter/nw/themes/default/background.jpg');*/
+    background-color: #5393bc;
+}
+
+#boxLeft {
+    
+}
+
+#treeLeft.view {
+    background-color: rgba(255,255,255,0.2);
+}
+
+#panedOuter.separator {
+    /*background-color: #5393bc;*/
+    background-color: transparent;
+}
+#panedOuter.separator.wide {
+    /*background-color: #5393bc;*/
+    background-color: transparent;
+}
+
+panedOuter:first-child {
+    /*background-color: #cbdde9;*/
+    /*background-color: transparent;*/
+    /*background-color: rgba(0,0,0,0.2);*/
+}
+
+panedOuter:last-child {
+    opacity: 0.0;
+    /*background-color: #cbdde9;*/
+    /*background-color: transparent;*/
+    /*background-color: rgba(0,0,0,0.2);*/
+}
+
+panedContent {
+    background-color: transparent;
+}
+
+panedContent:first-child {
+    background-color: transparent;
+}

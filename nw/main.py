@@ -16,31 +16,37 @@ import nw
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository   import Gtk, GLib
+from gi.repository   import Gtk, Gdk
 from time            import sleep
 from os              import path
 
-from nw.gui.winmain  import GUIwinMain
+from nw.gui.winmain  import GuiWinMain
 
 logger  = logging.getLogger(__name__)
 
 class NovelWriter():
 
     def __init__(self):
-
-        self.guiLoaded    = False
-
+        
         # Define Core Objects
-        self.mainConf     = nw.CONFIG
-
+        self.mainConf = nw.CONFIG
+        
         # Build the GUI
         logger.debug("Assembling the main GUI")
-        self.winMain      = GUIwinMain()
+        self.winMain   = GuiWinMain()
+        self.webEditor = self.winMain.webEditor
+        self.cssMain   = Gtk.CssProvider()
+        
+        # Load StyleSheet
+        self.cssMain.load_from_path(
+            path.join(self.mainConf.themePath,self.mainConf.theTheme,"gtkstyles.css")
+        )
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),self.cssMain,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
         
         # Set Up Event Handlers
         self.winMain.connect("delete-event",self.onApplicationQuit)
-
-        self.guiLoaded = True
 
         return
 
