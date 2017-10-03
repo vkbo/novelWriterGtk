@@ -10,7 +10,7 @@ Created: 2017-01-10 [0.1.0]
 
 """
 
-import logging as logger
+import logging
 import nw
 import gi
 gi.require_version("Gtk","3.0")
@@ -18,15 +18,17 @@ gi.require_version("Gtk","3.0")
 from gi.repository   import Gtk, GLib
 from time            import sleep
 from os              import path
-from nw.functions    import getIconWidget, formatDateTime, dateFromStamp, makeSortString
-from nw.editor       import Editor
-from nw.dialogs      import EditBookDialog
-from nw.scenetree    import SceneTree
-from nw.timer        import Timer
-from nw.book         import Book
-from nw.statusbar    import StatusBar
-from nw.bookoverview import BookOverview
-from nw.scenebuffer  import SceneBuffer
+# from nw.functions    import getIconWidget, formatDateTime, dateFromStamp, makeSortString
+# from nw.editor       import Editor
+# from nw.dialogs      import EditBookDialog
+# from nw.scenetree    import SceneTree
+# from nw.timer        import Timer
+# from nw.book         import Book
+# from nw.statusbar    import StatusBar
+# from nw.bookoverview import BookOverview
+# from nw.scenebuffer  import SceneBuffer
+
+logger  = logging.getLogger(__name__)
 
 class GUI():
 
@@ -38,17 +40,19 @@ class GUI():
         self.mainConf     = nw.CONFIG
         self.guiBuilder   = nw.BUILDER
 
+        # Build the GUI
+        logger.debug("Assembling the main GUI")
         self.getObject    = self.guiBuilder.get_object
         self.winMain      = self.getObject("winMain")
-
+        
         # Prepare GUI Classes
-        self.theBook      = Book()
-        self.guiTimer     = Timer(self.theBook)
-        self.statusBar    = StatusBar()
-        self.webEditor    = Editor(self.guiTimer,self.statusBar)
-        self.sceneTree    = SceneTree()
-        self.sceneBuffer  = SceneBuffer(self.theBook)
-        self.bookOverview = BookOverview(self.theBook)
+        # self.theBook      = Book()
+        # self.guiTimer     = Timer(self.theBook)
+        # self.statusBar    = StatusBar()
+        # self.webEditor    = Editor(self.guiTimer,self.statusBar)
+        # self.sceneTree    = SceneTree()
+        # self.sceneBuffer  = SceneBuffer(self.theBook)
+        # self.bookOverview = BookOverview(self.theBook)
 
         # Runtime Properties
         self.currHandle   = ""
@@ -56,92 +60,92 @@ class GUI():
         # Set Up Event Handlers
         guiHandlers = {
             # Main GUI
-            "onClickNew"               :  self.onNewBook,
-            "onClickOpen"              :  self.onOpenBook,
-            "onClickSave"              :  self.onSaveBook,
-            "onClickEdit"              :  self.onEditBook,
-            "onClickPreferences"       :  self.mainConf.onLoad,
-            "onClickSceneAdd"          :  self.onSceneAdd,
-            "onClickSceneRemove"       :  self.onSceneRemove,
-            "onClickSceneMoveUp"       :  self.onSceneMoveUp,
-            "onClickSceneMoveDown"     :  self.onSceneMoveDown,
-            "onSelectTreeScene"        :  self.onSceneSelect,
-            "onMainTabChange"          :  self.onMainTabChange,
-            "onDestroyWindow"          :  self.onGuiDestroy,
-            "onMainWinChange"          :  self.onWinChange,
+            # "onClickNew"               :  self.onNewBook,
+            # "onClickOpen"              :  self.onOpenBook,
+            # "onClickSave"              :  self.onSaveBook,
+            # "onClickEdit"              :  self.onEditBook,
+            # "onClickPreferences"       :  self.mainConf.onLoad,
+            # "onClickSceneAdd"          :  self.onSceneAdd,
+            # "onClickSceneRemove"       :  self.onSceneRemove,
+            # "onClickSceneMoveUp"       :  self.onSceneMoveUp,
+            # "onClickSceneMoveDown"     :  self.onSceneMoveDown,
+            # "onSelectTreeScene"        :  self.onSceneSelect,
+            # "onMainTabChange"          :  self.onMainTabChange,
+            "onMainWinDestroy"         :  self.onGuiDestroy,
+            # "onMainWinChange"          :  self.onWinChange,
             # Main Menu
-            "onMenuFileNew"            :  self.onNewBook,
-            "onMenuFileOpen"           :  self.onOpenBook,
-            "onMenuFileSave"           :  self.onSaveBook,
-            "onMenuFileQuit"           :  self.onGuiDestroy,
-            "onMenuEditPastePlain"     : (self.webEditor.onEditPasteProcess,nw.PASTE_PLAIN),
-            "onMenuEditPasteClean"     : (self.webEditor.onEditPasteProcess,nw.PASTE_CLEAN),
-            "onMenuEditBook"           :  self.onEditBook,
-            "onMenuEditPreferences"    :  self.mainConf.onLoad,
-            "onMenuViewBookOverview"   :  self.onViewBookOverview,
-            "onMenuViewSceneBuffer"    :  self.onViewSceneBuffer,
-            "onMenuHelpAbout"          :  self.onShowAbout,
+            # "onMenuFileNew"            :  self.onNewBook,
+            # "onMenuFileOpen"           :  self.onOpenBook,
+            # "onMenuFileSave"           :  self.onSaveBook,
+            # "onMenuFileQuit"           :  self.onGuiDestroy,
+            # "onMenuEditPastePlain"     : (self.webEditor.onEditPasteProcess,nw.PASTE_PLAIN),
+            # "onMenuEditPasteClean"     : (self.webEditor.onEditPasteProcess,nw.PASTE_CLEAN),
+            # "onMenuEditBook"           :  self.onEditBook,
+            # "onMenuEditPreferences"    :  self.mainConf.onLoad,
+            # "onMenuViewBookOverview"   :  self.onViewBookOverview,
+            # "onMenuViewSceneBuffer"    :  self.onViewSceneBuffer,
+            # "onMenuHelpAbout"          :  self.onShowAbout,
             # Main Menu Recent List
-            "onMenuRecent0"            : (self.onOpenRecent,0),
-            "onMenuRecent1"            : (self.onOpenRecent,1),
-            "onMenuRecent2"            : (self.onOpenRecent,2),
-            "onMenuRecent3"            : (self.onOpenRecent,3),
-            "onMenuRecent4"            : (self.onOpenRecent,4),
-            "onMenuRecent5"            : (self.onOpenRecent,5),
-            "onMenuRecent6"            : (self.onOpenRecent,6),
-            "onMenuRecent7"            : (self.onOpenRecent,7),
-            "onMenuRecent8"            : (self.onOpenRecent,8),
-            "onMenuRecent9"            : (self.onOpenRecent,9),
+            # "onMenuRecent0"            : (self.onOpenRecent,0),
+            # "onMenuRecent1"            : (self.onOpenRecent,1),
+            # "onMenuRecent2"            : (self.onOpenRecent,2),
+            # "onMenuRecent3"            : (self.onOpenRecent,3),
+            # "onMenuRecent4"            : (self.onOpenRecent,4),
+            # "onMenuRecent5"            : (self.onOpenRecent,5),
+            # "onMenuRecent6"            : (self.onOpenRecent,6),
+            # "onMenuRecent7"            : (self.onOpenRecent,7),
+            # "onMenuRecent8"            : (self.onOpenRecent,8),
+            # "onMenuRecent9"            : (self.onOpenRecent,9),
             # WebKit Editor Signals
-            "onToggleEditable"         :  self.webEditor.onToggleEditable,
-            "onClickEditRefresh"       :  self.webEditor.onEditRefresh,
-            "onClickEditUndo"          : (self.webEditor.onEditAction,"undo"),
-            "onClickEditRedo"          : (self.webEditor.onEditAction,"redo"),
-            "onClickEditCut"           :  self.webEditor.onEditCut,
-            "onClickEditCopy"          :  self.webEditor.onEditCopy,
-            "onClickEditPaste"         :  self.webEditor.onEditPaste,
-            "onClickEditInsertPara"    : (self.webEditor.onEditFormat,"p"),
-            "onClickEditBold"          : (self.webEditor.onEditAction,"bold"),
-            "onClickEditItalic"        : (self.webEditor.onEditAction,"italic"),
-            "onClickEditUnderline"     : (self.webEditor.onEditAction,"underline"),
-            "onClickEditStrikethrough" : (self.webEditor.onEditAction,"strikethrough"),
-            "onToggleShowPara"         :  self.webEditor.onShowParagraphs,
-            "onToggleSpellCheck"       :  self.webEditor.onToggleSpellCheck,
+            # "onToggleEditable"         :  self.webEditor.onToggleEditable,
+            # "onClickEditRefresh"       :  self.webEditor.onEditRefresh,
+            # "onClickEditUndo"          : (self.webEditor.onEditAction,"undo"),
+            # "onClickEditRedo"          : (self.webEditor.onEditAction,"redo"),
+            # "onClickEditCut"           :  self.webEditor.onEditCut,
+            # "onClickEditCopy"          :  self.webEditor.onEditCopy,
+            # "onClickEditPaste"         :  self.webEditor.onEditPaste,
+            # "onClickEditInsertPara"    : (self.webEditor.onEditFormat,"p"),
+            # "onClickEditBold"          : (self.webEditor.onEditAction,"bold"),
+            # "onClickEditItalic"        : (self.webEditor.onEditAction,"italic"),
+            # "onClickEditUnderline"     : (self.webEditor.onEditAction,"underline"),
+            # "onClickEditStrikethrough" : (self.webEditor.onEditAction,"strikethrough"),
+            # "onToggleShowPara"         :  self.webEditor.onShowParagraphs,
+            # "onToggleSpellCheck"       :  self.webEditor.onToggleSpellCheck,
         }
         self.guiBuilder.connect_signals(guiHandlers)
 
         # Set Pane Positions
-        self.getObject("panedContent").set_position(self.mainConf.mainPane)
-        self.getObject("panedSide").set_position(self.mainConf.sidePane)
+        # self.getObject("panedContent").set_position(self.mainConf.mainPane)
+        # self.getObject("panedSide").set_position(self.mainConf.sidePane)
 
         # Prepare Editor
-        self.getObject("scrollEditor").add(self.webEditor)
-        self.getObject("textSource").set_editable(False)
+        # self.getObject("scrollEditor").add(self.webEditor)
+        # self.getObject("textSource").set_editable(False)
 
         # Custom Icons
-        self.getObject("btnEditInsertPara").set_icon_widget(getIconWidget("icon-paragraph",24))
-        self.getObject("btnMainNew").set_icon_widget(getIconWidget("icon-book-new",28))
+        # self.getObject("btnEditInsertPara").set_icon_widget(getIconWidget("icon-paragraph",24))
+        # self.getObject("btnMainNew").set_icon_widget(getIconWidget("icon-book-new",28))
 
         # Set Up Timers
-        self.timerID    = GLib.timeout_add(200,self.onTick)
-        self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.doAutoTasks)
+        # self.timerID    = GLib.timeout_add(200,self.onTick)
+        # self.autoTaskID = GLib.timeout_add_seconds(self.mainConf.autoSave,self.doAutoTasks)
 
         ##
         #  Content
         ##
 
         # Scene Chapter Selector
-        adjScene = Gtk.Adjustment(1,1,100,1,1,1)
-        numSceneChapter = self.getObject("numSceneChapter")
-        numSceneChapter.configure(adjScene,1,0)
+        # adjScene = Gtk.Adjustment(1,1,100,1,1,1)
+        # numSceneChapter = self.getObject("numSceneChapter")
+        # numSceneChapter.configure(adjScene,1,0)
 
         ##
         #  Finalise GUI Setup
         ##
 
         # Remove Widgets Not In Use Yet
-        boxDetails = self.getObject("boxDetails")
-        boxDetails.remove(self.getObject("boxCharsNTime"))
+        # boxDetails = self.getObject("boxDetails")
+        # boxDetails.remove(self.getObject("boxCharsNTime"))
 
         # Prepare Main Window
         self.winMain.set_title(self.mainConf.appName)
@@ -150,7 +154,7 @@ class GUI():
         self.winMain.show_all()
 
         # Load Last Book
-        self.loadBook()
+        # self.loadBook()
 
         self.guiLoaded = True
 
@@ -509,18 +513,19 @@ class GUI():
 
     def onGuiDestroy(self, guiObject):
 
-        logger.debug("GUI.onGuiDestroy: Exiting")
+        logger.info("Beginning shutdown procedure")
 
-        self.sceneBuffer.destroyGUI()
+        # self.sceneBuffer.destroyGUI()
 
-        mainPane = self.getObject("panedContent").get_position()
-        sidePane = self.getObject("panedSide").get_position()
-        self.mainConf.setMainPane(mainPane)
-        self.mainConf.setSidePane(sidePane)
-        self.mainConf.saveConfig()
+        # mainPane = self.getObject("panedContent").get_position()
+        # sidePane = self.getObject("panedSide").get_position()
+        # self.mainConf.setMainPane(mainPane)
+        # self.mainConf.setSidePane(sidePane)
+        # self.mainConf.saveConfig()
+        # 
+        # self.theBook.closeBook()
 
-        self.theBook.closeBook()
-
+        logger.info("Exiting")
         Gtk.main_quit()
 
         return

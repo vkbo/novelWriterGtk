@@ -10,7 +10,7 @@ Created: 2017-01-10 [0.1.0]
 
 """
 
-import logging as logger
+import logging
 import configparser
 import nw
 import gi
@@ -19,6 +19,8 @@ gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 from os            import path, mkdir, getcwd
 from appdirs       import user_config_dir
+
+logger = logging.getLogger(__name__)
 
 class Config:
 
@@ -33,13 +35,13 @@ class Config:
         self.appName    = "novelWriter"
         self.appHandle  = "novelwriter"
         self.appVersion = "Dev0.4"
-        self.appURL     = "https://github.com/Jadzia626/novelWriter"
+        self.appURL     = "https://github.com/vkbo/novelWriter"
 
         # Set Paths
         self.confPath   = user_config_dir(self.appHandle)
         self.confFile   = self.appHandle+".conf"
         self.homePath   = path.expanduser("~")
-        self.appPath    = getcwd()
+        self.appPath    = path.dirname(__file__)
         self.guiPath    = path.join(self.appPath,"gui")
 
         # If config folder does not exist, make it.
