@@ -74,7 +74,11 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.tbLeft.set_margin_left(12)
         self.tbLeft.set_margin_right(12)
         self.btnLeftAddCont = Gtk.ToolButton(icon_name="gtk-directory")
+        self.btnLeftAddFile = Gtk.ToolButton(icon_name="gtk-file")
+        self.btnLeftDelete  = Gtk.ToolButton(icon_name="gtk-delete")
         self.tbLeft.insert(self.btnLeftAddCont,0)
+        self.tbLeft.insert(self.btnLeftAddFile,1)
+        self.tbLeft.insert(self.btnLeftDelete,2)
         self.boxLeft.pack_start(self.tbLeft,False,True,0)
 
         # Pane between main content and timeline

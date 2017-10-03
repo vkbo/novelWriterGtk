@@ -32,11 +32,23 @@ class GuiEditor(WebKit.WebView):
         self.mainConf   = nw.CONFIG
 
         # Paths
-        self.htmlRoot   = "file://"+self.mainConf.guiPath.replace("\\","/")
+        self.htmlRoot   = "file://"+self.mainConf.themePath.replace("\\","/")
+        
+        htmSimple = """<!DOCTYPE html>
+        <html>
+        <head>
+        <link rel="stylesheet" href="themes/default/editor.css" type="text/css">
+        </head>
+        <body>
+        <article contenteditable="true">Hello</article>
+        <aside contenteditable="true"><b>Notes:</b></aside>
+        </body>
+        </html>
+        """
 
         # Set Up Editor
         self.set_editable(False)
-        self.load_html_string("",self.htmlRoot)
+        self.load_html_string(htmSimple,self.htmlRoot)
 
         setEditor = self.get_settings()
         setEditor.set_property("enable-default-context-menu",False)
