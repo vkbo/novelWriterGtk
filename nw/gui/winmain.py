@@ -15,7 +15,7 @@ import nw
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository   import Gtk, GLib
+from gi.repository   import Gtk, Gdk, GLib
 from nw.gui.editor   import GuiEditor
 from nw.gui.maintree import GuiMainTree
 
@@ -28,7 +28,19 @@ class GuiWinMain(Gtk.ApplicationWindow):
         
         self.mainConf = nw.CONFIG
         # self.connect("delete-event",self.onWindowsDestroy)
-
+        
+        theScreen = self.get_screen()
+        theVisual = theScreen.get_rgba_visual()
+        # theVisual = theScreen.get_system_visual()
+        
+        self.set_visual(theVisual)
+        self.set_app_paintable(True)
+        self.set_title(self.mainConf.appName)
+        self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        # self.set_opacity(0.3)
+        self.set_css_name("winMain")
+        
         # The outer vertical box
         # - Added to main window
         self.boxOuter = Gtk.Box()
@@ -43,7 +55,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedOuter.set_name("panedOuter")
         self.panedOuter.set_orientation(Gtk.Orientation.HORIZONTAL)
         self.panedOuter.set_position(300)
-        # self.panedOuter.set_wide_handle(True)
+        self.panedOuter.set_wide_handle(True)
         self.boxOuter.pack_start(self.panedOuter,True,True,0)
 
         # Vertical box to hold tree view and buttons
@@ -63,11 +75,13 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.treeLeft.set_margin_bottom(4)
         self.treeLeft.set_margin_left(12)
         self.treeLeft.set_margin_right(12)
+        self.treeLeft.set_headers_visible(False)
         self.boxLeft.pack_start(self.treeLeft,True,True,0)
         self.mainTree = GuiMainTree(self.treeLeft)
         
         # Tree view toolbar
         self.tbLeft = Gtk.Toolbar()
+        self.tbLeft.set_name("tbLeft")
         self.tbLeft.set_icon_size(2)
         self.tbLeft.set_margin_top(4)
         self.tbLeft.set_margin_bottom(12)
@@ -103,11 +117,6 @@ class GuiWinMain(Gtk.ApplicationWindow):
 
         # self.btnTest = Gtk.Button(label="Test")
         # self.boxOuter.pack_start(self.btnTest,False,True,0)
-        
-        self.set_title(self.mainConf.appName)
-        self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        # self.set_css_name("winMain")
 
         self.show_all()
         

@@ -156,12 +156,12 @@ def main(sysArgs):
             if   inArg == "ERROR":
                 debugLevel = logging.ERROR
             elif inArg == "WARN":
-                debugLevel = logging.WARN
+                debugLevel = logging.WARNING
             elif inArg == "INFO":
                 debugLevel = logging.INFO
             elif inArg == "DEBUG":
                 debugLevel = logging.DEBUG
-                debugStr   = "[{asctime} | {name:15s}:{lineno:4d}] {levelname:8s}  {message}"
+                debugStr   = "[{asctime}] {lineno:4d}:{name:15s} {levelname:8s}  {message}"
             else:
                 print("Invalid debug level")
                 exit(2)
