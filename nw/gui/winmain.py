@@ -11,6 +11,7 @@ Created: 2017-10-03 [0.4.0]
 """
 
 import logging
+import math
 import nw
 import gi
 gi.require_version("Gtk","3.0")
@@ -141,6 +142,11 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.scrlTimeLine = Gtk.ScrolledWindow()
         self.scrlTimeLine.set_name("scrlTimeLine")
         self.panedContent.pack2(self.scrlTimeLine,True,False)
+        
+        self.drawTimeLine = Gtk.DrawingArea()
+        self.drawTimeLine.set_name("drawTimeLine")
+        self.scrlTimeLine.add(self.drawTimeLine)
+        # self.drawTimeLine.connect("draw", self.onExpose)
 
         # self.btnTest = Gtk.Button(label="Test")
         # self.boxOuter.pack_start(self.btnTest,False,True,0)
@@ -148,8 +154,24 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.show_all()
         
         return
+    
+    def onExpose(self, guiObject, guiEvent):
+        
+        ctx = guiObject.window.cairo_create()
 
-    def onWindowsDestroy(self, guiObject, guiStuff):
+        ctx.set_line_width(9)
+        ctx.set_source_rgb(0.7, 0.2, 0.0)
+                
+        ctx.translate(400, 100)
+        ctx.arc(0, 0, 50, 0, 2*math.pi)
+        ctx.stroke_preserve()
+        
+        ctx.set_source_rgb(0.3, 0.4, 0.6)
+        ctx.fill()
+
+        return
+
+    def onWindowsDestroy(self, guiObject, guiEvent):
 
         logger.info("Beginning shutdown procedure")
 
