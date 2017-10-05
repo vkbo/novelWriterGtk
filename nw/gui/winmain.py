@@ -36,7 +36,8 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.set_visual(theVisual)
         self.set_app_paintable(True)
         self.set_title(self.mainConf.appName)
-        self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
+        # self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
+        self.resize(1600,980)
         self.set_position(Gtk.WindowPosition.CENTER)
         # self.set_opacity(0.3)
         self.set_css_name("winMain")
@@ -73,7 +74,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedOuter = Gtk.Paned()
         self.panedOuter.set_name("panedOuter")
         self.panedOuter.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.panedOuter.set_position(300)
+        self.panedOuter.set_position(280)
         self.panedOuter.set_wide_handle(True)
         self.boxOuter.pack_start(self.panedOuter,True,True,0)
 
@@ -126,7 +127,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedContent = Gtk.Paned()
         self.panedContent.set_name("panedContent")
         self.panedContent.set_orientation(Gtk.Orientation.VERTICAL)
-        self.panedContent.set_position(600)
+        self.panedContent.set_position(750)
         self.boxContent.pack_start(self.panedContent,True,True,0)
         
         

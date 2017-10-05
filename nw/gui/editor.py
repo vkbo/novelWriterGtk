@@ -19,6 +19,7 @@ gi.require_version("WebKit2","4.0")
 
 from gi.repository import Gtk, Gdk, GLib, WebKit2
 from os            import path
+from nw.content    import getLoremIpsum
 
 logger = logging.getLogger(__name__)
 
@@ -55,25 +56,55 @@ class GuiEditor(WebKit2.WebView):
         # for stateFlag in stateFlags:
         #     self.override_background_color(stateFlag, Gdk.RGBA(0,0,0,0))
         
+        tmpPars = getLoremIpsum(13)
+        tmpText = ""
+        for tmpPar in tmpPars:
+            tmpText += "<p>%s</p>" % tmpPar
+        
         htmSimple = """<!DOCTYPE html>
         <html>
-        <head>
-        <link rel="stylesheet" href="themes/default/editor.css" type="text/css">
-        </head>
-        <body>
-        <div id="wrapper">
-        <div id="left">
-        <h1>Document Title</h1>
-        <article contenteditable="true"><p>New document</p></article>
-        </div>
-        <div id="right">
-        <h1>Notes</h1>
-        <aside contenteditable="true"><p>Notes ...</p></aside>
-        </div>
-        </div>
-        </body>
+          <head>
+            <link rel="stylesheet" href="themes/default/editor.css" type="text/css">
+          </head>
+          <body>
+            <div id="wrapper">
+              <div id="left">
+                <h1 id="doctitle">Document Title</h1>
+                <article id="doc" contenteditable="true">%s</article>
+              </div>
+              <div id="right">
+                <h1 id="metatitle">Details</h1>
+                <aside id="meta">
+                  <div class="metarow">
+                    <div class="metalabel">POV</div>
+                    <div class="metapov">Jane Smith</div>
+                  </div>
+                  <div class="metarow">
+                    <div class="metalabel">Chars</div>
+                    <div class="metachar">
+                      <ul>
+                        <li>Bob Dude</li>
+                        <li>Melissa Blonde</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="metarow">
+                    <div class="metalabel">Plots</div>
+                    <div class="metaplot">
+                      <ul>
+                        <li>Main Plot</li>
+                        <li>Best Subplot Ever</li>
+                      </ul>
+                    </div>
+                  </div>
+                </aside>
+                <h1 id="notestitle">Notes</h1>
+                <aside id="notes" contenteditable="true"><p>Notes ...</p></aside>
+              </div>
+            </div>
+          </body>
         </html>
-        """
+        """ % tmpText
         
         # htmSimple = ""
 
