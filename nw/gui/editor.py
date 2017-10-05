@@ -61,8 +61,16 @@ class GuiEditor(WebKit2.WebView):
         <link rel="stylesheet" href="themes/default/editor.css" type="text/css">
         </head>
         <body>
-        <article contenteditable="true">Hello</article>
-        <aside contenteditable="true"><b>Notes:</b></aside>
+        <div id="wrapper">
+        <div id="left">
+        <h1>Document Title</h1>
+        <article contenteditable="true"><p>New document</p></article>
+        </div>
+        <div id="right">
+        <h1>Notes</h1>
+        <aside contenteditable="true"><p>Notes ...</p></aside>
+        </div>
+        </div>
         </body>
         </html>
         """

@@ -40,6 +40,15 @@
 #boxLeft {
     
 }
+
+#boxTop {
+    background-color: #2e3f47;
+}
+
+#tbMain {
+    background-color: #2e3f47;
+}
+
 #scrlContent {
     background-color: transparent;
 }
@@ -50,8 +59,12 @@
 }
 
 #treeLeft.view {
-    /*background-color: rgba(255,255,255,0.2);*/
     background-color: #354852;
+    color: #ffffff;
+}
+
+#treeLeft.view:hover {
+    background-color: rgba(255,255,255,0.1);
 }
 
 #panedOuter {

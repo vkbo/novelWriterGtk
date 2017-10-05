@@ -33,7 +33,7 @@ class GuiMainTree():
         # Core objects
         self.treeView   = treeView
         self.treeSelect = Gtk.TreeSelection()
-        self.treeStore  = Gtk.TreeStore(str,str,str,str,str)
+        self.treeStore  = Gtk.TreeStore(str,str,str,str)
         self.treeSort   = Gtk.TreeModelSort(model=self.treeStore)
 
         # Data Sorting
@@ -82,6 +82,24 @@ class GuiMainTree():
         #     treeCol3.set_visible(True)
         #     treeCol3.pack_start(cellCol3,False)
         #     treeCol3.add_attribute(cellCol3,"text",3)
+        
+        self.loadContent()
+
+        return
+
+    def loadContent(self):
+
+        # self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
+        self.treeStore.clear()
+
+        tmpIter = self.treeStore.append(None,["<b>Book</b>","0","0","Stuff"])
+        tmpIter = self.treeStore.append(tmpIter,["Prologue","0","0","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Characters</b>","1","0","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Plots</b>","2","0","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Notes</b>","3","0","Stuff"])
+
+        self.treeView.expand_all()
+        # self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
 
         return
 

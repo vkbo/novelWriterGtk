@@ -49,6 +49,25 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.boxOuter.set_spacing = 0
         self.add(self.boxOuter)
 
+        self.boxTop = Gtk.Box()
+        self.boxTop.set_name("boxTop")
+        self.boxTop.set_orientation(Gtk.Orientation.HORIZONTAL)
+        self.boxTop.set_spacing(0)
+        self.boxOuter.pack_start(self.boxTop,False,False,0)
+
+        # Main toolbar
+        self.tbMain = Gtk.Toolbar()
+        self.tbMain.set_name("tbMain")
+        self.tbMain.set_margin_top(8)
+        self.tbMain.set_margin_bottom(8)
+        self.tbMain.set_margin_left(12)
+        self.tbMain.set_margin_right(12)
+        self.btnMainSave = Gtk.ToolButton(icon_name="gtk-save")
+        self.btnMainOpen = Gtk.ToolButton(icon_name="gtk-open")
+        self.tbMain.insert(self.btnMainSave,0)
+        self.tbMain.insert(self.btnMainOpen,1)
+        self.boxTop.pack_start(self.tbMain,False,True,0)
+
         # Pane between tree view and main content
         # - Added to outer box
         self.panedOuter = Gtk.Paned()
@@ -71,7 +90,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # - Tree store is not added here, just the container.
         self.treeLeft = Gtk.TreeView()
         self.treeLeft.set_name("treeLeft")
-        self.treeLeft.set_margin_top(12)
+        self.treeLeft.set_margin_top(40)
         self.treeLeft.set_margin_bottom(4)
         self.treeLeft.set_margin_left(12)
         self.treeLeft.set_margin_right(12)
@@ -94,14 +113,21 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.tbLeft.insert(self.btnLeftAddFile,1)
         self.tbLeft.insert(self.btnLeftDelete,2)
         self.boxLeft.pack_start(self.tbLeft,False,True,0)
+        
+        self.boxContent = Gtk.Box()
+        self.boxContent.set_name("boxContent")
+        self.boxContent.set_orientation(Gtk.Orientation.VERTICAL)
+        self.boxContent.set_spacing(0)
+        self.panedOuter.pack2(self.boxContent,True,False)
 
+        
         # Pane between main content and timeline
         # - Added to right pane of panedOuter
         self.panedContent = Gtk.Paned()
         self.panedContent.set_name("panedContent")
         self.panedContent.set_orientation(Gtk.Orientation.VERTICAL)
         self.panedContent.set_position(600)
-        self.panedOuter.pack2(self.panedContent,True,True)
+        self.boxContent.pack_start(self.panedContent,True,True,0)
         
         
         self.scrlContent = Gtk.ScrolledWindow()
