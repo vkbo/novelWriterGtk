@@ -34,7 +34,7 @@ class NovelWriter():
         # Build the GUI
         logger.debug("Assembling the main GUI")
         self.winMain   = GuiWinMain()
-        self.webEditor = self.winMain.webEditor
+        # self.webEditor = self.winMain.webEditor
         self.cssMain   = Gtk.CssProvider()
         
         # Load StyleSheet

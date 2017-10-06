@@ -83,6 +83,19 @@
     border-color: #354852;
 }
 
+#boxDocEdit {
+    background-color: #3d0000;
+}
+
+#lblDocTitle {
+    font-size: 30px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.8);
+}
+
+#boxDocMeta {
+    background-color: #003d00;
+}
 
 #tbLeft {
     /*background-color: #5393bc;*/
