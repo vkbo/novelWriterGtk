@@ -21,6 +21,7 @@ from time            import sleep
 from os              import path
 
 from nw.gui.winmain  import GuiWinMain
+from nw.file         import DataStore
 
 logger  = logging.getLogger(__name__)
 
@@ -30,6 +31,9 @@ class NovelWriter():
         
         # Define Core Objects
         self.mainConf = nw.CONFIG
+        self.theBook  = DataStore()
+        
+        self.theBook.createBook()
         
         # Build the GUI
         logger.debug("Assembling the main GUI")
@@ -47,6 +51,9 @@ class NovelWriter():
         
         # Set Up Event Handlers
         self.winMain.connect("delete-event",self.onApplicationQuit)
+        
+        
+        self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
 
         return
 
@@ -54,6 +61,18 @@ class NovelWriter():
     ##
     #  Event Handlers
     ##
+    
+    def onLeftTreeSelect(self, guiObject):
+
+        listModel, pathList = guiObject.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,0)
+            
+            print(listIter)
+            print(itemHandle)
+
+        return
 
     def onApplicationQuit(self, guiObject, guiEvent):
 

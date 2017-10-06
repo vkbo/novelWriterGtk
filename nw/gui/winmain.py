@@ -45,64 +45,63 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # self.set_opacity(0.3)
         self.set_css_name("winMain")
         
-        # The outer vertical box
-        # - Added to main window
+        #
+        # Main Layout Items
+        #
+        
+        # Outer Vertical Box
         self.boxOuter = Gtk.Box()
         self.boxOuter.set_name("boxOuter")
         self.boxOuter.set_orientation(Gtk.Orientation.VERTICAL)
         self.boxOuter.set_spacing = 0
         self.add(self.boxOuter)
-
+        
+        # Top Horisontal Box (TopBar)
         self.boxTop = Gtk.Box()
         self.boxTop.set_name("boxTop")
         self.boxTop.set_orientation(Gtk.Orientation.HORIZONTAL)
         self.boxTop.set_spacing(0)
         self.boxOuter.pack_start(self.boxTop,False,False,0)
-
-        # Main toolbar
+        
+        # Main ToolBar
         self.tbMain = Gtk.Toolbar()
         self.tbMain.set_name("tbMain")
         self.tbMain.set_margin_top(8)
         self.tbMain.set_margin_bottom(8)
         self.tbMain.set_margin_left(12)
         self.tbMain.set_margin_right(12)
-        self.btnMainSave = Gtk.ToolButton(icon_name="gtk-save")
+        self.btnMainNew  = Gtk.ToolButton(icon_name="gtk-new")
         self.btnMainOpen = Gtk.ToolButton(icon_name="gtk-open")
-        self.tbMain.insert(self.btnMainSave,0)
+        self.btnMainSave = Gtk.ToolButton(icon_name="gtk-save")
+        self.tbMain.insert(self.btnMainNew,0)
         self.tbMain.insert(self.btnMainOpen,1)
+        self.tbMain.insert(self.btnMainSave,2)
         self.boxTop.pack_start(self.tbMain,False,True,0)
-
-        # Pane between tree view and main content
-        # - Added to outer box
+        
+        # Pane for TreeView and Main Content
         self.panedOuter = Gtk.Paned()
         self.panedOuter.set_name("panedOuter")
         self.panedOuter.set_orientation(Gtk.Orientation.HORIZONTAL)
         self.panedOuter.set_position(280)
         self.panedOuter.set_wide_handle(False)
         self.boxOuter.pack_start(self.panedOuter,True,True,0)
-
-        # Vertical box to hold tree view and buttons
-        # - Added to left outer pane
+        
+        #
+        # Left Side Tree
+        #
+        
+        # TreeView Vertical Box
         self.boxLeft = Gtk.Box()
         self.boxLeft.set_name("boxLeft")
         self.boxLeft.set_orientation(Gtk.Orientation.VERTICAL)
         self.boxLeft.set_spacing(0)
         self.panedOuter.pack1(self.boxLeft,True,False)
         
-        # The main tree view
-        # - Added to left vertical box
-        # - Tree store is not added here, just the container.
-        self.treeLeft = Gtk.TreeView()
-        self.treeLeft.set_name("treeLeft")
-        self.treeLeft.set_margin_top(40)
-        self.treeLeft.set_margin_bottom(4)
-        self.treeLeft.set_margin_left(12)
-        self.treeLeft.set_margin_right(12)
-        self.treeLeft.set_headers_visible(False)
+        # The Tree
+        self.treeLeft = GuiMainTree()
         self.boxLeft.pack_start(self.treeLeft,True,True,0)
-        self.mainTree = GuiMainTree(self.treeLeft)
         
-        # Tree view toolbar
+        # TreeView toolbar
         self.tbLeft = Gtk.Toolbar()
         self.tbLeft.set_name("tbLeft")
         self.tbLeft.set_icon_size(2)
@@ -118,43 +117,75 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.tbLeft.insert(self.btnLeftDelete,2)
         self.boxLeft.pack_start(self.tbLeft,False,True,0)
         
-        self.boxContent = Gtk.Box()
-        self.boxContent.set_name("boxContent")
-        self.boxContent.set_orientation(Gtk.Orientation.VERTICAL)
-        self.boxContent.set_spacing(0)
-        self.panedOuter.pack2(self.boxContent,True,False)
+        #
+        # Main Content
+        #
+        
+        # Notebook Holding the Main Content
+        self.nbContent = Gtk.Notebook()
+        self.nbContent.set_name("nbContent")
+        self.nbContent.set_show_tabs(False)
+        self.nbContent.set_show_border(False)
+        self.nbContent.set_tab_pos(Gtk.PositionType.RIGHT)
+        self.panedOuter.pack2(self.nbContent,True,False)
 
-        # Pane between main content and timeline
+        #
+        # Notebook: Front Page
+        #
+        
+        # Outer Scroll Window
+        self.scrollBook = Gtk.ScrolledWindow()
+        self.scrollBook.set_name("scrollBook")
+        self.nbContent.insert_page(self.scrollBook,None,0)
+        
+        # Book Alignment
+        self.alignBook = Gtk.Alignment()
+        
+        # Main Vertical Box
+        self.boxBook = Gtk.Box()
+        self.boxBook.set_name("boxBook")
+        self.boxBook.set_orientation(Gtk.Orientation.VERTICAL)
+        self.boxBook.set_spacing(0)
+        self.scrollBook.add(self.boxBook)
+        
+        #
+        # Notebook: Editor Tab
+        #
+        
+        # Pane Between Editor and Timeline
         self.panedContent = Gtk.Paned()
         self.panedContent.set_name("panedContent")
         self.panedContent.set_orientation(Gtk.Orientation.VERTICAL)
         self.panedContent.set_position(750)
-        self.boxContent.pack_start(self.panedContent,True,True,0)
-
-        # Pane between main main document and details/notes
+        self.nbContent.insert_page(self.panedContent,None,1)
+        
+        # Pane Between Document and Details/Notes
         self.panedEditor = Gtk.Paned()
         self.panedEditor.set_name("panedEditor")
         self.panedEditor.set_orientation(Gtk.Orientation.HORIZONTAL)
         self.panedEditor.set_position(900)
         self.panedContent.pack1(self.panedEditor,True,False)
         
+        # Document Editor
         self.alignDocEdit = GuiDocEditor()
         self.panedEditor.pack1(self.alignDocEdit,True,False)
 
-        # Pane between main main details and notes
+        # Pane Between Details and Notes
         self.panedMeta = Gtk.Paned()
         self.panedMeta.set_name("panedMeta")
         self.panedMeta.set_orientation(Gtk.Orientation.VERTICAL)
         self.panedMeta.set_position(240)
         self.panedEditor.pack2(self.panedMeta,True,False)
-
+        
+        # Document Details
         self.alignDocDetails = GuiDocDetails()
         self.panedMeta.pack1(self.alignDocDetails,True,False)
-
+        
+        # Document Notes
         self.alignNoteEdit = GuiNoteEditor()
         self.panedMeta.pack2(self.alignNoteEdit,True,False)
-
-        # Timeline pane content
+        
+        # Timeline
         self.scrlTimeLine = Gtk.ScrolledWindow()
         self.scrlTimeLine.set_name("scrlTimeLine")
         self.panedContent.pack2(self.scrlTimeLine,True,False)

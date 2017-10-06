@@ -7,25 +7,47 @@
  *  Created: 2017-10-03 [0.4.0]
  */
 
+/**
+ *  Main Layout Items
+ */
+
+/* Outer Vertical Box */
+
 #boxOuter {
     background-color: #3d535e;
 }
 
-#boxLeft {
-    
-}
+/* Top Horisontal Box (TopBar) */
 
 #boxTop {
     background-color: #293840;
 }
 
+/* Main ToolBar */
+
 #tbMain {
     background-color: #293840;
 }
 
-#scrlContent {
-    background-color: transparent;
+/* Pane for TreeView and Main Content */
+
+#panedOuter {
+    background-color: #354852;
 }
+
+#panedOuter > separator {
+    border-color: #354852;
+}
+
+/**
+ * Left Side Tree
+ */
+
+/* TreeView Vertical Box */
+
+#boxLeft {}
+
+/* The Tree */
 
 #treeLeft.view {
     background-color: #354852;
@@ -40,13 +62,43 @@
     background-color: rgba(255,255,255,0.2);
 }
 
-#panedOuter {
+/* TreeView toolbar */
+
+#tbLeft {
     background-color: #354852;
 }
 
-#panedOuter > separator {
-    border-color: #354852;
+/**
+ * Main Content
+ */
+
+/* Notebook Holding the Main Content */
+
+#nbContent {}
+
+/**
+ * Notebook: Front Page
+ */
+
+/* Outer Scroll Window */
+
+#scrollBook {
+    background-color: #3d535e;
 }
+
+/* Book Alignment */
+
+#alignBook {}
+
+/* Main Vertical Box */
+
+#boxBook {}
+
+/**
+ * Notebook: Editor Tab
+ */
+
+/* Pane Between Editor and Timeline */
 
 #panedContent {
     background-color: #3d535e;
@@ -56,6 +108,8 @@
     border-color: #354852;
 }
 
+/* Pane Between Document and Details/Notes */
+
 #panedEditor {
     background-color: transparent;
 }
@@ -63,6 +117,8 @@
 #panedEditor > separator {
     border-color: #3d535e;
 }
+
+/* Document Editor */
 
 #boxDocOuter {
     background-color: transparent;
@@ -80,14 +136,26 @@
     /*background-color: #7ca9bf;*/
 }
 
-#panedMeta > separator {
-    border-color: #3d535e;
-}
-
 #textViewDoc {
     background-color: rgba(255,255,255,0.8);
     padding: 20px;
 }
+
+/* Pane Between Details and Notes */
+
+#panedMeta > separator {
+    border-color: #3d535e;
+}
+
+/* Document Details */
+
+#lblDetailsTitle {
+    font-size: 30px;
+    font-weight: bold;
+    color: rgba(200,240,200,0.8);
+}
+
+/* Document Notes */
 
 #boxNoteOuter {
     background-color: transparent;
@@ -106,14 +174,4 @@
 #textViewNote {
     background-color: rgba(255,255,200,0.8);
     padding: 10px;
-}
-
-#lblDetailsTitle {
-    font-size: 30px;
-    font-weight: bold;
-    color: rgba(200,240,200,0.8);
-}
-
-#tbLeft {
-    background-color: #354852;
 }
