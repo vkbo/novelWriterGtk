@@ -45,12 +45,13 @@ class GuiMainTree():
         # Title
         self.colTitle   = Gtk.TreeViewColumn(title="Title")
         self.rendTitle  = Gtk.CellRendererText()
+        self.colTitle.set_expand(True)
         self.colTitle.pack_start(self.rendTitle,True)
         self.colTitle.add_attribute(self.rendTitle,"text",0)
         self.colTitle.set_attributes(self.rendTitle,markup=0)
 
         # File Number
-        self.colNumber  = Gtk.TreeViewColumn(title="#")
+        self.colNumber  = Gtk.TreeViewColumn(title="Count")
         self.rendNumber = Gtk.CellRendererText()
         self.colNumber.pack_start(self.rendNumber,False)
         self.colNumber.add_attribute(self.rendNumber,"text",1)
@@ -92,11 +93,11 @@ class GuiMainTree():
         # self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
-        tmpIter = self.treeStore.append(None,["<b>Book</b>","0","0","Stuff"])
-        tmpIter = self.treeStore.append(tmpIter,["Prologue","0","0","Stuff"])
-        tmpIter = self.treeStore.append(None,["<b>Characters</b>","1","0","Stuff"])
-        tmpIter = self.treeStore.append(None,["<b>Plots</b>","2","0","Stuff"])
-        tmpIter = self.treeStore.append(None,["<b>Notes</b>","3","0","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Book</b>","0","[0]","Stuff"])
+        tmpIter = self.treeStore.append(tmpIter,["Prologue","0.1","[0]","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Characters</b>","1","[0]","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Plots</b>","2","[0]","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Notes</b>","3","[0]","Stuff"])
 
         self.treeView.expand_all()
         # self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)

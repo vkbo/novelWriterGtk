@@ -76,7 +76,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedOuter.set_name("panedOuter")
         self.panedOuter.set_orientation(Gtk.Orientation.HORIZONTAL)
         self.panedOuter.set_position(280)
-        self.panedOuter.set_wide_handle(True)
+        self.panedOuter.set_wide_handle(False)
         self.boxOuter.pack_start(self.panedOuter,True,True,0)
 
         # Vertical box to hold tree view and buttons

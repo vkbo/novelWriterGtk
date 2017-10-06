@@ -42,7 +42,7 @@ logger  = logging.getLogger(__name__)
 CONFIG  = Config()
 BUILDER = Gtk.Builder()
 
-BUILDER.add_from_file(path.join(CONFIG.appPath,"gui.xml"))
+# BUILDER.add_from_file(path.join(CONFIG.appPath,"gui.xml"))
 CONFIG.setBuilder(BUILDER)
 # CONFIG.updateRecentList()
 
