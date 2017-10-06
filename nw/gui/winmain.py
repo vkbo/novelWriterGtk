@@ -16,9 +16,11 @@ import nw
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository    import Gtk, Gdk, GLib
-from nw.gui.doceditor import GuiDocEditor
-from nw.gui.maintree  import GuiMainTree
+from gi.repository     import Gtk, Gdk, GLib
+from nw.gui.doceditor  import GuiDocEditor
+from nw.gui.noteeditor import GuiNoteEditor
+from nw.gui.docdetails import GuiDocDetails
+from nw.gui.maintree   import GuiMainTree
 
 logger = logging.getLogger(__name__)
 
@@ -122,9 +124,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.boxContent.set_spacing(0)
         self.panedOuter.pack2(self.boxContent,True,False)
 
-        
         # Pane between main content and timeline
-        # - Added to right pane of panedOuter
         self.panedContent = Gtk.Paned()
         self.panedContent.set_name("panedContent")
         self.panedContent.set_orientation(Gtk.Orientation.VERTICAL)
@@ -132,7 +132,6 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.boxContent.pack_start(self.panedContent,True,True,0)
 
         # Pane between main main document and details/notes
-        # - Added to top pane of panedContent
         self.panedEditor = Gtk.Paned()
         self.panedEditor.set_name("panedEditor")
         self.panedEditor.set_orientation(Gtk.Orientation.HORIZONTAL)
@@ -142,24 +141,19 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.alignDocEdit = GuiDocEditor()
         self.panedEditor.pack1(self.alignDocEdit,True,False)
 
-        self.alignDocMeta = Gtk.Alignment()
-        self.alignDocMeta.set_name("alignDocEdit")
-        self.alignDocMeta.set_padding(40,40,10,40)
-        self.panedEditor.pack2(self.alignDocMeta,True,False)
+        # Pane between main main details and notes
+        self.panedMeta = Gtk.Paned()
+        self.panedMeta.set_name("panedMeta")
+        self.panedMeta.set_orientation(Gtk.Orientation.VERTICAL)
+        self.panedMeta.set_position(240)
+        self.panedEditor.pack2(self.panedMeta,True,False)
 
-        self.boxDocMeta = Gtk.Box()
-        self.boxDocMeta.set_name("boxDocMeta")
-        self.boxDocMeta.set_orientation(Gtk.Orientation.VERTICAL)
-        self.boxDocMeta.set_spacing(0)
-        self.alignDocMeta.add(self.boxDocMeta)
-        
-        # self.scrlContent = Gtk.ScrolledWindow()
-        # self.scrlContent.set_name("scrlContent")
-        # self.panedContent.pack1(self.scrlContent,True,False)
-        # 
-        # self.webEditor = GuiEditor()
-        # self.scrlContent.add(self.webEditor)
-        
+        self.alignDocDetails = GuiDocDetails()
+        self.panedMeta.pack1(self.alignDocDetails,True,False)
+
+        self.alignNoteEdit = GuiNoteEditor()
+        self.panedMeta.pack2(self.alignNoteEdit,True,False)
+
         # Timeline pane content
         self.scrlTimeLine = Gtk.ScrolledWindow()
         self.scrlTimeLine.set_name("scrlTimeLine")

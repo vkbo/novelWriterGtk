@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*
-"""novelWriter Document Editor Class
+"""novelWriter Note Editor Class
 
- novelWriter – Document Editor Class
-=====================================
- Main wrapper class for the GUI text editor
+ novelWriter – Note Editor Class
+=================================
+ Main wrapper class for the GUI note editor
 
  File History:
  Created:   2017-10-06 [0.4.0]
@@ -21,31 +21,32 @@ from nw.content    import getLoremIpsum
 
 logger = logging.getLogger(__name__)
 
-class GuiDocEditor(Gtk.Alignment):
+class GuiNoteEditor(Gtk.Alignment):
 
     def __init__(self):
 
         Gtk.Alignment.__init__(self)
         
-        self.set_name("alignDocEdit")
-        self.set_padding(40,40,40,10)
+        self.set_name("alignNoteEdit")
+        self.set_padding(20,40,10,40)
 
         self.boxOuter = Gtk.Box()
-        self.boxOuter.set_name("boxDocOuter")
+        self.boxOuter.set_name("boxNoteOuter")
         self.boxOuter.set_orientation(Gtk.Orientation.VERTICAL)
         self.boxOuter.set_spacing(0)
         self.add(self.boxOuter)
 
         self.lblTitle = Gtk.Label()
-        self.lblTitle.set_name("lblDocTitle")
-        self.lblTitle.set_label("Document Title")
+        self.lblTitle.set_name("lblNoteTitle")
+        self.lblTitle.set_label("Notes")
         self.lblTitle.set_xalign(0.0)
         self.lblTitle.set_margin_bottom(12)
         self.boxOuter.pack_start(self.lblTitle,False,False,0)
 
         # Editor toolbar
         self.tbEdit = Gtk.Toolbar()
-        self.tbEdit.set_name("tbDocEdit")
+        self.tbEdit.set_name("tbNoteEdit")
+        self.tbEdit.set_icon_size(2)
         self.btnEditBold       = Gtk.ToolButton(icon_name="format-text-bold-symbolic")
         self.btnEditItalic     = Gtk.ToolButton(icon_name="format-text-italic-symbolic")
         self.btnEditUnderlince = Gtk.ToolButton(icon_name="format-text-underline-symbolic")
@@ -77,8 +78,8 @@ class GuiDocEditor(Gtk.Alignment):
 
         self.textView   = Gtk.TextView()
         self.textBuffer = self.textView.get_buffer()
-        self.textBuffer.set_text("\n".join(getLoremIpsum(5)))
-        self.textView.set_name("textViewDoc")
+        self.textBuffer.set_text("\n".join(getLoremIpsum(2)))
+        self.textView.set_name("textViewNote")
         self.scrollDoc.add(self.textView)
 
         self.tagBold      = self.textBuffer.create_tag("bold",weight=Pango.Weight.BOLD)
@@ -86,12 +87,12 @@ class GuiDocEditor(Gtk.Alignment):
         self.tagUnderline = self.textBuffer.create_tag("underline",underline=Pango.Underline.SINGLE)
         
         self.textView.set_wrap_mode(Gtk.WrapMode.WORD)
-        self.textView.set_indent(30)
-        self.textView.set_justification(Gtk.Justification.FILL)
-        self.textView.set_pixels_below_lines(4)
-        self.textView.modify_font(Pango.FontDescription("Tinos 15"))
+        self.textView.set_indent(0)
+        self.textView.set_justification(Gtk.Justification.LEFT)
+        self.textView.set_pixels_below_lines(8)
+        # self.textView.modify_font(Pango.FontDescription("Ubuntu 12"))
 
 
         return
 
-# End Class GuiDocEditor
+# End Class GuiNoteEditor

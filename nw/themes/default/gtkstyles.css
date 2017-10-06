@@ -83,8 +83,17 @@
     border-color: #354852;
 }
 
-#boxDocEdit {
-    background-color: #3d0000;
+#panedEditor {
+    background-color: transparent;
+}
+
+#panedEditor > separator {
+    border-color: #3d535e;
+}
+
+#boxDocOuter {
+    background-color: transparent;
+    /*background-color: #3d0000;*/
 }
 
 #lblDocTitle {
@@ -93,8 +102,43 @@
     color: rgba(255,255,255,0.8);
 }
 
-#boxDocMeta {
-    background-color: #003d00;
+#tbDocEdit {
+    background-color: rgba(255,255,255,0.5);
+    /*background-color: #7ca9bf;*/
+}
+
+#panedMeta > separator {
+    border-color: #3d535e;
+}
+
+#textViewDoc {
+    background-color: rgba(255,255,255,0.8);
+    padding: 20px;
+}
+
+#boxNoteOuter {
+    background-color: transparent;
+}
+
+#lblNoteTitle {
+    font-size: 30px;
+    font-weight: bold;
+    color: rgba(255,255,200,0.8);
+}
+
+#tbNoteEdit {
+    background-color: rgba(255,255,200,0.5);
+}
+
+#textViewNote {
+    background-color: rgba(255,255,200,0.8);
+    padding: 10px;
+}
+
+#lblDetailsTitle {
+    font-size: 30px;
+    font-weight: bold;
+    color: rgba(200,240,200,0.8);
 }
 
 #tbLeft {
