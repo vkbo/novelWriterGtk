@@ -93,11 +93,12 @@ class GuiMainTree():
         # self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
 
-        tmpIter = self.treeStore.append(None,["<b>Book</b>","0","[0]","Stuff"])
-        tmpIter = self.treeStore.append(tmpIter,["Prologue","0.1","[0]","Stuff"])
-        tmpIter = self.treeStore.append(None,["<b>Characters</b>","1","[0]","Stuff"])
-        tmpIter = self.treeStore.append(None,["<b>Plots</b>","2","[0]","Stuff"])
-        tmpIter = self.treeStore.append(None,["<b>Notes</b>","3","[0]","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Book</b>","1","[0]","Stuff"])
+        tmpIter = self.treeStore.append(tmpIter,["Prologue","1","[0]","Stuff"])
+        tmpIter = self.treeStore.append(tmpIter,["Scene 1","","[0]","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Characters</b>","0","[0]","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Plots</b>","0","[0]","Stuff"])
+        tmpIter = self.treeStore.append(None,["<b>Notes</b>","0","[0]","Stuff"])
 
         self.treeView.expand_all()
         # self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
