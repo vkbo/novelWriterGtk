@@ -97,4 +97,4 @@ class GuiBookPane(Gtk.Alignment):
         
         return
 
-# End Class GuiNoteEditor
+# End Class GuiBookPane

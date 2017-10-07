@@ -18,6 +18,7 @@ gi.require_version("Gtk","3.0")
 
 from gi.repository     import Gtk, Gdk, GLib
 from nw.gui.bookpane   import GuiBookPane
+from nw.gui.charspane  import GuiCharsPane
 from nw.gui.doceditor  import GuiDocEditor
 from nw.gui.noteeditor import GuiNoteEditor
 from nw.gui.docdetails import GuiDocDetails
@@ -145,6 +146,19 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.alignBook = GuiBookPane()
         self.scrollBook.add(self.alignBook)
         
+        #
+        # Notebook: Characters Page
+        #
+        
+        # Outer Scroll Window
+        self.scrollChars = Gtk.ScrolledWindow()
+        self.scrollChars.set_name("scrollChars")
+        self.nbContent.insert_page(self.scrollChars,None,NWC.NBTabs.CHARS.value)
+        
+        # Book Alignment
+        self.alignChars = GuiCharsPane(self.theBook)
+        self.scrollChars.add(self.alignChars)
+
         #
         # Notebook: Editor Tab
         #

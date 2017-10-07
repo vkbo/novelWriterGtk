@@ -82,21 +82,33 @@
 
 /* Outer Scroll Window */
 
-#scrollBook {
+#scrollBook, #scrollChars {
     background-color: #3d535e;
 }
 
 /* Book Alignment */
 
-#alignBook {}
+#alignBook, #alignChars {}
 
 /* Main Vertical Box */
 
-#boxBook {}
+#boxBook, #boxChars {}
 
-#lblBook {
+#lblBook, #lblChars {
     color: rgba(255,255,255,0.4);
     font-size: 60px;
+    font-weight: bold;
+}
+
+#treeChars.view {
+    background-color: #354852;
+}
+
+#treeChars.view > header > button {
+    color: rgba(255,255,255,0.8);
+    border-width: 0px;
+    background-image: none;
+    background-color: #293840;
     font-weight: bold;
 }
 

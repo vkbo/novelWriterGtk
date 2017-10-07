@@ -52,6 +52,6 @@ class BookTree(Enum):
 class NBTabs(Enum):
     
     BOOK   = 0
-    EDITOR = 1
-    CHARS  = 2
+    CHARS  = 1
+    EDITOR = 2
     PLOTS  = 3
