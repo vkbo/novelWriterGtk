@@ -13,6 +13,7 @@ Rewrittem: 2017-10-03 [0.4.0]
 
 import logging
 import nw
+import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
@@ -21,7 +22,8 @@ from time            import sleep
 from os              import path
 
 from nw.gui.winmain  import GuiWinMain
-from nw.file         import DataStore
+from nw.gui.maintree import GuiMainTree
+from nw.file         import Book
 
 logger  = logging.getLogger(__name__)
 
@@ -31,56 +33,155 @@ class NovelWriter():
         
         # Define Core Objects
         self.mainConf = nw.CONFIG
-        self.theBook  = DataStore()
+        self.theBook  = Book()
         
-        self.theBook.createBook()
         
         # Build the GUI
         logger.debug("Assembling the main GUI")
-        self.winMain   = GuiWinMain()
-        # self.webEditor = self.winMain.webEditor
-        self.cssMain   = Gtk.CssProvider()
+        self.winMain = GuiWinMain(self.theBook)
+        self.cssMain = Gtk.CssProvider()
+        
+        # Set file filter for loading and saving
+        self.fileFilter = Gtk.FileFilter()
+        self.fileFilter.add_pattern("*")
+        self.fileFilter.add_pattern("*.nwf")
         
         # Load StyleSheet
-        self.cssMain.load_from_path(
-            path.join(self.mainConf.themePath,self.mainConf.theTheme,"gtkstyles.css")
-        )
+        cssPath = path.join(self.mainConf.themePath,self.mainConf.theTheme,"gtkstyles.css")
+        logger.verbose("Loading stylesheet from %s" % cssPath)
+        self.cssMain.load_from_path(cssPath)
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),self.cssMain,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
         
         # Set Up Event Handlers
         self.winMain.connect("delete-event",self.onApplicationQuit)
-        
+        self.winMain.connect("configure-event",self.onMainWinChange)
+        self.winMain.btnMainNew.connect("clicked",self.onBookNew)
+        self.winMain.btnMainOpen.connect("clicked",self.onBookOpen)
+        self.winMain.btnMainSave.connect("clicked",self.onBookSave)
         
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
+        
+        self.winMain.btnLeftAddCont.connect("clicked",self.onLeftTreeAdd,NWC.ItemClass.CONTAINER)
+        
+        # Load Data
+        lastBook = self.mainConf.getLastBook()
+        if lastBook == "":
+            logger.debug("No recent files set, creating empty book project")
+            self.theBook.createBook()
+        else:
+            if path.isfile(lastBook):
+                logger.info("Opening last book project from %s" % lastBook)
+                self.theBook.openBook(lastBook)
+            else:
+                logger.debug("Last book project not found, creating empty book project")
+                self.theBook.createBook()
+        
+        self.winMain.treeLeft.loadContent()
 
         return
-
-
-    ##
-    #  Event Handlers
-    ##
+    
+    ##                                                                                            ##
+    #  ==============================        Event Handlers        ==============================  #
+    ##                                                                                            ##
+    
+    #
+    # ToolBar Events
+    #
+    
+    def onBookNew(self, guiObject):
+        return
+    
+    def onBookOpen(self, guiObject):
+        return
+    
+    def onBookSave(self, guiObject):
+        
+        if self.theBook.bookPath == None:
+            dlgSave = Gtk.FileChooserNative()
+            dlgSave.set_title("Save book as ...")
+            dlgSave.set_transient_for(self.winMain)
+            dlgSave.set_modal(True)
+            dlgSave.set_action(Gtk.FileChooserAction.SAVE)
+            dlgSave.set_current_folder(self.mainConf.homePath)
+            dlgSave.set_current_name("NewBookProject.nwx")
+            dlgReturn = dlgSave.run()
+            if dlgReturn == Gtk.ResponseType.ACCEPT:
+                savePath = dlgSave.get_filename()
+                logger.verbose("BookSave: Saving to %s" % savePath)
+                self.theBook.setBookPath(savePath)
+            else:
+                logger.verbose("BookSave: Cancelled")
+                return
+            dlgSave.destroy()
+            
+        self.theBook.saveBook()
+        self.mainConf.setLastBook(self.theBook.bookPath)
+        
+        return
+    
+    #
+    # Main Tree Events
+    #
     
     def onLeftTreeSelect(self, guiObject):
-
+        
+        itemHandle = None
+        
         listModel, pathList = guiObject.get_selected_rows()
         for pathItem in pathList:
             listIter   = listModel.get_iter(pathItem)
-            itemHandle = listModel.get_value(listIter,0)
+            itemHandle = listModel.get_value(listIter,GuiMainTree.COL_HANDLE)
+            itemName   = listModel.get_value(listIter,GuiMainTree.COL_NAME)
+            logger.vverbose("MainTree: Selected item %s named '%s'" % (itemHandle,itemName))
             
-            print(listIter)
-            print(itemHandle)
-
+        if itemHandle == None: return
+        
+        itemEntry = self.theBook.getTreeEntry(itemHandle)
+        
+        itemLevel = itemEntry[NWC.BookTree.LEVEL]
+        itemType  = itemEntry[NWC.BookTree.TYPE]
+        logger.vverbose("MainTree: The item level is %s" % itemLevel)
+        logger.vverbose("MainTree: The item type is %s" % itemType)
+        if itemLevel == NWC.ItemLevel.ROOT:
+            if itemType == NWC.ItemType.BOOK:  self.winMain.showTab(NWC.NBTabs.BOOK)
+            if itemType == NWC.ItemType.CHARS: self.winMain.showTab(NWC.NBTabs.CHARS)
+            if itemType == NWC.ItemType.PLOTS: self.winMain.showTab(NWC.NBTabs.PLOTS)
+            if itemType == NWC.ItemType.NOTES: self.winMain.showTab(NWC.NBTabs.BOOK)
+        
+        return
+    
+    def onLeftTreeAdd(self, guiObject, addType):
+        
+        logger.vverbose("MainTree: Adding item of type %s" % addType.name)
+        
+        
+        return
+    
+    #
+    # Application Events
+    #
+    
+    def onMainWinChange(self, guiObject, guiEvent):
+        self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
 
     def onApplicationQuit(self, guiObject, guiEvent):
-
-        logger.info("Beginning shutdown procedure")
-
-        logger.info("Exiting")
+        
+        logger.info("Shutting down")
+        
+        # Get Pane Positions
+        posOuter    = self.winMain.panedOuter.get_position()
+        posContent = self.winMain.panedContent.get_position()
+        posEditor  = self.winMain.panedEditor.get_position()
+        posMeta    = self.winMain.panedMeta.get_position()
+        self.mainConf.setPanes([posOuter,posContent,posEditor,posMeta])
+        
+        self.mainConf.saveConfig()
+        logger.debug("Calling Gtk quit")
         Gtk.main_quit()
-
+        
         return
 
 # End Class NovelWriter

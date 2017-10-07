@@ -50,8 +50,8 @@ __status__     = "Development"
 
 VERBOSE  = 9
 VVERBOSE = 8
-logging.addLevelName(VERBOSE, "DEBUG-V")
-logging.addLevelName(VVERBOSE,"DEBUG-VV")
+logging.addLevelName(VERBOSE, "DEBUGV")
+logging.addLevelName(VVERBOSE,"DEBUGVV")
 
 def logVerbose(self, message, *args, **kws):
     if self.isEnabledFor(VERBOSE):
@@ -71,14 +71,13 @@ logger = logging.getLogger(__name__)
 # ==============
 #
 
-# Global Classes
-CONFIG  = Config()
-BUILDER = Gtk.Builder()
-
-CONFIG.setBuilder(BUILDER)
-# CONFIG.updateRecentList()
+# Load the main config as a global object
+CONFIG = Config()
 
 def main(sysArgs):
+    """
+    Parses command line, sets up logging, and launches main GUI.
+    """
     
     # Valid Input Options
     shortOpt = "hd:qtl:v"

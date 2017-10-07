@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*
 """novelWriter Config Class
 
-novelWriter – Config Class
-==========================
-This class reads and store the main preferences of the application
+ novelWriter – Config Class
+============================
+ This class reads and store the main preferences of the application
 
-File History:
-Created: 2017-01-10 [0.1.0]
+ File History:
+ Created: 2017-01-10 [0.1.0]
 
 """
 
@@ -26,15 +26,9 @@ class Config:
 
     def __init__(self):
 
-        # Connect to GUI
-        self.getObject  = None
-        self.dlgBuilder = Gtk.Builder()
-        self.dlgObject  = self.dlgBuilder.get_object
-
         # Set Application Variables
         self.appName    = "novelWriter"
         self.appHandle  = "novelwriter"
-        self.appVersion = "Dev0.4"
         self.appURL     = "https://github.com/vkbo/novelWriter"
 
         # Set Paths
@@ -54,10 +48,12 @@ class Config:
         self.confChanged = False
 
         ## General
-        self.winWidth    = 1000
-        self.winHeight   = 700
-        self.mainPane    = 200
-        self.sidePane    = 200
+        self.winWidth    = 1600
+        self.winHeight   = 980
+        self.mainPane    = 280
+        self.contPane    = 750
+        self.editPane    = 900
+        self.metaPane    = 240
         self.theTheme    = "default"
 
         ## Editor
@@ -94,7 +90,7 @@ class Config:
 
     def loadConfig(self):
 
-        logger.debug("Config: Loading")
+        logger.debug("Loading config file")
         confParser = configparser.ConfigParser()
         confParser.readfp(open(path.join(self.confPath,self.confFile)))
 
@@ -106,7 +102,9 @@ class Config:
             if confParser.has_option(cnfSec,"winWidth"):   self.winWidth     = confParser.getint(cnfSec,"winWidth")
             if confParser.has_option(cnfSec,"winHeight"):  self.winHeight    = confParser.getint(cnfSec,"winHeight")
             if confParser.has_option(cnfSec,"mainPane"):   self.mainPane     = confParser.getint(cnfSec,"mainPane")
-            if confParser.has_option(cnfSec,"sidePane"):   self.sidePane     = confParser.getint(cnfSec,"sidePane")
+            if confParser.has_option(cnfSec,"contPane"):   self.contPane     = confParser.getint(cnfSec,"contPane")
+            if confParser.has_option(cnfSec,"editPane"):   self.editPane     = confParser.getint(cnfSec,"editPane")
+            if confParser.has_option(cnfSec,"metaPane"):   self.metaPane     = confParser.getint(cnfSec,"metaPane")
 
         ## Editor
         cnfSec = "Editor"
@@ -156,7 +154,9 @@ class Config:
         confParser.set(cnfSec,"winWidth",   str(self.winWidth))
         confParser.set(cnfSec,"winHeight",  str(self.winHeight))
         confParser.set(cnfSec,"mainPane",   str(self.mainPane))
-        confParser.set(cnfSec,"sidePane",   str(self.sidePane))
+        confParser.set(cnfSec,"contPane",   str(self.contPane))
+        confParser.set(cnfSec,"editPane",   str(self.editPane))
+        confParser.set(cnfSec,"metaPane",   str(self.metaPane))
 
         ## Editor
         cnfSec = "Editor"
@@ -211,35 +211,30 @@ class Config:
     #  Setters
     ##
 
-    def setBuilder(self, guiBuilder):
-        self.getObject = guiBuilder.get_object
-        return
-
     def setWinSize(self, width, height):
         if width != self.winWidth or height != self.winHeight:
             self.winWidth    = width
             self.winHeight   = height
             self.confChanged = True
         return
-
-    def setMainPane(self, position):
-        if position != self.mainPane:
-            self.mainPane    = position
+    
+    def setPanes(self, panePos):
+        if panePos[0] != self.mainPane:
+            self.mainPane    = panePos[0]
+            self.confChanged = True
+        if panePos[1] != self.contPane:
+            self.contPane    = panePos[1]
+            self.confChanged = True
+        if panePos[2] != self.editPane:
+            self.editPane    = panePos[2]
+            self.confChanged = True
+        if panePos[3] != self.metaPane:
+            self.metaPane    = panePos[3]
             self.confChanged = True
         return
-
-    def setSidePane(self, position):
-        if position != self.sidePane:
-            self.sidePane    = position
-            self.confChanged = True
-        return
-
+    
     def setSpellState(self, state):
         self.spellState = state
-        return
-
-    def setShowParagraph(self, state):
-        self.showPara = state
         return
 
     def setLastBook(self, bookPath):
@@ -263,12 +258,12 @@ class Config:
     ##
 
     def updateRecentList(self):
-        for n in range(10):
-            if self.recentBook[n] == "":
-                self.getObject("menuFileRecent%d" % n).set_visible(False)
-            else:
-                self.getObject("menuFileRecent%d" % n).set_visible(True)
-                self.getObject("menuFileRecent%d" % n).set_label(self.recentBook[n])
+        # for n in range(10):
+        #     if self.recentBook[n] == "":
+        #         self.getObject("menuFileRecent%d" % n).set_visible(False)
+        #     else:
+        #         self.getObject("menuFileRecent%d" % n).set_visible(True)
+        #         self.getObject("menuFileRecent%d" % n).set_label(self.recentBook[n])
         return
 
     ##

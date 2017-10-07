@@ -16,22 +16,42 @@ from enum import Enum
 
 logger = logging.getLogger(__name__)
 
-class TreeNodes(Enum):
+class ItemType(Enum):
     
-    BOOK      = 10
-    CHARS     = 20
-    PLOTS     = 30
-    NOTES     = 40
+    BOOK        = 10
+    FRONTMATTER = 11
+    PROLOGUE    = 12
+    CHAPTER     = 13
+    EPILOGUE    = 14
+    BACKMATTER  = 15
+    CHARS       = 20
+    PLOTS       = 30
+    NOTES       = 40
+
+class ItemClass(Enum):
     
-    BOOK_PRO  = 11
-    BOOK_CHAP = 12
-    BOOK_EPI  = 13
+    CONTAINER = 0
+    DOCUMENT  = 1
+    DIVIDER   = 2
+
+class ItemLevel(Enum):
     
-    CHAR_MAIN = 21
-    CHAR_SEC  = 22
-    CHAR_MIN  = 23
+    ROOT = 0
+    ITEM = 1
+    FILE = 2
+
+class BookTree(Enum):
     
-    PLOT_MAIN = 31
-    PLOT_SUB  = 32
-    PLOT_MIN  = 33
+    CLASS  = 0
+    LEVEL  = 1
+    TYPE   = 2
+    HANDLE = 3
+    PARENT = 4
+    NAME   = 5
+
+class NBTabs(Enum):
     
+    BOOK   = 0
+    EDITOR = 1
+    CHARS  = 2
+    PLOTS  = 3
