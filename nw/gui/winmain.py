@@ -17,6 +17,7 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository     import Gtk, Gdk, GLib
+from nw.gui.bookpane   import GuiBookPane
 from nw.gui.doceditor  import GuiDocEditor
 from nw.gui.noteeditor import GuiNoteEditor
 from nw.gui.docdetails import GuiDocDetails
@@ -132,7 +133,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedOuter.pack2(self.nbContent,True,False)
         
         #
-        # Notebook: Front Page
+        # Notebook: Book Page
         #
         
         # Outer Scroll Window
@@ -141,14 +142,8 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.nbContent.insert_page(self.scrollBook,None,NWC.NBTabs.BOOK.value)
         
         # Book Alignment
-        self.alignBook = Gtk.Alignment()
-        
-        # Main Vertical Box
-        self.boxBook = Gtk.Box()
-        self.boxBook.set_name("boxBook")
-        self.boxBook.set_orientation(Gtk.Orientation.VERTICAL)
-        self.boxBook.set_spacing(0)
-        self.scrollBook.add(self.boxBook)
+        self.alignBook = GuiBookPane()
+        self.scrollBook.add(self.alignBook)
         
         #
         # Notebook: Editor Tab

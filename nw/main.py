@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*
 """novelWriter Main Class
 
-novelWriter – Main Class
-============================
-Sets up the main GUI and holds action and event functions
+ novelWriter – Main Class
+==========================
+ Sets up the main GUI and holds action and event functions
 
-File History:
-Created:   2017-01-10 [0.1.0]
-Rewrittem: 2017-10-03 [0.4.0]
+ File History:
+ Created:   2017-01-10 [0.1.0]
+ Rewritten: 2017-10-03 [0.4.0]
 
 """
 
@@ -25,16 +25,15 @@ from nw.gui.winmain  import GuiWinMain
 from nw.gui.maintree import GuiMainTree
 from nw.file         import Book
 
-logger  = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 class NovelWriter():
-
+    
     def __init__(self):
         
         # Define Core Objects
         self.mainConf = nw.CONFIG
         self.theBook  = Book()
-        
         
         # Build the GUI
         logger.debug("Assembling the main GUI")
@@ -61,6 +60,9 @@ class NovelWriter():
         self.winMain.btnMainOpen.connect("clicked",self.onBookOpen)
         self.winMain.btnMainSave.connect("clicked",self.onBookSave)
         
+        # self.winMain.alignBook.entryBookTitle.connect("icon-press",self.onBookTitleToggle)
+        # self.winMain.alignBook.entryBookAuthor.connect("icon-press",self.onBookAuthorToggle)
+        
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
         
         self.winMain.btnLeftAddCont.connect("clicked",self.onLeftTreeAdd,NWC.ItemClass.CONTAINER)
@@ -73,13 +75,32 @@ class NovelWriter():
         else:
             if path.isfile(lastBook):
                 logger.info("Opening last book project from %s" % lastBook)
-                self.theBook.openBook(lastBook)
+                self.openBook(lastBook)
             else:
                 logger.debug("Last book project not found, creating empty book project")
                 self.theBook.createBook()
         
         self.winMain.treeLeft.loadContent()
-
+        
+        return
+    
+    def openBook(self, bookPath):
+        
+        self.theBook.openBook(bookPath)
+        
+        self.winMain.alignBook.entryBookTitle.set_text(self.theBook.bookTitle)
+        self.winMain.alignBook.entryBookAuthor.set_text(", ".join(self.theBook.bookAuthors))
+        
+        return
+    
+    def saveBook(self):
+        
+        self.theBook.setTitle(self.winMain.alignBook.entryBookTitle.get_text())
+        self.theBook.setAuthors(self.winMain.alignBook.entryBookAuthor.get_text())
+        
+        self.theBook.saveBook()
+        self.mainConf.setLastBook(self.theBook.bookPath)
+        
         return
     
     ##                                                                                            ##
@@ -115,9 +136,8 @@ class NovelWriter():
                 logger.verbose("BookSave: Cancelled")
                 return
             dlgSave.destroy()
-            
-        self.theBook.saveBook()
-        self.mainConf.setLastBook(self.theBook.bookPath)
+        
+        self.saveBook()
         
         return
     
@@ -158,6 +178,15 @@ class NovelWriter():
         
         
         return
+    #
+    # Book Pane Events
+    #
+    
+    def onBookTitleToggle(self, guiObject, guiType, guiEvent):
+        return
+    
+    def onBookAuthorToggle(self, guiObject, guiType, guiEvent):
+        return
     
     #
     # Application Events
@@ -172,7 +201,7 @@ class NovelWriter():
         logger.info("Shutting down")
         
         # Get Pane Positions
-        posOuter    = self.winMain.panedOuter.get_position()
+        posOuter   = self.winMain.panedOuter.get_position()
         posContent = self.winMain.panedContent.get_position()
         posEditor  = self.winMain.panedEditor.get_position()
         posMeta    = self.winMain.panedMeta.get_position()

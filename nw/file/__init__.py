@@ -15,11 +15,12 @@ import nw
 import nw.const as NWC
 import xml.etree.ElementTree as ET
 
-from os             import path
-from xml.dom        import minidom
-from time           import time
-from hashlib        import sha256
-from nw.file.doc    import DocFile
+from os          import path, mkdir
+from xml.dom     import minidom
+from time        import time
+from hashlib     import sha256
+# from datetime    import datetime
+from nw.file.doc import DocFile
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ class Book():
         self.bookLoaded = False
         
         self.bookPath   = None
+        self.docPath    = None
         self.theTree    = []
         self.theIndex   = {}
         
@@ -46,7 +48,6 @@ class Book():
             return
         
         self.bookPath = bookPath
-        self.bookLoaded = True
         
         nwXML = ET.parse(bookPath)
         xRoot = nwXML.getroot()
@@ -90,6 +91,8 @@ class Book():
                     logger.vverbose("BookOpen: Item parent is %s" % itemParent)
                     self.appendTree(itemClass,itemLevel,itemType,itemHandle,itemParent,itemName)
         
+        self.bookLoaded = True
+        
         return
     
     def saveBook(self):
@@ -99,15 +102,22 @@ class Book():
         logger.vverbose("BookSave: Folder is %s" % bookDir)
         logger.vverbose("BookSave: File is %s" % bookFile)
         
+        if bookFile[-4:] == ".nwx":
+            self.docPath = path.join(bookDir,bookFile[:-4]+".nwd")
+            if not path.isdir(self.docPath):
+                logger.info("BookSave: Created folder %s" % self.docPath)
+                mkdir(self.docPath)
+        
         nwXML = ET.Element("novelWriterXML",attrib={
             "fileVersion" : "1.0",
             "appVersion"  : str(nw.__version__),
         })
         xBook = ET.SubElement(nwXML,"book")
         xBookTitle = ET.SubElement(xBook,"title")
-        xBookTitle.text = "Book Title"
-        xBookAuthor = ET.SubElement(xBook,"author")
-        xBookAuthor.text = "J. Smith"
+        xBookTitle.text = self.bookTitle
+        for bookAuthor in self.bookAuthors:
+            xBookAuthor = ET.SubElement(xBook,"author")
+            xBookAuthor.text = bookAuthor
         
         xContent = ET.SubElement(nwXML,"content",attrib={"count":str(len(self.theTree))})
         itemIdx  = 0
@@ -148,11 +158,21 @@ class Book():
         self.bookPath = bookPath
         return
     
+    def setTitle(self, bookTitle):
+        logger.debug("Book title changed to '%s'" % bookTitle)
+        self.bookTitle = bookTitle.strip()
+        return
+    
+    def setAuthors(self, bookAuthors):
+        self.bookAuthors = []
+        authList = bookAuthors.split(",")
+        for author in authList:
+            logger.debug("Book author '%s' added" % author.strip())
+            self.bookAuthors.append(author.strip())
+        return
+    
     def createDoc(self, docTitle, docType):
         
-        nodeHandle = sha256(str(time()).encode()).hexdigest()[0:20]
-        
-        self.theTree[docHandle] = DocFile(self.nodeHandle)
         
         return True
     
@@ -183,8 +203,12 @@ class Book():
         
         return True
     
-    def makeHandle(self):
-        return sha256(str(time()).encode()).hexdigest()[0:20]
+    def makeHandle(self,seed=""):
+        itemHandle = sha256((str(time())+seed).encode()).hexdigest()[0:13]
+        if itemHandle in self.theIndex.keys():
+            logger.warning("Duplicate handle encountered! Retrying ...")
+            itemHandle = self.makeHandle(seed+"!")
+        return itemHandle
     
     def getEnumFromString(self,enumItem,lookUp):
         for enumName in enumItem:
