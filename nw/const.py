@@ -49,6 +49,12 @@ class BookTree(Enum):
     PARENT = 4
     NAME   = 5
 
+class CharTree(Enum):
+    
+    IMPORTANCE = 0
+    ROLE       = 1
+    COMMENT    = 2
+
 class NBTabs(Enum):
     
     BOOK   = 0

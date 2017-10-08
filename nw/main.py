@@ -60,12 +60,18 @@ class NovelWriter():
         self.winMain.btnMainOpen.connect("clicked",self.onBookOpen)
         self.winMain.btnMainSave.connect("clicked",self.onBookSave)
         
-        # self.winMain.alignBook.entryBookTitle.connect("icon-press",self.onBookTitleToggle)
-        # self.winMain.alignBook.entryBookAuthor.connect("icon-press",self.onBookAuthorToggle)
-        
+        # Main Tree
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
-        
         self.winMain.btnLeftAddCont.connect("clicked",self.onLeftTreeAdd,NWC.ItemClass.CONTAINER)
+        
+        # Characters Pane
+        pChars = self.winMain.alignChars
+        pChars.btnCharsAdd.connect("clicked",self.onCharAdd)
+        pChars.btnCharsRemove.connect("clicked",self.onCharRemove)
+        pChars.treeChars.rendName.connect("edited",self.onCharEdit,NWC.BookTree.NAME)
+        pChars.treeChars.rendImport.connect("edited",self.onCharEdit,NWC.CharTree.IMPORTANCE)
+        pChars.treeChars.rendRole.connect("edited",self.onCharEdit,NWC.CharTree.ROLE)
+        pChars.treeChars.rendComment.connect("edited",self.onCharEdit,NWC.CharTree.COMMENT)
         
         # Load Data
         lastBook = self.mainConf.getLastBook()
@@ -81,15 +87,21 @@ class NovelWriter():
                 self.theBook.createBook()
         
         self.winMain.treeLeft.loadContent()
-        
+        self.winMain.alignChars.treeChars.loadContent()
+
         return
     
     def openBook(self, bookPath):
         
         self.theBook.openBook(bookPath)
         
-        self.winMain.alignBook.entryBookTitle.set_text(self.theBook.bookTitle)
-        self.winMain.alignBook.entryBookAuthor.set_text(", ".join(self.theBook.bookAuthors))
+        bookTitle   = self.theBook.bookTitle
+        bookAuthors = ", ".join(self.theBook.bookAuthors)
+        winTitle    = "%s – novelWriter v%s" % (bookTitle,nw.__version__)
+        
+        self.winMain.set_title(winTitle)
+        self.winMain.alignBook.entryBookTitle.set_text(bookTitle)
+        self.winMain.alignBook.entryBookAuthor.set_text(bookAuthors)
         
         return
     
@@ -178,14 +190,41 @@ class NovelWriter():
         
         
         return
+    
     #
-    # Book Pane Events
+    # Characters Pane Events
     #
     
-    def onBookTitleToggle(self, guiObject, guiType, guiEvent):
+    def onCharAdd(self, guiObject):
+        
+        logger.vverbose("User clicked add character")
+        self.theBook.addCharacter()
+        self.winMain.treeLeft.loadContent()
+        self.winMain.alignChars.treeChars.loadContent()
+        
         return
     
-    def onBookAuthorToggle(self, guiObject, guiType, guiEvent):
+    def onCharRemove(self, guiObject):
+        
+        logger.vverbose("User clicked remove character")
+        
+        return
+    
+    def onCharEdit(self, guiObject, itemPath, editText, enumType):
+        
+        srcTree   = self.winMain.alignChars.treeChars
+        handleCol = srcTree.COL_HANDLE
+        
+        if enumType == NWC.BookTree.NAME:       srcColumn = srcTree.COL_TITLE
+        if enumType == NWC.CharTree.IMPORTANCE: srcColumn = srcTree.COL_IMPORTANCE
+        if enumType == NWC.CharTree.ROLE:       srcColumn = srcTree.COL_ROLE
+        if enumType == NWC.CharTree.COMMENT:    srcColumn = srcTree.COL_COMMENT
+        
+        itemHandle = srcTree.listStore[itemPath][handleCol]
+        srcTree.listStore[itemPath][srcColumn] = editText.strip()
+        self.theBook.updateCharacter(itemHandle,enumType,editText)
+        self.winMain.treeLeft.loadContent()
+        
         return
     
     #

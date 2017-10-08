@@ -91,8 +91,11 @@ class GuiMainTree(Gtk.TreeView):
             if itemParent == None:
                 parIter = None
             else:
-                # TODO: Add extract parent iter from map
-                parIter = None
+                if itemParent in self.iterMap:
+                    parIter = self.iterMap[itemParent]
+                else:
+                    logger.error("Item encountered before its parent")
+                    parIter = None
             
             if itemLevel == NWC.ItemLevel.ROOT:
                 itemTitle = "<b>%s</b>" % itemName
