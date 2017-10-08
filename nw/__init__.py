@@ -102,8 +102,8 @@ def main(sysArgs):
         "     --verbose   Increase verbosity of debug.\n"
         "     --vverbose  Increase verbosity of debug even more.\n"
         " -q, --quiet     Disable output to command line. Does not affect log file.\n"
-        " -t, --time      Show time stamp in logging output. Adds milliseconds for verbose.\n"
-        " -l, --logfile   Log file.\n"
+        " -t, --time      Shows time stamp in logging output. Adds milliseconds for verbose.\n"
+        " -l, --logfile   Specify log file.\n"
         " -v, --version   Print program version and exit.\n"
     ).format(
         version   = __version__,
