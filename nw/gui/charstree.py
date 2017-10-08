@@ -100,7 +100,11 @@ class GuiCharsTree(Gtk.TreeView):
             if not itemLevel == NWC.ItemLevel.ITEM: continue
             if not itemType  == NWC.ItemType.CHARS: continue
             
-            treeEntry = [itemName,"0","","",itemHandle]
+            charImportance = self.theBook.charData[itemHandle][NWC.CharTree.IMPORTANCE]
+            charRole       = self.theBook.charData[itemHandle][NWC.CharTree.ROLE]
+            charComment    = self.theBook.charData[itemHandle][NWC.CharTree.COMMENT]
+            
+            treeEntry = [itemName,charImportance,charRole,charComment,itemHandle]
             tmpIter   = self.listStore.append(treeEntry)
             self.iterMap[itemHandle] = tmpIter
         

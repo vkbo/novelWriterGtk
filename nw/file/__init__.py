@@ -100,30 +100,32 @@ class Book():
                     for xValue in xItem:
                         if xValue.tag == "name":
                             itemName    = xValue.text
+                            logger.verbose("BookOpen: Loading item '%s'" % itemName)
+                            logger.vverbose("BookOpen: Item handle is %s" % itemHandle)
+                            logger.vverbose("BookOpen: Item parent is %s" % itemParent)
                         elif xValue.tag == "class":
                             itemClass   = self.getEnumFromString(NWC.ItemClass,xValue.text)
+                            logger.vverbose("BookOpen: Item class is %s" % itemClass)
                         elif xValue.tag == "level":
                             itemLevel   = self.getEnumFromString(NWC.ItemLevel,xValue.text)
+                            logger.vverbose("BookOpen: Item level is %s" % itemLevel)
                         elif xValue.tag == "type":
                             itemType    = self.getEnumFromString(NWC.ItemType,xValue.text)
+                            logger.vverbose("BookOpen: Item type is %s" % itemType)
                         elif xValue.tag == "charImportance":
                             charImport  = xValue.text
+                            logger.vverbose("BookOpen: Character importance is %s" % charImport)
                         elif xValue.tag == "charRole":
                             charRole    = xValue.text
+                            logger.vverbose("BookOpen: Chararcter role is '%s'" % charRole)
                         elif xValue.tag == "charComment":
                             charComment = xValue.text
+                            logger.vverbose("BookOpen: Chararcter comment is '%s'" % charComment)
                         else:
                             logger.warning("BookOpen: Unknown item value '%s' in xml" % xValue.tag)
-
-                    logger.verbose("BookOpen: Loading item '%s'" % itemName)
-                    logger.vverbose("BookOpen: Item class is %s" % itemClass)
-                    logger.vverbose("BookOpen: Item level is %s" % itemLevel)
-                    logger.vverbose("BookOpen: Item type is %s" % itemType)
-                    logger.vverbose("BookOpen: Item handle is %s" % itemHandle)
-                    logger.vverbose("BookOpen: Item parent is %s" % itemParent)
-
+                            
                     self.appendTree(itemClass,itemLevel,itemType,itemHandle,itemParent,itemName)
-
+                    
                     if itemLevel == NWC.ItemLevel.ROOT:
                         if itemType == NWC.ItemType.BOOK:
                             self.bookHandle = itemHandle
@@ -139,9 +141,6 @@ class Book():
                             logger.verbose("BookOpen: Root notes handle is %s" % itemHandle)
                     if itemLevel == NWC.ItemLevel.ITEM:
                         if itemType == NWC.ItemType.CHARS:
-                            if charImport  == None: charImport  = 0
-                            if charRole    == None: charRole    = ""
-                            if charComment == None: charComment = ""
                             self.appendChar(itemHandle,charImport,charRole,charComment)
         
         self.bookLoaded = True
@@ -306,6 +305,10 @@ class Book():
         """
         Appends an entry to the character data dictionary
         """
+        
+        if cImportance == None: cImportance = 0
+        if cRole       == None: cRole       = ""
+        if cComment    == None: cComment    = ""
         
         self.charData[tHandle] = {
             NWC.CharTree.IMPORTANCE : cImportance,
