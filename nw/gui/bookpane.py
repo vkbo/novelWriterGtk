@@ -16,16 +16,19 @@ import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository import Gtk, Pango
-from os            import path
+from gi.repository       import Gtk, Pango
+from os                  import path
+from nw.gui.chapterstree import GuiChaptersTree
 
 logger = logging.getLogger(__name__)
 
 class GuiBookPane(Gtk.Alignment):
 
-    def __init__(self):
+    def __init__(self, theBook):
 
         Gtk.Alignment.__init__(self)
+        
+        self.theBook = theBook
         
         # Book Alignment
         self.set_name("alignBook")
@@ -74,7 +77,6 @@ class GuiBookPane(Gtk.Alignment):
         
         self.entryBookTitle = Gtk.Entry()
         self.entryBookTitle.set_name("entryBookTitle")
-        # self.entryBookTitle.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY,"gtk-edit")
         self.alignBookTitle.add(self.entryBookTitle)
         
         # Book Authors
@@ -91,9 +93,22 @@ class GuiBookPane(Gtk.Alignment):
         
         self.entryBookAuthor = Gtk.Entry()
         self.entryBookAuthor.set_name("entryBookAuthor")
-        # self.entryBookAuthor.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY,"gtk-edit")
         self.alignBookAuthor.add(self.entryBookAuthor)
         
+        # Chapters ToolBar
+        self.tbChapters = Gtk.Toolbar()
+        self.tbChapters.set_name("tbChapters")
+        self.tbChapters.set_icon_size(2)
+        self.tbChapters.set_halign(Gtk.Align.END)
+        self.btnChaptersAdd    = Gtk.ToolButton(icon_name="gtk-add")
+        self.btnChaptersRemove = Gtk.ToolButton(icon_name="gtk-remove")
+        self.tbChapters.insert(self.btnChaptersAdd,0)
+        self.tbChapters.insert(self.btnChaptersRemove,1)
+        self.boxBook.pack_start(self.tbChapters,False,True,0)
+        
+        # Chapters Tree
+        self.treeChapters = GuiChaptersTree(self.theBook)
+        self.boxBook.pack_start(self.treeChapters,True,True,0)
         
         return
 

@@ -64,6 +64,16 @@ class NovelWriter():
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
         self.winMain.btnLeftAddCont.connect("clicked",self.onLeftTreeAdd,NWC.ItemClass.CONTAINER)
         
+        # Book Pane
+        pBooks = self.winMain.alignBook
+        pBooks.btnChaptersAdd.connect("clicked",self.onChapterAdd)
+        pBooks.btnChaptersRemove.connect("clicked",self.onChapterRemove)
+        pBooks.treeChapters.rendType.connect("edited",self.onChapterEdit,NWC.ChapterTree.TYPE)
+        pBooks.treeChapters.rendNumber.connect("edited",self.onChapterEdit,NWC.ChapterTree.NUMBER)
+        pBooks.treeChapters.rendTitle.connect("edited",self.onChapterEdit,NWC.BookTree.NAME)
+        pBooks.treeChapters.rendCompile.connect("edited",self.onChapterEdit,NWC.ChapterTree.COMPILE)
+        pBooks.treeChapters.rendComment.connect("edited",self.onChapterEdit,NWC.ChapterTree.COMMENT)
+        
         # Characters Pane
         pChars = self.winMain.alignChars
         pChars.btnCharsAdd.connect("clicked",self.onCharAdd)
@@ -95,9 +105,10 @@ class NovelWriter():
                 self.theBook.createBook()
         
         self.winMain.treeLeft.loadContent()
+        self.winMain.alignBook.treeChapters.loadContent()
         self.winMain.alignChars.treeChars.loadContent()
         self.winMain.alignPlots.treePlots.loadContent()
-
+        
         return
     
     def openBook(self, bookPath):
@@ -197,6 +208,43 @@ class NovelWriter():
         
         logger.vverbose("MainTree: Adding item of type %s" % addType.name)
         
+        
+        return
+    
+    #
+    # Book Pane Events
+    #
+    
+    def onChapterAdd(self, guiObject):
+        
+        logger.vverbose("User clicked add chapter")
+        self.theBook.addChapter()
+        self.winMain.treeLeft.loadContent()
+        self.winMain.alignBook.treeChapters.loadContent()
+        
+        return
+    
+    def onChapterRemove(self, guiObject):
+        
+        logger.vverbose("User clicked remove chapter")
+        
+        return
+    
+    def onChapterEdit(self, guiObject, itemPath, editText, enumType):
+        
+        srcTree   = self.winMain.alignBook.treeChapters
+        handleCol = srcTree.COL_HANDLE
+        
+        if enumType == NWC.ChapterTree.TYPE:    srcColumn = srcTree.COL_TYPE
+        if enumType == NWC.ChapterTree.NUMBER:  srcColumn = srcTree.COL_NUMBER
+        if enumType == NWC.BookTree.NAME:       srcColumn = srcTree.COL_TITLE
+        if enumType == NWC.ChapterTree.COMPILE: srcColumn = srcTree.COL_COMPILE
+        if enumType == NWC.ChapterTree.COMMENT: srcColumn = srcTree.COL_COMMENT
+        
+        itemHandle = srcTree.listStore[itemPath][handleCol]
+        srcTree.listStore[itemPath][srcColumn] = editText.strip()
+        self.theBook.updateChapter(itemHandle,enumType,editText)
+        self.winMain.treeLeft.loadContent()
         
         return
     

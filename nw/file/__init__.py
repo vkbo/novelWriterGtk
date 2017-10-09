@@ -28,19 +28,20 @@ class Book():
     
     def __init__(self):
         
-        self.bookLoaded = False
+        self.bookLoaded  = False
         
-        self.bookPath   = None
-        self.docPath    = None
-        self.theTree    = []
-        self.theIndex   = {}
-        self.charData   = {}
-        self.plotData   = {}
+        self.bookPath    = None
+        self.docPath     = None
+        self.theTree     = []
+        self.theIndex    = {}
+        self.chapterData = {}
+        self.charData    = {}
+        self.plotData    = {}
         
-        self.bookHandle = None
-        self.charHandle = None
-        self.plotHandle = None
-        self.noteHandle = None
+        self.bookHandle  = None
+        self.charHandle  = None
+        self.plotHandle  = None
+        self.noteHandle  = None
         
         # Book Settings
         self.bookTitle   = ""
@@ -93,6 +94,11 @@ class Book():
                     itemLevel   = None
                     itemType    = None
                     
+                    chapType    = NWC.BookType.CHAPTER
+                    chapNumber  = 1
+                    chapCompile = True
+                    chapComment = ""
+                    
                     charImport  = 0
                     charRole    = ""
                     charComment = ""
@@ -115,6 +121,22 @@ class Book():
                         elif xValue.tag == "type":
                             itemType    = self.getEnumFromString(NWC.ItemType,xValue.text)
                             logger.vverbose("BookOpen: Item type is %s" % itemType)
+                        
+                        # Chapter
+                        elif xValue.tag == "chapterType":
+                            chapType    = self.getEnumFromString(NWC.BookType,xValue.text)
+                            logger.vverbose("BookOpen: Chapter type is %s" % chapType)
+                        elif xValue.tag == "chapterNumber":
+                            chapNumber  = xValue.text
+                            logger.vverbose("BookOpen: Chapter number is %s" % chapNumber)
+                        elif xValue.tag == "chapterCompile":
+                            chapCompile = xValue.text
+                            logger.vverbose("BookOpen: Chapter compile is %s" % chapCompile)
+                        elif xValue.tag == "chapterComment":
+                            chapComment = xValue.text
+                            logger.vverbose("BookOpen: Chapter comment is '%s'" % chapComment)
+                        
+                        # Characters
                         elif xValue.tag == "charImportance":
                             charImport  = xValue.text
                             logger.vverbose("BookOpen: Character importance is %s" % charImport)
@@ -124,12 +146,16 @@ class Book():
                         elif xValue.tag == "charComment":
                             charComment = xValue.text
                             logger.vverbose("BookOpen: Chararcter comment is '%s'" % charComment)
+                        
+                        # Plots
                         elif xValue.tag == "plotImportance":
                             plotImport  = xValue.text
                             logger.vverbose("BookOpen: Plot importance is %s" % plotImport)
                         elif xValue.tag == "plotComment":
                             plotComment = xValue.text
                             logger.vverbose("BookOpen: Plot comment is '%s'" % plotComment)
+                        
+                        # Unknown
                         else:
                             logger.warning("BookOpen: Unknown item value '%s' in xml" % xValue.tag)
                             
@@ -149,7 +175,9 @@ class Book():
                             self.noteHandle = itemHandle
                             logger.verbose("BookOpen: Root notes handle is %s" % itemHandle)
                     if itemLevel == NWC.ItemLevel.ITEM:
-                        if itemType == NWC.ItemType.CHARS:
+                        if itemType == NWC.ItemType.BOOK:
+                            self.appendChapter(itemHandle,chapType,chapNumber,chapCompile,chapComment)
+                        elif itemType == NWC.ItemType.CHARS:
                             self.appendChar(itemHandle,charImport,charRole,charComment)
                         elif itemType == NWC.ItemType.PLOTS:
                             self.appendPlot(itemHandle,plotImport,plotComment)
@@ -205,6 +233,16 @@ class Book():
             xValue.text = str(treeItem[NWC.BookTree.NAME])
             
             if treeItem[NWC.BookTree.LEVEL] == NWC.ItemLevel.ITEM:
+                if treeItem[NWC.BookTree.TYPE] == NWC.ItemType.BOOK:
+                    if itemHandle in self.chapterData:
+                        xValue = ET.SubElement(xItem,"chapterType")
+                        xValue.text = str(self.chapterData[itemHandle][NWC.ChapterTree.TYPE])
+                        xValue = ET.SubElement(xItem,"chapterNumber")
+                        xValue.text = str(self.chapterData[itemHandle][NWC.ChapterTree.NUMBER])
+                        xValue = ET.SubElement(xItem,"chapterCompile")
+                        xValue.text = str(self.chapterData[itemHandle][NWC.ChapterTree.COMPILE])
+                        xValue = ET.SubElement(xItem,"chapterComment")
+                        xValue.text = str(self.chapterData[itemHandle][NWC.ChapterTree.COMMENT])
                 if treeItem[NWC.BookTree.TYPE] == NWC.ItemType.CHARS:
                     if itemHandle in self.charData:
                         xValue = ET.SubElement(xItem,"charImportance")
@@ -266,6 +304,29 @@ class Book():
         return
     
     def createDoc(self, docTitle, docType):
+        return
+    
+    def addChapter(self):
+        
+        parHandle = self.appendTree(
+            NWC.ItemClass.CONTAINER,
+            NWC.ItemLevel.ITEM,
+            NWC.ItemType.BOOK,
+            None,
+            self.bookHandle,
+            "New Chapter"
+        )
+        self.appendChapter(parHandle,NWC.BookType.CHAPTER,1,True,"")
+        
+        return
+    
+    def updateChapter(self,cHandle,cTarget,cValue):
+        if cTarget == NWC.BookTree.NAME:
+            self.theTree[self.theIndex[cHandle]][cTarget] = cValue.strip()
+        elif cTarget in NWC.ChapterTree:
+            self.chapterData[cHandle][cTarget] = cValue.strip()
+        else:
+            logger.debug("Trying to set an unknown field %s" % cTarget)
         return
     
     def addCharacter(self):
@@ -340,6 +401,26 @@ class Book():
         logger.verbose("Added item %s named '%s' to the project tree" % (tHandle,tName))
         
         return tHandle
+    
+    def appendChapter(self,tHandle,cType,cNumber,cCompile,cComment):
+        """
+        Appends an entry to the chapter data dictionary
+        """
+        
+        if cType    == None: cType    = NWC.BookType.CHAPTER
+        if cNumber  == None: cNumber  = 1
+        if cCompile == None: cCompile = False
+        if cComment == None: cComment = ""
+        
+        self.chapterData[tHandle] = {
+            NWC.ChapterTree.TYPE    : cType,
+            NWC.ChapterTree.NUMBER  : cNumber,
+            NWC.ChapterTree.COMPILE : cCompile,
+            NWC.ChapterTree.COMMENT : cComment,
+        }
+        logger.verbose("Added data to chapter %s" % tHandle)
+        
+        return
     
     def appendChar(self,tHandle,cImportance,cRole,cComment):
         """

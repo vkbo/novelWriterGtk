@@ -144,7 +144,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.nbContent.insert_page(self.scrollBook,None,NWC.NBTabs.BOOK.value)
         
         # Book Alignment
-        self.alignBook = GuiBookPane()
+        self.alignBook = GuiBookPane(self.theBook)
         self.scrollBook.add(self.alignBook)
         
         #

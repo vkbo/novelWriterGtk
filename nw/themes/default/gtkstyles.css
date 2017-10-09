@@ -100,17 +100,20 @@
     font-weight: bold;
 }
 
+#treeChapters.view,
 #treeChars.view,
 #treePlots.view {
     background-color: #354852;
     color: #ffffff;
 }
 
+#treeChapters.view:hover,
 #treeChars.view:hover,
 #treePlots.view:hover {
     background-color: rgba(255,255,255,0.1);
 }
 
+#treeChapters.view > header > button,
 #treeChars.view > header > button,
 #treePlots.view > header > button {
     color: rgba(255,255,255,0.8);

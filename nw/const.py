@@ -19,14 +19,17 @@ logger = logging.getLogger(__name__)
 class ItemType(Enum):
     
     BOOK        = 10
+    CHARS       = 20
+    PLOTS       = 30
+    NOTES       = 40
+
+class BookType(Enum):
+    
     FRONTMATTER = 11
     PROLOGUE    = 12
     CHAPTER     = 13
     EPILOGUE    = 14
     BACKMATTER  = 15
-    CHARS       = 20
-    PLOTS       = 30
-    NOTES       = 40
 
 class ItemClass(Enum):
     
@@ -48,6 +51,13 @@ class BookTree(Enum):
     HANDLE = 3
     PARENT = 4
     NAME   = 5
+
+class ChapterTree(Enum):
+    
+    TYPE    = 0
+    NUMBER  = 1
+    COMPILE = 2
+    COMMENT = 3
 
 class CharTree(Enum):
     
