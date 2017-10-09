@@ -108,7 +108,7 @@ class GuiChaptersTree(Gtk.TreeView):
             if not itemLevel == NWC.ItemLevel.ITEM: continue
             if not itemType  == NWC.ItemType.BOOK: continue
             
-            itemSubType = treeItem[NWC.BookTree.SUBTYPE].name
+            itemSubType = str(treeItem[NWC.BookTree.SUBTYPE])
             itemNumber  = str(treeItem[NWC.BookTree.NUMBER])
             itemCompile = str(treeItem[NWC.BookTree.COMPILE])
             itemComment = treeItem[NWC.BookTree.COMMENT]

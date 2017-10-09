@@ -34,10 +34,6 @@ class Book():
         self.docPath     = None
         self.theTree     = []
         self.theIndex    = {}
-        self.chapterData = {}
-        self.charData    = {}
-        self.plotData    = {}
-        self.lastChapter = 0
         
         self.bookHandle  = None
         self.charHandle  = None
@@ -86,87 +82,57 @@ class Book():
                 logger.debug("BookOpen: Found book content")
                 for xItem in xChild:
                     
-                    itemAttrib  = xItem.attrib
-                    itemHandle  = itemAttrib["handle"]
-                    itemParent  = itemAttrib["parent"]
+                    itemAttrib     = xItem.attrib
+                    itemHandle     = itemAttrib["handle"]
+                    itemParent     = itemAttrib["parent"]
                     
-                    itemName    = ""
-                    itemClass   = None
-                    itemLevel   = None
-                    itemType    = None
-                    itemSubType = None
-                    itemNumber  = None
-                    itemCompile = None
-                    itemComment = None
-                    
-                    charImport  = 0
-                    charRole    = ""
-                    charComment = ""
-                    
-                    plotImport  = 0
-                    plotComment = ""
+                    itemName       = None
+                    itemClass      = None
+                    itemLevel      = None
+                    itemType       = None
+                    itemSubType    = None
+                    itemNumber     = None
+                    itemCompile    = None
+                    itemComment    = None
+                    itemImportance = None
+                    itemRole       = None
                     
                     for xValue in xItem:
-                        if xValue.tag == "name":
-                            itemName    = xValue.text
-                            logger.verbose("BookOpen: Loading item '%s'" % itemName)
-                            logger.vverbose("BookOpen: Item handle is %s" % itemHandle)
-                            logger.vverbose("BookOpen: Item parent is %s" % itemParent)
-                        elif xValue.tag == "class":
-                            itemClass   = self.getEnumFromString(NWC.ItemClass,xValue.text)
-                            logger.vverbose("BookOpen: Item class is %s" % itemClass)
-                        elif xValue.tag == "level":
-                            itemLevel   = self.getEnumFromString(NWC.ItemLevel,xValue.text)
-                            logger.vverbose("BookOpen: Item level is %s" % itemLevel)
-                        elif xValue.tag == "type":
-                            itemType    = self.getEnumFromString(NWC.ItemType,xValue.text)
-                            logger.vverbose("BookOpen: Item type is %s" % itemType)
-                        
-                        # Chapter
-                        elif xValue.tag == "subype":  itemSubType = xValue.text
-                        elif xValue.tag == "number":  itemNumber  = xValue.text
-                        elif xValue.tag == "compile": itemCompile = xValue.text
-                        elif xValue.tag == "comment": itemComment = xValue.text
-                        
-                        # Characters
-                        elif xValue.tag == "charImportance":
-                            charImport  = xValue.text
-                            logger.vverbose("BookOpen: Character importance is %s" % charImport)
-                        elif xValue.tag == "charRole":
-                            charRole    = xValue.text
-                            logger.vverbose("BookOpen: Chararcter role is '%s'" % charRole)
-                        
-                        # Plots
-                        elif xValue.tag == "plotImportance":
-                            plotImport  = xValue.text
-                            logger.vverbose("BookOpen: Plot importance is %s" % plotImport)
-                        
-                        # Unknown
+                        if   xValue.tag == "name":       itemName       = xValue.text
+                        elif xValue.tag == "class":      itemClass      = xValue.text
+                        elif xValue.tag == "level":      itemLevel      = xValue.text
+                        elif xValue.tag == "type":       itemType       = xValue.text
+                        elif xValue.tag == "subtype":    itemSubType    = xValue.text
+                        elif xValue.tag == "number":     itemNumber     = xValue.text
+                        elif xValue.tag == "compile":    itemCompile    = xValue.text
+                        elif xValue.tag == "comment":    itemComment    = xValue.text
+                        elif xValue.tag == "importance": itemImportance = xValue.text
+                        elif xValue.tag == "role":       itemRole       = xValue.text
                         else:
                             logger.warning("BookOpen: Unknown item value '%s' in xml" % xValue.tag)
                             
                     self.appendTree(itemClass,itemLevel,itemType,itemHandle,itemParent,itemName)
                     
-                    if itemLevel == NWC.ItemLevel.ROOT:
-                        if itemType == NWC.ItemType.BOOK:
+                    if itemLevel == NWC.ItemLevel.ROOT.name:
+                        if itemType == NWC.ItemType.BOOK.name:
                             self.bookHandle = itemHandle
                             logger.verbose("BookOpen: Root book handle is %s" % itemHandle)
-                        if itemType == NWC.ItemType.CHARS:
+                        if itemType == NWC.ItemType.CHARS.name:
                             self.charHandle = itemHandle
                             logger.verbose("BookOpen: Root chars handle is %s" % itemHandle)
-                        if itemType == NWC.ItemType.PLOTS:
+                        if itemType == NWC.ItemType.PLOTS.name:
                             self.plotHandle = itemHandle
                             logger.verbose("BookOpen: Root plots handle is %s" % itemHandle)
-                        if itemType == NWC.ItemType.NOTES:
+                        if itemType == NWC.ItemType.NOTES.name:
                             self.noteHandle = itemHandle
                             logger.verbose("BookOpen: Root notes handle is %s" % itemHandle)
-                    if itemLevel == NWC.ItemLevel.ITEM:
-                        if itemType == NWC.ItemType.BOOK:
+                    if itemLevel == NWC.ItemLevel.ITEM.name:
+                        if itemType == NWC.ItemType.BOOK.name:
                             self.appendChapter(itemHandle,itemSubType,itemNumber,itemCompile,itemComment)
-                        elif itemType == NWC.ItemType.CHARS:
-                            self.appendChar(itemHandle,charImport,charRole,itemComment)
-                        elif itemType == NWC.ItemType.PLOTS:
-                            self.appendPlot(itemHandle,plotImport,itemComment)
+                        elif itemType == NWC.ItemType.CHARS.name:
+                            self.appendChar(itemHandle,itemImportance,itemRole,itemComment)
+                        elif itemType == NWC.ItemType.PLOTS.name:
+                            self.appendPlot(itemHandle,itemImportance,itemComment)
         
         self.bookLoaded = True
         
@@ -220,29 +186,26 @@ class Book():
             
             if treeItem[NWC.BookTree.LEVEL] == NWC.ItemLevel.ITEM:
                 if treeItem[NWC.BookTree.TYPE] == NWC.ItemType.BOOK:
-                    if itemHandle in self.chapterData:
-                        xValue = ET.SubElement(xItem,"subtype")
-                        xValue.text = str(treeItem[NWC.BookTree.SUBTYPE].name)
-                        xValue = ET.SubElement(xItem,"number")
-                        xValue.text = str(treeItem[NWC.BookTree.NUMBER])
-                        xValue = ET.SubElement(xItem,"compile")
-                        xValue.text = str(treeItem[NWC.BookTree.COMPILE])
-                        xValue = ET.SubElement(xItem,"comment")
-                        xValue.text = str(treeItem[NWC.BookTree.COMMENT])
+                    xValue = ET.SubElement(xItem,"subtype")
+                    xValue.text = str(treeItem[NWC.BookTree.SUBTYPE].name)
+                    xValue = ET.SubElement(xItem,"number")
+                    xValue.text = str(treeItem[NWC.BookTree.NUMBER])
+                    xValue = ET.SubElement(xItem,"compile")
+                    xValue.text = str(treeItem[NWC.BookTree.COMPILE])
+                    xValue = ET.SubElement(xItem,"comment")
+                    xValue.text = str(treeItem[NWC.BookTree.COMMENT])
                 if treeItem[NWC.BookTree.TYPE] == NWC.ItemType.CHARS:
-                    if itemHandle in self.charData:
-                        xValue = ET.SubElement(xItem,"charImportance")
-                        xValue.text = str(self.charData[itemHandle][NWC.CharTree.IMPORTANCE])
-                        xValue = ET.SubElement(xItem,"charRole")
-                        xValue.text = str(self.charData[itemHandle][NWC.CharTree.ROLE])
-                        xValue = ET.SubElement(xItem,"charComment")
-                        xValue.text = str(self.charData[itemHandle][NWC.CharTree.COMMENT])
+                    xValue = ET.SubElement(xItem,"importance")
+                    xValue.text = str(treeItem[NWC.BookTree.IMPORTANCE])
+                    xValue = ET.SubElement(xItem,"role")
+                    xValue.text = str(treeItem[NWC.BookTree.ROLE])
+                    xValue = ET.SubElement(xItem,"comment")
+                    xValue.text = str(treeItem[NWC.BookTree.COMMENT])
                 if treeItem[NWC.BookTree.TYPE] == NWC.ItemType.PLOTS:
-                    if itemHandle in self.plotData:
-                        xValue = ET.SubElement(xItem,"plotImportance")
-                        xValue.text = str(self.plotData[itemHandle][NWC.PlotTree.IMPORTANCE])
-                        xValue = ET.SubElement(xItem,"plotComment")
-                        xValue.text = str(self.plotData[itemHandle][NWC.PlotTree.COMMENT])
+                    xValue = ET.SubElement(xItem,"importance")
+                    xValue.text = str(treeItem[NWC.BookTree.IMPORTANCE])
+                    xValue = ET.SubElement(xItem,"comment")
+                    xValue.text = str(treeItem[NWC.BookTree.COMMENT])
                         
             itemIdx += 1
         
@@ -302,7 +265,7 @@ class Book():
             self.bookHandle,
             "New Chapter"
         )
-        self.appendChapter(parHandle,NWC.BookType.CHAPTER,self.lastChapter+1,True,"")
+        self.appendChapter(parHandle,NWC.BookType.CHAPTER,None,True,None)
         
         return
     
@@ -325,7 +288,7 @@ class Book():
             self.charHandle,
             "New Character"
         )
-        self.appendChar(parHandle,0,"","")
+        self.appendChar(parHandle,None,None,None)
         
         return
     
@@ -348,7 +311,7 @@ class Book():
             self.plotHandle,
             "New Plot"
         )
-        self.appendPlot(parHandle,0,"")
+        self.appendPlot(parHandle,None,None)
         
         return
     
@@ -368,10 +331,21 @@ class Book():
         """
         Appends an entry to the main project tree.
         """
-
-        if tHandle == None:   tHandle = self.makeHandle()
-        if pHandle == "None": pHandle = None
-
+        
+        tClass  = self.checkEnumString(tClass,NWC.ItemClass,NWC.ItemClass.DOCUMENT,False)
+        tLevel  = self.checkEnumString(tLevel,NWC.ItemLevel,NWC.ItemLevel.ROOT,False)
+        tType   = self.checkEnumString(tType,NWC.ItemType,NWC.ItemType.NOTES,False)
+        tHandle = self.checkString(tHandle,self.makeHandle(),False)
+        pHandle = self.checkString(pHandle,None,True)
+        tName   = self.checkString(tName,None,True)
+        
+        logger.verbose("BookOpen: Loading item '%s'"  % tName)
+        logger.vverbose("BookOpen: Item class is %s"  % tClass)
+        logger.vverbose("BookOpen: Item level is %s"  % tLevel)
+        logger.vverbose("BookOpen: Item type is %s"   % tType)
+        logger.vverbose("BookOpen: Item handle is %s" % tHandle)
+        logger.vverbose("BookOpen: Item parent is %s" % pHandle)
+        
         self.theTree.append({
             NWC.BookTree.CLASS  : tClass,
             NWC.BookTree.LEVEL  : tLevel,
@@ -413,16 +387,17 @@ class Book():
         Appends an entry to the character data dictionary
         """
         
-        if cImportance == None: cImportance = 0
-        if cRole       == None: cRole       = ""
-        if cComment    == None: cComment    = ""
+        cImportance = self.checkInt(cImportance,None,True)
+        cRole       = self.checkString(cRole,None,True)
+        cComment    = self.checkString(cComment,None,True)
         
-        self.charData[tHandle] = {
-            NWC.CharTree.IMPORTANCE : cImportance,
-            NWC.CharTree.ROLE       : cRole,
-            NWC.CharTree.COMMENT    : cComment,
-        }
-        logger.verbose("Added data to character %s" % tHandle)
+        logger.vverbose("BookOpen: Character importance; %s" % str(cImportance))
+        logger.vverbose("BookOpen: Character role: '%s'"     % str(cRole))
+        logger.vverbose("BookOpen: Character comment: '%s'"  % str(cComment))
+        
+        self.theTree[self.theIndex[tHandle]][NWC.BookTree.IMPORTANCE] = cImportance
+        self.theTree[self.theIndex[tHandle]][NWC.BookTree.ROLE]       = cRole
+        self.theTree[self.theIndex[tHandle]][NWC.BookTree.COMMENT]    = cComment
         
         return
     
@@ -431,14 +406,14 @@ class Book():
         Appends an entry to the plot data dictionary
         """
         
-        if pImportance == None: pImportance = 0
-        if pComment    == None: pComment    = ""
+        pImportance = self.checkInt(pImportance,None,True)
+        pComment    = self.checkString(pComment,None,True)
         
-        self.plotData[tHandle] = {
-            NWC.PlotTree.IMPORTANCE : pImportance,
-            NWC.PlotTree.COMMENT    : pComment,
-        }
-        logger.verbose("Added data to plot %s" % tHandle)
+        logger.vverbose("BookOpen: Plot importance; %s" % str(pImportance))
+        logger.vverbose("BookOpen: Plot comment: '%s'"  % str(pComment))
+        
+        self.theTree[self.theIndex[tHandle]][NWC.BookTree.IMPORTANCE] = pImportance
+        self.theTree[self.theIndex[tHandle]][NWC.BookTree.COMMENT]    = pComment
         
         return
     

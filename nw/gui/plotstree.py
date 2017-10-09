@@ -86,16 +86,19 @@ class GuiPlotsTree(Gtk.TreeView):
             itemHandle = treeItem[NWC.BookTree.HANDLE]
             itemParent = treeItem[NWC.BookTree.PARENT]
             
-            # Skip everything that isn't container, item and plot
             if not itemClass == NWC.ItemClass.CONTAINER: continue
             if not itemLevel == NWC.ItemLevel.ITEM: continue
             if not itemType  == NWC.ItemType.PLOTS: continue
             
-            plotImportance = self.theBook.plotData[itemHandle][NWC.PlotTree.IMPORTANCE]
-            plotComment    = self.theBook.plotData[itemHandle][NWC.PlotTree.COMMENT]
+            itemImportance = str(treeItem[NWC.BookTree.IMPORTANCE])
+            itemComment    = treeItem[NWC.BookTree.COMMENT]
             
-            treeEntry = [itemName,str(plotImportance),plotComment,itemHandle]
-            tmpIter   = self.listStore.append(treeEntry)
+            tmpIter = self.listStore.append([
+                itemName,
+                itemImportance,
+                itemComment,
+                itemHandle
+            ])
             self.iterMap[itemHandle] = tmpIter
         
         self.expand_all()
