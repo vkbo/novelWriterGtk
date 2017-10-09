@@ -97,6 +97,9 @@ class Book():
                     charRole    = ""
                     charComment = ""
                     
+                    plotImport  = 0
+                    plotComment = ""
+                    
                     for xValue in xItem:
                         if xValue.tag == "name":
                             itemName    = xValue.text
@@ -121,6 +124,12 @@ class Book():
                         elif xValue.tag == "charComment":
                             charComment = xValue.text
                             logger.vverbose("BookOpen: Chararcter comment is '%s'" % charComment)
+                        elif xValue.tag == "plotImportance":
+                            plotImport  = xValue.text
+                            logger.vverbose("BookOpen: Plot importance is %s" % plotImport)
+                        elif xValue.tag == "plotComment":
+                            plotComment = xValue.text
+                            logger.vverbose("BookOpen: Plot comment is '%s'" % plotComment)
                         else:
                             logger.warning("BookOpen: Unknown item value '%s' in xml" % xValue.tag)
                             
@@ -142,6 +151,8 @@ class Book():
                     if itemLevel == NWC.ItemLevel.ITEM:
                         if itemType == NWC.ItemType.CHARS:
                             self.appendChar(itemHandle,charImport,charRole,charComment)
+                        elif itemType == NWC.ItemType.PLOTS:
+                            self.appendPlot(itemHandle,plotImport,plotComment)
         
         self.bookLoaded = True
         
@@ -202,6 +213,12 @@ class Book():
                         xValue.text = str(self.charData[itemHandle][NWC.CharTree.ROLE])
                         xValue = ET.SubElement(xItem,"charComment")
                         xValue.text = str(self.charData[itemHandle][NWC.CharTree.COMMENT])
+                if treeItem[NWC.BookTree.TYPE] == NWC.ItemType.PLOTS:
+                    if itemHandle in self.plotData:
+                        xValue = ET.SubElement(xItem,"plotImportance")
+                        xValue.text = str(self.plotData[itemHandle][NWC.PlotTree.IMPORTANCE])
+                        xValue = ET.SubElement(xItem,"plotComment")
+                        xValue.text = str(self.plotData[itemHandle][NWC.PlotTree.COMMENT])
                         
             itemIdx += 1
         
@@ -274,6 +291,29 @@ class Book():
             logger.debug("Trying to set an unknown field %s" % cTarget)
         return
     
+    def addPlot(self):
+        
+        parHandle = self.appendTree(
+            NWC.ItemClass.CONTAINER,
+            NWC.ItemLevel.ITEM,
+            NWC.ItemType.PLOTS,
+            None,
+            self.plotHandle,
+            "New Plot"
+        )
+        self.appendPlot(parHandle,0,"")
+        
+        return
+    
+    def updatePlot(self,cHandle,cTarget,cValue):
+        if cTarget == NWC.BookTree.NAME:
+            self.theTree[self.theIndex[cHandle]][cTarget] = cValue.strip()
+        elif cTarget in NWC.PlotTree:
+            self.plotData[cHandle][cTarget] = cValue.strip()
+        else:
+            logger.debug("Trying to set an unknown field %s" % cTarget)
+        return
+    
     def getTreeEntry(self,itemHandle):
         return self.theTree[self.theIndex[itemHandle]]
     
@@ -316,6 +356,22 @@ class Book():
             NWC.CharTree.COMMENT    : cComment,
         }
         logger.verbose("Added data to character %s" % tHandle)
+        
+        return
+    
+    def appendPlot(self,tHandle,pImportance,pComment):
+        """
+        Appends an entry to the plot data dictionary
+        """
+        
+        if pImportance == None: pImportance = 0
+        if pComment    == None: pComment    = ""
+        
+        self.plotData[tHandle] = {
+            NWC.PlotTree.IMPORTANCE : pImportance,
+            NWC.PlotTree.COMMENT    : pComment,
+        }
+        logger.verbose("Added data to plot %s" % tHandle)
         
         return
     

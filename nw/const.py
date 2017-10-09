@@ -55,6 +55,11 @@ class CharTree(Enum):
     ROLE       = 1
     COMMENT    = 2
 
+class PlotTree(Enum):
+    
+    IMPORTANCE = 0
+    COMMENT    = 1
+
 class NBTabs(Enum):
     
     BOOK   = 0

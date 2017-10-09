@@ -82,34 +82,37 @@
 
 /* Outer Scroll Window */
 
-#scrollBook, #scrollChars {
+#scrollBook, #scrollChars, #scrollPlots {
     background-color: #3d535e;
 }
 
 /* Book Alignment */
 
-#alignBook, #alignChars {}
+#alignBook, #alignChars, #alignPlots {}
 
 /* Main Vertical Box */
 
-#boxBook, #boxChars {}
+#boxBook, #boxChars, #boxPlots {}
 
-#lblBook, #lblChars {
+#lblBook, #lblChars, #lblPlots {
     color: rgba(255,255,255,0.4);
     font-size: 60px;
     font-weight: bold;
 }
 
-#treeChars.view {
+#treeChars.view,
+#treePlots.view {
     background-color: #354852;
     color: #ffffff;
 }
 
-#treeChars.view:hover {
+#treeChars.view:hover,
+#treePlots.view:hover {
     background-color: rgba(255,255,255,0.1);
 }
 
-#treeChars.view > header > button {
+#treeChars.view > header > button,
+#treePlots.view > header > button {
     color: rgba(255,255,255,0.8);
     border-width: 0px;
     background-image: none;

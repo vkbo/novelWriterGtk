@@ -73,6 +73,14 @@ class NovelWriter():
         pChars.treeChars.rendRole.connect("edited",self.onCharEdit,NWC.CharTree.ROLE)
         pChars.treeChars.rendComment.connect("edited",self.onCharEdit,NWC.CharTree.COMMENT)
         
+        # Plots Pane
+        pPlots = self.winMain.alignPlots
+        pPlots.btnPlotsAdd.connect("clicked",self.onPlotAdd)
+        pPlots.btnPlotsRemove.connect("clicked",self.onPlotRemove)
+        pPlots.treePlots.rendName.connect("edited",self.onPlotEdit,NWC.BookTree.NAME)
+        pPlots.treePlots.rendImport.connect("edited",self.onPlotEdit,NWC.PlotTree.IMPORTANCE)
+        pPlots.treePlots.rendComment.connect("edited",self.onPlotEdit,NWC.PlotTree.COMMENT)
+        
         # Load Data
         lastBook = self.mainConf.getLastBook()
         if lastBook == "":
@@ -88,6 +96,7 @@ class NovelWriter():
         
         self.winMain.treeLeft.loadContent()
         self.winMain.alignChars.treeChars.loadContent()
+        self.winMain.alignPlots.treePlots.loadContent()
 
         return
     
@@ -223,6 +232,41 @@ class NovelWriter():
         itemHandle = srcTree.listStore[itemPath][handleCol]
         srcTree.listStore[itemPath][srcColumn] = editText.strip()
         self.theBook.updateCharacter(itemHandle,enumType,editText)
+        self.winMain.treeLeft.loadContent()
+        
+        return
+    
+    #
+    # Plots Pane Events
+    #
+    
+    def onPlotAdd(self, guiObject):
+        
+        logger.vverbose("User clicked add plot")
+        self.theBook.addPlot()
+        self.winMain.treeLeft.loadContent()
+        self.winMain.alignPlots.treePlots.loadContent()
+        
+        return
+    
+    def onPlotRemove(self, guiObject):
+        
+        logger.vverbose("User clicked remove plot")
+        
+        return
+    
+    def onPlotEdit(self, guiObject, itemPath, editText, enumType):
+        
+        srcTree   = self.winMain.alignPlots.treePlots
+        handleCol = srcTree.COL_HANDLE
+        
+        if enumType == NWC.BookTree.NAME:       srcColumn = srcTree.COL_TITLE
+        if enumType == NWC.PlotTree.IMPORTANCE: srcColumn = srcTree.COL_IMPORTANCE
+        if enumType == NWC.PlotTree.COMMENT:    srcColumn = srcTree.COL_COMMENT
+        
+        itemHandle = srcTree.listStore[itemPath][handleCol]
+        srcTree.listStore[itemPath][srcColumn] = editText.strip()
+        self.theBook.updatePlot(itemHandle,enumType,editText)
         self.winMain.treeLeft.loadContent()
         
         return
