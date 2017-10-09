@@ -97,25 +97,30 @@ class GuiChaptersTree(Gtk.TreeView):
         
         for treeItem in self.theBook.theTree:
             
-            itemName   = treeItem[NWC.BookTree.NAME]
-            itemClass  = treeItem[NWC.BookTree.CLASS]
-            itemLevel  = treeItem[NWC.BookTree.LEVEL]
-            itemType   = treeItem[NWC.BookTree.TYPE]
-            itemHandle = treeItem[NWC.BookTree.HANDLE]
-            itemParent = treeItem[NWC.BookTree.PARENT]
+            itemName    = treeItem[NWC.BookTree.NAME]
+            itemClass   = treeItem[NWC.BookTree.CLASS]
+            itemLevel   = treeItem[NWC.BookTree.LEVEL]
+            itemType    = treeItem[NWC.BookTree.TYPE]
+            itemHandle  = treeItem[NWC.BookTree.HANDLE]
+            itemParent  = treeItem[NWC.BookTree.PARENT]
             
-            # Skip everything that isn't container, item and char
             if not itemClass == NWC.ItemClass.CONTAINER: continue
             if not itemLevel == NWC.ItemLevel.ITEM: continue
             if not itemType  == NWC.ItemType.BOOK: continue
             
-            chapType    = self.theBook.chapterData[itemHandle][NWC.ChapterTree.TYPE].name
-            chapNumber  = str(self.theBook.chapterData[itemHandle][NWC.ChapterTree.NUMBER])
-            chapCompile = str(self.theBook.chapterData[itemHandle][NWC.ChapterTree.COMPILE])
-            chapComment = self.theBook.chapterData[itemHandle][NWC.ChapterTree.COMMENT]
+            itemSubType = treeItem[NWC.BookTree.SUBTYPE].name
+            itemNumber  = str(treeItem[NWC.BookTree.NUMBER])
+            itemCompile = str(treeItem[NWC.BookTree.COMPILE])
+            itemComment = treeItem[NWC.BookTree.COMMENT]
             
-            treeEntry = [chapType,chapNumber,itemName,chapCompile,chapComment,itemHandle]
-            tmpIter   = self.listStore.append(treeEntry)
+            tmpIter = self.listStore.append([
+                itemSubType,
+                itemNumber,
+                itemName,
+                itemCompile,
+                itemComment,
+                itemHandle
+            ])
             self.iterMap[itemHandle] = tmpIter
         
         self.expand_all()

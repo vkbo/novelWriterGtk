@@ -45,12 +45,16 @@ class ItemLevel(Enum):
 
 class BookTree(Enum):
     
-    CLASS  = 0
-    LEVEL  = 1
-    TYPE   = 2
-    HANDLE = 3
-    PARENT = 4
-    NAME   = 5
+    CLASS   = 0
+    LEVEL   = 1
+    TYPE    = 2
+    HANDLE  = 3
+    PARENT  = 4
+    NAME    = 5
+    SUBTYPE = 6
+    NUMBER  = 7
+    COMPILE = 8
+    COMMENT = 9
 
 class ChapterTree(Enum):
     
