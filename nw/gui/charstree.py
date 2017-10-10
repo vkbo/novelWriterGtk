@@ -88,20 +88,21 @@ class GuiCharsTree(Gtk.TreeView):
         
         for treeItem in self.theBook.theTree:
             
-            itemName   = treeItem[NWC.BookTree.NAME]
-            itemClass  = treeItem[NWC.BookTree.CLASS]
-            itemLevel  = treeItem[NWC.BookTree.LEVEL]
-            itemType   = treeItem[NWC.BookTree.TYPE]
-            itemHandle = treeItem[NWC.BookTree.HANDLE]
-            itemParent = treeItem[NWC.BookTree.PARENT]
+            itemHandle = treeItem["handle"]
+            itemParent = treeItem["parent"]
             
-            if not itemClass == NWC.ItemClass.CONTAINER: continue
-            if not itemLevel == NWC.ItemLevel.ITEM: continue
-            if not itemType  == NWC.ItemType.CHARS: continue
+            itemName   = treeItem["entry"].itemName
+            itemClass  = treeItem["entry"].itemClass
+            itemLevel  = treeItem["entry"].itemLevel
+            itemType   = treeItem["entry"].itemType
             
-            itemImportance = str(treeItem[NWC.BookTree.IMPORTANCE])
-            itemRole       = treeItem[NWC.BookTree.ROLE]
-            itemComment    = treeItem[NWC.BookTree.COMMENT]
+            if not itemClass == "CONTAINER": continue
+            if not itemLevel == "ITEM":      continue
+            if not itemType  == "CHAR":      continue
+            
+            itemImportance = str(treeItem["entry"].itemImportance)
+            itemRole       = treeItem["entry"].itemRole
+            itemComment    = treeItem["entry"].itemComment
             
             tmpIter = self.listStore.append([
                 itemName,

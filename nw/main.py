@@ -62,34 +62,34 @@ class NovelWriter():
         
         # Main Tree
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
-        self.winMain.btnLeftAddCont.connect("clicked",self.onLeftTreeAdd,NWC.ItemClass.CONTAINER)
+        self.winMain.btnLeftAddCont.connect("clicked",self.onLeftTreeAdd,"CONTAINER")
         
         # Book Pane
         pBooks = self.winMain.alignBook
         pBooks.btnChaptersAdd.connect("clicked",self.onChapterAdd)
         pBooks.btnChaptersRemove.connect("clicked",self.onChapterRemove)
-        pBooks.treeChapters.rendType.connect("edited",self.onChapterEdit,NWC.BookTree.TYPE)
-        pBooks.treeChapters.rendNumber.connect("edited",self.onChapterEdit,NWC.BookTree.NUMBER)
-        pBooks.treeChapters.rendTitle.connect("edited",self.onChapterEdit,NWC.BookTree.NAME)
-        pBooks.treeChapters.rendCompile.connect("edited",self.onChapterEdit,NWC.BookTree.COMPILE)
-        pBooks.treeChapters.rendComment.connect("edited",self.onChapterEdit,NWC.BookTree.COMMENT)
+        pBooks.treeChapters.rendType.connect("edited",self.onChapterEdit,"type")
+        pBooks.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
+        pBooks.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
+        pBooks.treeChapters.rendCompile.connect("edited",self.onChapterEdit,"compile")
+        pBooks.treeChapters.rendComment.connect("edited",self.onChapterEdit,"comment")
         
         # Characters Pane
         pChars = self.winMain.alignChars
         pChars.btnCharsAdd.connect("clicked",self.onCharAdd)
         pChars.btnCharsRemove.connect("clicked",self.onCharRemove)
-        pChars.treeChars.rendName.connect("edited",self.onCharEdit,NWC.BookTree.NAME)
-        pChars.treeChars.rendImport.connect("edited",self.onCharEdit,NWC.BookTree.IMPORTANCE)
-        pChars.treeChars.rendRole.connect("edited",self.onCharEdit,NWC.BookTree.ROLE)
-        pChars.treeChars.rendComment.connect("edited",self.onCharEdit,NWC.BookTree.COMMENT)
+        pChars.treeChars.rendName.connect("edited",self.onCharEdit,"name")
+        pChars.treeChars.rendImport.connect("edited",self.onCharEdit,"importance")
+        pChars.treeChars.rendRole.connect("edited",self.onCharEdit,"role")
+        pChars.treeChars.rendComment.connect("edited",self.onCharEdit,"comment")
         
         # Plots Pane
         pPlots = self.winMain.alignPlots
         pPlots.btnPlotsAdd.connect("clicked",self.onPlotAdd)
         pPlots.btnPlotsRemove.connect("clicked",self.onPlotRemove)
-        pPlots.treePlots.rendName.connect("edited",self.onPlotEdit,NWC.BookTree.NAME)
-        pPlots.treePlots.rendImport.connect("edited",self.onPlotEdit,NWC.BookTree.IMPORTANCE)
-        pPlots.treePlots.rendComment.connect("edited",self.onPlotEdit,NWC.BookTree.COMMENT)
+        pPlots.treePlots.rendName.connect("edited",self.onPlotEdit,"name")
+        pPlots.treePlots.rendImport.connect("edited",self.onPlotEdit,"importance")
+        pPlots.treePlots.rendComment.connect("edited",self.onPlotEdit,"comment")
         
         # Load Data
         lastBook = self.mainConf.getLastBook()
@@ -192,15 +192,15 @@ class NovelWriter():
         
         itemEntry = self.theBook.getTreeEntry(itemHandle)
         
-        itemLevel = itemEntry[NWC.BookTree.LEVEL]
-        itemType  = itemEntry[NWC.BookTree.TYPE]
+        itemLevel = itemEntry["entry"].itemLevel
+        itemType  = itemEntry["entry"].itemType
         logger.vverbose("MainTree: The item level is %s" % itemLevel)
         logger.vverbose("MainTree: The item type is %s" % itemType)
-        if itemLevel == NWC.ItemLevel.ROOT:
-            if itemType == NWC.ItemType.BOOK:  self.winMain.showTab(NWC.NBTabs.BOOK)
-            if itemType == NWC.ItemType.CHARS: self.winMain.showTab(NWC.NBTabs.CHARS)
-            if itemType == NWC.ItemType.PLOTS: self.winMain.showTab(NWC.NBTabs.PLOTS)
-            if itemType == NWC.ItemType.NOTES: self.winMain.showTab(NWC.NBTabs.BOOK)
+        if itemLevel == "ROOT":
+            if itemType == "BOOK": self.winMain.showTab(NWC.NBTabs.BOOK)
+            if itemType == "CHAR": self.winMain.showTab(NWC.NBTabs.CHARS)
+            if itemType == "PLOT": self.winMain.showTab(NWC.NBTabs.PLOTS)
+            if itemType == "NOTE": self.winMain.showTab(NWC.NBTabs.BOOK)
         
         return
     
@@ -230,20 +230,20 @@ class NovelWriter():
         
         return
     
-    def onChapterEdit(self, guiObject, itemPath, editText, enumType):
+    def onChapterEdit(self, guiObject, itemPath, editText, itemTag):
         
         srcTree   = self.winMain.alignBook.treeChapters
         handleCol = srcTree.COL_HANDLE
         
-        if enumType == NWC.BookTree.TYPE:    srcColumn = srcTree.COL_TYPE
-        if enumType == NWC.BookTree.NUMBER:  srcColumn = srcTree.COL_NUMBER
-        if enumType == NWC.BookTree.NAME:    srcColumn = srcTree.COL_TITLE
-        if enumType == NWC.BookTree.COMPILE: srcColumn = srcTree.COL_COMPILE
-        if enumType == NWC.BookTree.COMMENT: srcColumn = srcTree.COL_COMMENT
+        if itemTag == "type":    srcColumn = srcTree.COL_TYPE
+        if itemTag == "number":  srcColumn = srcTree.COL_NUMBER
+        if itemTag == "name":    srcColumn = srcTree.COL_TITLE
+        if itemTag == "compile": srcColumn = srcTree.COL_COMPILE
+        if itemTag == "comment": srcColumn = srcTree.COL_COMMENT
         
         itemHandle = srcTree.listStore[itemPath][handleCol]
         srcTree.listStore[itemPath][srcColumn] = editText.strip()
-        self.theBook.updateTreeEntry(itemHandle,enumType,editText)
+        self.theBook.updateTreeEntry(itemHandle,itemTag,editText)
         self.winMain.treeLeft.loadContent()
         
         return
@@ -267,19 +267,19 @@ class NovelWriter():
         
         return
     
-    def onCharEdit(self, guiObject, itemPath, editText, enumType):
+    def onCharEdit(self, guiObject, itemPath, editText, itemTag):
         
         srcTree   = self.winMain.alignChars.treeChars
         handleCol = srcTree.COL_HANDLE
         
-        if enumType == NWC.BookTree.NAME:       srcColumn = srcTree.COL_TITLE
-        if enumType == NWC.BookTree.IMPORTANCE: srcColumn = srcTree.COL_IMPORTANCE
-        if enumType == NWC.BookTree.ROLE:       srcColumn = srcTree.COL_ROLE
-        if enumType == NWC.BookTree.COMMENT:    srcColumn = srcTree.COL_COMMENT
+        if itemTag == "name":       srcColumn = srcTree.COL_TITLE
+        if itemTag == "importance": srcColumn = srcTree.COL_IMPORTANCE
+        if itemTag == "role":       srcColumn = srcTree.COL_ROLE
+        if itemTag == "comment":    srcColumn = srcTree.COL_COMMENT
         
         itemHandle = srcTree.listStore[itemPath][handleCol]
         srcTree.listStore[itemPath][srcColumn] = editText.strip()
-        self.theBook.updateTreeEntry(itemHandle,enumType,editText)
+        self.theBook.updateTreeEntry(itemHandle,itemTag,editText)
         self.winMain.treeLeft.loadContent()
         
         return
@@ -303,18 +303,18 @@ class NovelWriter():
         
         return
     
-    def onPlotEdit(self, guiObject, itemPath, editText, enumType):
+    def onPlotEdit(self, guiObject, itemPath, editText, itemTag):
         
         srcTree   = self.winMain.alignPlots.treePlots
         handleCol = srcTree.COL_HANDLE
         
-        if enumType == NWC.BookTree.NAME:       srcColumn = srcTree.COL_TITLE
-        if enumType == NWC.BookTree.IMPORTANCE: srcColumn = srcTree.COL_IMPORTANCE
-        if enumType == NWC.BookTree.COMMENT:    srcColumn = srcTree.COL_COMMENT
+        if itemTag == "name":       srcColumn = srcTree.COL_TITLE
+        if itemTag == "importance": srcColumn = srcTree.COL_IMPORTANCE
+        if itemTag == "comment":    srcColumn = srcTree.COL_COMMENT
         
         itemHandle = srcTree.listStore[itemPath][handleCol]
         srcTree.listStore[itemPath][srcColumn] = editText.strip()
-        self.theBook.updateTreeEntry(itemHandle,enumType,editText)
+        self.theBook.updateTreeEntry(itemHandle,itemTag,editText)
         self.winMain.treeLeft.loadContent()
         
         return

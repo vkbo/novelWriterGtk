@@ -64,8 +64,8 @@ class GuiChaptersTree(Gtk.TreeView):
         self.colTitle  = Gtk.TreeViewColumn(title="Title")
         self.rendTitle = Gtk.CellRendererText()
         self.rendTitle.set_property("editable",True)
-        self.colTitle.pack_start(self.rendType,False)
-        self.colTitle.add_attribute(self.rendType,"text",2)
+        self.colTitle.pack_start(self.rendTitle,False)
+        self.colTitle.add_attribute(self.rendTitle,"text",2)
         
         # Compile
         self.colCompile  = Gtk.TreeViewColumn(title="Compile")
@@ -97,21 +97,22 @@ class GuiChaptersTree(Gtk.TreeView):
         
         for treeItem in self.theBook.theTree:
             
-            itemName    = treeItem[NWC.BookTree.NAME]
-            itemClass   = treeItem[NWC.BookTree.CLASS]
-            itemLevel   = treeItem[NWC.BookTree.LEVEL]
-            itemType    = treeItem[NWC.BookTree.TYPE]
-            itemHandle  = treeItem[NWC.BookTree.HANDLE]
-            itemParent  = treeItem[NWC.BookTree.PARENT]
+            itemHandle  = treeItem["handle"]
+            itemParent  = treeItem["parent"]
+
+            itemName    = treeItem["entry"].itemName
+            itemClass   = treeItem["entry"].itemClass
+            itemLevel   = treeItem["entry"].itemLevel
+            itemType    = treeItem["entry"].itemType
             
-            if not itemClass == NWC.ItemClass.CONTAINER: continue
-            if not itemLevel == NWC.ItemLevel.ITEM: continue
-            if not itemType  == NWC.ItemType.BOOK: continue
+            if not itemClass == "CONTAINER": continue
+            if not itemLevel == "ITEM":      continue
+            if not itemType  == "BOOK":      continue
             
-            itemSubType = str(treeItem[NWC.BookTree.SUBTYPE])
-            itemNumber  = str(treeItem[NWC.BookTree.NUMBER])
-            itemCompile = str(treeItem[NWC.BookTree.COMPILE])
-            itemComment = treeItem[NWC.BookTree.COMMENT]
+            itemSubType = treeItem["entry"].itemSubType
+            itemNumber  = str(treeItem["entry"].itemNumber)
+            itemCompile = str(treeItem["entry"].itemCompile)
+            itemComment = treeItem["entry"].itemComment
             
             tmpIter = self.listStore.append([
                 itemSubType,

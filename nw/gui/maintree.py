@@ -83,10 +83,11 @@ class GuiMainTree(Gtk.TreeView):
         
         for treeItem in self.theBook.theTree:
             
-            itemName   = treeItem[NWC.BookTree.NAME]
-            itemLevel  = treeItem[NWC.BookTree.LEVEL]
-            itemHandle = treeItem[NWC.BookTree.HANDLE]
-            itemParent = treeItem[NWC.BookTree.PARENT]
+            itemHandle = treeItem["handle"]
+            itemParent = treeItem["parent"]
+            
+            itemName   = treeItem["entry"].itemName
+            itemLevel  = treeItem["entry"].itemLevel
             
             if itemParent == None:
                 parIter = None
