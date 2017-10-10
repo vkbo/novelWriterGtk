@@ -242,8 +242,9 @@ class NovelWriter():
         if itemTag == "comment": srcColumn = srcTree.COL_COMMENT
         
         itemHandle = srcTree.listStore[itemPath][handleCol]
-        srcTree.listStore[itemPath][srcColumn] = editText.strip()
         self.theBook.updateTreeEntry(itemHandle,itemTag,editText)
+        parsedValue = self.theBook.getTreeEntry(itemHandle)["entry"].getFromTag(itemTag)
+        srcTree.listStore[itemPath][srcColumn] = str(parsedValue)
         self.winMain.treeLeft.loadContent()
         
         return
@@ -278,8 +279,9 @@ class NovelWriter():
         if itemTag == "comment":    srcColumn = srcTree.COL_COMMENT
         
         itemHandle = srcTree.listStore[itemPath][handleCol]
-        srcTree.listStore[itemPath][srcColumn] = editText.strip()
         self.theBook.updateTreeEntry(itemHandle,itemTag,editText)
+        parsedValue = self.theBook.getTreeEntry(itemHandle)["entry"].getFromTag(itemTag)
+        srcTree.listStore[itemPath][srcColumn] = str(parsedValue)
         self.winMain.treeLeft.loadContent()
         
         return
@@ -313,8 +315,9 @@ class NovelWriter():
         if itemTag == "comment":    srcColumn = srcTree.COL_COMMENT
         
         itemHandle = srcTree.listStore[itemPath][handleCol]
-        srcTree.listStore[itemPath][srcColumn] = editText.strip()
         self.theBook.updateTreeEntry(itemHandle,itemTag,editText)
+        parsedValue = self.theBook.getTreeEntry(itemHandle)["entry"].getFromTag(itemTag)
+        srcTree.listStore[itemPath][srcColumn] = str(parsedValue)
         self.winMain.treeLeft.loadContent()
         
         return

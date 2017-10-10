@@ -98,7 +98,7 @@ class GuiMainTree(Gtk.TreeView):
                     logger.error("Item encountered before its parent")
                     parIter = None
             
-            if itemLevel == NWC.ItemLevel.ROOT:
+            if itemLevel == "ROOT":
                 itemTitle = "<b>%s</b>" % itemName
             else:
                 itemTitle = itemName
