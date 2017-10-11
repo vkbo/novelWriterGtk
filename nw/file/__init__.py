@@ -33,6 +33,8 @@ class Book():
         self.docPath     = None
         self.theTree     = []
         self.theIndex    = {}
+        self.lvlIndex    = {}
+        self.rootIndex   = {}
         
         self.bookHandle  = None
         self.charHandle  = None
@@ -43,7 +45,15 @@ class Book():
         self.bookTitle   = ""
         self.bookAuthors = []
         
+        # Prepar empty indices
+        for itemLevel in BookItem.validLevels: self.lvlIndex[itemLevel] = {}
+        for itemType in BookItem.validTypes:   self.rootIndex[itemType] = None
+        
         return
+    
+    #
+    # Project File I/O and Creation
+    #
     
     def openBook(self, bookPath):
         
@@ -89,6 +99,7 @@ class Book():
                     self.appendTree(itemHandle,itemParent,bookItem)
         
         self.bookLoaded = True
+        self.validateTree()
         
         return
     
@@ -154,27 +165,27 @@ class Book():
         self.noteHandle = self.makeHandle()
         
         newBookItem = BookItem()
-        newBookItem.setClass("CONTAINER")
-        newBookItem.setLevel("ROOT")
-        newBookItem.setType("BOOK")
+        newBookItem.setClass(BookItem.CLS_CONT)
+        newBookItem.setLevel(BookItem.LEV_ROOT)
+        newBookItem.setType(BookItem.TYP_BOOK)
         newBookItem.setName("Book")
         
         newCharItem = BookItem()
-        newCharItem.setClass("CONTAINER")
-        newCharItem.setLevel("ROOT")
-        newCharItem.setType("CHAR")
+        newCharItem.setClass(BookItem.CLS_CONT)
+        newCharItem.setLevel(BookItem.LEV_ROOT)
+        newCharItem.setType(BookItem.TYP_CHAR)
         newCharItem.setName("Characters")
         
         newPlotItem = BookItem()
-        newPlotItem.setClass("CONTAINER")
-        newPlotItem.setLevel("ROOT")
-        newPlotItem.setType("PLOT")
+        newPlotItem.setClass(BookItem.CLS_CONT)
+        newPlotItem.setLevel(BookItem.LEV_ROOT)
+        newPlotItem.setType(BookItem.TYP_PLOT)
         newPlotItem.setName("Plots")
         
         newNoteItem = BookItem()
-        newNoteItem.setClass("CONTAINER")
-        newNoteItem.setLevel("ROOT")
-        newNoteItem.setType("NOTE")
+        newNoteItem.setClass(BookItem.CLS_CONT)
+        newNoteItem.setLevel(BookItem.LEV_ROOT)
+        newNoteItem.setType(BookItem.TYP_NOTE)
         newNoteItem.setName("Notes")
         
         self.appendTree(self.bookHandle,None,newBookItem)
@@ -183,6 +194,10 @@ class Book():
         self.appendTree(self.noteHandle,None,newNoteItem)
         
         return True
+    
+    #
+    #  Set Functions
+    #
     
     def setBookPath(self, bookPath):
         self.bookPath = bookPath
@@ -201,16 +216,17 @@ class Book():
             self.bookAuthors.append(author.strip())
         return
     
-    def createDoc(self, docTitle, docType):
-        return
+    #
+    # Add Elements to Main Tree
+    #
     
     def addChapter(self):
         
         newItem = BookItem()
-        newItem.setClass("CONTAINER")
-        newItem.setLevel("ITEM")
-        newItem.setType("BOOK")
-        newItem.setSubType("CHAPTER")
+        newItem.setClass(BookItem.CLS_CONT)
+        newItem.setLevel(BookItem.LEV_ITEM)
+        newItem.setType(BookItem.TYP_BOOK)
+        newItem.setSubType(BookItem.SUB_CHAP)
         newItem.setName("New Chapter")
         newItem.setCompile(True)
         
@@ -221,9 +237,9 @@ class Book():
     def addCharacter(self):
         
         newItem = BookItem()
-        newItem.setClass("CONTAINER")
-        newItem.setLevel("ITEM")
-        newItem.setType("CHAR")
+        newItem.setClass(BookItem.CLS_CONT)
+        newItem.setLevel(BookItem.LEV_ITEM)
+        newItem.setType(BookItem.TYP_CHAR)
         newItem.setName("New Character")
         
         self.appendTree(None,self.charHandle,newItem)
@@ -233,14 +249,18 @@ class Book():
     def addPlot(self):
         
         newItem = BookItem()
-        newItem.setClass("CONTAINER")
-        newItem.setLevel("ITEM")
-        newItem.setType("PLOT")
+        newItem.setClass(BookItem.CLS_CONT)
+        newItem.setLevel(BookItem.LEV_ITEM)
+        newItem.setType(BookItem.TYP_PLOT)
         newItem.setName("New Plot")
         
         self.appendTree(None,self.plotHandle,newItem)
         
         return
+    
+    #
+    # Data Tree Maintenance
+    #
     
     def updateTreeEntry(self,tHandle,tTarget,tValue):
         self.theTree[self.theIndex[tHandle]]["entry"].setFromTag(tTarget,tValue.strip())
@@ -266,8 +286,65 @@ class Book():
         })
         lastIdx = len(self.theTree)-1
         self.theIndex[tHandle] = lastIdx
+        self.lvlIndex[bookItem.itemLevel][tHandle] = lastIdx
         
         return
+    
+    def validateTree(self):
+        
+        errCount = 0
+        
+        # Checking ROOT level
+        for treeItem in self.theTree:
+            
+            itemHandle = treeItem["handle"]
+            itemParent = treeItem["parent"]
+            bookEntry  = treeItem["entry"]
+            itemIdx    = self.theIndex[itemHandle]
+            
+            if not bookEntry.itemLevel == BookItem.LEV_ROOT: continue
+            logger.verbose("Checking ROOT with handle %s" % itemHandle)
+            
+            if not itemParent is None:
+                self.theTree[itemIdx]["parent"] = None
+                logger.warning("Parent was set for ROOT element %s" % itemHandle)
+                errCount += 1
+            
+            for itemType in bookEntry.validTypes:
+                if bookEntry.itemType == itemType:
+                    if self.rootIndex[itemType] is None:
+                        self.rootIndex[itemType] = itemHandle
+                        logger.debug("Root handle for type %s set to %s" % (itemType,itemHandle))
+                    else:
+                        logger.warning("Encountered a second ROOT of type %s with handle %s" % (itemType,itemHandle))
+                        errCount += 1
+            
+        # Checking ITEM level
+        for treeItem in self.theTree:
+            
+            itemHandle = treeItem["handle"]
+            itemParent = treeItem["parent"]
+            bookEntry  = treeItem["entry"]
+            itemIdx    = self.theIndex[itemHandle]
+            hasError   = False
+            
+            if not bookEntry.itemLevel == BookItem.LEV_ITEM: continue
+            logger.verbose("Checking ITEM with handle %s" % itemHandle)
+            
+            for itemType in bookEntry.validTypes:
+                if bookEntry.itemType == itemType:
+                    if itemParent is None:
+                        logger.warning("Parent was missing for ITEM of type %s with handle %s" % (itemType,itemHandle))
+                        self.theTree[itemIdx]["parent"] = self.rootIndex[itemType]
+                        errCount += 1
+        
+        logger.info("Found %d error(s) while parsing the project file" % errCount)
+        
+        return
+    
+    #
+    # Internal Functions
+    #
     
     def makeHandle(self,seed=""):
         itemHandle = sha256((str(time())+seed).encode()).hexdigest()[0:13]
@@ -302,6 +379,5 @@ class Book():
             if checkValue == "None": return None
         if isinstance(checkValue,str): return str(checkValue)
         return defaultValue
-        
     
 # End Class DataStore

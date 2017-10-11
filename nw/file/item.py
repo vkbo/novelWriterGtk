@@ -21,15 +21,45 @@ logger = logging.getLogger(__name__)
 
 class BookItem():
     
-    validTags     = [
-        "class","level","type","subtype",
-        "title","name","comment",
-        "role","number","compile","importance"
+    TAG_CLASS   = "class"
+    TAG_LEVEL   = "level"
+    TAG_TYPE    = "type"
+    TAG_SUBTYPE = "subtype"
+    TAG_TITLE   = "title"
+    TAG_NAME    = "name"
+    TAG_COMMENT = "comment"
+    TAG_ROLE    = "role"
+    TAG_NUMBER  = "number"
+    TAG_COMPILE = "compile"
+    TAG_IMPORT  = "importance"
+    
+    CLS_CONT    = "CONTAINER"
+    CLS_DOC     = "DOCUMENT"
+    
+    LEV_ROOT    = "ROOT"
+    LEV_ITEM    = "ITEM"
+    LEV_FILE    = "FILE"
+    
+    TYP_BOOK    = "BOOK"
+    TYP_CHAR    = "CHAR"
+    TYP_PLOT    = "PLOT"
+    TYP_NOTE    = "NOTE"
+    
+    SUB_FRONT   = "FRONTMATTER"
+    SUB_PRO     = "PROLOGUE"
+    SUB_CHAP    = "CHAPTER"
+    SUB_EPI     = "EPILOGUE"
+    SUB_BACK    = "BACKMATTER"
+    
+    validTags = [
+        TAG_CLASS, TAG_LEVEL,  TAG_TYPE,    TAG_SUBTYPE,
+        TAG_TITLE, TAG_NAME,   TAG_COMMENT,
+        TAG_ROLE,  TAG_NUMBER, TAG_COMPILE, TAG_IMPORT
     ]
-    validClasses  = ["CONTAINER","DOCUMENT"]
-    validLevels   = ["ROOT","ITEM","FILE"]
-    validTypes    = ["BOOK","CHAR","PLOT","NOTE"]
-    validSubTypes = ["FRONTMATTER","PROLOGUE","CHAPTER","EPILOGUE","BACKMATTER"]
+    validClasses   = [CLS_CONT,CLS_DOC]
+    validLevels    = [LEV_ROOT,LEV_ITEM,LEV_FILE]
+    validTypes     = [TYP_BOOK,TYP_CHAR,TYP_PLOT,TYP_NOTE]
+    validSubTypes  = [SUB_FRONT,SUB_PRO,SUB_CHAP,SUB_EPI,SUB_BACK]
     
     itemClass      = None
     itemLevel      = None
@@ -46,34 +76,34 @@ class BookItem():
     def __init__(self):
         
         self.tagMap = {
-            "class"      : self.setClass,
-            "level"      : self.setLevel,
-            "type"       : self.setType,
-            "subtype"    : self.setSubType,
-            "title"      : self.setTitle,
-            "name"       : self.setName,
-            "comment"    : self.setComment,
-            "role"       : self.setRole,
-            "number"     : self.setNumber,
-            "compile"    : self.setCompile,
-            "importance" : self.setImportance,
+            self.TAG_CLASS   : self.setClass,
+            self.TAG_LEVEL   : self.setLevel,
+            self.TAG_TYPE    : self.setType,
+            self.TAG_SUBTYPE : self.setSubType,
+            self.TAG_TITLE   : self.setTitle,
+            self.TAG_NAME    : self.setName,
+            self.TAG_COMMENT : self.setComment,
+            self.TAG_ROLE    : self.setRole,
+            self.TAG_NUMBER  : self.setNumber,
+            self.TAG_COMPILE : self.setCompile,
+            self.TAG_IMPORT  : self.setImportance,
         }
         
         return
     
     def getFromTag(self,getTag):
         if getTag in self.validTags:
-            if getTag == "class":      return self.itemClass
-            if getTag == "level":      return self.itemLevel
-            if getTag == "type":       return self.itemType
-            if getTag == "subtype":    return self.itemSubType
-            if getTag == "title":      return self.itemTitle
-            if getTag == "name":       return self.itemName
-            if getTag == "comment":    return self.itemComment
-            if getTag == "role":       return self.itemRole
-            if getTag == "number":     return self.itemNumber
-            if getTag == "compile":    return self.itemCompile
-            if getTag == "importance": return self.itemImportance
+            if getTag == self.TAG_CLASS:   return self.itemClass
+            if getTag == self.TAG_LEVEL:   return self.itemLevel
+            if getTag == self.TAG_TYPE:    return self.itemType
+            if getTag == self.TAG_SUBTYPE: return self.itemSubType
+            if getTag == self.TAG_TITLE:   return self.itemTitle
+            if getTag == self.TAG_NAME:    return self.itemName
+            if getTag == self.TAG_COMMENT: return self.itemComment
+            if getTag == self.TAG_ROLE:    return self.itemRole
+            if getTag == self.TAG_NUMBER:  return self.itemNumber
+            if getTag == self.TAG_COMPILE: return self.itemCompile
+            if getTag == self.TAG_IMPORT:  return self.itemImportance
         else:
             logger.error("Unknown tag '%s'" % setTag)
         return
