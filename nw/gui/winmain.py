@@ -114,12 +114,13 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.tbLeft.set_margin_bottom(12)
         self.tbLeft.set_margin_left(12)
         self.tbLeft.set_margin_right(12)
-        self.btnLeftAddCont = Gtk.ToolButton(icon_name="gtk-directory")
-        self.btnLeftAddFile = Gtk.ToolButton(icon_name="gtk-file")
-        self.btnLeftDelete  = Gtk.ToolButton(icon_name="gtk-delete")
-        self.tbLeft.insert(self.btnLeftAddCont,0)
-        self.tbLeft.insert(self.btnLeftAddFile,1)
-        self.tbLeft.insert(self.btnLeftDelete,2)
+        self.tbLeft.set_halign(Gtk.Align.END)
+        self.btnLeftAdd    = Gtk.ToolButton()
+        self.btnLeftRemove = Gtk.ToolButton()
+        self.btnLeftAdd.set_label("Add")
+        self.btnLeftRemove.set_label("Remove")
+        self.tbLeft.insert(self.btnLeftAdd,0)
+        self.tbLeft.insert(self.btnLeftRemove,1)
         self.boxLeft.pack_start(self.tbLeft,False,True,0)
         
         #
@@ -219,9 +220,6 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.drawTimeLine.set_name("drawTimeLine")
         self.scrlTimeLine.add(self.drawTimeLine)
         # self.drawTimeLine.connect("draw", self.onExpose)
-        
-        # self.btnTest = Gtk.Button(label="Test")
-        # self.boxOuter.pack_start(self.btnTest,False,True,0)
         
         logger.verbose("Finished building main window")
         self.show_all()

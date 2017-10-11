@@ -62,7 +62,7 @@ class NovelWriter():
         
         # Main Tree
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
-        self.winMain.btnLeftAddCont.connect("clicked",self.onLeftTreeAdd,"CONTAINER")
+        self.winMain.btnLeftAdd.connect("clicked",self.onLeftAddFile)
         
         # Book Pane
         pBooks = self.winMain.alignBook
@@ -204,9 +204,8 @@ class NovelWriter():
         
         return
     
-    def onLeftTreeAdd(self, guiObject, addType):
+    def onLeftAddFile(self, guiObject, addType):
         
-        logger.vverbose("MainTree: Adding item of type %s" % addType.name)
         
         
         return

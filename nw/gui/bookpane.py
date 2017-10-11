@@ -38,7 +38,7 @@ class GuiBookPane(Gtk.Alignment):
         self.boxBook = Gtk.Box()
         self.boxBook.set_name("boxBook")
         self.boxBook.set_orientation(Gtk.Orientation.VERTICAL)
-        self.boxBook.set_spacing(0)
+        self.boxBook.set_spacing(8)
         self.add(self.boxBook)
         
         # Top Horisontal Box
@@ -99,9 +99,11 @@ class GuiBookPane(Gtk.Alignment):
         self.tbChapters = Gtk.Toolbar()
         self.tbChapters.set_name("tbChapters")
         self.tbChapters.set_icon_size(2)
-        self.tbChapters.set_halign(Gtk.Align.END)
-        self.btnChaptersAdd    = Gtk.ToolButton(icon_name="gtk-add")
-        self.btnChaptersRemove = Gtk.ToolButton(icon_name="gtk-remove")
+        self.tbChapters.set_halign(Gtk.Align.START)
+        self.btnChaptersAdd    = Gtk.ToolButton()
+        self.btnChaptersRemove = Gtk.ToolButton()
+        self.btnChaptersAdd.set_label("Add")
+        self.btnChaptersRemove.set_label("Remove")
         self.tbChapters.insert(self.btnChaptersAdd,0)
         self.tbChapters.insert(self.btnChaptersRemove,1)
         self.boxBook.pack_start(self.tbChapters,False,True,0)

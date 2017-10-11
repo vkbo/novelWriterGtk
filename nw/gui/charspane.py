@@ -38,7 +38,7 @@ class GuiCharsPane(Gtk.Alignment):
         self.boxChars = Gtk.Box()
         self.boxChars.set_name("boxChars")
         self.boxChars.set_orientation(Gtk.Orientation.VERTICAL)
-        self.boxChars.set_spacing(0)
+        self.boxChars.set_spacing(8)
         self.add(self.boxChars)
         
         # Top Horisontal Box
@@ -60,9 +60,11 @@ class GuiCharsPane(Gtk.Alignment):
         self.tbChars = Gtk.Toolbar()
         self.tbChars.set_name("tbChars")
         self.tbChars.set_icon_size(2)
-        self.tbChars.set_halign(Gtk.Align.END)
-        self.btnCharsAdd    = Gtk.ToolButton(icon_name="gtk-add")
-        self.btnCharsRemove = Gtk.ToolButton(icon_name="gtk-remove")
+        self.tbChars.set_halign(Gtk.Align.START)
+        self.btnCharsAdd    = Gtk.ToolButton()
+        self.btnCharsRemove = Gtk.ToolButton()
+        self.btnCharsAdd.set_label("Add")
+        self.btnCharsRemove.set_label("Remove")
         self.tbChars.insert(self.btnCharsAdd,0)
         self.tbChars.insert(self.btnCharsRemove,1)
         self.boxChars.pack_start(self.tbChars,False,True,0)

@@ -38,7 +38,7 @@ class GuiPlotsPane(Gtk.Alignment):
         self.boxPlots = Gtk.Box()
         self.boxPlots.set_name("boxPlots")
         self.boxPlots.set_orientation(Gtk.Orientation.VERTICAL)
-        self.boxPlots.set_spacing(0)
+        self.boxPlots.set_spacing(8)
         self.add(self.boxPlots)
         
         # Top Horisontal Box
@@ -60,9 +60,11 @@ class GuiPlotsPane(Gtk.Alignment):
         self.tbPlots = Gtk.Toolbar()
         self.tbPlots.set_name("tbPlots")
         self.tbPlots.set_icon_size(2)
-        self.tbPlots.set_halign(Gtk.Align.END)
-        self.btnPlotsAdd    = Gtk.ToolButton(icon_name="gtk-add")
-        self.btnPlotsRemove = Gtk.ToolButton(icon_name="gtk-remove")
+        self.tbPlots.set_halign(Gtk.Align.START)
+        self.btnPlotsAdd    = Gtk.ToolButton()
+        self.btnPlotsRemove = Gtk.ToolButton()
+        self.btnPlotsAdd.set_label("Add")
+        self.btnPlotsRemove.set_label("Remove")
         self.tbPlots.insert(self.btnPlotsAdd,0)
         self.tbPlots.insert(self.btnPlotsRemove,1)
         self.boxPlots.pack_start(self.tbPlots,False,True,0)
