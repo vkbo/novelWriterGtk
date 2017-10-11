@@ -17,6 +17,7 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
+from nw.file.item  import BookItem
 
 class GuiMainTree(Gtk.TreeView):
 
@@ -88,6 +89,7 @@ class GuiMainTree(Gtk.TreeView):
             
             itemName   = treeItem["entry"].itemName
             itemLevel  = treeItem["entry"].itemLevel
+            itemClass  = treeItem["entry"].itemClass
             
             if itemParent == None:
                 parIter = None
@@ -98,7 +100,7 @@ class GuiMainTree(Gtk.TreeView):
                     logger.error("Item encountered before its parent")
                     parIter = None
             
-            if itemLevel == "ROOT":
+            if itemClass == BookItem.CLS_CONT:
                 itemTitle = "<b>%s</b>" % itemName
             else:
                 itemTitle = itemName

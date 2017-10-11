@@ -61,12 +61,14 @@ class GuiPlotsPane(Gtk.Alignment):
         self.tbPlots.set_name("tbPlots")
         self.tbPlots.set_icon_size(2)
         self.tbPlots.set_halign(Gtk.Align.START)
-        self.btnPlotsAdd    = Gtk.ToolButton()
-        self.btnPlotsRemove = Gtk.ToolButton()
+        self.btnPlotsAdd = Gtk.ToolButton()
+        self.btnPlotsDel = Gtk.ToolButton()
         self.btnPlotsAdd.set_label("Add")
-        self.btnPlotsRemove.set_label("Remove")
+        self.btnPlotsDel.set_label("Remove")
+        self.btnPlotsAdd.set_homogeneous(False)
+        self.btnPlotsDel.set_homogeneous(False)
         self.tbPlots.insert(self.btnPlotsAdd,0)
-        self.tbPlots.insert(self.btnPlotsRemove,1)
+        self.tbPlots.insert(self.btnPlotsDel,1)
         self.boxPlots.pack_start(self.tbPlots,False,True,0)
         
         # Plots Tree

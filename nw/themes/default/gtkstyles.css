@@ -102,7 +102,7 @@
     background-color: rgba(255,255,255,0.1);
 }
 
-#treeLeft.view:active {
+#treeLeft.view:selected {
     background-color: rgba(255,255,255,0.2);
 }
 
@@ -160,9 +160,9 @@
     background-color: rgba(255,255,255,0.1);
 }
 
-#treeChapters.view:active,
-#treeChars.view:active,
-#treePlots.view:active {
+#treeChapters.view:selected,
+#treeChars.view:selected,
+#treePlots.view:selected {
     background-color: rgba(255,255,255,0.2);
 }
 
@@ -234,15 +234,23 @@
     /*background-color: #3d0000;*/
 }
 
-#lblDocTitle {
+#entryDocTitle {
+    border: none;
+    border-radius: 0px;
+    background-image: none;
+    background-color: transparent;
+    color: rgba(255,255,255,0.8);
     font-size: 30px;
     font-weight: bold;
-    color: rgba(255,255,255,0.8);
+    padding: 0px;
+}
+
+#entryDocTitle:focus {
+    background-color: #354852;
 }
 
 #tbDocEdit {
     background-color: rgba(255,255,255,0.5);
-    /*background-color: #7ca9bf;*/
 }
 
 #textViewDoc {

@@ -63,7 +63,7 @@ class GuiBookPane(Gtk.Alignment):
         self.boxDetails.set_spacing(12)
         self.boxTop.add(self.boxDetails)
         
-        # Details Book Title
+        # Book Title
         self.fmeBookTitle = Gtk.Frame()
         self.fmeBookTitle.set_name("fmeBookTitle")
         self.fmeBookTitle.set_label("Book Title")
@@ -100,12 +100,18 @@ class GuiBookPane(Gtk.Alignment):
         self.tbChapters.set_name("tbChapters")
         self.tbChapters.set_icon_size(2)
         self.tbChapters.set_halign(Gtk.Align.START)
-        self.btnChaptersAdd    = Gtk.ToolButton()
-        self.btnChaptersRemove = Gtk.ToolButton()
+        self.btnChaptersAdd = Gtk.ToolButton()
+        self.btnChaptersDel = Gtk.ToolButton()
+        self.btnChaptersNum = Gtk.ToolButton()
         self.btnChaptersAdd.set_label("Add")
-        self.btnChaptersRemove.set_label("Remove")
+        self.btnChaptersDel.set_label("Remove")
+        self.btnChaptersNum.set_label("Re-number")
+        self.btnChaptersAdd.set_homogeneous(False)
+        self.btnChaptersDel.set_homogeneous(False)
+        self.btnChaptersNum.set_homogeneous(False)
         self.tbChapters.insert(self.btnChaptersAdd,0)
-        self.tbChapters.insert(self.btnChaptersRemove,1)
+        self.tbChapters.insert(self.btnChaptersDel,1)
+        self.tbChapters.insert(self.btnChaptersNum,2)
         self.boxBook.pack_start(self.tbChapters,False,True,0)
         
         # Chapters Tree

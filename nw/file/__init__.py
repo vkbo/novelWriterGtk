@@ -220,6 +220,43 @@ class Book():
     # Add Elements to Main Tree
     #
     
+    def addFile(self, pHandle):
+        
+        parEntry = self.getTreeEntry(pHandle)["entry"]
+        parClass = parEntry.itemClass
+        parType  = parEntry.itemType
+        
+        if not parClass == BookItem.CLS_CONT:
+            logger.debug("Item is not a folder, getting its parent")
+            parParent = self.getTreeEntry(pHandle)["parent"]
+            if not parParent is None:
+                pHandle  = parParent
+                parEntry = self.getTreeEntry(pHandle)["entry"]
+                parClass = parEntry.itemClass
+                parType  = parEntry.itemType
+            else:
+                logger.error("A file must be added to a folder")
+        
+        if parType == BookItem.TYP_BOOK:
+            newClass   = BookItem.CLS_SCENE
+            newName    = "New Scene"
+            newCompile = True
+        else:
+            newClass   = BookItem.CLS_NOTE
+            newName    = "New Note"
+            newCompile = None
+        
+        newItem = BookItem()
+        newItem.setClass(newClass)
+        newItem.setLevel(BookItem.LEV_FILE)
+        newItem.setType(parType)
+        newItem.setName(newName)
+        newItem.setCompile(newCompile)
+        
+        self.appendTree(None,pHandle,newItem)
+        
+        return
+    
     def addChapter(self):
         
         newItem = BookItem()
@@ -230,7 +267,7 @@ class Book():
         newItem.setName("New Chapter")
         newItem.setCompile(True)
         
-        self.appendTree(None,self.bookHandle,newItem)
+        self.appendTree(None,self.rootIndex[BookItem.TYP_BOOK],newItem)
         
         return
     
@@ -242,7 +279,7 @@ class Book():
         newItem.setType(BookItem.TYP_CHAR)
         newItem.setName("New Character")
         
-        self.appendTree(None,self.charHandle,newItem)
+        self.appendTree(None,self.rootIndex[BookItem.TYP_CHAR],newItem)
         
         return
     
@@ -254,7 +291,7 @@ class Book():
         newItem.setType(BookItem.TYP_PLOT)
         newItem.setName("New Plot")
         
-        self.appendTree(None,self.plotHandle,newItem)
+        self.appendTree(None,self.rootIndex[BookItem.TYP_PLOT],newItem)
         
         return
     

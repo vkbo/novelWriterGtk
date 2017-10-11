@@ -115,12 +115,14 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.tbLeft.set_margin_left(12)
         self.tbLeft.set_margin_right(12)
         self.tbLeft.set_halign(Gtk.Align.END)
-        self.btnLeftAdd    = Gtk.ToolButton()
-        self.btnLeftRemove = Gtk.ToolButton()
+        self.btnLeftAdd = Gtk.ToolButton()
+        self.btnLeftDel = Gtk.ToolButton()
         self.btnLeftAdd.set_label("Add")
-        self.btnLeftRemove.set_label("Remove")
+        self.btnLeftDel.set_label("Remove")
+        self.btnLeftAdd.set_homogeneous(False)
+        self.btnLeftDel.set_homogeneous(False)
         self.tbLeft.insert(self.btnLeftAdd,0)
-        self.tbLeft.insert(self.btnLeftRemove,1)
+        self.tbLeft.insert(self.btnLeftDel,1)
         self.boxLeft.pack_start(self.tbLeft,False,True,0)
         
         #

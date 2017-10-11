@@ -36,13 +36,21 @@ class GuiDocEditor(Gtk.Alignment):
         self.boxOuter.set_spacing(0)
         self.add(self.boxOuter)
 
-        self.lblTitle = Gtk.Label()
-        self.lblTitle.set_name("lblDocTitle")
-        self.lblTitle.set_label("Document Title")
-        self.lblTitle.set_xalign(0.0)
-        self.lblTitle.set_margin_bottom(12)
-        self.boxOuter.pack_start(self.lblTitle,False,False,0)
-
+        # Document Title
+        self.fmeDocTitle = Gtk.Frame()
+        self.fmeDocTitle.set_name("fmeDocTitle")
+        self.fmeDocTitle.set_shadow_type(Gtk.ShadowType.NONE)
+        self.boxOuter.pack_start(self.fmeDocTitle,False,False,0)
+        
+        self.alignDocTitle = Gtk.Alignment()
+        self.alignDocTitle.set_padding(0,12,0,0)
+        self.fmeDocTitle.add(self.alignDocTitle)
+        
+        self.entryDocTitle = Gtk.Entry()
+        self.entryDocTitle.set_name("entryDocTitle")
+        self.entryDocTitle.set_text("Document Title")
+        self.alignDocTitle.add(self.entryDocTitle)
+        
         # Editor toolbar
         self.tbEdit = Gtk.Toolbar()
         self.tbEdit.set_name("tbDocEdit")

@@ -61,12 +61,14 @@ class GuiCharsPane(Gtk.Alignment):
         self.tbChars.set_name("tbChars")
         self.tbChars.set_icon_size(2)
         self.tbChars.set_halign(Gtk.Align.START)
-        self.btnCharsAdd    = Gtk.ToolButton()
-        self.btnCharsRemove = Gtk.ToolButton()
+        self.btnCharsAdd = Gtk.ToolButton()
+        self.btnCharsDel = Gtk.ToolButton()
         self.btnCharsAdd.set_label("Add")
-        self.btnCharsRemove.set_label("Remove")
+        self.btnCharsDel.set_label("Remove")
+        self.btnCharsAdd.set_homogeneous(False)
+        self.btnCharsDel.set_homogeneous(False)
         self.tbChars.insert(self.btnCharsAdd,0)
-        self.tbChars.insert(self.btnCharsRemove,1)
+        self.tbChars.insert(self.btnCharsDel,1)
         self.boxChars.pack_start(self.tbChars,False,True,0)
         
         # Characters Tree

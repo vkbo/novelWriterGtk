@@ -23,7 +23,7 @@ from os              import path
 
 from nw.gui.winmain  import GuiWinMain
 from nw.gui.maintree import GuiMainTree
-from nw.file         import Book
+from nw.file         import Book, BookItem
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ class NovelWriter():
         # Book Pane
         pBooks = self.winMain.alignBook
         pBooks.btnChaptersAdd.connect("clicked",self.onChapterAdd)
-        pBooks.btnChaptersRemove.connect("clicked",self.onChapterRemove)
+        pBooks.btnChaptersDel.connect("clicked",self.onChapterRemove)
         pBooks.treeChapters.rendType.connect("edited",self.onChapterEdit,"type")
         pBooks.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
         pBooks.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
@@ -77,7 +77,7 @@ class NovelWriter():
         # Characters Pane
         pChars = self.winMain.alignChars
         pChars.btnCharsAdd.connect("clicked",self.onCharAdd)
-        pChars.btnCharsRemove.connect("clicked",self.onCharRemove)
+        pChars.btnCharsDel.connect("clicked",self.onCharRemove)
         pChars.treeChars.rendName.connect("edited",self.onCharEdit,"name")
         pChars.treeChars.rendImport.connect("edited",self.onCharEdit,"importance")
         pChars.treeChars.rendRole.connect("edited",self.onCharEdit,"role")
@@ -86,7 +86,7 @@ class NovelWriter():
         # Plots Pane
         pPlots = self.winMain.alignPlots
         pPlots.btnPlotsAdd.connect("clicked",self.onPlotAdd)
-        pPlots.btnPlotsRemove.connect("clicked",self.onPlotRemove)
+        pPlots.btnPlotsDel.connect("clicked",self.onPlotRemove)
         pPlots.treePlots.rendName.connect("edited",self.onPlotEdit,"name")
         pPlots.treePlots.rendImport.connect("edited",self.onPlotEdit,"importance")
         pPlots.treePlots.rendComment.connect("edited",self.onPlotEdit,"comment")
@@ -192,6 +192,7 @@ class NovelWriter():
         
         itemEntry = self.theBook.getTreeEntry(itemHandle)
         
+        itemClass = itemEntry["entry"].itemClass
         itemLevel = itemEntry["entry"].itemLevel
         itemType  = itemEntry["entry"].itemType
         logger.vverbose("MainTree: The item level is %s" % itemLevel)
@@ -201,12 +202,27 @@ class NovelWriter():
             if itemType == "CHAR": self.winMain.showTab(NWC.NBTabs.CHARS)
             if itemType == "PLOT": self.winMain.showTab(NWC.NBTabs.PLOTS)
             if itemType == "NOTE": self.winMain.showTab(NWC.NBTabs.BOOK)
+        else:
+            if itemClass == BookItem.CLS_SCENE: self.winMain.showTab(NWC.NBTabs.EDITOR)
+            if itemClass == BookItem.CLS_NOTE:  self.winMain.showTab(NWC.NBTabs.EDITOR)
         
         return
     
-    def onLeftAddFile(self, guiObject, addType):
+    def onLeftAddFile(self, guiObject):
         
+        itemHandle = None
         
+        listModel, pathList = self.winMain.treeLeft.treeSelect.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,GuiMainTree.COL_HANDLE)
+            itemName   = listModel.get_value(listIter,GuiMainTree.COL_NAME)
+            logger.vverbose("MainTree: Adding file to item %s named '%s'" % (itemHandle,itemName))
+        
+        if itemHandle == None: return
+
+        self.theBook.addFile(itemHandle)
+        self.winMain.treeLeft.loadContent()
         
         return
     

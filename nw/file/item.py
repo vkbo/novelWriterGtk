@@ -34,7 +34,8 @@ class BookItem():
     TAG_IMPORT  = "importance"
     
     CLS_CONT    = "CONTAINER"
-    CLS_DOC     = "DOCUMENT"
+    CLS_SCENE   = "SCENE"
+    CLS_NOTE    = "NOTE"
     
     LEV_ROOT    = "ROOT"
     LEV_ITEM    = "ITEM"
@@ -56,7 +57,7 @@ class BookItem():
         TAG_TITLE, TAG_NAME,   TAG_COMMENT,
         TAG_ROLE,  TAG_NUMBER, TAG_COMPILE, TAG_IMPORT
     ]
-    validClasses   = [CLS_CONT,CLS_DOC]
+    validClasses   = [CLS_CONT,CLS_SCENE,CLS_NOTE]
     validLevels    = [LEV_ROOT,LEV_ITEM,LEV_FILE]
     validTypes     = [TYP_BOOK,TYP_CHAR,TYP_PLOT,TYP_NOTE]
     validSubTypes  = [SUB_FRONT,SUB_PRO,SUB_CHAP,SUB_EPI,SUB_BACK]
