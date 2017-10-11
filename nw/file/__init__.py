@@ -160,10 +160,10 @@ class Book():
         
         logger.debug("Creating empty book project")
         
-        self.bookHandle = self.makeHandle()
-        self.charHandle = self.makeHandle()
-        self.plotHandle = self.makeHandle()
-        self.noteHandle = self.makeHandle()
+        bookHandle = self.makeHandle()
+        charHandle = self.makeHandle()
+        plotHandle = self.makeHandle()
+        noteHandle = self.makeHandle()
         
         newBookItem = BookItem()
         newBookItem.setClass(BookItem.CLS_CONT)
@@ -189,10 +189,10 @@ class Book():
         newNoteItem.setType(BookItem.TYP_NOTE)
         newNoteItem.setName("Notes")
         
-        self.appendTree(self.bookHandle,None,newBookItem)
-        self.appendTree(self.charHandle,None,newCharItem)
-        self.appendTree(self.plotHandle,None,newPlotItem)
-        self.appendTree(self.noteHandle,None,newNoteItem)
+        self.appendTree(bookHandle,None,newBookItem)
+        self.appendTree(charHandle,None,newCharItem)
+        self.appendTree(plotHandle,None,newPlotItem)
+        self.appendTree(noteHandle,None,newNoteItem)
         
         return True
     
@@ -302,8 +302,8 @@ class Book():
     # Data Tree Maintenance
     #
     
-    def updateTreeEntry(self,tHandle,tTarget,tValue):
-        self.theTree[self.theIndex[tHandle]]["entry"].setFromTag(tTarget,tValue.strip())
+    def updateTreeEntry(self,tHandle,tTag,tValue):
+        self.theTree[self.theIndex[tHandle]]["entry"].setFromTag(tTag,tValue.strip())
         return
     
     def getTreeEntry(self,itemHandle):
@@ -421,4 +421,4 @@ class Book():
         if isinstance(checkValue,str): return str(checkValue)
         return defaultValue
     
-# End Class DataStore
+# End Class Book

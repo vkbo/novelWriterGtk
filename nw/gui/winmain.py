@@ -36,16 +36,10 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.mainConf = nw.CONFIG
         self.theBook  = theBook
         
-        # theScreen = self.get_screen()
-        # theVisual = theScreen.get_rgba_visual()
-        # theVisual = theScreen.get_system_visual()
-        
-        # self.set_visual(theVisual)
-        # self.set_app_paintable(True)
         self.set_title(self.mainConf.appName)
         self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
         self.set_position(Gtk.WindowPosition.CENTER)
-        # self.set_opacity(0.3)
+        
         self.set_css_name("winMain")
         
         #
@@ -233,4 +227,4 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.nbContent.set_current_page(tabNum.value)
         return
 
-# End Class GUIwinMain
+# End Class GuiWinMain
