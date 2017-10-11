@@ -20,6 +20,7 @@ from xml.dom      import minidom
 from time         import time
 from hashlib      import sha256
 from nw.file.item import BookItem
+from nw.file.doc  import DocFile
 
 logger = logging.getLogger(__name__)
 
@@ -253,7 +254,9 @@ class Book():
         newItem.setName(newName)
         newItem.setCompile(newCompile)
         
-        self.appendTree(None,pHandle,newItem)
+        docItem = DocFile("","")
+        
+        self.appendTree(None,pHandle,newItem,docItem)
         
         return
     
@@ -306,7 +309,7 @@ class Book():
     def getTreeEntry(self,itemHandle):
         return self.theTree[self.theIndex[itemHandle]]
     
-    def appendTree(self,tHandle,pHandle,bookItem):
+    def appendTree(self,tHandle,pHandle,bookItem,docItem=None):
         """
         Appends an entry to the main project tree.
         """
@@ -320,6 +323,7 @@ class Book():
             "handle" : tHandle,
             "parent" : pHandle,
             "entry"  : bookItem,
+            "doc"    : docItem,
         })
         lastIdx = len(self.theTree)-1
         self.theIndex[tHandle] = lastIdx

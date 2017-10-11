@@ -220,7 +220,7 @@ class NovelWriter():
             logger.vverbose("MainTree: Adding file to item %s named '%s'" % (itemHandle,itemName))
         
         if itemHandle == None: return
-
+        
         self.theBook.addFile(itemHandle)
         self.winMain.treeLeft.loadContent()
         
