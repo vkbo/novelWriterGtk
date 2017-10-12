@@ -17,13 +17,11 @@ import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository   import Gtk, Gdk
-from time            import sleep
-from os              import path
-
-from nw.gui.winmain  import GuiWinMain
-from nw.gui.maintree import GuiMainTree
-from nw.file         import Book, BookItem
+from gi.repository import Gtk, Gdk
+from time          import sleep
+from os            import path
+from nw.gui        import GuiWinMain, GuiMainTree
+from nw.file       import Book, BookItem
 
 logger = logging.getLogger(__name__)
 

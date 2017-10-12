@@ -22,27 +22,27 @@ from nw.content    import getLoremIpsum
 logger = logging.getLogger(__name__)
 
 class GuiNoteEditor(Gtk.Alignment):
-
+    
     def __init__(self):
-
+        
         Gtk.Alignment.__init__(self)
         
         self.set_name("alignNoteEdit")
         self.set_padding(20,40,10,40)
-
+        
         self.boxOuter = Gtk.Box()
         self.boxOuter.set_name("boxNoteOuter")
         self.boxOuter.set_orientation(Gtk.Orientation.VERTICAL)
         self.boxOuter.set_spacing(0)
         self.add(self.boxOuter)
-
+        
         self.lblTitle = Gtk.Label()
         self.lblTitle.set_name("lblNoteTitle")
         self.lblTitle.set_label("Notes")
         self.lblTitle.set_xalign(0.0)
         self.lblTitle.set_margin_bottom(12)
         self.boxOuter.pack_start(self.lblTitle,False,False,0)
-
+        
         # Editor toolbar
         self.tbEdit = Gtk.Toolbar()
         self.tbEdit.set_name("tbNoteEdit")
@@ -70,18 +70,27 @@ class GuiNoteEditor(Gtk.Alignment):
         self.tbEdit.insert(Gtk.SeparatorToolItem(),8)
         self.tbEdit.insert(self.btnEditClear,9)
         self.boxOuter.pack_start(self.tbEdit,False,True,0)
-
-        self.scrollDoc = Gtk.ScrolledWindow()
-        self.scrollDoc.set_hexpand(True)
-        self.scrollDoc.set_vexpand(True)
-        self.boxOuter.pack_start(self.scrollDoc,True,True,0)
-
+        
+        self.scrollNote = Gtk.ScrolledWindow()
+        self.scrollNote.set_name("scrollNote")
+        self.scrollNote.set_hexpand(True)
+        self.scrollNote.set_vexpand(True)
+        self.boxOuter.pack_start(self.scrollNote,True,True,0)
+        
+        self.alignNote = Gtk.Alignment()
+        self.alignNote.set_name("alignNote")
+        self.alignNote.set_margin_top(10)
+        self.alignNote.set_margin_bottom(10)
+        self.alignNote.set_margin_left(10)
+        self.alignNote.set_margin_right(10)
+        self.scrollNote.add(self.alignNote)
+        
         self.textView   = Gtk.TextView()
         self.textBuffer = self.textView.get_buffer()
         self.textBuffer.set_text("\n".join(getLoremIpsum(2)))
         self.textView.set_name("textViewNote")
-        self.scrollDoc.add(self.textView)
-
+        self.alignNote.add(self.textView)
+        
         self.tagBold      = self.textBuffer.create_tag("bold",weight=Pango.Weight.BOLD)
         self.tagItalic    = self.textBuffer.create_tag("italic",style=Pango.Style.ITALIC)
         self.tagUnderline = self.textBuffer.create_tag("underline",underline=Pango.Underline.SINGLE)
@@ -91,8 +100,7 @@ class GuiNoteEditor(Gtk.Alignment):
         self.textView.set_justification(Gtk.Justification.LEFT)
         self.textView.set_pixels_below_lines(8)
         # self.textView.modify_font(Pango.FontDescription("Ubuntu 12"))
-
-
+        
         return
-
+    
 # End Class GuiNoteEditor

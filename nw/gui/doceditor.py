@@ -22,20 +22,20 @@ from nw.content    import getLoremIpsum
 logger = logging.getLogger(__name__)
 
 class GuiDocEditor(Gtk.Alignment):
-
+    
     def __init__(self):
-
+        
         Gtk.Alignment.__init__(self)
         
         self.set_name("alignDocEdit")
         self.set_padding(40,40,40,10)
-
+        
         self.boxOuter = Gtk.Box()
         self.boxOuter.set_name("boxDocOuter")
         self.boxOuter.set_orientation(Gtk.Orientation.VERTICAL)
         self.boxOuter.set_spacing(0)
         self.add(self.boxOuter)
-
+        
         # Document Title
         self.fmeDocTitle = Gtk.Frame()
         self.fmeDocTitle.set_name("fmeDocTitle")
@@ -77,18 +77,31 @@ class GuiDocEditor(Gtk.Alignment):
         self.tbEdit.insert(Gtk.SeparatorToolItem(),8)
         self.tbEdit.insert(self.btnEditClear,9)
         self.boxOuter.pack_start(self.tbEdit,False,True,0)
-
+        
         self.scrollDoc = Gtk.ScrolledWindow()
+        self.scrollDoc.set_name("scrollDoc")
         self.scrollDoc.set_hexpand(True)
         self.scrollDoc.set_vexpand(True)
         self.boxOuter.pack_start(self.scrollDoc,True,True,0)
-
+        
+        self.alignDoc = Gtk.Alignment()
+        self.alignDoc.set_name("alignDoc")
+        self.alignDoc.set_margin_top(20)
+        self.alignDoc.set_margin_bottom(20)
+        self.alignDoc.set_margin_left(20)
+        self.alignDoc.set_margin_right(20)
+        self.scrollDoc.add(self.alignDoc)
+        
         self.textView   = Gtk.TextView()
         self.textBuffer = self.textView.get_buffer()
         self.textBuffer.set_text("\n".join(getLoremIpsum(5)))
         self.textView.set_name("textViewDoc")
-        self.scrollDoc.add(self.textView)
-
+        self.textView.set_margin_top(0)
+        self.textView.set_margin_bottom(0)
+        self.textView.set_margin_left(0)
+        self.textView.set_margin_right(0)
+        self.alignDoc.add(self.textView)
+        
         self.tagBold      = self.textBuffer.create_tag("bold",weight=Pango.Weight.BOLD)
         self.tagItalic    = self.textBuffer.create_tag("italic",style=Pango.Style.ITALIC)
         self.tagUnderline = self.textBuffer.create_tag("underline",underline=Pango.Underline.SINGLE)
@@ -98,8 +111,7 @@ class GuiDocEditor(Gtk.Alignment):
         self.textView.set_justification(Gtk.Justification.FILL)
         self.textView.set_pixels_below_lines(4)
         self.textView.modify_font(Pango.FontDescription("Tinos 15"))
-
-
+        
         return
-
+    
 # End Class GuiDocEditor

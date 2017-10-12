@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*
 """novelWriter GUI Main Window
 
-novelWriter – GUI Main Window
-=============================
-Class holding the main window
+ novelWriter – GUI Main Window
+===============================
+ Class holding the main window
 
-File History:
-Created: 2017-10-03 [0.4.0]
+ File History:
+ Created: 2017-10-03 [0.4.0]
 
 """
 
@@ -16,14 +16,8 @@ import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository     import Gtk, Gdk, GLib
-from nw.gui.bookpane   import GuiBookPane
-from nw.gui.charspane  import GuiCharsPane
-from nw.gui.plotspane  import GuiPlotsPane
-from nw.gui.doceditor  import GuiDocEditor
-from nw.gui.noteeditor import GuiNoteEditor
-from nw.gui.docdetails import GuiDocDetails
-from nw.gui.maintree   import GuiMainTree
+from gi.repository import Gtk, Gdk, GLib
+from nw.gui        import *
 
 logger = logging.getLogger(__name__)
 
