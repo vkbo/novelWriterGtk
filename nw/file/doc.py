@@ -12,10 +12,8 @@
 
 import logging
 import nw
-import gi
-gi.require_version("Gtk","3.0")
 
-from gi.repository import Gtk
+from nw.content import getLoremIpsum
 
 logger = logging.getLogger(__name__)
 
@@ -23,17 +21,18 @@ class DocFile():
     
     def __init__(self, docPath, docSlug):
         
-        self.docPath    = docPath
-        self.docSlug    = docSlug
+        self.docPath = docPath
+        self.docSlug = docSlug
         
-        self.textBuffer = None
-        self.noteBuffer = None
+        self.docText = None
+        self.docNote = None
         
         return
     
-    def openDocument(self):
+    def openFile(self):
         
-        self.textBuffer = Gtk.TextBuffer()
+        self.docText = "\n".join(getLoremIpsum(5))
+        self.docNote = "\n".join(getLoremIpsum(2))
         
         return
 

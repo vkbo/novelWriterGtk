@@ -349,9 +349,9 @@ class NovelWriter():
         
         # Get Pane Positions
         posOuter   = self.winMain.panedOuter.get_position()
-        posContent = self.winMain.panedContent.get_position()
-        posEditor  = self.winMain.panedEditor.get_position()
-        posMeta    = self.winMain.panedMeta.get_position()
+        posContent = self.winMain.sceneEditor.get_position()
+        posEditor  = self.winMain.sceneEditor.panedEditor.get_position()
+        posMeta    = self.winMain.sceneEditor.panedMeta.get_position()
         self.mainConf.setPanes([posOuter,posContent,posEditor,posMeta])
         
         self.mainConf.saveConfig()

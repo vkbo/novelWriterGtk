@@ -23,6 +23,7 @@ from nw.gui.maintree   import GuiMainTree
 from nw.gui.noteeditor import GuiNoteEditor
 from nw.gui.plotspane  import GuiPlotsPane
 from nw.gui.plotstree  import GuiPlotsTree
+from nw.gui.scenepane  import GuiSceneEditor
 from nw.gui.winmain    import GuiWinMain
 
 logger = logging.getLogger(__name__)

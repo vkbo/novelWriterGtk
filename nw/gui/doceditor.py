@@ -94,7 +94,7 @@ class GuiDocEditor(Gtk.Alignment):
         
         self.textView   = Gtk.TextView()
         self.textBuffer = self.textView.get_buffer()
-        self.textBuffer.set_text("\n".join(getLoremIpsum(5)))
+        # self.textBuffer.set_text("\n".join(getLoremIpsum(5)))
         self.textView.set_name("textViewDoc")
         self.textView.set_margin_top(20)
         self.textView.set_margin_bottom(20)

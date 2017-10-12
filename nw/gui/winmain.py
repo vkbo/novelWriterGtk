@@ -163,53 +163,14 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # Book Alignment
         self.alignPlots = GuiPlotsPane(self.theBook)
         self.scrollPlots.add(self.alignPlots)
-
+        
         #
         # Notebook: Editor Tab
         #
         
         # Pane Between Editor and Timeline
-        self.panedContent = Gtk.Paned()
-        self.panedContent.set_name("panedContent")
-        self.panedContent.set_orientation(Gtk.Orientation.VERTICAL)
-        self.panedContent.set_position(self.mainConf.contPane)
-        self.nbContent.insert_page(self.panedContent,None,NWC.NBTabs.EDITOR.value)
-        
-        # Pane Between Document and Details/Notes
-        self.panedEditor = Gtk.Paned()
-        self.panedEditor.set_name("panedEditor")
-        self.panedEditor.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.panedEditor.set_position(self.mainConf.editPane)
-        self.panedContent.pack1(self.panedEditor,True,False)
-        
-        # Document Editor
-        self.alignDocEdit = GuiDocEditor()
-        self.panedEditor.pack1(self.alignDocEdit,True,False)
-        
-        # Pane Between Details and Notes
-        self.panedMeta = Gtk.Paned()
-        self.panedMeta.set_name("panedMeta")
-        self.panedMeta.set_orientation(Gtk.Orientation.VERTICAL)
-        self.panedMeta.set_position(self.mainConf.metaPane)
-        self.panedEditor.pack2(self.panedMeta,True,False)
-        
-        # Document Details
-        self.alignDocDetails = GuiDocDetails()
-        self.panedMeta.pack1(self.alignDocDetails,True,False)
-        
-        # Document Notes
-        self.alignNoteEdit = GuiNoteEditor()
-        self.panedMeta.pack2(self.alignNoteEdit,True,False)
-        
-        # Timeline
-        self.scrlTimeLine = Gtk.ScrolledWindow()
-        self.scrlTimeLine.set_name("scrlTimeLine")
-        self.panedContent.pack2(self.scrlTimeLine,True,False)
-        
-        self.drawTimeLine = Gtk.DrawingArea()
-        self.drawTimeLine.set_name("drawTimeLine")
-        self.scrlTimeLine.add(self.drawTimeLine)
-        # self.drawTimeLine.connect("draw", self.onExpose)
+        self.sceneEditor = GuiSceneEditor(self.theBook)
+        self.nbContent.insert_page(self.sceneEditor,None,NWC.NBTabs.EDITOR.value)
         
         logger.verbose("Finished building main window")
         self.show_all()
