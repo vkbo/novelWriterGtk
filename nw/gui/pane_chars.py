@@ -16,9 +16,9 @@ import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository    import Gtk, Pango
-from os               import path
-from nw.gui.charstree import GuiCharsTree
+from gi.repository     import Gtk, Pango
+from os                import path
+from nw.gui.tree_chars import GuiCharsTree
 
 logger = logging.getLogger(__name__)
 

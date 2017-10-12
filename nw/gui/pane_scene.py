@@ -15,9 +15,11 @@ import nw
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository import Gtk, Pango
-from os            import path
-from nw.gui        import *
+from gi.repository       import Gtk, Pango
+from os                  import path
+from nw.gui.edit_doc     import GuiDocEditor
+from nw.gui.edit_note    import GuiNoteEditor
+from nw.gui.pane_details import GuiDocDetails
 
 logger = logging.getLogger(__name__)
 

@@ -16,8 +16,12 @@ import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository import Gtk, Gdk, GLib
-from nw.gui        import *
+from gi.repository     import Gtk, Gdk, GLib
+from nw.gui.tree_main  import GuiMainTree
+from nw.gui.pane_book  import GuiBookPane
+from nw.gui.pane_chars import GuiCharsPane
+from nw.gui.pane_plots import GuiPlotsPane
+from nw.gui.pane_scene import GuiSceneEditor
 
 logger = logging.getLogger(__name__)
 
