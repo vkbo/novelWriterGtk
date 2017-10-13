@@ -13,10 +13,9 @@
 import logging
 import nw
 import nw.const as NWC
-import xml.etree.ElementTree as ET
+import lxml.etree as ET
 
 from os           import path, mkdir
-from xml.dom      import minidom
 from time         import time
 from hashlib      import sha256
 from nw.file.item import BookItem
@@ -152,10 +151,13 @@ class Book():
                         
             itemIdx += 1
         
-        roughXML  = ET.tostring(nwXML,"utf-8")
-        prettyXML = minidom.parseString(roughXML)
-        with open(self.bookPath,"wt") as outFile:
-            prettyXML.writexml(outFile,indent="",addindent="  ",newl="\n")
+        with open(self.bookPath,"wb") as outFile:
+            outFile.write(ET.tostring(
+                nwXML,
+                pretty_print    = True,
+                encoding        = "utf-8",
+                xml_declaration = True
+            ))
         
         return True
     
