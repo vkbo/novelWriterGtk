@@ -84,17 +84,8 @@ class GuiDocEditor(Gtk.Alignment):
         self.scrollDoc.set_vexpand(True)
         self.boxOuter.pack_start(self.scrollDoc,True,True,0)
         
-        # self.alignDoc = Gtk.Alignment()
-        # self.alignDoc.set_name("alignDoc")
-        # self.alignDoc.set_margin_top(20)
-        # self.alignDoc.set_margin_bottom(20)
-        # self.alignDoc.set_margin_left(20)
-        # self.alignDoc.set_margin_right(20)
-        # self.scrollDoc.add(self.alignDoc)
-        
         self.textView   = Gtk.TextView()
         self.textBuffer = self.textView.get_buffer()
-        # self.textBuffer.set_text("\n".join(getLoremIpsum(5)))
         self.textView.set_name("textViewDoc")
         self.textView.set_margin_top(20)
         self.textView.set_margin_bottom(20)
@@ -106,12 +97,23 @@ class GuiDocEditor(Gtk.Alignment):
         self.tagItalic    = self.textBuffer.create_tag("italic",style=Pango.Style.ITALIC)
         self.tagUnderline = self.textBuffer.create_tag("underline",underline=Pango.Underline.SINGLE)
         
+        self.btnEditBold.connect("clicked",self.onButtonClick,self.tagBold)
+        self.btnEditItalic.connect("clicked",self.onButtonClick,self.tagItalic)
+        self.btnEditUnderlince.connect("clicked",self.onButtonClick,self.tagUnderline)
+        
         self.textView.set_wrap_mode(Gtk.WrapMode.WORD)
         self.textView.set_indent(30)
         self.textView.set_justification(Gtk.Justification.FILL)
         self.textView.set_pixels_below_lines(4)
         self.textView.modify_font(Pango.FontDescription("Tinos 15"))
         
+        return
+    
+    def onButtonClick(self, guiObject, textTag):
+        selBounds = self.textBuffer.get_selection_bounds()
+        if len(selBounds) != 0:
+            selStart, selEnd = selBounds
+            self.textBuffer.apply_tag(textTag, selStart, selEnd)
         return
     
 # End Class GuiDocEditor

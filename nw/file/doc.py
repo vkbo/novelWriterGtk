@@ -13,19 +13,24 @@
 import logging
 import nw
 
-from nw.content import getLoremIpsum
+from os           import path
+from nw.content   import getLoremIpsum
+from nw.file.item import BookItem
 
 logger = logging.getLogger(__name__)
 
 class DocFile():
     
-    def __init__(self, docPath, docSlug):
+    def __init__(self, docPath, itemHandle, itemClass):
         
-        self.docPath = docPath
-        self.docSlug = docSlug
+        self.itemHandle = itemHandle
+        self.itemClass  = itemClass
         
-        self.docText = None
-        self.docNote = None
+        self.docPath    = docPath
+        self.docFile    = None
+        
+        self.docText    = None
+        self.docNote    = None
         
         return
     
@@ -33,6 +38,19 @@ class DocFile():
         
         self.docText = "\n".join(getLoremIpsum(5))
         self.docNote = "\n".join(getLoremIpsum(2))
+        
+        return
+    
+    def saveFile(self):
+        
+        self.docFile  = "%s-%s.nwf" % (self.itemClass,self.itemHandle)
+        self.fullPath = path.join(self.docPath,self.docFile)
+        
+        logger.vverbose("Document file path is %s" % self.fullPath)
+    
+    def setText(self, newText):
+        
+        print(newText)
         
         return
 

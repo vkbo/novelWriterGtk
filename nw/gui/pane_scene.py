@@ -31,6 +31,7 @@ class GuiSceneEditor(Gtk.Paned):
         
         self.mainConf = nw.CONFIG
         self.theBook  = theBook
+        self.docItem  = None
         
         self.set_name("panedContent")
         self.set_orientation(Gtk.Orientation.VERTICAL)
@@ -44,8 +45,8 @@ class GuiSceneEditor(Gtk.Paned):
         self.pack1(self.panedEditor,True,False)
         
         # Document Editor
-        self.alignDocEdit = GuiDocEditor()
-        self.panedEditor.pack1(self.alignDocEdit,True,False)
+        self.scenePane = GuiDocEditor()
+        self.panedEditor.pack1(self.scenePane,True,False)
         
         # Pane Between Details and Notes
         self.panedMeta = Gtk.Paned()
@@ -59,8 +60,8 @@ class GuiSceneEditor(Gtk.Paned):
         self.panedMeta.pack1(self.alignDocDetails,True,False)
         
         # Document Notes
-        self.alignNoteEdit = GuiNoteEditor()
-        self.panedMeta.pack2(self.alignNoteEdit,True,False)
+        self.notePane = GuiNoteEditor()
+        self.panedMeta.pack2(self.notePane,True,False)
         
         # Timeline
         self.scrlTimeLine = Gtk.ScrolledWindow()
@@ -73,5 +74,28 @@ class GuiSceneEditor(Gtk.Paned):
         # self.drawTimeLine.connect("draw", self.onExpose)
         
         return
+    
+    def loadContent(self, docItem):
+        
+        self.docItem = docItem
+        self.docItem.openFile()
+        
+        self.scenePane.textBuffer.set_text(self.docItem.docText)
+        
+        return
+    
+    def saveContent(self):
+        
+        if self.docItem == None:
+            logger.error("Nowhere to save content of scene editor")
+            return
+        
+        textBuffer = self.scenePane.textBuffer
+        bufFormat  = textBuffer.register_serialize_tagset()
+        bufStart   = textBuffer.get_start_iter()
+        bufEnd     = textBuffer.get_end_iter()
+        bufSerial  = textBuffer.serialize(textBuffer,bufFormat,bufStart,bufEnd)
+        
+        self.docItem.setText(bufSerial)
     
 # End Class GuiSceneEditor

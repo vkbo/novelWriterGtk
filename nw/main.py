@@ -134,9 +134,10 @@ class NovelWriter():
         
         return
     
-    ##                                                                                            ##
-    #  ==============================        Event Handlers        ==============================  #
-    ##                                                                                            ##
+    ##                  ##
+    #   Event Handlers   #
+    #  ================  #
+    ##                  ##
     
     #
     # ToolBar Events
@@ -168,6 +169,7 @@ class NovelWriter():
                 return
             dlgSave.destroy()
         
+        self.winMain.sceneEditor.saveContent()
         self.saveBook()
         
         return
@@ -194,16 +196,23 @@ class NovelWriter():
         itemClass = itemEntry["entry"].itemClass
         itemLevel = itemEntry["entry"].itemLevel
         itemType  = itemEntry["entry"].itemType
+        
         logger.vverbose("MainTree: The item level is %s" % itemLevel)
         logger.vverbose("MainTree: The item type is %s" % itemType)
-        if itemLevel == "ROOT":
-            if itemType == "BOOK": self.winMain.showTab(NWC.NBTabs.BOOK)
-            if itemType == "CHAR": self.winMain.showTab(NWC.NBTabs.CHARS)
-            if itemType == "PLOT": self.winMain.showTab(NWC.NBTabs.PLOTS)
-            if itemType == "NOTE": self.winMain.showTab(NWC.NBTabs.BOOK)
-        else:
-            if itemClass == BookItem.CLS_SCENE: self.winMain.showTab(NWC.NBTabs.EDITOR)
-            if itemClass == BookItem.CLS_NOTE:  self.winMain.showTab(NWC.NBTabs.EDITOR)
+        
+        if itemLevel == BookItem.LEV_ROOT:
+            if itemType == BookItem.TYP_BOOK: self.winMain.showTab(NWC.NBTabs.BOOK)
+            if itemType == BookItem.TYP_CHAR: self.winMain.showTab(NWC.NBTabs.CHARS)
+            if itemType == BookItem.TYP_PLOT: self.winMain.showTab(NWC.NBTabs.PLOTS)
+            if itemType == BookItem.TYP_NOTE: self.winMain.showTab(NWC.NBTabs.BOOK)
+        elif itemLevel == BookItem.LEV_FILE:
+            docItem = itemEntry["doc"]
+            if itemClass == BookItem.CLS_SCENE:
+                self.winMain.showTab(NWC.NBTabs.EDITOR)
+                self.winMain.sceneEditor.loadContent(docItem)
+            elif itemClass == BookItem.CLS_NOTE:
+                self.winMain.showTab(NWC.NBTabs.EDITOR)
+                self.winMain.sceneEditor.loadContent(docItem)
         
         return
     

@@ -62,6 +62,9 @@ class Book():
             logger.error("Path not found: %s" % bookPath)
             return
         
+        if bookPath[-4:] == ".nwx":
+            self.docPath = bookPath[:-4]+".nwd"
+
         self.bookPath = bookPath
         
         nwXML = ET.parse(bookPath)
@@ -254,8 +257,6 @@ class Book():
         newItem.setName(newName)
         newItem.setCompile(newCompile)
         
-        docItem = DocFile("","")
-        
         self.appendTree(None,pHandle,newItem,docItem)
         
         return
@@ -309,7 +310,7 @@ class Book():
     def getTreeEntry(self,itemHandle):
         return self.theTree[self.theIndex[itemHandle]]
     
-    def appendTree(self,tHandle,pHandle,bookItem,docItem=None):
+    def appendTree(self,tHandle,pHandle,bookItem):
         """
         Appends an entry to the main project tree.
         """
@@ -318,6 +319,11 @@ class Book():
         pHandle = self.checkString(pHandle,None,True)
         
         logger.verbose("BookOpen: Adding item %s with parent %s" % (str(tHandle),str(pHandle)))
+        
+        if bookItem.itemLevel == BookItem.LEV_FILE:
+            docItem = DocFile(self.docPath,tHandle,bookItem.itemClass)
+        else:
+            docItem = None
         
         self.theTree.append({
             "handle" : tHandle,
