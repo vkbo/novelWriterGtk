@@ -25,13 +25,18 @@ logger = logging.getLogger(__name__)
 
 class GuiSceneEditor(Gtk.Paned):
     
-    def __init__(self, theBook):
+    def __init__(self, theBook, itemHandle):
         
         Gtk.Paned.__init__(self)
         
-        self.mainConf = nw.CONFIG
-        self.theBook  = theBook
-        self.docItem  = None
+        self.mainConf    = nw.CONFIG
+        self.theBook     = theBook
+        self.itemHandle  = itemHandle
+        self.treeItem    = theBook.getTreeEntry(itemHandle)
+        self.docLoaded   = False
+        self.noteLoaded  = False
+        self.docChanged  = False
+        self.noteChanged = False
         
         # Pane Between Document and Details/Notes
         self.set_name("panedEditor")
@@ -39,8 +44,8 @@ class GuiSceneEditor(Gtk.Paned):
         self.set_position(self.mainConf.editPane)
         
         # Document Editor
-        self.scenePane = GuiDocEditor()
-        self.pack1(self.scenePane,True,False)
+        self.editDoc = GuiDocEditor()
+        self.pack1(self.editDoc,True,False)
         
         # Pane Between Details and Notes
         self.panedMeta = Gtk.Paned()
@@ -54,32 +59,59 @@ class GuiSceneEditor(Gtk.Paned):
         self.panedMeta.pack1(self.alignDocDetails,True,False)
         
         # Document Notes
-        self.notePane = GuiNoteEditor()
-        self.panedMeta.pack2(self.notePane,True,False)
+        self.editNote = GuiNoteEditor()
+        self.panedMeta.pack2(self.editNote,True,False)
+        
+        # Signals
+        self.editDoc.textBuffer.connect("changed",self.onDocChange)
         
         return
     
-    def loadContent(self, docItem):
+    def loadContent(self):
         
-        self.docItem = docItem
-        self.docItem.openFile()
+        docEntry = self.treeItem["entry"]
+        docItem  = self.treeItem["doc"]
+        docItem.openFile()
         
-        self.scenePane.textBuffer.set_text(self.docItem.docText)
+        self.editDoc.entryDocTitle.set_text(docEntry.itemName)
+        self.editDoc.textBuffer.set_text(docItem.docText)
+        self.docLoaded = True
         
         return
     
     def saveContent(self):
         
-        if self.docItem == None:
-            logger.error("Nowhere to save content of scene editor")
-            return
+        docEntry   = self.treeItem["entry"]
+        docItem    = self.treeItem["doc"]
         
-        textBuffer = self.scenePane.textBuffer
+        textBuffer = self.editDoc.textBuffer
         bufFormat  = textBuffer.register_serialize_tagset()
         bufStart   = textBuffer.get_start_iter()
         bufEnd     = textBuffer.get_end_iter()
         bufSerial  = textBuffer.serialize(textBuffer,bufFormat,bufStart,bufEnd)
         
-        self.docItem.setText(bufSerial)
+        docItem.setText(bufSerial)
+        
+        tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
+        tabIcon.set_from_icon_name("gtk-file",1)
+        
+        return
+        
+    def onDocChange(self, guiObject):
+        
+        if not self.docLoaded: return
+        
+        self.docChanged = True
+        
+        # print(guiObject)
+        # print(self.get_parent())
+        # print(self.get_parent().page_num(self))
+        # print(self.get_parent().get_tab_label(self))
+        # print(self.get_parent().get_tab_label(self).get_children()[0])
+        tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
+        tabIcon.set_from_icon_name("gtk-about",1)
+        
+        
+        return
     
 # End Class GuiSceneEditor

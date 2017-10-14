@@ -135,13 +135,13 @@
     background: @colDark;
     color: @colText;
     border-image: none;
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: 10px 10px 0px 0px;
+    border: 1px solid rgba(0,0,0,0.4);
+    border-radius: 8px 8px 0px 0px;
     border-bottom: none;
 }
 
 #nbContent > header > tabs > tab:hover {
-    background: @colLight;
+    background: @colMedium;
     color: @colText;
     border-image: none;
 }
@@ -152,19 +152,16 @@
     border-image: none;
 }
 
-
-
-/*#nbContent > header.top > tabs > tab > button {
-    background: @colDark;
+#nbContent > header button {
+    margin: 0px;
+    padding: 0px;
+    box-shadow: none;
 }
 
-#nbContent > header.top > tabs > tab:selected {
-    background: @colLight;
+#nbContent > header button:hover {
+    background-image: none;
 }
 
-#nbContent > header.top > tabs > tab:selected > button {
-    background: @colLight;
-}*/
 
 /**
  * Panes

@@ -258,7 +258,7 @@ class Book():
         newItem.setName(newName)
         newItem.setCompile(newCompile)
         
-        self.appendTree(None,pHandle,newItem,docItem)
+        self.appendTree(None,pHandle,newItem)
         
         return
     

@@ -225,12 +225,12 @@ class Config:
         if panePos[1] != self.contPane:
             self.contPane    = panePos[1]
             self.confChanged = True
-        if panePos[2] != self.editPane:
-            self.editPane    = panePos[2]
-            self.confChanged = True
-        if panePos[3] != self.metaPane:
-            self.metaPane    = panePos[3]
-            self.confChanged = True
+        # if panePos[2] != self.editPane:
+        #     self.editPane    = panePos[2]
+        #     self.confChanged = True
+        # if panePos[3] != self.metaPane:
+        #     self.metaPane    = panePos[3]
+        #     self.confChanged = True
         return
     
     def setSpellState(self, state):

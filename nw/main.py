@@ -39,7 +39,7 @@ class NovelWriter():
         self.bookPage  = self.winMain.bookPage
         self.charPage  = self.winMain.charPage
         self.plotPage  = self.winMain.plotPage
-        self.sceneEdit = self.winMain.sceneEdit
+        # self.sceneEdit = self.winMain.sceneEdit
         
         # Set file filter for loading and saving
         self.fileFilter = Gtk.FileFilter()
@@ -64,6 +64,7 @@ class NovelWriter():
         
         # Main Tree
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
+        self.winMain.treeLeft.connect("row-activated",self.onLeftTreeActivate)
         self.winMain.btnLeftAdd.connect("clicked",self.onLeftAddFile)
         
         # Book Page
@@ -126,8 +127,8 @@ class NovelWriter():
     
     def saveBook(self):
         
-        self.theBook.setTitle(self.winMain.alignBook.entryBookTitle.get_text())
-        self.theBook.setAuthors(self.winMain.alignBook.entryBookAuthor.get_text())
+        self.theBook.setTitle(self.bookPage.entryBookTitle.get_text())
+        self.theBook.setAuthors(self.bookPage.entryBookAuthor.get_text())
         
         self.theBook.saveBook()
         self.mainConf.setLastBook(self.theBook.bookPath)
@@ -168,8 +169,10 @@ class NovelWriter():
                 logger.verbose("BookSave: Cancelled")
                 return
             dlgSave.destroy()
+            
+        for itemHandle in self.winMain.editPages.keys():
+            self.winMain.editPages[itemHandle]["item"].saveContent()
         
-        self.sceneEdit.saveContent()
         self.saveBook()
         
         return
@@ -205,14 +208,28 @@ class NovelWriter():
             if itemType == BookItem.TYP_CHAR: self.winMain.showTab(self.winMain.TAB_CHAR)
             if itemType == BookItem.TYP_PLOT: self.winMain.showTab(self.winMain.TAB_PLOT)
             # if itemType == BookItem.TYP_NOTE: self.winMain.showTab(self.winMain.TAB_BOOK)
-        elif itemLevel == BookItem.LEV_FILE:
-            docItem = itemEntry["doc"]
-            if itemClass == BookItem.CLS_SCENE:
-                self.winMain.showTab(self.winMain.TAB_EDIT)
-                self.sceneEdit.loadContent(docItem)
-            elif itemClass == BookItem.CLS_NOTE:
-                self.winMain.showTab(self.winMain.TAB_EDIT)
-                self.sceneEdit.loadContent(docItem)
+        # elif itemLevel == BookItem.LEV_FILE:
+        #     docItem = itemEntry["doc"]
+        #     if itemClass == BookItem.CLS_SCENE:
+        #         self.winMain.showTab(self.winMain.TAB_EDIT)
+        #         self.sceneEdit.loadContent(docItem)
+        #     elif itemClass == BookItem.CLS_NOTE:
+        #         self.winMain.showTab(self.winMain.TAB_EDIT)
+        #         self.sceneEdit.loadContent(docItem)
+        
+        return
+    
+    def onLeftTreeActivate(self, guiObject, pathItem, itemColumn):
+        
+        listModel  = self.winMain.treeLeft.get_model()
+        listIter   = listModel.get_iter(pathItem)
+        itemHandle = listModel.get_value(listIter,GuiMainTree.COL_HANDLE)
+        itemName   = listModel.get_value(listIter,GuiMainTree.COL_NAME)
+        logger.vverbose("MainTree: Activated item %s named '%s'" % (itemHandle,itemName))
+            
+        if itemHandle == None: return
+        
+        self.winMain.editFile(itemHandle)
         
         return
     
@@ -360,9 +377,10 @@ class NovelWriter():
         # Get Pane Positions
         posOuter   = self.winMain.panedOuter.get_position()
         posContent = self.winMain.panedContent.get_position()
-        posEditor  = self.sceneEdit.get_position()
-        posMeta    = self.sceneEdit.panedMeta.get_position()
-        self.mainConf.setPanes([posOuter,posContent,posEditor,posMeta])
+        # posEditor  = self.sceneEdit.get_position()
+        # posMeta    = self.sceneEdit.panedMeta.get_position()
+        # self.mainConf.setPanes([posOuter,posContent,posEditor,posMeta])
+        self.mainConf.setPanes([posOuter,posContent])
         
         self.mainConf.saveConfig()
         logger.debug("Calling Gtk quit")

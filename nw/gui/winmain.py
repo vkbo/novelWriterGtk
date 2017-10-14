@@ -36,8 +36,9 @@ class GuiWinMain(Gtk.ApplicationWindow):
         Gtk.ApplicationWindow.__init__(self)
         logger.verbose("Starting building main window")
         
-        self.mainConf = nw.CONFIG
-        self.theBook  = theBook
+        self.mainConf  = nw.CONFIG
+        self.theBook   = theBook
+        self.editPages = {}
         
         self.set_title(self.mainConf.appName)
         self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
@@ -180,14 +181,6 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.scrollPlots.add(self.plotPage)
         
         #
-        # Notebook: Editor Page
-        #
-        
-        # Pane Between Editor and Timeline
-        self.sceneEdit = GuiSceneEditor(self.theBook)
-        self.nbContent.insert_page(self.sceneEdit,None,self.TAB_EDIT)
-        
-        #
         #  Timeline
         #
         
@@ -209,6 +202,59 @@ class GuiWinMain(Gtk.ApplicationWindow):
     def showTab(self, tabNum):
         logger.vverbose("WinMain: Switching tab to %s" % tabNum)
         self.nbContent.set_current_page(tabNum)
+        return
+    
+    def editFile(self, itemHandle):
+        
+        logger.verbose("Editing file with handle %s" % itemHandle)
+        
+        if itemHandle in self.editPages.keys():
+            tabNum = self.editPages[itemHandle]["index"]
+            self.nbContent.set_current_page(tabNum)
+            return
+        
+        logger.vverbose("Opening a new tab")
+        
+        treeEntry = self.theBook.getTreeEntry(itemHandle)
+        
+        tabBox = Gtk.Box()
+        tabBox.set_orientation(Gtk.Orientation.HORIZONTAL)
+        tabBox.set_spacing(2)
+        tabLabel = Gtk.Label(treeEntry["entry"].itemName)
+        tabIcon = Gtk.Image()
+        tabIcon.set_from_icon_name("gtk-file",1)
+        tabImage = Gtk.Image()
+        tabImage.set_from_icon_name("gtk-close",1)
+        tabButton = Gtk.Button()
+        tabButton.set_image(tabImage)
+        tabButton.set_relief(Gtk.ReliefStyle.NONE)
+        tabBox.pack_start(tabIcon,False,False,0)
+        tabBox.pack_start(tabLabel,False,False,0)
+        tabBox.pack_start(tabButton,False,False,0)
+        
+        newPage = GuiSceneEditor(self.theBook,itemHandle)
+        pageID  = self.nbContent.append_page(newPage,tabBox)
+        tabBox.show_all()
+        newPage.show_all()
+        newPage.loadContent()
+        
+        self.editPages[itemHandle] = {
+            "index" : pageID,
+            "item"  : newPage,
+        }
+        
+        tabButton.connect("clicked",self.closeTab,itemHandle)
+        self.nbContent.set_current_page(pageID)
+        
+        return
+    
+    def closeTab(self,guiObject,itemHandle):
+        
+        pageID = self.nbContent.page_num(self.editPages[itemHandle]["item"])
+        
+        self.nbContent.remove_page(pageID)
+        del self.editPages[itemHandle]
+        
         return
 
 # End Class GuiWinMain

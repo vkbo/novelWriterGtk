@@ -12,6 +12,7 @@
 
 import logging
 import nw
+import lxml.etree as ET
 
 from os           import path
 from nw.content   import getLoremIpsum
@@ -36,8 +37,8 @@ class DocFile():
     
     def openFile(self):
         
-        self.docText = "\n".join(getLoremIpsum(5))
-        self.docNote = "\n".join(getLoremIpsum(2))
+        self.docText = "\n".join(getLoremIpsum(2))
+        self.docNote = "\n".join(getLoremIpsum(1))
         
         return
     
@@ -46,11 +47,23 @@ class DocFile():
         self.docFile  = "%s-%s.nwf" % (self.itemClass,self.itemHandle)
         self.fullPath = path.join(self.docPath,self.docFile)
         
+        nwXML = ET.Element("novelWriterXML",attrib={
+            "fileVersion" : "1.0",
+            "appVersion"  : str(nw.__version__),
+        })
+        xDoc = ET.SubElement(nwXML,"document")
+        xDoc.text = self.docText[31:]
+        
+        # nwDoc = ET.fromstring(self.docText[31:])
+        print(ET.tostring(nwXML,pretty_print=True))
+        
         logger.vverbose("Document file path is %s" % self.fullPath)
     
     def setText(self, newText):
         
-        print(newText)
+        self.docText = newText
+        print(newText[31:])
+        self.saveFile()
         
         return
 
