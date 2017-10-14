@@ -12,7 +12,6 @@
 
 import logging
 import nw
-import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
@@ -26,6 +25,12 @@ from nw.gui.pane_scene import GuiSceneEditor
 logger = logging.getLogger(__name__)
 
 class GuiWinMain(Gtk.ApplicationWindow):
+    
+    TAB_BOOK = 0
+    TAB_CHAR = 1
+    TAB_PLOT = 2
+    TAB_VIEW = 3
+    TAB_EDIT = 4
     
     def __init__(self, theBook):
         Gtk.ApplicationWindow.__init__(self)
@@ -121,13 +126,19 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # Main Content
         #
         
+        self.panedContent = Gtk.Paned()
+        self.panedContent.set_name("panedContent")
+        self.panedContent.set_orientation(Gtk.Orientation.VERTICAL)
+        self.panedContent.set_position(self.mainConf.contPane)
+        self.panedOuter.pack2(self.panedContent,True,False)
+        
         # Notebook Holding the Main Content
         self.nbContent = Gtk.Notebook()
         self.nbContent.set_name("nbContent")
-        self.nbContent.set_show_tabs(False)
+        self.nbContent.set_show_tabs(True)
         self.nbContent.set_show_border(False)
-        self.nbContent.set_tab_pos(Gtk.PositionType.RIGHT)
-        self.panedOuter.pack2(self.nbContent,True,False)
+        self.nbContent.set_tab_pos(Gtk.PositionType.TOP)
+        self.panedContent.pack1(self.nbContent,True,False)
         
         #
         # Notebook: Book Page
@@ -136,11 +147,11 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # Outer Scroll Window
         self.scrollBook = Gtk.ScrolledWindow()
         self.scrollBook.set_name("scrollBook")
-        self.nbContent.insert_page(self.scrollBook,None,NWC.NBTabs.BOOK.value)
+        self.nbContent.insert_page(self.scrollBook,Gtk.Label("Book"),self.TAB_BOOK)
         
         # Book Alignment
-        self.alignBook = GuiBookPane(self.theBook)
-        self.scrollBook.add(self.alignBook)
+        self.bookPage = GuiBookPane(self.theBook)
+        self.scrollBook.add(self.bookPage)
         
         #
         # Notebook: Characters Page
@@ -149,11 +160,11 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # Outer Scroll Window
         self.scrollChars = Gtk.ScrolledWindow()
         self.scrollChars.set_name("scrollChars")
-        self.nbContent.insert_page(self.scrollChars,None,NWC.NBTabs.CHARS.value)
+        self.nbContent.insert_page(self.scrollChars,Gtk.Label("Characters"),self.TAB_CHAR)
         
         # Book Alignment
-        self.alignChars = GuiCharsPane(self.theBook)
-        self.scrollChars.add(self.alignChars)
+        self.charPage = GuiCharsPane(self.theBook)
+        self.scrollChars.add(self.charPage)
         
         #
         # Notebook: Plots Page
@@ -162,20 +173,34 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # Outer Scroll Window
         self.scrollPlots = Gtk.ScrolledWindow()
         self.scrollPlots.set_name("scrollPlots")
-        self.nbContent.insert_page(self.scrollPlots,None,NWC.NBTabs.PLOTS.value)
+        self.nbContent.insert_page(self.scrollPlots,Gtk.Label("Plots"),self.TAB_PLOT)
         
         # Book Alignment
-        self.alignPlots = GuiPlotsPane(self.theBook)
-        self.scrollPlots.add(self.alignPlots)
+        self.plotPage = GuiPlotsPane(self.theBook)
+        self.scrollPlots.add(self.plotPage)
         
         #
-        # Notebook: Editor Tab
+        # Notebook: Editor Page
         #
         
         # Pane Between Editor and Timeline
-        self.sceneEditor = GuiSceneEditor(self.theBook)
-        self.nbContent.insert_page(self.sceneEditor,None,NWC.NBTabs.EDITOR.value)
+        self.sceneEdit = GuiSceneEditor(self.theBook)
+        self.nbContent.insert_page(self.sceneEdit,None,self.TAB_EDIT)
         
+        #
+        #  Timeline
+        #
+        
+        # Timeline
+        self.scrlTimeLine = Gtk.ScrolledWindow()
+        self.scrlTimeLine.set_name("scrlTimeLine")
+        self.panedContent.pack2(self.scrlTimeLine,True,False)
+        
+        self.drawTimeLine = Gtk.DrawingArea()
+        self.drawTimeLine.set_name("drawTimeLine")
+        self.scrlTimeLine.add(self.drawTimeLine)
+        # self.drawTimeLine.connect("draw", self.onExpose)
+
         logger.verbose("Finished building main window")
         self.show_all()
         
@@ -183,7 +208,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
     
     def showTab(self, tabNum):
         logger.vverbose("WinMain: Switching tab to %s" % tabNum)
-        self.nbContent.set_current_page(tabNum.value)
+        self.nbContent.set_current_page(tabNum)
         return
 
 # End Class GuiWinMain

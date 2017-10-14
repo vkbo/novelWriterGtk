@@ -12,7 +12,6 @@
 
 import logging
 import nw
-import nw.const as NWC
 import lxml.etree as ET
 
 from os           import path, mkdir

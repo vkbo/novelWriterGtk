@@ -14,8 +14,12 @@ import logging
 import nw
 import gi
 gi.require_version("Gtk","3.0")
+# gi.require_version("WebKit2","4.0")
+gi.require_version("GtkSource","3.0")
 
 from gi.repository import Gtk, Pango
+# from gi.repository import WebKit2
+from gi.repository import GtkSource
 from os            import path
 from nw.content    import getLoremIpsum
 
@@ -84,14 +88,31 @@ class GuiDocEditor(Gtk.Alignment):
         self.scrollDoc.set_vexpand(True)
         self.boxOuter.pack_start(self.scrollDoc,True,True,0)
         
-        self.textView   = Gtk.TextView()
-        self.textBuffer = self.textView.get_buffer()
+        self.textView   = GtkSource.View()
         self.textView.set_name("textViewDoc")
         self.textView.set_margin_top(20)
         self.textView.set_margin_bottom(20)
         self.textView.set_margin_left(20)
         self.textView.set_margin_right(20)
+        self.textBuffer = self.textView.get_buffer()
+        self.textBuffer.set_highlight_syntax(False)
+        self.textBuffer.set_max_undo_levels(-1)
         self.scrollDoc.add(self.textView)
+        
+        # self.textView   = Gtk.TextView()
+        # self.textBuffer = self.textView.get_buffer()
+        # self.textView.set_name("textViewDoc")
+        # self.textView.set_margin_top(20)
+        # self.textView.set_margin_bottom(20)
+        # self.textView.set_margin_left(20)
+        # self.textView.set_margin_right(20)
+        # self.scrollDoc.add(self.textView)
+        
+        # self.webView = WebKit2.WebView()
+        # self.webView.set_name("webViewDoc")
+        # self.webView.set_editable(True)
+        # self.webView.load_html("Hello!")
+        # self.scrollDoc.add(self.webView)
         
         self.tagBold      = self.textBuffer.create_tag("bold",weight=Pango.Weight.BOLD)
         self.tagItalic    = self.textBuffer.create_tag("italic",style=Pango.Style.ITALIC)

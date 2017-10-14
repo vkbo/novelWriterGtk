@@ -12,7 +12,6 @@
 
 import logging
 import nw
-import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 

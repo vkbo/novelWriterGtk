@@ -12,7 +12,6 @@
 
 import logging
 import nw
-import nw.const as NWC
 
 from os      import path
 from hashlib import sha256

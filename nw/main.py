@@ -13,7 +13,6 @@
 
 import logging
 import nw
-import nw.const as NWC
 import gi
 gi.require_version("Gtk","3.0")
 
@@ -36,8 +35,11 @@ class NovelWriter():
         
         # Build the GUI
         logger.debug("Assembling the main GUI")
-        self.winMain = GuiWinMain(self.theBook)
-        self.cssMain = Gtk.CssProvider()
+        self.winMain   = GuiWinMain(self.theBook)
+        self.bookPage  = self.winMain.bookPage
+        self.charPage  = self.winMain.charPage
+        self.plotPage  = self.winMain.plotPage
+        self.sceneEdit = self.winMain.sceneEdit
         
         # Set file filter for loading and saving
         self.fileFilter = Gtk.FileFilter()
@@ -47,6 +49,7 @@ class NovelWriter():
         # Load StyleSheet
         cssPath = path.join(self.mainConf.themePath,self.mainConf.theTheme,"gtkstyles.css")
         logger.verbose("Loading stylesheet from %s" % cssPath)
+        self.cssMain = Gtk.CssProvider()
         self.cssMain.load_from_path(cssPath)
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),self.cssMain,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -63,32 +66,29 @@ class NovelWriter():
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
         self.winMain.btnLeftAdd.connect("clicked",self.onLeftAddFile)
         
-        # Book Pane
-        pBooks = self.winMain.alignBook
-        pBooks.btnChaptersAdd.connect("clicked",self.onChapterAdd)
-        pBooks.btnChaptersDel.connect("clicked",self.onChapterRemove)
-        pBooks.treeChapters.rendType.connect("edited",self.onChapterEdit,"type")
-        pBooks.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
-        pBooks.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
-        pBooks.treeChapters.rendCompile.connect("edited",self.onChapterEdit,"compile")
-        pBooks.treeChapters.rendComment.connect("edited",self.onChapterEdit,"comment")
+        # Book Page
+        self.bookPage.btnChaptersAdd.connect("clicked",self.onChapterAdd)
+        self.bookPage.btnChaptersDel.connect("clicked",self.onChapterRemove)
+        self.bookPage.treeChapters.rendType.connect("edited",self.onChapterEdit,"type")
+        self.bookPage.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
+        self.bookPage.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
+        self.bookPage.treeChapters.rendCompile.connect("edited",self.onChapterEdit,"compile")
+        self.bookPage.treeChapters.rendComment.connect("edited",self.onChapterEdit,"comment")
         
-        # Characters Pane
-        pChars = self.winMain.alignChars
-        pChars.btnCharsAdd.connect("clicked",self.onCharAdd)
-        pChars.btnCharsDel.connect("clicked",self.onCharRemove)
-        pChars.treeChars.rendName.connect("edited",self.onCharEdit,"name")
-        pChars.treeChars.rendImport.connect("edited",self.onCharEdit,"importance")
-        pChars.treeChars.rendRole.connect("edited",self.onCharEdit,"role")
-        pChars.treeChars.rendComment.connect("edited",self.onCharEdit,"comment")
+        # Characters Page
+        self.charPage.btnCharsAdd.connect("clicked",self.onCharAdd)
+        self.charPage.btnCharsDel.connect("clicked",self.onCharRemove)
+        self.charPage.treeChars.rendName.connect("edited",self.onCharEdit,"name")
+        self.charPage.treeChars.rendImport.connect("edited",self.onCharEdit,"importance")
+        self.charPage.treeChars.rendRole.connect("edited",self.onCharEdit,"role")
+        self.charPage.treeChars.rendComment.connect("edited",self.onCharEdit,"comment")
         
-        # Plots Pane
-        pPlots = self.winMain.alignPlots
-        pPlots.btnPlotsAdd.connect("clicked",self.onPlotAdd)
-        pPlots.btnPlotsDel.connect("clicked",self.onPlotRemove)
-        pPlots.treePlots.rendName.connect("edited",self.onPlotEdit,"name")
-        pPlots.treePlots.rendImport.connect("edited",self.onPlotEdit,"importance")
-        pPlots.treePlots.rendComment.connect("edited",self.onPlotEdit,"comment")
+        # Plots Page
+        self.plotPage.btnPlotsAdd.connect("clicked",self.onPlotAdd)
+        self.plotPage.btnPlotsDel.connect("clicked",self.onPlotRemove)
+        self.plotPage.treePlots.rendName.connect("edited",self.onPlotEdit,"name")
+        self.plotPage.treePlots.rendImport.connect("edited",self.onPlotEdit,"importance")
+        self.plotPage.treePlots.rendComment.connect("edited",self.onPlotEdit,"comment")
         
         # Load Data
         lastBook = self.mainConf.getLastBook()
@@ -104,9 +104,9 @@ class NovelWriter():
                 self.theBook.createBook()
         
         self.winMain.treeLeft.loadContent()
-        self.winMain.alignBook.treeChapters.loadContent()
-        self.winMain.alignChars.treeChars.loadContent()
-        self.winMain.alignPlots.treePlots.loadContent()
+        self.bookPage.treeChapters.loadContent()
+        self.charPage.treeChars.loadContent()
+        self.plotPage.treePlots.loadContent()
         
         return
     
@@ -119,8 +119,8 @@ class NovelWriter():
         winTitle    = "%s – novelWriter v%s" % (bookTitle,nw.__version__)
         
         self.winMain.set_title(winTitle)
-        self.winMain.alignBook.entryBookTitle.set_text(bookTitle)
-        self.winMain.alignBook.entryBookAuthor.set_text(bookAuthors)
+        self.bookPage.entryBookTitle.set_text(bookTitle)
+        self.bookPage.entryBookAuthor.set_text(bookAuthors)
         
         return
     
@@ -169,7 +169,7 @@ class NovelWriter():
                 return
             dlgSave.destroy()
         
-        self.winMain.sceneEditor.saveContent()
+        self.sceneEdit.saveContent()
         self.saveBook()
         
         return
@@ -201,18 +201,18 @@ class NovelWriter():
         logger.vverbose("MainTree: The item type is %s" % itemType)
         
         if itemLevel == BookItem.LEV_ROOT:
-            if itemType == BookItem.TYP_BOOK: self.winMain.showTab(NWC.NBTabs.BOOK)
-            if itemType == BookItem.TYP_CHAR: self.winMain.showTab(NWC.NBTabs.CHARS)
-            if itemType == BookItem.TYP_PLOT: self.winMain.showTab(NWC.NBTabs.PLOTS)
-            if itemType == BookItem.TYP_NOTE: self.winMain.showTab(NWC.NBTabs.BOOK)
+            if itemType == BookItem.TYP_BOOK: self.winMain.showTab(self.winMain.TAB_BOOK)
+            if itemType == BookItem.TYP_CHAR: self.winMain.showTab(self.winMain.TAB_CHAR)
+            if itemType == BookItem.TYP_PLOT: self.winMain.showTab(self.winMain.TAB_PLOT)
+            # if itemType == BookItem.TYP_NOTE: self.winMain.showTab(self.winMain.TAB_BOOK)
         elif itemLevel == BookItem.LEV_FILE:
             docItem = itemEntry["doc"]
             if itemClass == BookItem.CLS_SCENE:
-                self.winMain.showTab(NWC.NBTabs.EDITOR)
-                self.winMain.sceneEditor.loadContent(docItem)
+                self.winMain.showTab(self.winMain.TAB_EDIT)
+                self.sceneEdit.loadContent(docItem)
             elif itemClass == BookItem.CLS_NOTE:
-                self.winMain.showTab(NWC.NBTabs.EDITOR)
-                self.winMain.sceneEditor.loadContent(docItem)
+                self.winMain.showTab(self.winMain.TAB_EDIT)
+                self.sceneEdit.loadContent(docItem)
         
         return
     
@@ -243,7 +243,7 @@ class NovelWriter():
         logger.vverbose("User clicked add chapter")
         self.theBook.addChapter()
         self.winMain.treeLeft.loadContent()
-        self.winMain.alignBook.treeChapters.loadContent()
+        self.bookPage.treeChapters.loadContent()
         
         return
     
@@ -255,7 +255,7 @@ class NovelWriter():
     
     def onChapterEdit(self, guiObject, itemPath, editText, itemTag):
         
-        srcTree   = self.winMain.alignBook.treeChapters
+        srcTree   = self.bookPage.treeChapters
         handleCol = srcTree.COL_HANDLE
         
         if itemTag == "type":    srcColumn = srcTree.COL_TYPE
@@ -281,7 +281,7 @@ class NovelWriter():
         logger.vverbose("User clicked add character")
         self.theBook.addCharacter()
         self.winMain.treeLeft.loadContent()
-        self.winMain.alignChars.treeChars.loadContent()
+        self.charPage.treeChars.loadContent()
         
         return
     
@@ -293,7 +293,7 @@ class NovelWriter():
     
     def onCharEdit(self, guiObject, itemPath, editText, itemTag):
         
-        srcTree   = self.winMain.alignChars.treeChars
+        srcTree   = self.charPage.treeChars
         handleCol = srcTree.COL_HANDLE
         
         if itemTag == "name":       srcColumn = srcTree.COL_TITLE
@@ -318,7 +318,7 @@ class NovelWriter():
         logger.vverbose("User clicked add plot")
         self.theBook.addPlot()
         self.winMain.treeLeft.loadContent()
-        self.winMain.alignPlots.treePlots.loadContent()
+        self.plotPage.treePlots.loadContent()
         
         return
     
@@ -330,7 +330,7 @@ class NovelWriter():
     
     def onPlotEdit(self, guiObject, itemPath, editText, itemTag):
         
-        srcTree   = self.winMain.alignPlots.treePlots
+        srcTree   = self.plotPage.treePlots
         handleCol = srcTree.COL_HANDLE
         
         if itemTag == "name":       srcColumn = srcTree.COL_TITLE
@@ -359,9 +359,9 @@ class NovelWriter():
         
         # Get Pane Positions
         posOuter   = self.winMain.panedOuter.get_position()
-        posContent = self.winMain.sceneEditor.get_position()
-        posEditor  = self.winMain.sceneEditor.panedEditor.get_position()
-        posMeta    = self.winMain.sceneEditor.panedMeta.get_position()
+        posContent = self.winMain.panedContent.get_position()
+        posEditor  = self.sceneEdit.get_position()
+        posMeta    = self.sceneEdit.panedMeta.get_position()
         self.mainConf.setPanes([posOuter,posContent,posEditor,posMeta])
         
         self.mainConf.saveConfig()

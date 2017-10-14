@@ -33,27 +33,21 @@ class GuiSceneEditor(Gtk.Paned):
         self.theBook  = theBook
         self.docItem  = None
         
-        self.set_name("panedContent")
-        self.set_orientation(Gtk.Orientation.VERTICAL)
-        self.set_position(self.mainConf.contPane)
-        
         # Pane Between Document and Details/Notes
-        self.panedEditor = Gtk.Paned()
-        self.panedEditor.set_name("panedEditor")
-        self.panedEditor.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.panedEditor.set_position(self.mainConf.editPane)
-        self.pack1(self.panedEditor,True,False)
+        self.set_name("panedEditor")
+        self.set_orientation(Gtk.Orientation.HORIZONTAL)
+        self.set_position(self.mainConf.editPane)
         
         # Document Editor
         self.scenePane = GuiDocEditor()
-        self.panedEditor.pack1(self.scenePane,True,False)
+        self.pack1(self.scenePane,True,False)
         
         # Pane Between Details and Notes
         self.panedMeta = Gtk.Paned()
         self.panedMeta.set_name("panedMeta")
         self.panedMeta.set_orientation(Gtk.Orientation.VERTICAL)
         self.panedMeta.set_position(self.mainConf.metaPane)
-        self.panedEditor.pack2(self.panedMeta,True,False)
+        self.pack2(self.panedMeta,True,False)
         
         # Document Details
         self.alignDocDetails = GuiDocDetails()
@@ -62,16 +56,6 @@ class GuiSceneEditor(Gtk.Paned):
         # Document Notes
         self.notePane = GuiNoteEditor()
         self.panedMeta.pack2(self.notePane,True,False)
-        
-        # Timeline
-        self.scrlTimeLine = Gtk.ScrolledWindow()
-        self.scrlTimeLine.set_name("scrlTimeLine")
-        self.pack2(self.scrlTimeLine,True,False)
-        
-        self.drawTimeLine = Gtk.DrawingArea()
-        self.drawTimeLine.set_name("drawTimeLine")
-        self.scrlTimeLine.add(self.drawTimeLine)
-        # self.drawTimeLine.connect("draw", self.onExpose)
         
         return
     
