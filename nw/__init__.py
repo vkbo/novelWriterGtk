@@ -140,7 +140,7 @@ def main(sysArgs):
                 debugLevel = logging.INFO
             elif inArg == "DEBUG":
                 debugLevel = logging.DEBUG
-                debugStr   = "{lineno:4d}:{name:15s} {levelname:8s}  {message}"
+                debugStr   = "{lineno:4d}:{name:18s} {levelname:8s}  {message}"
             else:
                 print("Invalid debug level")
                 exit(2)

@@ -20,6 +20,7 @@ from os                  import path
 from nw.gui.edit_doc     import GuiDocEditor
 from nw.gui.edit_note    import GuiNoteEditor
 from nw.gui.pane_details import GuiDocDetails
+from nw.file.doc         import DocFile
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +75,7 @@ class GuiSceneEditor(Gtk.Paned):
         docItem.openFile()
         
         self.editDoc.entryDocTitle.set_text(docEntry.itemName)
-        self.editDoc.textBuffer.set_text(docItem.docText)
+        self.editDoc.textBuffer.set_text("\n".join(docItem.docMain[0]["text"]))
         self.docLoaded = True
         
         return
@@ -85,12 +86,10 @@ class GuiSceneEditor(Gtk.Paned):
         docItem    = self.treeItem["doc"]
         
         textBuffer = self.editDoc.textBuffer
-        bufFormat  = textBuffer.register_serialize_tagset()
-        bufStart   = textBuffer.get_start_iter()
-        bufEnd     = textBuffer.get_end_iter()
-        bufSerial  = textBuffer.serialize(textBuffer,bufFormat,bufStart,bufEnd)
+        parText, textCount = textBuffer.encodeText()
         
-        docItem.setText(bufSerial)
+        docItem.setText(DocFile.DOC_MAIN,parText,textCount)
+        docItem.saveFile()
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
         tabIcon.set_from_icon_name("gtk-file",1)
