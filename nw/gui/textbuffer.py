@@ -47,6 +47,42 @@ class NWTextBuffer(GtkSource.Buffer):
         
         return
     
+    def getCursorIter(self):
+        """Returns the Gtk.TextIter of the cursor
+        """
+        currMark = self.get_insert()
+        currIter = self.get_iter_at_mark(currMark)
+        return currIter
+    
+    def toggleStyle(self, styleTag):
+        """Toggles the style of the selected text or the word
+        where the cursor is positioned.
+        """
+        
+        currIter  = self.getCursorIter()
+        selBounds = self.get_selection_bounds()
+        
+        if len(selBounds) != 0:
+            selStart, selEnd = selBounds
+        elif currIter.inside_word():
+            selStart = currIter.copy()
+            selEnd   = currIter.copy()
+            selStart.backward_word_start()
+            selEnd.forward_word_end()
+        else:
+            return
+        
+        if selStart.has_tag(styleTag):
+            self.remove_tag(styleTag,selStart,selEnd)
+        else:
+            self.apply_tag(styleTag,selStart,selEnd)
+        
+        return
+    
+    #
+    # Encode and Decode the Buffer
+    #
+    
     def encodeText(self, getBounds=None):
         
         logger.verbose("Beginning encoding of text buffer")
