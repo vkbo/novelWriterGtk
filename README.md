@@ -3,6 +3,7 @@
 **Development branch for version 0.4**
 
 Latest pre-release: [Version 0.3](https://github.com/vkbo/novelWriter/releases/tag/v0.3)
+(Version 0.4 will not be compatible with 0.3 project files.)
 
 **NB: Major rewrite in progress!**
 
@@ -43,10 +44,10 @@ Files are stored as XML, using the lxml package.
 Currently implemented features or actively being implemented (some are incomplete):
 
 * Four main groups of documents:
- * Book: Holds chapters and scenes files.
- * Characters: Holds a folder for each character, with any number of note files.
- * Plots: Holds a folder for each plot, with any number of note files.
- * Notes: A last folder where other note files can be kept.
+  * Book: Holds chapters and scenes files.
+  * Characters: Holds a folder for each character, with any number of note files.
+  * Plots: Holds a folder for each plot, with any number of note files.
+  * Notes: A last folder where other note files can be kept.
 * Each scene file under book or chapter also has a box for note taking.
 * Files are organised into a project file, and a folder with the same name containing one file
   per document. These are all XML files with file extension `.nwx`.
