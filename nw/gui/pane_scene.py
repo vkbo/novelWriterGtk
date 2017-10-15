@@ -74,9 +74,7 @@ class GuiSceneEditor(Gtk.Paned):
         docItem  = self.treeItem["doc"]
         docItem.openFile()
         
-        # self.editDoc.entryDocTitle.set_text(docEntry.itemName)
-        # self.editDoc.textBuffer.set_text("\n".join(docItem.docMain[0]["text"]))
-        self.editDoc.textBuffer.decodeText(docItem.docMain[0]["text"])
+        self.editDoc.textBuffer.decodeText(docItem.docMain["current"]["text"])
         self.docLoaded = True
         
         return
@@ -93,7 +91,7 @@ class GuiSceneEditor(Gtk.Paned):
         docItem.saveFile()
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
-        tabIcon.set_from_icon_name("gtk-file",1)
+        tabIcon.set_from_icon_name("gtk-file",Gtk.IconSize.MENU)
         
         return
         
@@ -103,13 +101,8 @@ class GuiSceneEditor(Gtk.Paned):
         
         self.docChanged = True
         
-        # print(guiObject)
-        # print(self.get_parent())
-        # print(self.get_parent().page_num(self))
-        # print(self.get_parent().get_tab_label(self))
-        # print(self.get_parent().get_tab_label(self).get_children()[0])
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
-        tabIcon.set_from_icon_name("gtk-about",1)
+        tabIcon.set_from_icon_name("gtk-about",Gtk.IconSize.MENU)
         
         
         return

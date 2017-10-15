@@ -183,6 +183,7 @@ class NWTextBuffer(GtkSource.Buffer):
         self.delete(itStart,itEnd)
         
         parCount = 0
+        tagStack = []
         for parItem in parText:
             parStack  = []
             stackItem = ""

@@ -43,8 +43,8 @@ class DocFile():
             },
         }
         
-        self.docMain  = []
-        self.docAside = []
+        self.docMain  = {}
+        self.docAside = {}
         
         return
     
@@ -53,7 +53,6 @@ class DocFile():
         if not path.isfile(self.fullPath):
             logger.debug("File not found %s" % self.fullPath)
             self.docMain.append(self.docTemplate)
-            self.docMain[0]["text"] = getLoremIpsum(2)
             return
         
         nwXML = ET.parse(self.fullPath)
@@ -72,7 +71,8 @@ class DocFile():
         
         for xChild in xRoot:
             if xChild.tag == "document":
-                logger.debug("DocOpen: Found document data")
+                docVersion = xChild.attrib["version"]
+                logger.debug("DocOpen: Found document version %s" % docVersion)
                 newDoc = self.docTemplate
                 for xItem in xChild:
                     if xItem.tag == "stats":
@@ -82,7 +82,7 @@ class DocFile():
                     elif xItem.tag == "text":
                         for xPar in xItem:
                             self.docTemplate["text"].append(xPar.text)
-                self.docMain.append(newDoc)
+                self.docMain[docVersion] = newDoc
         
         return
     
@@ -92,8 +92,9 @@ class DocFile():
             "fileVersion" : "1.0",
             "appVersion"  : str(nw.__version__),
         })
-        for docMain in self.docMain:
-            xDoc = ET.SubElement(nwXML,"document",attrib={"version":"current"})
+        for docVersion in self.docMain.keys():
+            docMain = self.docMain[docVersion]
+            xDoc = ET.SubElement(nwXML,"document",attrib={"version":docVersion})
             xStats = ET.SubElement(xDoc,"stats",attrib={
                 "paragraphs" : str(docMain["stats"]["paragraphs"]),
                 "sentences"  : str(docMain["stats"]["sentences"]),
@@ -129,9 +130,9 @@ class DocFile():
         }
         
         if toTarget == self.DOC_MAIN:
-            self.docMain[0] = docText
+            self.docMain["current"] = docText
         elif toTarget == self.DOC_ASIDE:
-            self.docMain[0] = docText
+            self.docMain["current"] = docText
         else:
             logger.error("BUG: Unknown document target")
             
@@ -144,9 +145,9 @@ class DocFile():
             "words"      : str(wordCount),
         }
         if addTarget == self.DOC_MAIN:
-            self.docMain[0]["stats"] = statVals
+            self.docMain["current"]["stats"] = statVals
         elif addTarget == self.DOC_ASIDE:
-            self.docAside[0]["stats"] = statVals
+            self.docAside["current"]["stats"] = statVals
         else:
             logger.error("BUG: Unknown document target")
         return
