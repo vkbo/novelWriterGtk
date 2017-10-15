@@ -29,18 +29,27 @@ class NWTextBuffer(GtkSource.Buffer):
         self.tagBold   = self.create_tag("nwBold",weight=Pango.Weight.BOLD)
         self.tagItalic = self.create_tag("nwItalic",style=Pango.Style.ITALIC)
         self.tagMark   = self.create_tag("nwMark",underline=Pango.Underline.SINGLE)
-        self.tagStrike = self.create_tag("nwStrike",strikethrough=True)
+        self.tagStrike = self.create_tag("nwStrike",strikethrough=True,foreground="#aa0000")
         
-        self.mapTags = {
+        self.mapEnc = {
             "nwBold"   : ["strong", self.tagBold],
-            "nwItalic" : ["emph",   self.tagItalic],
+            "nwItalic" : ["em",     self.tagItalic],
             "nwMark"   : ["mark",   self.tagMark],
             "nwStrike" : ["strike", self.tagStrike],
+        }
+        
+        self.mapDec = {
+            "strong" : ["nwBold",   self.tagBold],
+            "em"     : ["nwItalic", self.tagItalic],
+            "mark"   : ["nwMark",   self.tagMark],
+            "strike" : ["nwStrike", self.tagStrike],
         }
         
         return
     
     def encodeText(self, getBounds=None):
+        
+        logger.verbose("Beginning encoding of text buffer")
         
         if getBounds is None:
             itStart, itEnd = self.get_bounds()
@@ -51,7 +60,7 @@ class NWTextBuffer(GtkSource.Buffer):
         textCount = [0,0,0]
         
         tagState = {}
-        for tagKey in self.mapTags.keys():
+        for tagKey in self.mapEnc.keys():
             tagState[tagKey] = False
         
         parBuffer = ""
@@ -63,28 +72,32 @@ class NWTextBuffer(GtkSource.Buffer):
             if itCurr.starts_tag():
                 for startTag in itCurr.get_tags():
                     tagName = startTag.get_property("name")
-                    if not tagName in self.mapTags.keys():
+                    if not tagName in self.mapEnc.keys():
                         logger.vverbose("Skipping non-nw tag in buffer")
                         continue
-                    tagHtml = self.mapTags[tagName][0]
+                    tagHtml = self.mapEnc[tagName][0]
                     if not tagName in tagStack:
                         tagStack.append(tagName)
                         parBuffer += "<%s>" % tagHtml
-                        logger.vverbose("Tags: %s" % (", ".join(tagStack)))
-            
-            parBuffer += itCurr.get_char()
+                        logger.vverbose("Tags += %-8s : [%s]" % (tagName,", ".join(tagStack)))
             
             # Iterate through all opened tags in reverse order, and check if
             # they have been closed. If so, add the html close tag and pop
             # the tag from the stack
             revStack = tagStack.copy()
             for tagName in reversed(revStack):
-                if itCurr.ends_tag(self.mapTags[tagName][1]):
-                    logger.vverbose("Tags: %s" % (", ".join(tagStack)))
-                    tagHtml = self.mapTags[tagName][0]
+                if itCurr.ends_tag(self.mapEnc[tagName][1]):
+                    tagHtml = self.mapEnc[tagName][0]
                     parBuffer += "</%s>" % tagHtml
-                    tagStack.remove(tagName)
+                    if tagName in tagStack:
+                        tagStack.remove(tagName)
+                        logger.vverbose("Tags -= %-8s : [%s]" % (tagName,", ".join(tagStack)))
             revStack = []
+            
+            char = itCurr.get_char()
+            if char == "<": char = "&lt;"
+            if char == ">": char = "&gt;"
+            parBuffer += char
             
             # If at the end of a line, close all open tags, save the buffer
             # as a new paragraph, reset the buffer and re-open all tags in
@@ -94,14 +107,14 @@ class NWTextBuffer(GtkSource.Buffer):
                 parBuffer = parBuffer.rstrip("\n")
                 if len(tagStack) > 0:
                     for tagName in reversed(tagStack):
-                        tagHtml = self.mapTags[tagName][0]
+                        tagHtml = self.mapEnc[tagName][0]
                         parBuffer += "</%s>" % tagHtml
                 parText.append(parBuffer)
                 
                 parBuffer = ""
                 if len(tagStack) > 0:
                     for tagName in tagStack:
-                        tagHtml = self.mapTags[tagName][0]
+                        tagHtml = self.mapEnc[tagName][0]
                         parBuffer += "<%s>" % tagHtml
             
             if itCurr.ends_sentence(): textCount[1] += 1
@@ -118,5 +131,84 @@ class NWTextBuffer(GtkSource.Buffer):
         ))
         
         return parText, textCount
+    
+    def decodeText(self, parText):
+        
+        logger.verbose("Beginning decoding of text buffer")
+        
+        validOpen  = []
+        validClose = []
+        for nwTag in self.mapDec.keys():
+            validOpen.append("<%s>" % nwTag)
+            validClose.append("</%s>" % nwTag)
+        
+        self.set_max_undo_levels(0)
+        itStart, itEnd = self.get_bounds()
+        self.delete(itStart,itEnd)
+        
+        parCount = 0
+        for parItem in parText:
+            parStack  = []
+            stackItem = ""
+            for char in parItem:
+                if char == "<":
+                    parStack.append(stackItem)
+                    stackItem = char
+                elif char == ">":
+                    parStack.append(stackItem+char)
+                    stackItem = ""
+                else:
+                    stackItem += char
+            parStack.append(stackItem)
+            
+            tagStack = []
+            for stackItem in parStack:
+                itemType = 0
+                if len(stackItem) > 2:
+                    if stackItem[0:2] == "</":
+                        itemType = 2
+                    elif stackItem[0] == "<":
+                        itemType = 1
+                
+                if itemType == 1:
+                    if not stackItem in validOpen: continue
+                    tagHtml = stackItem[1:-1].lower()
+                    if not tagHtml in self.mapDec.keys():
+                        logger.warning("BUG: Some inconsistency in tag names, got %s" % tagHtml)
+                        continue
+                    tagName = self.mapDec[tagHtml][0]
+                    if not tagName in tagStack:
+                        tagStack.append(tagName)
+                        logger.vverbose("Tags += %-8s : [%s]" % (tagName,", ".join(tagStack)))
+                    
+                elif itemType == 2:
+                    if not stackItem in validClose: continue
+                    tagHtml = stackItem[2:-1].lower()
+                    if not tagHtml in self.mapDec.keys():
+                        logger.warning("BUG: Some inconsistency in tag names, got %s" % tagHtml)
+                        continue
+                    tagName = self.mapDec[tagHtml][0]
+                    if tagName in tagStack:
+                        tagStack.remove(tagName)
+                        logger.vverbose("Tags -= %-8s : [%s]" % (tagName,", ".join(tagStack)))
+                    
+                else:
+                    itStart, itEnd = self.get_bounds()
+                    stackItem = stackItem.replace("&lt;","<")
+                    stackItem = stackItem.replace("&gt;",">")
+                    if len(tagStack) == 0:
+                        self.insert(itEnd,stackItem)
+                    else:
+                        self.insert_with_tags_by_name(itEnd,stackItem,*tagStack)
+                    
+            parCount += 1
+            if parCount < len(parText):
+                itStart, itEnd = self.get_bounds()
+                self.insert(itEnd,"\n")
+            
+        self.set_max_undo_levels(100)
+        logger.vverbose("Length of tag stack is %d" % len(tagStack))
+        
+        return
     
 # End Class NWTextBuffer

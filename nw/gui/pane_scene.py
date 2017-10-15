@@ -74,8 +74,9 @@ class GuiSceneEditor(Gtk.Paned):
         docItem  = self.treeItem["doc"]
         docItem.openFile()
         
-        self.editDoc.entryDocTitle.set_text(docEntry.itemName)
-        self.editDoc.textBuffer.set_text("\n".join(docItem.docMain[0]["text"]))
+        # self.editDoc.entryDocTitle.set_text(docEntry.itemName)
+        # self.editDoc.textBuffer.set_text("\n".join(docItem.docMain[0]["text"]))
+        self.editDoc.textBuffer.decodeText(docItem.docMain[0]["text"])
         self.docLoaded = True
         
         return

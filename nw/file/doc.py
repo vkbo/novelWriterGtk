@@ -51,6 +51,7 @@ class DocFile():
     def openFile(self):
         
         if not path.isfile(self.fullPath):
+            logger.debug("File not found %s" % self.fullPath)
             self.docMain.append(self.docTemplate)
             self.docMain[0]["text"] = getLoremIpsum(2)
             return
@@ -69,8 +70,19 @@ class DocFile():
             logger.error("BookOpen: Project file does not appear to be a novelWriterXML file version 1.0")
             return
         
-        # self.docMain = "\n".join(getLoremIpsum(2))
-        # self.docNote = "\n".join(getLoremIpsum(1))
+        for xChild in xRoot:
+            if xChild.tag == "document":
+                logger.debug("DocOpen: Found document data")
+                newDoc = self.docTemplate
+                for xItem in xChild:
+                    if xItem.tag == "stats":
+                        self.docTemplate["stats"]["paragraphs"] = int(xItem.attrib["paragraphs"])
+                        self.docTemplate["stats"]["sentences"]  = int(xItem.attrib["sentences"])
+                        self.docTemplate["stats"]["words"]      = int(xItem.attrib["words"])
+                    elif xItem.tag == "text":
+                        for xPar in xItem:
+                            self.docTemplate["text"].append(xPar.text)
+                self.docMain.append(newDoc)
         
         return
     
