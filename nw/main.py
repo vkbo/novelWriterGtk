@@ -144,6 +144,11 @@ class NovelWriter():
         self.theBook.saveBook()
         self.mainConf.setLastBook(self.theBook.bookPath)
         
+        self.winMain.treeLeft.loadContent()
+        self.bookPage.treeChapters.loadContent()
+        self.charPage.treeChars.loadContent()
+        self.plotPage.treePlots.loadContent()
+        
         return
     
     def closeBook(self):

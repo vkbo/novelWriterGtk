@@ -97,7 +97,11 @@ class Book():
                     itemParent = itemAttrib["parent"]
                     bookItem   = BookItem()
                     for xValue in xItem:
-                        bookItem.setFromTag(xValue.tag,xValue.text)
+                        if xValue.tag == "meta":
+                            for metaTag in xValue.attrib.keys():
+                                bookItem.setFromTag(metaTag,xValue.attrib[metaTag])
+                        else:
+                            bookItem.setFromTag(xValue.tag,xValue.text)
                     self.appendTree(itemHandle,itemParent,bookItem)
         
         self.bookLoaded = True
@@ -141,6 +145,14 @@ class Book():
                 "handle" : str(itemHandle),
                 "parent" : str(parHandle),
             })
+            
+            fileMeta = {}
+            for metaTag in treeItem["entry"].validMeta:
+                metaValue = treeItem["entry"].getFromTag(metaTag)
+                if not metaValue is None:
+                    fileMeta[metaTag] = str(metaValue)
+            if len(fileMeta) > 0:
+                xMeta = ET.SubElement(xItem,"meta",attrib=fileMeta)
             
             for entryTag in treeItem["entry"].validTags:
                 entryValue = treeItem["entry"].getFromTag(entryTag)

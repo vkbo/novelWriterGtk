@@ -15,7 +15,7 @@ import nw
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Pango
 from nw.file.item  import BookItem
 
 class GuiMainTree(Gtk.TreeView):
@@ -49,8 +49,9 @@ class GuiMainTree(Gtk.TreeView):
         self.set_model(self.treeStore)
         
         # Title
-        self.colTitle   = Gtk.TreeViewColumn(title="Title")
-        self.rendTitle  = Gtk.CellRendererText()
+        self.colTitle  = Gtk.TreeViewColumn(title="Title")
+        self.rendTitle = Gtk.CellRendererText()
+        self.rendTitle.set_property("ellipsize",Pango.EllipsizeMode.END)
         self.colTitle.set_expand(True)
         self.colTitle.pack_start(self.rendTitle,True)
         self.colTitle.add_attribute(self.rendTitle,"text",0)
@@ -59,12 +60,13 @@ class GuiMainTree(Gtk.TreeView):
         # File Number
         self.colNumber  = Gtk.TreeViewColumn(title="Count")
         self.rendNumber = Gtk.CellRendererText()
-        self.colNumber.pack_start(self.rendNumber,False)
-        self.colNumber.add_attribute(self.rendNumber,"text",1)
+        # self.colNumber.pack_start(self.rendNumber,False)
+        # self.colNumber.add_attribute(self.rendNumber,"text",1)
         
         # Word Count
-        self.colWords   = Gtk.TreeViewColumn(title="Words")
-        self.rendWords  = Gtk.CellRendererText()
+        self.colWords  = Gtk.TreeViewColumn(title="Words")
+        self.rendWords = Gtk.CellRendererText()
+        self.rendWords.set_alignment(1.0,1.0)
         self.colWords.pack_start(self.rendWords,False)
         self.colWords.add_attribute(self.rendWords,"text",2)
         self.colWords.set_attributes(self.rendWords,markup=2)
@@ -90,7 +92,9 @@ class GuiMainTree(Gtk.TreeView):
             itemLevel  = treeItem["entry"].itemLevel
             itemClass  = treeItem["entry"].itemClass
             
-            if itemParent == None:
+            wordCount  = treeItem["entry"].metaWordCount
+            
+            if itemParent is None:
                 parIter = None
             else:
                 if itemParent in self.iterMap:
@@ -104,7 +108,12 @@ class GuiMainTree(Gtk.TreeView):
             else:
                 itemTitle = itemName
             
-            treeEntry = [itemTitle,"0","0",itemName,itemHandle]
+            if wordCount is None:
+                wordCount = "<i>0</i>"
+            else:
+                wordCount = "<i>%s</i>" % str(wordCount)
+            
+            treeEntry = [itemTitle,"0",wordCount,itemName,itemHandle]
             tmpIter   = self.treeStore.append(parIter,treeEntry)
             self.iterMap[itemHandle] = tmpIter
         

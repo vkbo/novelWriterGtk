@@ -32,6 +32,11 @@ class BookItem():
     TAG_COMPILE = "compile"
     TAG_IMPORT  = "importance"
     
+    META_PARS   = "parcount"
+    META_SENTS  = "sentcount"
+    META_WORDS  = "wordcount"
+    META_CHARS  = "charcount"
+    
     CLS_CONT    = "CONTAINER"
     CLS_SCENE   = "SCENE"
     CLS_NOTE    = "NOTE"
@@ -56,6 +61,7 @@ class BookItem():
         TAG_TITLE, TAG_NAME,   TAG_COMMENT,
         TAG_ROLE,  TAG_NUMBER, TAG_COMPILE, TAG_IMPORT
     ]
+    validMeta      = [META_PARS,META_SENTS,META_WORDS,META_CHARS]
     validClasses   = [CLS_CONT,CLS_SCENE,CLS_NOTE]
     validLevels    = [LEV_ROOT,LEV_ITEM,LEV_FILE]
     validTypes     = [TYP_BOOK,TYP_CHAR,TYP_PLOT,TYP_NOTE]
@@ -73,6 +79,11 @@ class BookItem():
     itemCompile    = None
     itemImportance = None
     
+    metaParCount   = None
+    metaSentCount  = None
+    metaWordCount  = None
+    metaCharCount  = None
+    
     def __init__(self):
         
         self.tagMap = {
@@ -87,6 +98,10 @@ class BookItem():
             self.TAG_NUMBER  : self.setNumber,
             self.TAG_COMPILE : self.setCompile,
             self.TAG_IMPORT  : self.setImportance,
+            self.META_PARS   : self.setParCount,
+            self.META_SENTS  : self.setSentCount,
+            self.META_WORDS  : self.setWordCount,
+            self.META_CHARS  : self.setCharCount,
         }
         
         return
@@ -104,6 +119,11 @@ class BookItem():
             if getTag == self.TAG_NUMBER:  return self.itemNumber
             if getTag == self.TAG_COMPILE: return self.itemCompile
             if getTag == self.TAG_IMPORT:  return self.itemImportance
+        elif getTag in self.validMeta:
+            if getTag == self.META_PARS:   return self.metaParCount
+            if getTag == self.META_SENTS:  return self.metaSentCount
+            if getTag == self.META_WORDS:  return self.metaWordCount
+            if getTag == self.META_CHARS:  return self.metaCharCount
         else:
             logger.error("Unknown tag '%s'" % setTag)
         return
@@ -111,8 +131,17 @@ class BookItem():
     def setFromTag(self,setTag,newValue):
         if setTag in self.validTags:
             self.tagMap[setTag](newValue)
+        elif setTag in self.validMeta:
+            self.tagMap[setTag](newValue)
         else:
             logger.error("Unknown tag '%s'" % setTag)
+        return
+    
+    def setCounts(self,newCounts):
+        if len(newCounts) > 0: self.setParCount(newCounts[0])
+        if len(newCounts) > 1: self.setSentCount(newCounts[1])
+        if len(newCounts) > 2: self.setWordCount(newCounts[2])
+        if len(newCounts) > 3: self.setCharCount(newCounts[3])
         return
     
     def setClass(self,newClass):
@@ -239,5 +268,46 @@ class BookItem():
         else:
             self.itemCompile = False
         return
+    
+    def setParCount(self,newCount):
+        if isinstance(newCount,int):
+            if newCount >= 0: self.metaParCount = newCount
+        elif isinstance(newCount,str):
+            try:
+                self.metaParCount = int(newCount)
+            except:
+                return
+        return
+    
+    def setSentCount(self,newCount):
+        if isinstance(newCount,int):
+            if newCount >= 0: self.metaSentCount = newCount
+        elif isinstance(newCount,str):
+            try:
+                self.metaSentCount = int(newCount)
+            except:
+                return
+        return
+    
+    def setWordCount(self,newCount):
+        if isinstance(newCount,int):
+            if newCount >= 0: self.metaWordCount = newCount
+        elif isinstance(newCount,str):
+            try:
+                self.metaWordCount = int(newCount)
+            except:
+                return
+        return
+    
+    def setCharCount(self,newCount):
+        if isinstance(newCount,int):
+            if newCount >= 0: self.metaCharCount = newCount
+        elif isinstance(newCount,str):
+            try:
+                self.metaCharCount = int(newCount)
+            except:
+                return
+        return
+    
     
 # End Class BookItem
