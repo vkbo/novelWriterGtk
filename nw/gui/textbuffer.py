@@ -161,7 +161,7 @@ class NWTextBuffer(GtkSource.Buffer):
             else:
                 itCurr.forward_char()
         
-        logger.vverbose("Length of tag stack is %d" % len(tagStack))
+        logger.verbose("Length of tag stack is %d" % len(tagStack))
         logger.verbose("Encoded buffer with %d paragraphs, %d sentences and %d words" % (
             tuple(textCount)
         ))
@@ -169,6 +169,9 @@ class NWTextBuffer(GtkSource.Buffer):
         return parText, textCount
     
     def decodeText(self, parText):
+        """Decodes a list of html-formatted strings into the buffer.
+        ToDo: Add functionality to insert text instead of just replacing the buffer
+        """
         
         logger.verbose("Beginning decoding of text buffer")
         
@@ -178,13 +181,21 @@ class NWTextBuffer(GtkSource.Buffer):
             validOpen.append("<%s>" % nwTag)
             validClose.append("</%s>" % nwTag)
         
+        # Disable undo, and clear the buffer
         self.set_max_undo_levels(0)
         itStart, itEnd = self.get_bounds()
         self.delete(itStart,itEnd)
         
         parCount = 0
         tagStack = []
+        
+        # Iterate through all paragraps
         for parItem in parText:
+            
+            # First, iterate through the paragraph looking for html formatting
+            # tags, and add them to the stack as a list of strings where each
+            # string is either a format tag,  or a string which has the same
+            # formatting.
             parStack  = []
             stackItem = ""
             for char in parItem:
@@ -198,6 +209,14 @@ class NWTextBuffer(GtkSource.Buffer):
                     stackItem += char
             parStack.append(stackItem)
             
+            # Then, iterate through the strings in the stack, parsing each of
+            # them as either just a string to add to the buffer, or an action
+            # on the tag stack.
+            # Each string in the buffer will have the same formatting, and the
+            # current formatting at the given point in the buffer is given by
+            # the tagStack. Each time a new tag is encountered, it is added to
+            # the stack. Each time a closing tag is encountered, that tag is
+            # removed from the stack.
             tagStack = []
             for stackItem in parStack:
                 itemType = 0
@@ -207,6 +226,11 @@ class NWTextBuffer(GtkSource.Buffer):
                     elif stackItem[0] == "<":
                         itemType = 1
                 
+                # Opening a new tag: so adding it to the stack
+                # If the source is well formatted, the tag should not
+                # already be in the stack. But if it is, it is ignored.
+                # This serves the double purpose of cleaning up the buffer
+                # of tags opened multiple times without being closed.
                 if itemType == 1:
                     if not stackItem in validOpen: continue
                     tagHtml = stackItem[1:-1].lower()
@@ -217,7 +241,12 @@ class NWTextBuffer(GtkSource.Buffer):
                     if not tagName in tagStack:
                         tagStack.append(tagName)
                         logger.vverbose("Tags += %-8s : [%s]" % (tagName,", ".join(tagStack)))
-                    
+                
+                # Closing a tag, so removing it from the stack
+                # If the source is well formatted, this should be the last
+                # tag, meaning the stack behaves like a proper stack. If it
+                # isn't in the stack, there is an orphaned close tag in the
+                # source, and it will be removed.
                 elif itemType == 2:
                     if not stackItem in validClose: continue
                     tagHtml = stackItem[2:-1].lower()
@@ -228,11 +257,18 @@ class NWTextBuffer(GtkSource.Buffer):
                     if tagName in tagStack:
                         tagStack.remove(tagName)
                         logger.vverbose("Tags -= %-8s : [%s]" % (tagName,", ".join(tagStack)))
-                    
+                
+                # Anything that remeains, is plain text withing a range of
+                # uniform formatting. The correct formatting for the slice
+                # should then be defined by the tagStack. At this point there
+                # should be maximum one of each tag type.
                 else:
                     itStart, itEnd = self.get_bounds()
+                    # We can now safely insert <> symbols again as we are no
+                    # longer parsing html style tags.
                     stackItem = stackItem.replace("&lt;","<")
                     stackItem = stackItem.replace("&gt;",">")
+                    # If the tagStack is empty, no need to apply anything. Just insert.
                     if len(tagStack) == 0:
                         self.insert(itEnd,stackItem)
                     else:
@@ -242,9 +278,11 @@ class NWTextBuffer(GtkSource.Buffer):
             if parCount < len(parText):
                 itStart, itEnd = self.get_bounds()
                 self.insert(itEnd,"\n")
-            
+        
+        # Enable the undo buffer again, and report the length of
+        # the tagStack. It should be 0 if all tags were properly closed.
         self.set_max_undo_levels(100)
-        logger.vverbose("Length of tag stack is %d" % len(tagStack))
+        logger.verbose("Length of tag stack is %d" % len(tagStack))
         
         return
     
