@@ -265,12 +265,16 @@ class NovelWriter():
         listModel  = self.winMain.treeLeft.get_model()
         listIter   = listModel.get_iter(pathItem)
         itemHandle = listModel.get_value(listIter,GuiMainTree.COL_HANDLE)
-        itemName   = listModel.get_value(listIter,GuiMainTree.COL_NAME)
-        logger.vverbose("MainTree: Activated item %s named '%s'" % (itemHandle,itemName))
-            
+        
         if itemHandle == None: return
         
-        self.winMain.editFile(itemHandle)
+        treeItem   = self.theBook.getTreeEntry(itemHandle)
+        itemName   = treeItem["entry"].itemName
+        itemLevel  = treeItem["entry"].itemLevel
+        logger.vverbose("MainTree: Activated item %s named '%s'" % (itemHandle,itemName))
+        
+        if itemLevel == BookItem.LEV_FILE:
+            self.winMain.editFile(itemHandle)
         
         return
     
