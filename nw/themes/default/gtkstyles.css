@@ -18,7 +18,7 @@
  *  Defaults
  */
 
-button {
+#winMain button {
     border-image: none;
     border: 1px solid rgba(255,255,255,0.4);
     border-radius: 6px;
@@ -27,7 +27,7 @@ button {
     background: @colDark;
 }
 
-button:hover {
+#winMain button:hover {
     border: 1px solid rgba(255,255,255,0.8);
 }
 

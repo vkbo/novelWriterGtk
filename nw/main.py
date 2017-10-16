@@ -55,13 +55,20 @@ class NovelWriter():
             Gdk.Screen.get_default(),self.cssMain,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
         
-        # Set Up Event Handlers
+        #
+        # Event Handlers
+        #
+        
+        # Main Window
         self.winMain.connect("delete-event",self.onApplicationQuit)
         self.winMain.connect("configure-event",self.onMainWinChange)
         self.winMain.connect("key-press-event",self.onKeyPress)
+        
+        # Main ToolBar
         self.winMain.btnMainNew.connect("clicked",self.onBookNew)
         self.winMain.btnMainOpen.connect("clicked",self.onBookOpen)
         self.winMain.btnMainSave.connect("clicked",self.onBookSave)
+        self.winMain.btnMainSaveAs.connect("clicked",self.onBookSave,True)
         
         # Main Tree
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
@@ -92,37 +99,37 @@ class NovelWriter():
         self.plotPage.treePlots.rendImport.connect("edited",self.onPlotEdit,"importance")
         self.plotPage.treePlots.rendComment.connect("edited",self.onPlotEdit,"comment")
         
-        # Load Data
-        lastBook = self.mainConf.getLastBook()
-        if lastBook == "":
-            logger.debug("No recent files set, creating empty book project")
-            self.theBook.createBook()
-        else:
-            if path.isfile(lastBook):
-                logger.info("Opening last book project from %s" % lastBook)
-                self.openBook(lastBook)
-            else:
-                logger.debug("Last book project not found, creating empty book project")
-                self.theBook.createBook()
-        
-        self.winMain.treeLeft.loadContent()
-        self.bookPage.treeChapters.loadContent()
-        self.charPage.treeChars.loadContent()
-        self.plotPage.treePlots.loadContent()
+        # Load Data from Last Project
+        self.openBook(None,True)
         
         return
     
-    def openBook(self, bookPath):
+    #
+    # Book Project Handling
+    #
+    
+    def openBook(self, bookPath, openRecent=False):
         
-        self.theBook.openBook(bookPath)
+        if openRecent:
+            bookPath = self.mainConf.getLastBook()
         
-        bookTitle   = self.theBook.bookTitle
-        bookAuthors = ", ".join(self.theBook.bookAuthors)
-        winTitle    = "%s – novelWriter v%s" % (bookTitle,nw.__version__)
-        
-        self.winMain.set_title(winTitle)
-        self.bookPage.entryBookTitle.set_text(bookTitle)
-        self.bookPage.entryBookAuthor.set_text(bookAuthors)
+        if path.isfile(bookPath):
+            logger.info("BookOpen: Opening last book project from %s" % bookPath)
+            
+            self.theBook.openBook(bookPath)
+            
+            self.winMain.treeLeft.loadContent()
+            self.bookPage.treeChapters.loadContent()
+            self.charPage.treeChars.loadContent()
+            self.plotPage.treePlots.loadContent()
+            
+            bookTitle   = self.theBook.bookTitle
+            bookAuthors = ", ".join(self.theBook.bookAuthors)
+            winTitle    = "%s – novelWriter v%s" % (bookTitle,nw.__version__)
+            
+            self.winMain.set_title(winTitle)
+            self.bookPage.entryBookTitle.set_text(bookTitle)
+            self.bookPage.entryBookAuthor.set_text(bookAuthors)
         
         return
     
@@ -131,8 +138,21 @@ class NovelWriter():
         self.theBook.setTitle(self.bookPage.entryBookTitle.get_text())
         self.theBook.setAuthors(self.bookPage.entryBookAuthor.get_text())
         
+        for itemHandle in self.winMain.editPages.keys():
+            self.winMain.editPages[itemHandle]["item"].saveContent()
+        
         self.theBook.saveBook()
         self.mainConf.setLastBook(self.theBook.bookPath)
+        
+        return
+    
+    def closeBook(self):
+        """Closes the currently open book project.
+        ToDo: Make sure everything is saved
+        ToDo: Close all open tabs
+        """
+        
+        self.theBook = Book()
         
         return
     
@@ -149,13 +169,31 @@ class NovelWriter():
         return
     
     def onBookOpen(self, guiObject):
+        
+        dlgOpen = Gtk.FileChooserNative()
+        dlgOpen.set_title("Open book project ...")
+        dlgOpen.set_transient_for(self.winMain)
+        dlgOpen.set_modal(True)
+        dlgOpen.set_action(Gtk.FileChooserAction.OPEN)
+        dlgOpen.set_current_folder(self.mainConf.homePath)
+        dlgReturn = dlgOpen.run()
+        if dlgReturn == Gtk.ResponseType.ACCEPT:
+            bookPath = dlgOpen.get_filename()
+            logger.verbose("BookOpen: Opening %s" % bookPath)
+            self.closeBook()
+            self.openBook(bookPath)
+        else:
+            logger.verbose("BookOpen: Cancelled")
+            return
+        dlgOpen.destroy()
+        
         return
     
-    def onBookSave(self, guiObject):
+    def onBookSave(self, guiObject, saveAs=False):
         
-        if self.theBook.bookPath == None:
+        if self.theBook.bookPath == None or saveAs:
             dlgSave = Gtk.FileChooserNative()
-            dlgSave.set_title("Save book as ...")
+            dlgSave.set_title("Save book project as ...")
             dlgSave.set_transient_for(self.winMain)
             dlgSave.set_modal(True)
             dlgSave.set_action(Gtk.FileChooserAction.SAVE)
@@ -170,9 +208,6 @@ class NovelWriter():
                 logger.verbose("BookSave: Cancelled")
                 return
             dlgSave.destroy()
-            
-        for itemHandle in self.winMain.editPages.keys():
-            self.winMain.editPages[itemHandle]["item"].saveContent()
         
         self.saveBook()
         

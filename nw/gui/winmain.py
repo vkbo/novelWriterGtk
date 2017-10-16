@@ -44,7 +44,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
         self.set_position(Gtk.WindowPosition.CENTER)
         
-        self.set_css_name("winMain")
+        self.set_name("winMain")
         
         #
         # Main Layout Items
