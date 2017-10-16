@@ -58,6 +58,7 @@ class NovelWriter():
         # Set Up Event Handlers
         self.winMain.connect("delete-event",self.onApplicationQuit)
         self.winMain.connect("configure-event",self.onMainWinChange)
+        self.winMain.connect("key-press-event",self.onKeyPress)
         self.winMain.btnMainNew.connect("clicked",self.onBookNew)
         self.winMain.btnMainOpen.connect("clicked",self.onBookOpen)
         self.winMain.btnMainSave.connect("clicked",self.onBookSave)
@@ -365,6 +366,12 @@ class NovelWriter():
     #
     # Application Events
     #
+    
+    def onKeyPress(self, guiObject, guiKeyEvent):
+        
+        # print(guiKeyEvent.keyval)
+        
+        return
     
     def onMainWinChange(self, guiObject, guiEvent):
         self.mainConf.setWinSize(guiEvent.width,guiEvent.height)

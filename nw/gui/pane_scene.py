@@ -15,7 +15,7 @@ import nw
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository       import Gtk, Pango
+from gi.repository       import Gtk, Gdk, Pango
 from os                  import path
 from nw.gui.edit_doc     import GuiDocEditor
 from nw.gui.edit_note    import GuiNoteEditor
@@ -65,6 +65,7 @@ class GuiSceneEditor(Gtk.Paned):
         
         # Signals
         self.editDoc.textBuffer.connect("changed",self.onDocChange)
+        self.editDoc.textView.connect("key-press-event",self.onKeyPress)
         
         return
     
@@ -95,6 +96,14 @@ class GuiSceneEditor(Gtk.Paned):
         
         return
         
+    def onKeyPress(self, guiObject, guiKeyEvent):
+        
+        print(guiKeyEvent.state)
+        if guiKeyEvent.state == Gdk.ModifierType.CONTROL_MASK:
+            print(guiKeyEvent.keyval)
+        
+        return
+    
     def onDocChange(self, guiObject):
         
         if not self.docLoaded: return
