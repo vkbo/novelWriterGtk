@@ -72,7 +72,7 @@ class GuiNoteEditor(Gtk.Alignment):
         # self.tbEdit.insert(self.btnAlignRight,7)
         # self.tbEdit.insert(self.btnAlignFill,8)
         # self.tbEdit.insert(Gtk.SeparatorToolItem(),9)
-        # self.tbEdit.insert(self.btnEditClear,10)
+        self.tbEdit.insert(self.btnEditClear,4)
         self.boxOuter.pack_start(self.tbEdit,False,True,0)
         
         self.scrollNote = Gtk.ScrolledWindow()
@@ -104,18 +104,23 @@ class GuiNoteEditor(Gtk.Alignment):
         self.tagMark   = self.textBuffer.tagMark
         self.tagStrike = self.textBuffer.tagStrike
         
-        self.btnEditBold.connect("clicked",self.onButtonClick,self.tagBold)
-        self.btnEditItalic.connect("clicked",self.onButtonClick,self.tagItalic)
-        self.btnEditUnderline.connect("clicked",self.onButtonClick,self.tagMark)
-        self.btnEditStrike.connect("clicked",self.onButtonClick,self.tagStrike)
+        self.btnEditBold.connect("clicked",self.onToggleStyle,self.tagBold)
+        self.btnEditItalic.connect("clicked",self.onToggleStyle,self.tagItalic)
+        self.btnEditUnderline.connect("clicked",self.onToggleStyle,self.tagMark)
+        self.btnEditStrike.connect("clicked",self.onToggleStyle,self.tagStrike)
+        self.btnEditClear.connect("clicked",self.onClearStyle)
         
         return
     
-    def onButtonClick(self, guiObject, textTag):
+    def onToggleStyle(self, guiObject, textTag):
+        self.textBuffer.toggleStyle(textTag)
+        return
+    
+    def onClearStyle(self, guiObject):
         selBounds = self.textBuffer.get_selection_bounds()
         if len(selBounds) != 0:
             selStart, selEnd = selBounds
-            self.textBuffer.apply_tag(textTag, selStart, selEnd)
+            self.textBuffer.remove_all_tags(selStart,selEnd)
         return
     
 # End Class GuiNoteEditor

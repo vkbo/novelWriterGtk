@@ -77,6 +77,7 @@ class GuiSceneEditor(Gtk.Paned):
         
         self.editDoc.textBuffer.decodeText(docItem.docMain["current"]["text"])
         self.editDoc.entryDocTitle.set_text(docEntry.getFromTag(docEntry.TAG_NAME))
+        self.editNote.textBuffer.decodeText(docItem.docAside["current"]["text"])
         self.docLoaded = True
         
         return
@@ -87,12 +88,15 @@ class GuiSceneEditor(Gtk.Paned):
         docItem    = self.treeItem["doc"]
         
         textBuffer = self.editDoc.textBuffer
+        noteBuffer = self.editNote.textBuffer
         parText, textCount = textBuffer.encodeText()
+        parNote, noteCount = noteBuffer.encodeText()
         docTitle = self.editDoc.entryDocTitle.get_text().strip()
         
         docEntry.setCounts(textCount)
         docEntry.setName(docTitle)
         docItem.setText(DocFile.DOC_MAIN,parText,textCount)
+        docItem.setText(DocFile.DOC_ASIDE,parNote,noteCount)
         docItem.saveFile()
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]

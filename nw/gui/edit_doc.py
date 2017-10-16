@@ -121,10 +121,6 @@ class GuiDocEditor(Gtk.Alignment):
         return
     
     def onToggleStyle(self, guiObject, textTag):
-        # selBounds = self.textBuffer.get_selection_bounds()
-        # if len(selBounds) != 0:
-        #     selStart, selEnd = selBounds
-        #     self.textBuffer.apply_tag(textTag,selStart,selEnd)
         self.textBuffer.toggleStyle(textTag)
         return
     

@@ -108,10 +108,13 @@ class GuiMainTree(Gtk.TreeView):
             else:
                 itemTitle = itemName
             
-            if wordCount is None:
-                wordCount = "<i>0</i>"
+            if itemLevel == BookItem.LEV_FILE:
+                if wordCount is None:
+                    wordCount = "<i>0</i>"
+                else:
+                    wordCount = "<i>%s</i>" % str(wordCount)
             else:
-                wordCount = "<i>%s</i>" % str(wordCount)
+                wordCount = None
             
             treeEntry = [itemTitle,"0",wordCount,itemName,itemHandle]
             tmpIter   = self.treeStore.append(parIter,treeEntry)

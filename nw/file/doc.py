@@ -34,17 +34,8 @@ class DocFile():
         self.docFile    = "%s-%s.nwf" % (self.itemClass,self.itemHandle)
         self.fullPath   = path.join(self.docPath,self.docFile)
         
-        self.docTemplate = {
-            "text"  : [],
-            "stats" : {
-                "paragraphs" : 0,
-                "words"      : 0,
-                "sentences"  : 0
-            },
-        }
-        
-        self.docMain  = {}
-        self.docAside = {}
+        self.docMain    = {}
+        self.docAside   = {}
         
         return
     
@@ -52,7 +43,7 @@ class DocFile():
         
         if not path.isfile(self.fullPath):
             logger.debug("File not found %s" % self.fullPath)
-            self.docMain.append(self.docTemplate)
+            self.docMain.append(self.docTemplate.copy())
             return
         
         nwXML = ET.parse(self.fullPath)
@@ -70,19 +61,29 @@ class DocFile():
             return
         
         for xChild in xRoot:
-            if xChild.tag == "document":
+            if xChild.tag in ("document","note"):
                 docVersion = xChild.attrib["version"]
-                logger.debug("DocOpen: Found document version %s" % docVersion)
-                newDoc = self.docTemplate
+                logger.debug("DocOpen: Found %s version %s" % (xChild.tag,docVersion))
+                newDoc = {
+                    "text"  : [],
+                    "stats" : {
+                        "paragraphs" : 0,
+                        "words"      : 0,
+                        "sentences"  : 0
+                    },
+                }
                 for xItem in xChild:
                     if xItem.tag == "stats":
-                        self.docTemplate["stats"]["paragraphs"] = int(xItem.attrib["paragraphs"])
-                        self.docTemplate["stats"]["sentences"]  = int(xItem.attrib["sentences"])
-                        self.docTemplate["stats"]["words"]      = int(xItem.attrib["words"])
+                        newDoc["stats"]["paragraphs"] = int(xItem.attrib["paragraphs"])
+                        newDoc["stats"]["sentences"]  = int(xItem.attrib["sentences"])
+                        newDoc["stats"]["words"]      = int(xItem.attrib["words"])
                     elif xItem.tag == "text":
                         for xPar in xItem:
-                            self.docTemplate["text"].append(xPar.text)
-                self.docMain[docVersion] = newDoc
+                            newDoc["text"].append(xPar.text)
+                if xChild.tag == "document":
+                    self.docMain[docVersion] = newDoc
+                else:
+                    self.docAside[docVersion] = newDoc
         
         return
     
@@ -92,6 +93,7 @@ class DocFile():
             "fileVersion" : "1.0",
             "appVersion"  : str(nw.__version__),
         })
+        
         for docVersion in self.docMain.keys():
             docMain = self.docMain[docVersion]
             xDoc = ET.SubElement(nwXML,"document",attrib={"version":docVersion})
@@ -103,6 +105,21 @@ class DocFile():
             xText = ET.SubElement(xDoc,"text")
             parIdx = 0
             for parItem in docMain["text"]:
+                xPar = ET.SubElement(xText,"paragraph",attrib={"idx":str(parIdx)})
+                xPar.text = ET.CDATA(parItem)
+                parIdx += 1
+        
+        for docVersion in self.docAside.keys():
+            docAside = self.docAside[docVersion]
+            xNote = ET.SubElement(nwXML,"note",attrib={"version":docVersion})
+            xStats = ET.SubElement(xNote,"stats",attrib={
+                "paragraphs" : str(docAside["stats"]["paragraphs"]),
+                "sentences"  : str(docAside["stats"]["sentences"]),
+                "words"      : str(docAside["stats"]["words"]),
+            })
+            xText = ET.SubElement(xNote,"text")
+            parIdx = 0
+            for parItem in docAside["text"]:
                 xPar = ET.SubElement(xText,"paragraph",attrib={"idx":str(parIdx)})
                 xPar.text = ET.CDATA(parItem)
                 parIdx += 1
@@ -121,35 +138,36 @@ class DocFile():
     
     def setText(self, toTarget, newText, newCount):
         
-        docText = self.docTemplate
-        docText["text"]  = newText
-        docText["stats"] = {
-            "paragraphs" : str(newCount[0]),
-            "sentences"  : str(newCount[1]),
-            "words"      : str(newCount[2]),
+        docText = {
+            "text"  : newText,
+            "stats" : {
+                "paragraphs" : str(newCount[0]),
+                "sentences"  : str(newCount[1]),
+                "words"      : str(newCount[2]),
+            }
         }
         
         if toTarget == self.DOC_MAIN:
             self.docMain["current"] = docText
         elif toTarget == self.DOC_ASIDE:
-            self.docMain["current"] = docText
+            self.docAside["current"] = docText
         else:
             logger.error("BUG: Unknown document target")
             
         return
     
-    def setCount(self, addTarget, parCount, sentCount, wordCount):
-        statVals = {
-            "paragraphs" : str(parCount),
-            "sentences"  : str(sentCount),
-            "words"      : str(wordCount),
-        }
-        if addTarget == self.DOC_MAIN:
-            self.docMain["current"]["stats"] = statVals
-        elif addTarget == self.DOC_ASIDE:
-            self.docAside["current"]["stats"] = statVals
-        else:
-            logger.error("BUG: Unknown document target")
-        return
+    # def setCount(self, toTarget, parCount, sentCount, wordCount):
+    #     statVals = {
+    #         "paragraphs" : str(parCount),
+    #         "sentences"  : str(sentCount),
+    #         "words"      : str(wordCount),
+    #     }
+    #     if toTarget == self.DOC_MAIN:
+    #         self.docMain["current"]["stats"] = statVals
+    #     elif toTarget == self.DOC_ASIDE:
+    #         self.docAside["current"]["stats"] = statVals
+    #     else:
+    #         logger.error("BUG: Unknown document target")
+    #     return
     
 # End Class DocFile
