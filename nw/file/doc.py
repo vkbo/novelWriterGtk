@@ -43,7 +43,6 @@ class DocFile():
         
         if not path.isfile(self.fullPath):
             logger.debug("File not found %s" % self.fullPath)
-            self.docMain.append(self.docTemplate.copy())
             return
         
         nwXML = ET.parse(self.fullPath)

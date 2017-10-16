@@ -20,11 +20,12 @@ from os                  import path
 from nw.gui.edit_doc     import GuiDocEditor
 from nw.gui.edit_note    import GuiNoteEditor
 from nw.gui.pane_details import GuiDocDetails
+from nw.file             import BookItem
 from nw.file.doc         import DocFile
 
 logger = logging.getLogger(__name__)
 
-class GuiSceneEditor(Gtk.Paned):
+class GuiEditor(Gtk.Paned):
     
     def __init__(self, theBook, itemHandle):
         
@@ -32,8 +33,11 @@ class GuiSceneEditor(Gtk.Paned):
         
         self.mainConf    = nw.CONFIG
         self.theBook     = theBook
+        
         self.itemHandle  = itemHandle
         self.treeItem    = theBook.getTreeEntry(itemHandle)
+        self.itemClass   = self.treeItem["entry"].itemClass
+        
         self.docLoaded   = False
         self.noteLoaded  = False
         self.docChanged  = False
@@ -45,7 +49,7 @@ class GuiSceneEditor(Gtk.Paned):
         self.set_position(self.mainConf.editPane)
         
         # Document Editor
-        self.editDoc = GuiDocEditor()
+        self.editDoc = GuiDocEditor(self.itemClass)
         self.pack1(self.editDoc,True,False)
         
         # Pane Between Details and Notes
@@ -60,8 +64,11 @@ class GuiSceneEditor(Gtk.Paned):
         self.panedMeta.pack1(self.alignDocDetails,True,False)
         
         # Document Notes
-        self.editNote = GuiNoteEditor()
-        self.panedMeta.pack2(self.editNote,True,False)
+        if self.itemClass == BookItem.CLS_SCENE:
+            self.editNote = GuiNoteEditor()
+            self.panedMeta.pack2(self.editNote,True,False)
+        else:
+            self.editNote = None
         
         # Signals
         self.editDoc.textBuffer.connect("changed",self.onDocChange)
@@ -75,10 +82,16 @@ class GuiSceneEditor(Gtk.Paned):
         docItem  = self.treeItem["doc"]
         docItem.openFile()
         
-        self.editDoc.textBuffer.decodeText(docItem.docMain["current"]["text"])
         self.editDoc.entryDocTitle.set_text(docEntry.getFromTag(docEntry.TAG_NAME))
-        self.editNote.textBuffer.decodeText(docItem.docAside["current"]["text"])
-        self.docLoaded = True
+        
+        if "current" in docItem.docMain.keys():
+            self.editDoc.textBuffer.decodeText(docItem.docMain["current"]["text"])
+            self.docLoaded  = True
+            
+        if self.itemClass == BookItem.CLS_SCENE:
+            if "current" in docItem.docAside.keys():
+                self.editNote.textBuffer.decodeText(docItem.docAside["current"]["text"])
+                self.noteLoaded = True
         
         return
     
@@ -88,15 +101,18 @@ class GuiSceneEditor(Gtk.Paned):
         docItem    = self.treeItem["doc"]
         
         textBuffer = self.editDoc.textBuffer
-        noteBuffer = self.editNote.textBuffer
         parText, textCount = textBuffer.encodeText()
-        parNote, noteCount = noteBuffer.encodeText()
-        docTitle = self.editDoc.entryDocTitle.get_text().strip()
+        docItem.setText(DocFile.DOC_MAIN,parText,textCount)
         
+        docTitle = self.editDoc.entryDocTitle.get_text().strip()
         docEntry.setCounts(textCount)
         docEntry.setName(docTitle)
-        docItem.setText(DocFile.DOC_MAIN,parText,textCount)
-        docItem.setText(DocFile.DOC_ASIDE,parNote,noteCount)
+        
+        if self.itemClass == BookItem.CLS_SCENE:
+            noteBuffer = self.editNote.textBuffer
+            parNote, noteCount = noteBuffer.encodeText()
+            docItem.setText(DocFile.DOC_ASIDE,parNote,noteCount)
+        
         docItem.saveFile()
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
@@ -109,9 +125,9 @@ class GuiSceneEditor(Gtk.Paned):
         
     def onKeyPress(self, guiObject, guiKeyEvent):
         
-        print(guiKeyEvent.state)
-        if guiKeyEvent.state == Gdk.ModifierType.CONTROL_MASK:
-            print(guiKeyEvent.keyval)
+        # print(guiKeyEvent.state)
+        # if guiKeyEvent.state == Gdk.ModifierType.CONTROL_MASK:
+        #     print(guiKeyEvent.keyval)
         
         return
     

@@ -20,14 +20,17 @@ from gi.repository     import Gtk, Pango
 from gi.repository     import GtkSource
 from os                import path
 from nw.gui.textbuffer import NWTextBuffer
+from nw.file           import BookItem
 
 logger = logging.getLogger(__name__)
 
 class GuiDocEditor(Gtk.Alignment):
     
-    def __init__(self):
+    def __init__(self, itemClass):
         
         Gtk.Alignment.__init__(self)
+        
+        self.itemClass = itemClass
         
         self.set_name("alignDocEdit")
         self.set_padding(40,40,40,10)
@@ -113,10 +116,15 @@ class GuiDocEditor(Gtk.Alignment):
         self.btnEditClear.connect("clicked",self.onClearStyle)
         
         self.textView.set_wrap_mode(Gtk.WrapMode.WORD)
-        self.textView.set_indent(30)
-        self.textView.set_justification(Gtk.Justification.FILL)
-        self.textView.set_pixels_below_lines(4)
         self.textView.modify_font(Pango.FontDescription("Tinos 15"))
+        if self.itemClass == BookItem.CLS_SCENE:
+            self.textView.set_indent(30)
+            self.textView.set_justification(Gtk.Justification.FILL)
+            self.textView.set_pixels_below_lines(4)
+        else:
+            self.textView.set_indent(0)
+            self.textView.set_justification(Gtk.Justification.LEFT)
+            self.textView.set_pixels_below_lines(12)
         
         return
     
