@@ -11,7 +11,25 @@
 @define-color colMedium #354852;
 @define-color colDark   #293840;
 @define-color colText   #ffffff;
+@define-color colDocs   #000000;
 
+
+/**
+ *  Defaults
+ */
+
+button {
+    border-image: none;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 6px;
+    box-shadow: none;
+    color: @colText;
+    background: @colDark;
+}
+
+button:hover {
+    border: 1px solid rgba(255,255,255,0.8);
+}
 
 /**
  *  Toolbars
@@ -35,19 +53,6 @@
 #tbChars    {background-color: @colLight;}
 #tbPlots    {background-color: @colLight;}
 
-#tbLeft     button,
-#tbChapters button,
-#tbChars    button,
-#tbPlots    button {
-    background-color: @colDark;
-    background-image: none;
-    color: rgba(255,255,255,0.8);
-    border-width: 2px;
-    border-radius: 6px;
-    border-color: rgba(255,255,255,0.4);
-    box-shadow: none;
-}
-
 #tbLeft button {
     margin: 0px 0px 0px 6px;
 }
@@ -58,30 +63,32 @@
     margin: 0px 6px 0px 0px;
 }
 
-#tbLeft     button:hover,
-#tbChapters button:hover,
-#tbChars    button:hover,
-#tbPlots    button:hover {
-    background-color: @colDark;
-    background-image: none;
-    color: rgba(255,255,255,0.8);
-    border-radius: 6px;
-    border-color: rgba(255,255,255,0.8);
-    box-shadow: none;
+#tbDocEdit {
+    background: rgba(255,255,255,0.5);
 }
 
-#tbLeft button:hover {
-    margin: 0px 0px 0px 6px;
+#tbNoteEdit {
+    background-color: rgba(255,255,200,0.5);
 }
 
-#tbChapters button:hover,
-#tbChars    button:hover,
-#tbPlots    button:hover {
-    margin: 0px 6px 0px 0px;
+#tbDocEdit toolbutton *,
+#tbNoteEdit toolbutton * {
+    background: transparent;
+    color: @colDark;
+    padding: 0px;
 }
 
-#tbDocEdit  {background-color: rgba(255,255,255,0.5);}
-#tbNoteEdit {background-color: rgba(255,255,200,0.5);}
+#tbDocEdit button,
+#tbNoteEdit button {
+    border-color: rgba(0,0,0,0.2);
+    margin: 2px;
+    padding: 2px;
+}
+
+#tbDocEdit button:hover,
+#tbNoteEdit button:hover {
+    border-color: rgba(255,255,255,0.6);
+}
 
 
 /**
@@ -118,8 +125,8 @@
 #boxBook      {background-color: @colLight;}
 #boxChars     {background-color: @colLight;}
 #boxPlots     {background-color: @colLight;}
-#boxDocOuter  {background-color: transparent;}
-#boxNoteOuter {background-color: transparent;}
+#boxDocOuter  {background-color: @colLight;}
+#boxNoteOuter {background-color: @colLight;}
 
 
 /**
@@ -131,11 +138,21 @@
     border-bottom: none;
 }
 
+#nbContent > header.top * {
+    color: @colText;
+}
+
+#nbContent > header button * {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
 #nbContent > header.top > tabs > tab {
     background: @colDark;
     color: @colText;
     border-image: none;
-    border: 1px solid rgba(0,0,0,0.4);
+    border: 1px solid rgba(0,0,0,0.3);
     border-radius: 8px 8px 0px 0px;
     border-bottom: none;
 }
@@ -152,31 +169,21 @@
     border-image: none;
 }
 
-#nbContent > header button {
-    margin: 0px;
-    padding: 0px;
-    box-shadow: none;
-}
-
-#nbContent > header button:hover {
-    background-image: none;
-}
-
 
 /**
  * Panes
  */
 
-#panedOuter {background-color: transparent;}
+#panedOuter {background-color: @colLight;}
 #panedOuter > separator {border-color: @colMedium;}
 
-#panedContent {background-color: transparent;}
+#panedContent {background-color: @colLight;}
 #panedContent > separator {border-color: @colMedium;}
 
-#panedEditor {background-color: transparent;}
+#panedEditor {background-color: @colLight;}
 #panedEditor > separator {border-color: @colLight;}
 
-#panedMeta {background-color: transparent;}
+#panedMeta {background-color: @colLight;}
 #panedMeta > separator {border-color: @colLight;}
 
 
@@ -218,18 +225,22 @@
     background-color: rgba(255,255,255,0.2);
 }
 
+#treeChapters.view > header *,
+#treeChars.view    > header *,
+#treePlots.view    > header * {
+    font-weight: bold;
+    color: rgba(255,255,255,0.8);
+    background: @colDark;
+    border-width: 0px;
+    border-radius: 0px;
+    box-shadow: none;
+}
+
 #treeChapters.view > header > button,
 #treeChars.view    > header > button,
 #treePlots.view    > header > button {
-    font-weight: bold;
-    color: rgba(255,255,255,0.8);
-    background-image: none;
-    background-color: @colDark;
-    border-width: 0px;
-    border-radius: 0px;
     margin: 0px;
     padding: 4px 6px;
-    box-shadow: none;
 }
 
 #treeChapters.view > row,
@@ -247,9 +258,8 @@
 #entryBookTitle,
 #entryBookAuthor {
     border: none;
-    border-radius: 0px;
-    background-image: none;
-    background-color: @colMedium;
+    border-radius: 6px;
+    background: @colMedium;
     color: rgba(255,255,255,0.8);
     font-size: 22px;
     font-weight: 400;
@@ -257,9 +267,8 @@
 
 #entryDocTitle {
     border: none;
-    border-radius: 0px;
-    background-image: none;
-    background-color: transparent;
+    border-radius: 6px;
+    background: transparent;
     color: rgba(255,255,255,0.8);
     font-size: 30px;
     font-weight: bold;
@@ -267,15 +276,8 @@
 }
 
 #entryDocTitle:focus {
-    background-color: @colMedium;
+    background: @colMedium;
 }
-
-/*#textViewDoc {
-    background-image: none;
-    background-color: rgba(255,255,255,0.8);
-    padding: 0px;
-    margin: 0px
-}*/
 
 #textViewDoc.view {
     background: transparent;
@@ -284,7 +286,8 @@
 #textViewDoc.view > text {
     background: transparent;
     padding: 0px;
-    margin: 0px
+    margin: 0px;
+    color: @colDocs;
 }
 
 #textViewNote.view {
@@ -296,7 +299,8 @@
 #textViewNote.view > text {
     background: transparent;
     padding: 0px;
-    margin: 0px
+    margin: 0px;
+    color: @colDocs;
 }
 
 
@@ -307,7 +311,7 @@
 #scrollBook,
 #scrollChars,
 #scrollPlots {
-    background-color: transparent;
+    background-color: @colLight;
 }
 
 #scrollDoc  {background-color: rgba(255,255,255,0.8);}
@@ -315,13 +319,13 @@
 
 #alignDoc,
 #alignNote {
-    background-color: transparent;
+    background-color: @colLight;
 }
 
 #alignBook,
 #alignChars,
 #alignPlots {
-    background-color: transparent;
+    background-color: @colLight;
 }
 
 #fmeBookTitle,
