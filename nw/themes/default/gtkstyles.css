@@ -153,6 +153,12 @@
     border: none;
 }
 
+#nbContent > header > tabs > tab image {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
 #nbContent > header.top > tabs > tab {
     background: @colDark;
     color: @colText;
