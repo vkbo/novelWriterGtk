@@ -20,7 +20,7 @@ from os                  import path
 from nw.gui.edit_doc     import GuiDocEditor
 from nw.gui.edit_note    import GuiNoteEditor
 from nw.gui.pane_details import GuiDocDetails
-from nw.file             import BookItem
+from nw.file.book        import BookItem
 from nw.file.doc         import DocFile
 
 logger = logging.getLogger(__name__)

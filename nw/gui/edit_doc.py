@@ -20,7 +20,7 @@ from gi.repository     import Gtk, Pango
 from gi.repository     import GtkSource
 from os                import path
 from nw.gui.textbuffer import NWTextBuffer
-from nw.file           import BookItem
+from nw.file.book      import BookItem
 
 logger = logging.getLogger(__name__)
 

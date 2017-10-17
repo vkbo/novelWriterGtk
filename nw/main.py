@@ -21,7 +21,7 @@ from time             import sleep
 from os               import path
 from nw.gui.winmain   import GuiWinMain
 from nw.gui.tree_main import GuiMainTree
-from nw.file          import Book, BookItem
+from nw.file.book     import Book, BookItem
 
 logger = logging.getLogger(__name__)
 

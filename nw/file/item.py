@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*
-"""novelWriter Book Item
+"""novelWriter Book Item Class
 
- novelWriter – Book Item
-=========================
+ novelWriter – Book Item Class
+===============================
  A single entry in the book tree
 
  File History:

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*
-"""novelWriter Document File
+"""novelWriter Document File Class
 
- novelWriter – Document File
-=============================
+ novelWriter – Document File Class
+===================================
  Manages a single document
 
  File History:
@@ -29,7 +29,7 @@ class DocFile():
     VAL_COUNT  = "counts"
     
     CNT_PAR    = "parcount"
-    CNT_SENT   = "sencount"
+    CNT_SENT   = "sentcount"
     CNT_WORD   = "wordcount"
     CNT_CHAR   = "charcount"
     
@@ -73,10 +73,10 @@ class DocFile():
         fileVersion = xRoot.attrib["fileVersion"]
 
         logger.verbose("XML: Root is %s" % nwxRoot)
-        logger.verbose("XML: Version is %s" % fileVersion)
+        logger.verbose("XML: File version is %s" % fileVersion)
         
         if not nwxRoot == "novelWriterXML" or not fileVersion == "1.0":
-            logger.error("BookOpen: Project file does not appear to be a novelWriterXML file version 1.0")
+            logger.error("DocOpen: Project file does not appear to be a novelWriterXML file version 1.0")
             return
         
         for xChild in xRoot:
@@ -96,7 +96,7 @@ class DocFile():
                             self.docText[self.VAL_NOTE].append(xPar.text)
                     else:
                         logger.error("DocOpen: Unknown tag '%s' in XML" % xItem.tag)
-                logger.debug("DocOpen: Opened document %s last saved on %s" %(
+                logger.debug("DocOpen: Opened document %s last saved on %s" % (
                     self.itemHandle, self.docText[self.VAL_TIME]
                 ))
         
@@ -113,7 +113,7 @@ class DocFile():
         countVals = {}
         for countType in self.docText[self.VAL_COUNT].keys():
             countVal = self.docText[self.VAL_COUNT][countType]
-            if not countVal is None:
+            if countVal is not None:
                 countVals[countType] = str(countVal)
         xCounts = ET.SubElement(xDoc,self.VAL_COUNT,attrib=countVals)
         
@@ -148,25 +148,11 @@ class DocFile():
         
         for n in range(4):
             if len(newCount) > n:
-                self.docText[self.validCount[n]] = newCount[n]
+                self.docText[self.VAL_COUNT][self.validCount[n]] = newCount[n]
         
         self.docText[self.VAL_TEXT] = newText
         self.docText[self.VAL_NOTE] = newNote
         
         return
-    
-    # def setCount(self, toTarget, parCount, sentCount, wordCount):
-    #     statVals = {
-    #         "paragraphs" : str(parCount),
-    #         "sentences"  : str(sentCount),
-    #         "words"      : str(wordCount),
-    #     }
-    #     if toTarget == self.DOC_MAIN:
-    #         self.docText["current"]["stats"] = statVals
-    #     elif toTarget == self.DOC_ASIDE:
-    #         self.docAside["current"]["stats"] = statVals
-    #     else:
-    #         logger.error("BUG: Unknown document target")
-    #     return
     
 # End Class DocFile

@@ -1,8 +1,33 @@
 ## novelWriter Change Log
 
 #### Version 0.4 - Under development
-* **GUI:** Added about dialog.
-* **Code:** Book files are now only saved when there is an actual change in data. Previously it would simply just overwrite files, which is not ideal when using file sync software.
+
+**NB!** This version contains a near full rewrite of the entire appliaction.
+
+* **GUI:** A complete new GUI based on Gtk3 with CSS stylesheet. This makes it possible to write
+  themes. The default theme is named "default", and can be found in the nw/themes directory.
+* **GUI:** It is now also possible to add characters and plots to the project, in addition to the
+  previous chapter and scene tree layout. There is also a separate node for general note files.
+* **GUI:** The new layout is designed a bit more like a code editor. There are three fixed tabs for
+  book details (including chapter handling), character and plots. Scene and note files can be opened
+  as additional tabs beyond these.
+* **GUI:** Note files and scene files are treated a bit differently. Opening a scene file also gives
+  you access to a small text editor area in yellow for taking notes. This replaces the previous
+  summary box.
+* **GUI:** The text editor box itself is now a Gtk.TextView instead of a WebKit.WebView as
+  previously. Actually, it is GtkSource's TextView being used as it provides a rudimentary undo/redo
+  ability. However, no other part of GtkSource is used, so it will be removed again in the future
+  when I get a chance to write my own undo/redo routine. The GtkSource implementation is a bit
+  limited in that it doesn't let you undo/redo text formatting, just the plain text itself.
+* **Storage:** The new version of the app uses XML files for storage instead of the previous mix of
+  config style plain text files and html files. The number of files generated is also reduced to a
+  single projectfile, `fileName.nwx`, which also creates a directory `fileName.nwd`. All scene and
+  note files are saved as single files in this folder with the same `.nwx` file extension. This
+  makes it possible to use version control tools like git for the projects.
+* **Code:** Most of the underlying code has been rewritten from scratch.
+* **Code:** The Gtk.TextBuffer has a wrapper that adds functions for serialising and deserialisng
+  the text to and from html5 tag style formatting which is stored per paragraph in the xml file
+  format.
 
 #### Version 0.3 - 19.01.2017
 * **GUI:** The state of the spell checker and show paragraph buttons are now saved between sessions.
