@@ -17,13 +17,24 @@ import lxml.etree as ET
 from os           import path
 from nw.content   import getLoremIpsum
 from nw.file.item import BookItem
+from nw.functions import getTimeStamp
 
 logger = logging.getLogger(__name__)
 
 class DocFile():
     
-    DOC_MAIN  = 0
-    DOC_ASIDE = 1
+    VAL_TEXT   = "text"
+    VAL_NOTE   = "note"
+    VAL_TIME   = "timestamp"
+    VAL_COUNT  = "counts"
+    
+    CNT_PAR    = "parcount"
+    CNT_SENT   = "sencount"
+    CNT_WORD   = "wordcount"
+    CNT_CHAR   = "charcount"
+    
+    validEntry = [VAL_TEXT,VAL_NOTE,VAL_TIME,VAL_COUNT]
+    validCount = [CNT_PAR,CNT_SENT,CNT_WORD,CNT_CHAR]
     
     def __init__(self, docPath, itemHandle, itemClass):
         
@@ -34,8 +45,17 @@ class DocFile():
         self.docFile    = "%s-%s.nwf" % (self.itemClass,self.itemHandle)
         self.fullPath   = path.join(self.docPath,self.docFile)
         
-        self.docMain    = {}
-        self.docAside   = {}
+        self.docText = {
+            self.VAL_TEXT  : [],
+            self.VAL_NOTE  : [],
+            self.VAL_TIME  : None,
+            self.VAL_COUNT : {
+                self.CNT_PAR  : None,
+                self.CNT_SENT : None,
+                self.CNT_WORD : None,
+                self.CNT_CHAR : None,
+            }
+        }
         
         return
     
@@ -60,29 +80,25 @@ class DocFile():
             return
         
         for xChild in xRoot:
-            if xChild.tag in ("document","note"):
-                docVersion = xChild.attrib["version"]
-                logger.debug("DocOpen: Found %s version %s" % (xChild.tag,docVersion))
-                newDoc = {
-                    "text"  : [],
-                    "stats" : {
-                        "paragraphs" : 0,
-                        "words"      : 0,
-                        "sentences"  : 0
-                    },
-                }
+            if xChild.tag == "document":
+                if self.VAL_TIME in xChild.attrib.keys():
+                    self.docText[self.VAL_TIME] = xChild.attrib[self.VAL_TIME]
                 for xItem in xChild:
-                    if xItem.tag == "stats":
-                        newDoc["stats"]["paragraphs"] = int(xItem.attrib["paragraphs"])
-                        newDoc["stats"]["sentences"]  = int(xItem.attrib["sentences"])
-                        newDoc["stats"]["words"]      = int(xItem.attrib["words"])
-                    elif xItem.tag == "text":
+                    if xItem.tag == self.VAL_COUNT:
+                        for attribKey in xItem.attrib.keys():
+                            if not attribKey in self.validCount: continue
+                            self.docText[self.VAL_COUNT][attribKey] = int(xItem.attrib[attribKey])
+                    elif xItem.tag == self.VAL_TEXT:
                         for xPar in xItem:
-                            newDoc["text"].append(xPar.text)
-                if xChild.tag == "document":
-                    self.docMain[docVersion] = newDoc
-                else:
-                    self.docAside[docVersion] = newDoc
+                            self.docText[self.VAL_TEXT].append(xPar.text)
+                    elif xItem.tag == self.VAL_NOTE:
+                        for xPar in xItem:
+                            self.docText[self.VAL_NOTE].append(xPar.text)
+                    else:
+                        logger.error("DocOpen: Unknown tag '%s' in XML" % xItem.tag)
+                logger.debug("DocOpen: Opened document %s last saved on %s" %(
+                    self.itemHandle, self.docText[self.VAL_TIME]
+                ))
         
         return
     
@@ -93,33 +109,26 @@ class DocFile():
             "appVersion"  : str(nw.__version__),
         })
         
-        for docVersion in self.docMain.keys():
-            docMain = self.docMain[docVersion]
-            xDoc = ET.SubElement(nwXML,"document",attrib={"version":docVersion})
-            xStats = ET.SubElement(xDoc,"stats",attrib={
-                "paragraphs" : str(docMain["stats"]["paragraphs"]),
-                "sentences"  : str(docMain["stats"]["sentences"]),
-                "words"      : str(docMain["stats"]["words"]),
-            })
-            xText = ET.SubElement(xDoc,"text")
-            parIdx = 0
-            for parItem in docMain["text"]:
-                xPar = ET.SubElement(xText,"paragraph",attrib={"idx":str(parIdx)})
-                xPar.text = ET.CDATA(parItem)
-                parIdx += 1
+        xDoc = ET.SubElement(nwXML,"document",attrib={self.VAL_TIME:getTimeStamp("-")})
+        countVals = {}
+        for countType in self.docText[self.VAL_COUNT].keys():
+            countVal = self.docText[self.VAL_COUNT][countType]
+            if not countVal is None:
+                countVals[countType] = str(countVal)
+        xCounts = ET.SubElement(xDoc,self.VAL_COUNT,attrib=countVals)
         
-        for docVersion in self.docAside.keys():
-            docAside = self.docAside[docVersion]
-            xNote = ET.SubElement(nwXML,"note",attrib={"version":docVersion})
-            xStats = ET.SubElement(xNote,"stats",attrib={
-                "paragraphs" : str(docAside["stats"]["paragraphs"]),
-                "sentences"  : str(docAside["stats"]["sentences"]),
-                "words"      : str(docAside["stats"]["words"]),
-            })
-            xText = ET.SubElement(xNote,"text")
-            parIdx = 0
-            for parItem in docAside["text"]:
-                xPar = ET.SubElement(xText,"paragraph",attrib={"idx":str(parIdx)})
+        parIdx = 0
+        xText  = ET.SubElement(xDoc,self.VAL_TEXT)
+        for parItem in self.docText[self.VAL_TEXT]:
+            xPar = ET.SubElement(xText,"paragraph",attrib={"idx":str(parIdx)})
+            xPar.text = ET.CDATA(parItem)
+            parIdx += 1
+        
+        parIdx = 0
+        if len(self.docText[self.VAL_NOTE]) > 0:
+            xNote = ET.SubElement(xDoc,self.VAL_NOTE)
+            for parItem in self.docText[self.VAL_NOTE]:
+                xPar = ET.SubElement(xNote,"paragraph",attrib={"idx":str(parIdx)})
                 xPar.text = ET.CDATA(parItem)
                 parIdx += 1
         
@@ -135,24 +144,15 @@ class DocFile():
         
         return
     
-    def setText(self, toTarget, newText, newCount):
+    def setText(self, newText, newCount, newNote=[]):
         
-        docText = {
-            "text"  : newText,
-            "stats" : {
-                "paragraphs" : str(newCount[0]),
-                "sentences"  : str(newCount[1]),
-                "words"      : str(newCount[2]),
-            }
-        }
+        for n in range(4):
+            if len(newCount) > n:
+                self.docText[self.validCount[n]] = newCount[n]
         
-        if toTarget == self.DOC_MAIN:
-            self.docMain["current"] = docText
-        elif toTarget == self.DOC_ASIDE:
-            self.docAside["current"] = docText
-        else:
-            logger.error("BUG: Unknown document target")
-            
+        self.docText[self.VAL_TEXT] = newText
+        self.docText[self.VAL_NOTE] = newNote
+        
         return
     
     # def setCount(self, toTarget, parCount, sentCount, wordCount):
@@ -162,7 +162,7 @@ class DocFile():
     #         "words"      : str(wordCount),
     #     }
     #     if toTarget == self.DOC_MAIN:
-    #         self.docMain["current"]["stats"] = statVals
+    #         self.docText["current"]["stats"] = statVals
     #     elif toTarget == self.DOC_ASIDE:
     #         self.docAside["current"]["stats"] = statVals
     #     else:

@@ -17,8 +17,15 @@ gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk, GdkPixbuf
 from os            import path
+from datetime      import datetime
 
 logger = logging.getLogger(__name__)
+
+def getTimeStamp(dateSep=""):
+    timeValue  = datetime.now()
+    returnDate = "{:%Y%m%d}".format(timeValue)
+    returnTime = "{:%H%M%S}".format(timeValue)
+    return "%s%s%s" % (returnDate,dateSep,returnTime)
 
 def getIconWidget(iconID, iconSize=None):
     

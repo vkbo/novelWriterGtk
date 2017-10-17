@@ -84,14 +84,12 @@ class GuiEditor(Gtk.Paned):
         
         self.editDoc.entryDocTitle.set_text(docEntry.getFromTag(docEntry.TAG_NAME))
         
-        if "current" in docItem.docMain.keys():
-            self.editDoc.textBuffer.decodeText(docItem.docMain["current"]["text"])
-            self.docLoaded  = True
+        self.editDoc.textBuffer.decodeText(docItem.docText[DocFile.VAL_TEXT])
+        self.docLoaded = True
             
         if self.itemClass == BookItem.CLS_SCENE:
-            if "current" in docItem.docAside.keys():
-                self.editNote.textBuffer.decodeText(docItem.docAside["current"]["text"])
-                self.noteLoaded = True
+            self.editNote.textBuffer.decodeText(docItem.docText[DocFile.VAL_NOTE])
+            self.noteLoaded = True
         
         return
     
@@ -102,7 +100,6 @@ class GuiEditor(Gtk.Paned):
         
         textBuffer = self.editDoc.textBuffer
         parText, textCount = textBuffer.encodeText()
-        docItem.setText(DocFile.DOC_MAIN,parText,textCount)
         
         docTitle = self.editDoc.entryDocTitle.get_text().strip()
         docEntry.setCounts(textCount)
@@ -111,8 +108,10 @@ class GuiEditor(Gtk.Paned):
         if self.itemClass == BookItem.CLS_SCENE:
             noteBuffer = self.editNote.textBuffer
             parNote, noteCount = noteBuffer.encodeText()
-            docItem.setText(DocFile.DOC_ASIDE,parNote,noteCount)
+        else:
+            parNote = []
         
+        docItem.setText(parText,textCount,parNote)
         docItem.saveFile()
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
