@@ -94,7 +94,9 @@ class GuiChaptersTree(Gtk.TreeView):
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.listStore.clear()
         
-        for treeItem in self.theBook.theTree:
+        for treeHandle in self.theBook.theTree.fullOrder:
+            
+            treeItem    = self.theBook.getItem(treeHandle)
             
             itemHandle  = treeItem["handle"]
             itemParent  = treeItem["parent"]

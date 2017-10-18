@@ -215,7 +215,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         
         logger.vverbose("Opening a new tab")
         
-        treeEntry = self.theBook.getTreeEntry(itemHandle)
+        treeEntry = self.theBook.getItem(itemHandle)
         
         tabBox = Gtk.Box()
         tabBox.set_orientation(Gtk.Orientation.HORIZONTAL)

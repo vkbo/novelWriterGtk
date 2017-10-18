@@ -35,7 +35,7 @@ class GuiEditor(Gtk.Paned):
         self.theBook     = theBook
         
         self.itemHandle  = itemHandle
-        self.treeItem    = theBook.getTreeEntry(itemHandle)
+        self.treeItem    = theBook.getItem(itemHandle)
         self.itemClass   = self.treeItem["entry"].itemClass
         
         self.docLoaded   = False

@@ -76,6 +76,17 @@ class GuiMainTree(Gtk.TreeView):
         self.append_column(self.colNumber)
         self.append_column(self.colWords)
         
+        #
+        # Context Menu
+        #
+        
+        self.menuContext = Gtk.Menu()
+        menuItem = Gtk.MenuItem("Add Scene File")
+        self.menuContext.append(menuItem)
+        self.menuItemMoveScene = Gtk.MenuItem("Move Scene to")
+        self.menuContext.append(self.menuItemMoveScene)
+        # menuItem.show()
+        
         return
     
     def loadContent(self):
@@ -83,7 +94,9 @@ class GuiMainTree(Gtk.TreeView):
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
         
-        for treeItem in self.theBook.theTree:
+        for treeHandle in self.theBook.theTree.fullOrder:
+            
+            treeItem   = self.theBook.getItem(treeHandle)
             
             itemHandle = treeItem["handle"]
             itemParent = treeItem["parent"]

@@ -74,6 +74,7 @@ class NovelWriter():
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
         self.winMain.treeLeft.connect("row-activated",self.onLeftTreeActivate)
         self.winMain.btnLeftAdd.connect("clicked",self.onLeftAddFile)
+        self.winMain.treeLeft.connect("button-release-event",self.onLeftTreeContextMenu)
         
         # Book Page
         self.bookPage.btnChaptersAdd.connect("clicked",self.onChapterAdd)
@@ -235,7 +236,7 @@ class NovelWriter():
             
         if itemHandle == None: return
         
-        itemEntry = self.theBook.getTreeEntry(itemHandle)
+        itemEntry = self.theBook.getItem(itemHandle)
         
         itemClass = itemEntry["entry"].itemClass
         itemLevel = itemEntry["entry"].itemLevel
@@ -268,7 +269,7 @@ class NovelWriter():
         
         if itemHandle == None: return
         
-        treeItem   = self.theBook.getTreeEntry(itemHandle)
+        treeItem   = self.theBook.getItem(itemHandle)
         itemName   = treeItem["entry"].itemName
         itemLevel  = treeItem["entry"].itemLevel
         logger.vverbose("MainTree: Activated item %s named '%s'" % (itemHandle,itemName))
@@ -294,6 +295,13 @@ class NovelWriter():
         self.theBook.addFile(itemHandle)
         self.winMain.treeLeft.loadContent()
         
+        return
+    
+    def onLeftTreeContextMenu(self, guiObject, guiEvent):
+        if guiEvent.button == 3:
+            ctxMenu = self.winMain.treeLeft.menuContext
+            ctxMenu.popup(None,None,None,None,guiEvent.button,guiEvent.time)
+            ctxMenu.show_all()
         return
     
     #
