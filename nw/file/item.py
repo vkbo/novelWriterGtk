@@ -310,5 +310,4 @@ class BookItem():
                 return
         return
     
-    
 # End Class BookItem

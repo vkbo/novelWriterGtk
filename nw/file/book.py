@@ -30,14 +30,6 @@ class Book():
         self.bookPath    = None
         self.docPath     = None
         self.theTree     = BookTree()
-        # self.theIndex    = {}
-        # self.lvlIndex    = {}
-        # self.rootIndex   = {}
-        
-        # self.bookHandle  = None
-        # self.charHandle  = None
-        # self.plotHandle  = None
-        # self.noteHandle  = None
         
         # Book Settings
         self.bookTitle   = ""
@@ -49,10 +41,6 @@ class Book():
         self.addCharacter = self.theTree.addCharacter
         self.addPlot      = self.theTree.addPlot
         self.getItem      = self.theTree.getItem
-        
-        # Prepar empty indices
-        # for itemLevel in BookItem.validLevels: self.lvlIndex[itemLevel] = {}
-        # for itemType in BookItem.validTypes:   self.rootIndex[itemType] = None
         
         return
     
@@ -212,29 +200,5 @@ class Book():
             logger.debug("Book author '%s' added" % author.strip())
             self.bookAuthors.append(author.strip())
         return
-        
-    #
-    # Internal Functions
-    #
-    
-    # def checkBool(self,checkValue,defaultValue,allowNone=False):
-    #     if allowNone:
-    #         if checkValue == None:   return None
-    #         if checkValue == "None": return None
-    #     if isinstance(checkValue,bool):
-    #         return checkValue
-    #     if isinstance(checkValue,str):
-    #         if checkValue.lower() == "false": return False
-    #         if checkValue.lower() == "true":  return True
-    #     return defaultValue
-    
-    # def checkInt(self,checkValue,defaultValue,allowNone=False):
-    #     if allowNone:
-    #         if checkValue == None:   return None
-    #         if checkValue == "None": return None
-    #     try:
-    #         return int(checkValue)
-    #     except:
-    #         return defaultValue
     
 # End Class Book

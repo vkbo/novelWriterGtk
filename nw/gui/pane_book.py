@@ -22,9 +22,9 @@ from nw.gui.tree_chapters import GuiChaptersTree
 logger = logging.getLogger(__name__)
 
 class GuiBookPane(Gtk.Alignment):
-
+    
     def __init__(self, theBook):
-
+        
         Gtk.Alignment.__init__(self)
         
         self.theBook = theBook
@@ -46,7 +46,7 @@ class GuiBookPane(Gtk.Alignment):
         self.boxTop.set_orientation(Gtk.Orientation.HORIZONTAL)
         self.boxTop.set_spacing(100)
         self.boxBook.pack_start(self.boxTop,False,False,0)
-
+        
         # Top Title
         self.lblBook = Gtk.Label()
         self.lblBook.set_name("lblBook")
@@ -118,5 +118,5 @@ class GuiBookPane(Gtk.Alignment):
         self.boxBook.pack_start(self.treeChapters,True,True,0)
         
         return
-
+    
 # End Class GuiBookPane

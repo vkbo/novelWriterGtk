@@ -18,7 +18,7 @@ gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 
 class GuiPlotsTree(Gtk.TreeView):
-
+    
     # Constants
     COL_TITLE      = 0
     COL_IMPORTANCE = 1

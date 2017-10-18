@@ -22,9 +22,9 @@ from nw.gui.tree_chars import GuiCharsTree
 logger = logging.getLogger(__name__)
 
 class GuiCharsPane(Gtk.Alignment):
-
+    
     def __init__(self, theBook):
-
+        
         Gtk.Alignment.__init__(self)
         
         self.theBook = theBook

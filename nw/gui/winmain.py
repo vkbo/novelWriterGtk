@@ -193,7 +193,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.drawTimeLine.set_name("drawTimeLine")
         self.scrlTimeLine.add(self.drawTimeLine)
         # self.drawTimeLine.connect("draw", self.onExpose)
-
+        
         logger.verbose("Finished building main window")
         self.show_all()
         
@@ -256,5 +256,5 @@ class GuiWinMain(Gtk.ApplicationWindow):
         del self.editPages[itemHandle]
         
         return
-
+    
 # End Class GuiWinMain

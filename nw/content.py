@@ -15,59 +15,6 @@ import nw
 
 logger = logging.getLogger(__name__)
 
-def htmDemo(docText):
-    
-    pov   = "Jane Smith"
-    chars = ["Bod Dude","Melissa Blonde"]
-    plots = ["Main Plot","Awesome Subplot"]
-    
-    htmReturn = """<!DOCTYPE html>
-    <html>
-      <head>
-        <link rel="stylesheet" href="themes/default/editor.css" type="text/css">
-      </head>
-      <body>
-        <div id="wrapper">
-          <div id="left">
-            <h1 id="doctitle">Document Title</h1>
-            <article id="doc" contenteditable="true">{doc_content}</article>
-          </div>
-          <div id="right">
-            <h1 id="metatitle">Details</h1>
-            <aside id="meta">
-              <div class="metarow">
-                <div class="metalabel">POV</div>
-                <div class="metapov">{scn_pov}</div>
-              </div>
-              <div class="metarow">
-                <div class="metalabel">Chars</div>
-                <div class="metachar">
-                  <ul>{scn_chars}</ul>
-                </div>
-              </div>
-              <div class="metarow">
-                <div class="metalabel">Plots</div>
-                <div class="metaplot">
-                  <ul>{scn_plots}</ul>
-                </div>
-              </div>
-            </aside>
-            <h1 id="notestitle">Notes</h1>
-            <aside id="notes" contenteditable="true">{note_content}</aside>
-          </div>
-        </div>
-      </body>
-    </html>
-    """.format(
-        doc_content  = docText,
-        note_content = "<p>Notes ...</p>",
-        scn_pov      = pov,
-        scn_chars    = ("".join(["<li>%s</li>"]*len(chars))) % tuple(chars),
-        scn_plots    = ("".join(["<li>%s</li>"]*len(plots))) % tuple(plots)
-    )
-    
-    return htmReturn
-
 def getLoremIpsum(nPar):
     """
     Returns up to 13 paragraphs of Lorem Ipsum.

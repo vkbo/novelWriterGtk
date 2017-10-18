@@ -22,9 +22,9 @@ from nw.gui.tree_plots import GuiPlotsTree
 logger = logging.getLogger(__name__)
 
 class GuiPlotsPane(Gtk.Alignment):
-
+    
     def __init__(self, theBook):
-
+        
         Gtk.Alignment.__init__(self)
         
         self.theBook = theBook

@@ -19,7 +19,7 @@ from gi.repository import Gtk, Pango
 from nw.file.item  import BookItem
 
 class GuiMainTree(Gtk.TreeView):
-
+    
     # Constants
     COL_TITLE  = 0
     COL_NUMBER = 1
