@@ -41,6 +41,7 @@ class Book():
         self.addCharacter = self.theTree.addCharacter
         self.addPlot      = self.theTree.addPlot
         self.getItem      = self.theTree.getItem
+        self.updateItem   = self.theTree.updateItem
         
         return
     
