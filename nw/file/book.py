@@ -18,6 +18,7 @@ from os           import path, mkdir
 from nw.file.item import BookItem
 from nw.file.tree import BookTree
 from nw.file.doc  import DocFile
+from nw.functions import getTimeStamp
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +52,23 @@ class Book():
     #
     # Project File I/O and Creation
     #
+    
+    def closeBook(self):
+        
+        logger.info("Closing book project")
+        logger.debug("Resetting all project variables")
+        
+        self.bookLoaded  = False
+        
+        self.bookPath    = None
+        self.docPath     = None
+        self.theTree.clearTree()
+        
+        # Book Settings
+        self.bookTitle   = ""
+        self.bookAuthors = []
+        
+        return
     
     def openBook(self, bookPath):
         """Open a book project file. For robustness, we iterate through everything in the xml file
@@ -87,6 +105,7 @@ class Book():
             if xChild.tag == "book":
                 logger.debug("BookOpen: Found book data")
                 for xItem in xChild:
+                    if xItem.text is None: continue
                     if xItem.tag == "title":
                         logger.verbose("BookOpen: Title is '%s'" % xItem.text)
                         self.bookTitle = xItem.text
@@ -137,20 +156,21 @@ class Book():
         nwXML = ET.Element("novelWriterXML",attrib={
             "fileVersion" : "1.0",
             "appVersion"  : str(nw.__version__),
+            "timeStamp"   : getTimeStamp("-"),
         })
         xBook = ET.SubElement(nwXML,"book")
         xBookTitle = ET.SubElement(xBook,"title")
         xBookTitle.text = self.bookTitle
         for bookAuthor in self.bookAuthors:
+            if bookAuthor is None or bookAuthor == "": continue
             xBookAuthor = ET.SubElement(xBook,"author")
             xBookAuthor.text = bookAuthor
         
-        # Save all items in the tree in their currently sorted order
+        # Save all items in the tree in their created order
         xContent = ET.SubElement(nwXML,"content",attrib={"count":str(len(self.theTree.theTree))})
         itemIdx  = 0
-        for treeHandle in self.theTree.fullOrder:
+        for treeItem in self.theTree.theTree:
             
-            treeItem   = self.getItem(treeHandle)
             itemHandle = str(treeItem["handle"])
             parHandle  = str(treeItem["parent"])
             
@@ -198,6 +218,11 @@ class Book():
         self.theTree.createRootItem(BookItem.TYP_CHAR)
         self.theTree.createRootItem(BookItem.TYP_PLOT)
         self.theTree.createRootItem(BookItem.TYP_NOTE)
+        
+        self.bookTitle  = "New Book"
+        self.bookLoaded = True
+        self.theTree.validateTree()
+        self.theTree.sortTree()
         
         return
     

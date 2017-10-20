@@ -48,6 +48,31 @@ class BookTree():
         
         return
     
+    def clearTree(self):
+        
+        self.docPath    = None
+        self.theTree    = []
+        self.treeLookup = {}
+        self.rootOrder  = []
+        self.itemOrder  = []
+        self.fileOrder  = []
+        self.fullOrder  = []
+        
+        self.fixedOrder = [
+            BookItem.TYP_BOOK,
+            BookItem.TYP_CHAR,
+            BookItem.TYP_PLOT,
+            BookItem.TYP_NOTE,
+        ]
+        self.fixedItems = {
+            BookItem.TYP_BOOK : None,
+            BookItem.TYP_CHAR : None,
+            BookItem.TYP_PLOT : None,
+            BookItem.TYP_NOTE : None,
+        }
+        
+        return
+    
     #
     # Add Elements to Main Tree
     #
@@ -162,7 +187,7 @@ class BookTree():
         rootItem.setClass(BookItem.CLS_CONT)
         rootItem.setLevel(BookItem.LEV_ROOT)
         rootItem.setType(rootType)
-        newBookItem.setName(rootName)
+        rootItem.setName(rootName)
         
         logger.info("Creating root item '%s' with handle %s" % (rootName, rootHandle))
         

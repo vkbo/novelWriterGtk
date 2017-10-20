@@ -10,13 +10,15 @@
 
 """
 
-import logging as logger
+import logging
 import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk, Pango
 from nw.file.item  import BookItem
+
+logger = logging.getLogger(__name__)
 
 class GuiMainTree(Gtk.TreeView):
     
@@ -32,9 +34,9 @@ class GuiMainTree(Gtk.TreeView):
         Gtk.TreeView.__init__(self)
         
         # Connect to GUI
-        self.mainConf   = nw.CONFIG
-        self.theBook    = theBook
-        self.iterMap    = {}
+        self.mainConf = nw.CONFIG
+        self.theBook  = theBook
+        self.iterMap  = {}
         
         self.set_name("treeLeft")
         self.set_margin_top(40)
@@ -91,6 +93,8 @@ class GuiMainTree(Gtk.TreeView):
     
     def loadContent(self):
         
+        logger.debug("Loading main tree content")
+        
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
         
@@ -104,6 +108,8 @@ class GuiMainTree(Gtk.TreeView):
             itemName   = treeItem["entry"].itemName
             itemLevel  = treeItem["entry"].itemLevel
             itemClass  = treeItem["entry"].itemClass
+            
+            logger.vverbose("Adding '%s'" % itemName)
             
             wordCount  = treeItem["entry"].metaWordCount
             

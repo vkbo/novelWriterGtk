@@ -68,12 +68,21 @@ class DocFile():
         nwXML = ET.parse(self.fullPath)
         xRoot = nwXML.getroot()
         
-        nwxRoot     = xRoot.tag
-        appVersion  = xRoot.attrib["appVersion"]
-        fileVersion = xRoot.attrib["fileVersion"]
-
+        nwxRoot = xRoot.tag
         logger.verbose("XML: Root is %s" % nwxRoot)
-        logger.verbose("XML: File version is %s" % fileVersion)
+        
+        if "appVersion" in xRoot.attrib.keys():
+            appVersion = xRoot.attrib["appVersion"]
+            logger.verbose("XML: App version is %s" % appVersion)
+        
+        if "fileVersion" in xRoot.attrib.keys():
+            fileVersion = xRoot.attrib["fileVersion"]
+            logger.verbose("XML: File version is %s" % fileVersion)
+            
+        if "timeStamp" in xRoot.attrib.keys():
+            timeStamp = xRoot.attrib["fileVersion"]
+            logger.verbose("XML: File timestamp is %s" % timeStamp)
+            self.docText[self.VAL_TIME] = timeStamp
         
         if not nwxRoot == "novelWriterXML" or not fileVersion == "1.0":
             logger.error("DocOpen: Project file does not appear to be a novelWriterXML file version 1.0")
@@ -81,8 +90,8 @@ class DocFile():
         
         for xChild in xRoot:
             if xChild.tag == "document":
-                if self.VAL_TIME in xChild.attrib.keys():
-                    self.docText[self.VAL_TIME] = xChild.attrib[self.VAL_TIME]
+                # if self.VAL_TIME in xChild.attrib.keys():
+                #     self.docText[self.VAL_TIME] = xChild.attrib[self.VAL_TIME]
                 for xItem in xChild:
                     if xItem.tag == self.VAL_COUNT:
                         for attribKey in xItem.attrib.keys():
@@ -107,9 +116,10 @@ class DocFile():
         nwXML = ET.Element("novelWriterXML",attrib={
             "fileVersion" : "1.0",
             "appVersion"  : str(nw.__version__),
+            "timeStamp"   : getTimeStamp("-"),
         })
         
-        xDoc = ET.SubElement(nwXML,"document",attrib={self.VAL_TIME:getTimeStamp("-")})
+        xDoc = ET.SubElement(nwXML,"document",attrib={})
         countVals = {}
         for countType in self.docText[self.VAL_COUNT].keys():
             countVal = self.docText[self.VAL_COUNT][countType]

@@ -112,25 +112,32 @@ class NovelWriter():
     def openBook(self, bookPath, openRecent=False):
         
         if openRecent:
-            bookPath = self.mainConf.getLastBook()
-        
-        if path.isfile(bookPath):
             logger.info("BookOpen: Opening last book project from %s" % bookPath)
-            
-            self.theBook.openBook(bookPath)
-            
-            self.winMain.treeLeft.loadContent()
-            self.bookPage.treeChapters.loadContent()
-            self.charPage.treeChars.loadContent()
-            self.plotPage.treePlots.loadContent()
-            
-            bookTitle   = self.theBook.bookTitle
-            bookAuthors = ", ".join(self.theBook.bookAuthors)
-            winTitle    = "%s – novelWriter v%s" % (bookTitle,nw.__version__)
-            
-            self.winMain.set_title(winTitle)
-            self.bookPage.entryBookTitle.set_text(bookTitle)
-            self.bookPage.entryBookAuthor.set_text(bookAuthors)
+            bookPath = self.mainConf.getLastBook()
+            if path.isfile(bookPath):
+                self.theBook.openBook(bookPath)
+            else:
+                logger.info("BookOpen: Project file not found")
+                self.theBook.createBook()
+        else:
+            if path.isfile(bookPath):
+                logger.info("BookOpen: Opening book project from %s" % bookPath)
+                self.theBook.openBook(bookPath)
+            else:
+                logger.info("BookOpen: Project file not found")
+        
+        self.winMain.treeLeft.loadContent()
+        self.bookPage.treeChapters.loadContent()
+        self.charPage.treeChars.loadContent()
+        self.plotPage.treePlots.loadContent()
+        
+        bookTitle   = self.theBook.bookTitle
+        bookAuthors = ", ".join(self.theBook.bookAuthors)
+        winTitle    = "%s – novelWriter v%s" % (bookTitle,nw.__version__)
+        
+        self.winMain.set_title(winTitle)
+        self.bookPage.entryBookTitle.set_text(bookTitle)
+        self.bookPage.entryBookAuthor.set_text(bookAuthors)
         
         return
     
@@ -158,7 +165,7 @@ class NovelWriter():
         ToDo: Close all open tabs
         """
         
-        self.theBook = Book()
+        self.theBook.closeBook()
         
         return
     
@@ -185,7 +192,7 @@ class NovelWriter():
         dlgReturn = dlgOpen.run()
         if dlgReturn == Gtk.ResponseType.ACCEPT:
             bookPath = dlgOpen.get_filename()
-            logger.verbose("BookOpen: Opening %s" % bookPath)
+            logger.verbose("BookOpen: Reading %s" % bookPath)
             self.closeBook()
             self.openBook(bookPath)
         else:

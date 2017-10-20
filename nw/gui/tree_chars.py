@@ -10,12 +10,14 @@
 
 """
 
-import logging as logger
+import logging
 import nw
 import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
+
+logger = logging.getLogger(__name__)
 
 class GuiCharsTree(Gtk.TreeView):
     
