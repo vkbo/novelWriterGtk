@@ -84,6 +84,8 @@ class GuiCharsTree(Gtk.TreeView):
     
     def loadContent(self):
         
+        logger.debug("Loading character tree content")
+        
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.listStore.clear()
         
@@ -102,6 +104,8 @@ class GuiCharsTree(Gtk.TreeView):
             if not itemClass == "CONTAINER": continue
             if not itemLevel == "ITEM":      continue
             if not itemType  == "CHAR":      continue
+            
+            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
             
             itemImportance = str(treeItem["entry"].itemImportance)
             itemRole       = treeItem["entry"].itemRole

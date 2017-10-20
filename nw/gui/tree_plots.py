@@ -75,6 +75,8 @@ class GuiPlotsTree(Gtk.TreeView):
     
     def loadContent(self):
         
+        logger.debug("Loading plot tree content")
+        
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.listStore.clear()
         
@@ -93,6 +95,8 @@ class GuiPlotsTree(Gtk.TreeView):
             if not itemClass == "CONTAINER": continue
             if not itemLevel == "ITEM":      continue
             if not itemType  == "PLOT":      continue
+            
+            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
             
             itemImportance = str(treeItem["entry"].itemImportance)
             itemComment    = treeItem["entry"].itemComment

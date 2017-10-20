@@ -109,7 +109,7 @@ class GuiMainTree(Gtk.TreeView):
             itemLevel  = treeItem["entry"].itemLevel
             itemClass  = treeItem["entry"].itemClass
             
-            logger.vverbose("Adding '%s'" % itemName)
+            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
             
             wordCount  = treeItem["entry"].metaWordCount
             

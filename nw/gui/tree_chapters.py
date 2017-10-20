@@ -93,6 +93,8 @@ class GuiChaptersTree(Gtk.TreeView):
     
     def loadContent(self):
         
+        logger.debug("Loading chapter tree content")
+        
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.listStore.clear()
         
@@ -111,6 +113,8 @@ class GuiChaptersTree(Gtk.TreeView):
             if not itemClass == "CONTAINER": continue
             if not itemLevel == "ITEM":      continue
             if not itemType  == "BOOK":      continue
+            
+            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
             
             itemSubType = treeItem["entry"].itemSubType
             itemNumber  = str(treeItem["entry"].itemNumber)
