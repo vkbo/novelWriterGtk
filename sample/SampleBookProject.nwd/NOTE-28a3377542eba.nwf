@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0">
+  <document>
+    <counts parcount="2" sencount="2" wordcount="5"/>
+    <text>
+      <paragraph idx="0"><![CDATA[<strong><mark>Sam</mark></strong>]]></paragraph>
+      <paragraph idx="1"><![CDATA[A summary of Sam.]]></paragraph>
+    </text>
+  </document>
+</novelWriterXML>

@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0">
+  <document timestamp="20171017-114652">
+    <counts parcount="3" sencount="21" wordcount="193"/>
+    <text>
+      <paragraph idx="0"><![CDATA[Lorem <strong><em>iiiipsum </em></strong>dolor sit amet, consectetur adipiscing elit. Nullam vulputate luctus quam, in congue elit viverra malesuada. Ut iaculis quam fringilla ex aliquam auctor. Nam eu libero ac arcu egestas malesuada ut vel nisi. Maecenas et mauris dignissim, ultricies neque et, ornare diam. In vitae libero consequat, consequat eros nec, rhoncus velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam et elementum quam. Suspendisse laoreet dapibus vulputate. Phasellus turpis purus, convallis quis bibendum non, tincidunt eu libero. Fusce finibus sem velit, vitae dapibus ante tincidunt ac. Morbi in consequat turpis. Suspendisse felis dui, tincidunt sit amet lacinia eget, viverra ut arcu. Vivamus auctor nunc nunc, vitae porta sem tempus sed.]]></paragraph>
+      <paragraph idx="1"><![CDATA[Cras orci leo, dignissim quis turpis quis, sodales faucibus diam. Nam dictum dignissim lorem eget condimentum. Sed consequat elit ut purus convallis, sit amet blandit tellus convallis. Phasellus sit amet scelerisque mauris, id euismod risus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc ornare, felis in varius pulvinar, diam erat vehicula quam, posuere molestie erat turpis in neque. Sed ornare, justo a consectetur aliquet, lorem lorem posuere purus, nec tristique dolor ipsum sed nisi.]]></paragraph>
+      <paragraph idx="2"><![CDATA[]]></paragraph>
+    </text>
+    <note>
+      <paragraph idx="0"><![CDATA[]]></paragraph>
+    </note>
+  </document>
+</novelWriterXML>

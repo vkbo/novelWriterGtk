@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0">
+  <document>
+    <counts parcount="2" sencount="2" wordcount="17"/>
+    <text>
+      <paragraph idx="0"><![CDATA[This is a brand new scnene file <strike>with nothing in it</strike>.]]></paragraph>
+      <paragraph idx="1"><![CDATA[Now it has something in it.]]></paragraph>
+    </text>
+  </document>
+</novelWriterXML>

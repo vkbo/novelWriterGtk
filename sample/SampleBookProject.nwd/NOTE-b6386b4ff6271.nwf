@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0">
+  <document>
+    <counts parcount="1" sencount="1" wordcount="2"/>
+    <text>
+      <paragraph idx="0"><![CDATA[Test note]]></paragraph>
+    </text>
+  </document>
+</novelWriterXML>

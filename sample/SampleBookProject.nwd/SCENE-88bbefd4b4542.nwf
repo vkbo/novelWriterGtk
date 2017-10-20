@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0">
+  <document timestamp="20171017-141655">
+    <counts parcount="4" sentcount="25" wordcount="228"/>
+    <text>
+      <paragraph idx="0"><![CDATA[<strong>Lorem</strong> iiiipsum <em>dolor<strong> sit</strong></em> amet, consectetur adipiscing elit. Nullam vulputate luctus quam, in congue elit viverra malesuada. Ut iaculis quam fringilla ex aliquam auctor. Nam eu libero ac arcu egestas malesuada ut vel nisi. Maecenas et mauris dignissim, ultricies neque et, ornare diam. In vitae libero consequat, consequat eros nec, rhoncus velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam et elementum quam. Suspendisse laoreet dapibus vulputate. Phasellus turpis purus, convallis quis bibendum non, tincidunt eu libero. Fusce finibus sem velit, vitae dapibus ante tincidunt ac. Morbi in consequat turpis. Suspendisse felis dui, tincidunt sit amet lacinia eget, viverra ut arcu. <strike>Vivamus auctor nunc nunc, vitae <strong>porta</strong> sem tempus sed.</strike>]]></paragraph>
+      <paragraph idx="1"><![CDATA[<strike>Cras orci leo, dignissim quis turpis quis, sodales faucibus diam.</strike> Nam dictum dignissim lorem eget condimentum. Sed consequat elit ut purus convallis, sit amet blandit tellus convallis. Phasellus sit amet scelerisque mauris, id euismod risus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc ornare, felis in varius pulvinar, diam erat vehicula quam, posuere molestie erat turpis in neque. Sed ornare, justo a consectetur aliquet, lorem lorem posuere purus, nec tristique dolor ipsum sed nisi.]]></paragraph>
+      <paragraph idx="2"><![CDATA[This is an additional paragraph. It also contains an additional sentence with additional meaningless words.]]></paragraph>
+      <paragraph idx="3"><![CDATA[“Let’s mess it all up!” she said, before adding a &lt; to the text, and then a &gt; for good measure.]]></paragraph>
+    </text>
+    <note>
+      <paragraph idx="0"><![CDATA[Some <mark>notes</mark> for <em>Lorem Ipsum</em>.]]></paragraph>
+      <paragraph idx="1"><![CDATA[With a second paragraph for testing.]]></paragraph>
+      <paragraph idx="2"><![CDATA[]]></paragraph>
+      <paragraph idx="3"><![CDATA[<strong>This is a heading!</strong>]]></paragraph>
+      <paragraph idx="4"><![CDATA[Well, not su much. Just bolded text. But it looks like a heading.]]></paragraph>
+    </note>
+  </document>
+</novelWriterXML>
