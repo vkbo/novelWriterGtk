@@ -29,15 +29,14 @@ class Book():
         the currently opened files.
         ToDo: Add field for book status, i.e. draft, idea, final, etc. Maybe a date field too."""
         
-        self.bookLoaded  = False
-        
-        self.bookPath    = None
-        self.docPath     = None
-        self.theTree     = BookTree()
+        self.bookLoaded   = False
+        self.bookPath     = None
+        self.docPath      = None
+        self.theTree      = BookTree()
         
         # Book Settings
-        self.bookTitle   = ""
-        self.bookAuthors = []
+        self.bookTitle    = ""
+        self.bookAuthors  = []
         
         # Connect Functions
         self.addFile      = self.theTree.addFile
@@ -59,7 +58,6 @@ class Book():
         logger.debug("Resetting all project variables")
         
         self.bookLoaded  = False
-        
         self.bookPath    = None
         self.docPath     = None
         self.theTree.clearTree()
@@ -84,7 +82,7 @@ class Book():
         if bookPath[-4:] == ".nwx":
             self.docPath = bookPath[:-4]+".nwd"
             self.theTree.setPath(self.docPath)
-
+        
         self.bookPath = bookPath
         
         nwXML = ET.parse(bookPath)
@@ -93,7 +91,7 @@ class Book():
         nwxRoot     = xRoot.tag
         appVersion  = xRoot.attrib["appVersion"]
         fileVersion = xRoot.attrib["fileVersion"]
-
+        
         logger.verbose("XML: Root is %s" % nwxRoot)
         logger.verbose("XML: File version is %s" % fileVersion)
         
@@ -118,6 +116,7 @@ class Book():
                     itemAttrib = xItem.attrib
                     itemHandle = itemAttrib["handle"]
                     itemParent = itemAttrib["parent"]
+                    itemSort   = itemAttrib["sortafter"]
                     bookItem   = BookItem()
                     for xValue in xItem:
                         if xValue.tag == "meta":
@@ -125,7 +124,7 @@ class Book():
                                 bookItem.setFromTag(metaTag,xValue.attrib[metaTag])
                         else:
                             bookItem.setFromTag(xValue.tag,xValue.text)
-                    self.theTree.appendItem(itemHandle,itemParent,bookItem)
+                    self.theTree.appendItem(itemHandle,itemParent,itemSort,bookItem)
         
         self.bookLoaded = True
         self.theTree.validateTree()
@@ -173,11 +172,13 @@ class Book():
             
             itemHandle = str(treeItem["handle"])
             parHandle  = str(treeItem["parent"])
+            sortHandle = str(treeItem["sortafter"])
             
             xItem = ET.SubElement(xContent,"item",attrib={
-                "idx"    : str(itemIdx),    # This index is currently redundant. Maybe remove.
-                "handle" : str(itemHandle),
-                "parent" : str(parHandle),
+                # "idx"       : str(itemIdx),    # This index is currently redundant. Maybe remove.
+                "handle"    : str(itemHandle),
+                "parent"    : str(parHandle),
+                "sortafter" : str(sortHandle),
             })
             
             # Save the metadata of the file also in the project file
