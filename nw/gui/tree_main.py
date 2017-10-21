@@ -98,7 +98,7 @@ class GuiMainTree(Gtk.TreeView):
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.treeStore.clear()
         
-        for treeHandle in self.theBook.theTree.fullOrder:
+        for treeHandle in self.theBook.theTree.treeOrder:
             
             treeItem   = self.theBook.getItem(treeHandle)
             
