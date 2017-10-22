@@ -45,6 +45,7 @@ class Book():
         self.addPlot      = self.theTree.addPlot
         self.getItem      = self.theTree.getItem
         self.updateItem   = self.theTree.updateItem
+        self.changeOrder  = self.theTree.changeOrder
         
         return
     

@@ -16,12 +16,15 @@ import nw
 import gi
 gi.require_version("Gtk","3.0")
 
-from gi.repository    import Gtk, Gdk
-from time             import sleep
-from os               import path
-from nw.gui.winmain   import GuiWinMain
-from nw.gui.tree_main import GuiMainTree
-from nw.file.book     import Book, BookItem
+from gi.repository        import Gtk, Gdk
+from time                 import sleep
+from os                   import path
+from nw.gui.winmain       import GuiWinMain
+from nw.gui.tree_main     import GuiMainTree
+from nw.gui.tree_chapters import GuiChaptersTree
+from nw.gui.tree_chars    import GuiCharsTree
+from nw.gui.tree_plots    import GuiPlotsTree
+from nw.file.book         import Book, BookItem
 
 logger = logging.getLogger(__name__)
 
@@ -74,11 +77,15 @@ class NovelWriter():
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
         self.winMain.treeLeft.connect("row-activated",self.onLeftTreeActivate)
         self.winMain.btnLeftAdd.connect("clicked",self.onLeftAddFile)
+        self.winMain.btnLeftMvU.connect("clicked",self.onLeftMoveFile,"UP")
+        self.winMain.btnLeftMvD.connect("clicked",self.onLeftMoveFile,"DOWN")
         self.winMain.treeLeft.connect("button-release-event",self.onLeftTreeContextMenu)
         
         # Book Page
         self.bookPage.btnChaptersAdd.connect("clicked",self.onChapterAdd)
         self.bookPage.btnChaptersDel.connect("clicked",self.onChapterRemove)
+        self.bookPage.btnChaptersMvU.connect("clicked",self.onChapterMove,"UP")
+        self.bookPage.btnChaptersMvD.connect("clicked",self.onChapterMove,"DOWN")
         self.bookPage.treeChapters.rendType.connect("edited",self.onChapterEdit,"type")
         self.bookPage.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
         self.bookPage.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
@@ -88,6 +95,8 @@ class NovelWriter():
         # Characters Page
         self.charPage.btnCharsAdd.connect("clicked",self.onCharAdd)
         self.charPage.btnCharsDel.connect("clicked",self.onCharRemove)
+        self.charPage.btnCharsMvU.connect("clicked",self.onCharMove,"UP")
+        self.charPage.btnCharsMvD.connect("clicked",self.onCharMove,"DOWN")
         self.charPage.treeChars.rendName.connect("edited",self.onCharEdit,"name")
         self.charPage.treeChars.rendImport.connect("edited",self.onCharEdit,"importance")
         self.charPage.treeChars.rendRole.connect("edited",self.onCharEdit,"role")
@@ -96,6 +105,8 @@ class NovelWriter():
         # Plots Page
         self.plotPage.btnPlotsAdd.connect("clicked",self.onPlotAdd)
         self.plotPage.btnPlotsDel.connect("clicked",self.onPlotRemove)
+        self.plotPage.btnPlotsMvU.connect("clicked",self.onPlotMove,"UP")
+        self.plotPage.btnPlotsMvD.connect("clicked",self.onPlotMove,"DOWN")
         self.plotPage.treePlots.rendName.connect("edited",self.onPlotEdit,"name")
         self.plotPage.treePlots.rendImport.connect("edited",self.onPlotEdit,"importance")
         self.plotPage.treePlots.rendComment.connect("edited",self.onPlotEdit,"comment")
@@ -286,6 +297,27 @@ class NovelWriter():
         
         return
     
+    def onLeftMoveFile(self, guiObject, moveIt):
+        
+        itemHandle = None
+        
+        listModel, pathList = self.winMain.treeLeft.treeSelect.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,GuiMainTree.COL_HANDLE)
+        
+        if itemHandle == None: return
+        
+        logger.debug("Moving file %s %s" % (itemHandle,moveIt))
+        self.theBook.changeOrder(itemHandle,moveIt)
+        
+        self.winMain.treeLeft.loadContent()
+        
+        newIter = self.winMain.treeLeft.getIter(itemHandle)
+        self.winMain.treeLeft.treeSelect.select_iter(newIter)
+        
+        return
+    
     def onLeftAddFile(self, guiObject):
         
         itemHandle = None
@@ -330,6 +362,28 @@ class NovelWriter():
         
         return
     
+    def onChapterMove(self, guiObject, moveIt):
+        
+        itemHandle = None
+        
+        listModel, pathList = self.winMain.bookPage.treeChapters.treeSelect.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,GuiChaptersTree.COL_HANDLE)
+        
+        if itemHandle == None: return
+        
+        logger.debug("Moving chapter %s %s" % (itemHandle,moveIt))
+        self.theBook.changeOrder(itemHandle,moveIt)
+        
+        self.winMain.treeLeft.loadContent()
+        self.winMain.bookPage.treeChapters.loadContent()
+        
+        newIter = self.winMain.bookPage.treeChapters.getIter(itemHandle)
+        self.winMain.bookPage.treeChapters.treeSelect.select_iter(newIter)
+        
+        return
+    
     def onChapterEdit(self, guiObject, itemPath, editText, itemTag):
         
         srcTree   = self.bookPage.treeChapters
@@ -368,6 +422,28 @@ class NovelWriter():
         
         return
     
+    def onCharMove(self, guiObject, moveIt):
+        
+        itemHandle = None
+        
+        listModel, pathList = self.winMain.charPage.treeChars.treeSelect.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,GuiCharsTree.COL_HANDLE)
+        
+        if itemHandle == None: return
+        
+        logger.debug("Moving character %s %s" % (itemHandle,moveIt))
+        self.theBook.changeOrder(itemHandle,moveIt)
+        
+        self.winMain.treeLeft.loadContent()
+        self.winMain.charPage.treeChars.loadContent()
+        
+        newIter = self.winMain.charPage.treeChars.getIter(itemHandle)
+        self.winMain.charPage.treeChars.treeSelect.select_iter(newIter)
+        
+        return
+    
     def onCharEdit(self, guiObject, itemPath, editText, itemTag):
         
         srcTree   = self.charPage.treeChars
@@ -402,6 +478,28 @@ class NovelWriter():
     def onPlotRemove(self, guiObject):
         
         logger.vverbose("User clicked remove plot")
+        
+        return
+    
+    def onPlotMove(self, guiObject, moveIt):
+        
+        itemHandle = None
+        
+        listModel, pathList = self.winMain.plotPage.treePlots.treeSelect.get_selected_rows()
+        for pathItem in pathList:
+            listIter   = listModel.get_iter(pathItem)
+            itemHandle = listModel.get_value(listIter,GuiPlotsTree.COL_HANDLE)
+        
+        if itemHandle == None: return
+        
+        logger.debug("Moving plot %s %s" % (itemHandle,moveIt))
+        self.theBook.changeOrder(itemHandle,moveIt)
+        
+        self.winMain.treeLeft.loadContent()
+        self.winMain.plotPage.treePlots.loadContent()
+        
+        newIter = self.winMain.plotPage.treePlots.getIter(itemHandle)
+        self.winMain.plotPage.treePlots.treeSelect.select_iter(newIter)
         
         return
     

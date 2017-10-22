@@ -136,4 +136,7 @@ class GuiChaptersTree(Gtk.TreeView):
         
         return
     
+    def getIter(self, itemHandle):
+        return self.iterMap[itemHandle]
+    
 # End Class GuiCharsTree

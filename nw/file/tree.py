@@ -31,9 +31,6 @@ class BookTree():
         self.treeLookup = {}
         self.parOfItems = {}
         self.parOfFiles = {}
-        self.rootOrder  = []
-        self.itemOrder  = []
-        self.fileOrder  = []
         self.treeOrder  = []
         
         self.fixedOrder = [
@@ -58,9 +55,6 @@ class BookTree():
         self.treeLookup = {}
         self.parOfItems = {}
         self.parOfFiles = {}
-        self.rootOrder  = []
-        self.itemOrder  = []
-        self.fileOrder  = []
         self.treeOrder  = []
         
         self.fixedOrder = [
@@ -172,41 +166,43 @@ class BookTree():
     def getItem(self, itemHandle):
         return self.theTree[self.treeLookup[itemHandle]]
     
-    def changeOrder(self, itemHandle, moveStep):
+    def changeOrder(self, itemHandle, moveIt):
         
         treeItem   = self.getItem(itemHandle)
         itemParent = treeItem["parent"]
         itemEntry  = treeItem["entry"]
         
         if itemEntry.itemLevel == BookItem.LEV_FILE:
-            listHook = self.parOfFiles[itemParent]
+            currList = self.parOfFiles[itemParent]
         elif itemEntry.itemLevel == BookItem.LEV_ITEM:
-            listHook = self.parOfFiles[itemParent]
+            currList = self.parOfItems[itemParent]
         else:
             logger.error("Cannot change order of ROOT elements")
             return
         
-        if itemHandle not in listHook:
+        if itemHandle not in currList:
             logger.error("BUG: Cannot change order of %s, as it is not where it should be" % itemHandle)
             return
         
-        currIndex = listHook.index(itemHandle)
-        newIndex  = currIndex + moveStep
-        
-        if newIndex < 0 or newIndex >= len(listHook): return
-        
-        # Set sort after value to either parent, or previous element
-        if newIndex == 0:
-            self.theTree[self.treeLookup[itemHandle]]["sortafter"] = itemParent
+        currIndex = currList.index(itemHandle)
+        if moveIt == "UP":
+            newIndex = currIndex - 1
+        elif moveIt == "DOWN":
+            newIndex = currIndex + 1
         else:
-            self.theTree[self.treeLookup[itemHandle]]["sortafter"] = listHook[newIndex-1]
+            logger.error("BUG: Unknown move step %s" % str(moveIt))
         
-        # If an element exists at the new position, change its sorting
-        if newIndex < len(listHook)-1:
-            self.theTree[self.treeLookup[listHook[newIndex+1]]]["sortafter"] = itemHandle
+        if newIndex < 0 or newIndex >= len(currList): return
         
-        # No need to actually move the items, the sorting function will fix it
-        self.sortTree()
+        currList[currIndex], currList[newIndex] = currList[newIndex], currList[currIndex]
+        
+        if itemEntry.itemLevel == BookItem.LEV_FILE:
+            self.parOfFiles[itemParent] = currList
+        elif itemEntry.itemLevel == BookItem.LEV_ITEM:
+            self.parOfItems[itemParent] = currList
+        
+        self.buildTreeOrder()
+        self.updateEntryOrder()
         
         return
     
@@ -329,13 +325,8 @@ class BookTree():
         # Resetting Indices
         self.parOfItems = {}
         self.parOfFiles = {}
-        self.rootOrder  = []
-        self.itemOrder  = []
-        self.fileOrder  = []
-        self.treeOrder  = []
         
         treeOrder = []
-        
         logger.debug("Sort: Reading previous order")
         tempOrder = [None] * len(self.theTree)
         for treeItem in self.theTree:
@@ -365,11 +356,8 @@ class BookTree():
         logger.debug("Sort: Sorting ROOT entries")
         for rootType in self.fixedOrder:
             itemHandle = self.fixedItems[rootType]
-            self.rootOrder.append(itemHandle)
             self.parOfItems[itemHandle] = []
             self.parOfFiles[itemHandle] = []
-        
-        logger.debug("Sort: %d ROOT entries added to index" % len(self.rootOrder))
         
         # Scanning ITEM level
         logger.debug("Sort: Sorting ITEM entries")
@@ -393,11 +381,6 @@ class BookTree():
             else:
                 logger.warning("BUG: itemParent %s not found in itemParent" % itemParent)
         
-        for itemParent in self.rootOrder:
-            self.itemOrder += self.parOfItems[itemParent]
-        
-        logger.debug("Sort: %d ITEM entries added to index" % len(self.itemOrder))
-            
         # Scanning FILE level
         logger.verbose("Sort: Sorting FILE entries")
         for itemHandle in treeOrder:
@@ -419,30 +402,52 @@ class BookTree():
             else:
                 logger.warning("BUG: itemParent %s not found in fileParent" % itemParent)
         
-        for itemParent in chain(self.rootOrder,self.itemOrder):
-            self.fileOrder += self.parOfFiles[itemParent]
+        self.buildTreeOrder()
+        self.updateEntryOrder()
         
-        logger.debug("Sort: %d FILE entries added to index" % len(self.fileOrder))
+        return
+    
+    def buildTreeOrder(self):
         
-        # Checking Index
+        # Resetting Indices
+        self.treeOrder = []
+        
+        rootOrder = []
+        itemOrder = []
+        fileOrder = []
+        
+        for rootType in self.fixedOrder:
+            itemHandle = self.fixedItems[rootType]
+            rootOrder.append(itemHandle)
+        
+        logger.debug("Order: %d ROOT entries added to index" % len(rootOrder))
+        
+        for itemParent in rootOrder:
+            itemOrder += self.parOfItems[itemParent]
+        
+        logger.debug("Order: %d ITEM entries added to index" % len(itemOrder))
+        
+        for itemParent in chain(rootOrder,itemOrder):
+            fileOrder += self.parOfFiles[itemParent]
+        
+        logger.debug("Order: %d FILE entries added to index" % len(fileOrder))
+        
         errCount = 0
-        logger.debug("Sort: Assempling index, and checking for consistency")
-        self.treeOrder = self.rootOrder + self.itemOrder + self.fileOrder
+        logger.debug("Order: Assempling index, and checking for consistency")
+        self.treeOrder = rootOrder + itemOrder + fileOrder
         for itemHandle in self.treeLookup.keys():
             if itemHandle not in self.treeOrder:
                 logger.warning("BUG: Handle %s not in index" % itemHandle)
                 errCount += 1
         if errCount == 0:
-            logger.debug("Sort: Index is consistent")
+            logger.debug("Order: Index is consistent")
         else:
             logger.warning("BUG: %d errors found in the index" % errCount)
             
         uniqueSet = set(self.treeOrder)
         if len(uniqueSet) == len(self.treeOrder):
-            logger.debug("Sort: No duplicates found in index")
-        
-        self.updateEntryOrder()
-        
+            logger.debug("Order: No duplicates found in index")
+            
         return
     
     def updateEntryOrder(self):
