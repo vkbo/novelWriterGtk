@@ -114,9 +114,19 @@ class Book():
                 logger.debug("BookOpen: Found book content")
                 for xItem in xChild:
                     itemAttrib = xItem.attrib
-                    itemHandle = itemAttrib["handle"]
-                    itemParent = itemAttrib["parent"]
-                    itemSort   = itemAttrib["sortafter"]
+                    if "handle" in xItem.attrib:
+                        itemHandle = itemAttrib["handle"]
+                    else:
+                        logger.error("BookOpen: Item missing handle, Skipping")
+                        continue
+                    if "parent" in xItem.attrib:
+                        itemParent = itemAttrib["parent"]
+                    else:
+                        itemParent = None
+                    if "order" in xItem.attrib:
+                        itemOrder = itemAttrib["order"]
+                    else:
+                        itemOrder = None
                     bookItem   = BookItem()
                     for xValue in xItem:
                         if xValue.tag == "meta":
@@ -124,7 +134,7 @@ class Book():
                                 bookItem.setFromTag(metaTag,xValue.attrib[metaTag])
                         else:
                             bookItem.setFromTag(xValue.tag,xValue.text)
-                    self.theTree.appendItem(itemHandle,itemParent,itemSort,bookItem)
+                    self.theTree.appendItem(itemHandle,itemParent,itemOrder,bookItem)
         
         self.bookLoaded = True
         self.theTree.validateTree()
@@ -172,13 +182,12 @@ class Book():
             
             itemHandle = str(treeItem["handle"])
             parHandle  = str(treeItem["parent"])
-            sortHandle = str(treeItem["sortafter"])
+            itemOrder  = str(treeItem["order"])
             
             xItem = ET.SubElement(xContent,"item",attrib={
-                # "idx"       : str(itemIdx),    # This index is currently redundant. Maybe remove.
-                "handle"    : str(itemHandle),
-                "parent"    : str(parHandle),
-                "sortafter" : str(sortHandle),
+                "handle" : str(itemHandle),
+                "parent" : str(parHandle),
+                "order"  : str(itemOrder),
             })
             
             # Save the metadata of the file also in the project file

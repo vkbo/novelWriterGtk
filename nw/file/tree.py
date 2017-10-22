@@ -239,16 +239,16 @@ class BookTree():
         
         return
     
-    def appendItem(self, tHandle, pHandle, sHandle, bookItem):
+    def appendItem(self, tHandle, pHandle, tOrder, bookItem):
         """
         Appends an entry to the main project tree.
         """
         
         tHandle = self.checkString(tHandle,self.makeHandle(),False)
         pHandle = self.checkString(pHandle,None,True)
-        sHandle = self.checkString(sHandle,None,True)
+        tOrder  = self.checkInt(tOrder,None,True)
         
-        logger.verbose("BookOpen: Adding item %s with parent %s" % (str(tHandle),str(pHandle)))
+        logger.verbose("Append: Adding item %s with parent %s" % (str(tHandle),str(pHandle)))
         
         if bookItem.itemLevel == BookItem.LEV_FILE:
             docItem = DocFile(self.docPath,tHandle,bookItem.itemClass)
@@ -256,15 +256,14 @@ class BookTree():
             docItem = None
         
         self.theTree.append({
-            "handle"    : tHandle,
-            "parent"    : pHandle,
-            "sortafter" : sHandle,
-            "entry"     : bookItem,
-            "doc"       : docItem,
+            "handle" : tHandle,
+            "parent" : pHandle,
+            "order"  : tOrder,
+            "entry"  : bookItem,
+            "doc"    : docItem,
         })
         lastIdx = len(self.theTree)-1
         self.treeLookup[tHandle] = lastIdx
-        # self.lvlIndex[bookItem.itemLevel][tHandle] = lastIdx
         
         return
     
@@ -321,7 +320,7 @@ class BookTree():
                         self.theTree[itemIdx]["parent"] = self.fixedItems[itemType]
                         errCount += 1
         
-        logger.info("Found %d error(s) while parsing the project file" % errCount)
+        logger.info("Found %d error(s) while parsing the project tree" % errCount)
         
         return
     
@@ -335,115 +334,127 @@ class BookTree():
         self.fileOrder  = []
         self.treeOrder  = []
         
+        treeOrder = []
+        
+        logger.debug("Sort: Reading previous order")
+        tempOrder = [None] * len(self.theTree)
+        for treeItem in self.theTree:
+            itemHandle = treeItem["handle"]
+            itemOrder  = treeItem["order"]
+            itemName   = treeItem["entry"].itemName
+            if itemOrder is not None and isinstance(itemOrder,int):
+                if tempOrder[itemOrder] is None:
+                    tempOrder[itemOrder] = itemHandle
+                    logger.vverbose("Sort: Entry '%s' %s has order %s" % (
+                        str(itemName), str(itemHandle), str(itemOrder)
+                    ))
+                else:
+                    tempOrder.append(itemHandle)
+                    logger.vverbose("Sort: Entry '%s' %s has no order, appending" % (
+                        str(itemName), str(itemHandle)
+                    ))
+            else:
+                tempOrder.append(itemHandle)
+                logger.vverbose("Sort: Entry '%s' %s has no order, appending" % (
+                    str(itemName), str(itemHandle)
+                ))
+        for tempItem in tempOrder:
+            if tempItem is not None: treeOrder.append(tempItem)
+        
         # Scanning ROOT level
-        logger.debug("Sorting ROOT entries")
+        logger.debug("Sort: Sorting ROOT entries")
         for rootType in self.fixedOrder:
             itemHandle = self.fixedItems[rootType]
             self.rootOrder.append(itemHandle)
             self.parOfItems[itemHandle] = []
             self.parOfFiles[itemHandle] = []
         
-        logger.debug("%d ROOT entries added to index" % len(self.rootOrder))
+        logger.debug("Sort: %d ROOT entries added to index" % len(self.rootOrder))
         
         # Scanning ITEM level
-        logger.debug("Sorting ITEM entries")
-        for treeItem in self.theTree:
+        logger.debug("Sort: Sorting ITEM entries")
+        for itemHandle in treeOrder:
+            
+            itemIdx    = self.treeLookup[itemHandle]
+            treeItem   = self.theTree[itemIdx]
             
             itemHandle = treeItem["handle"]
             itemParent = treeItem["parent"]
-            itemSort   = treeItem["sortafter"]
             bookEntry  = treeItem["entry"]
-            itemIdx    = self.treeLookup[itemHandle]
             
             if not bookEntry.itemLevel == BookItem.LEV_ITEM: continue
             
             if itemParent in self.parOfItems.keys():
-                nItems = len(self.parOfItems[itemParent])
-                if itemSort in self.parOfItems[itemParent]:
-                    insertAt = self.parOfItems[itemParent].index(itemSort)+1
-                elif itemSort == itemParent:
-                    insertAt = 0
-                else:
-                    insertAt = nItems
-                self.parOfItems[itemParent].insert(insertAt,itemHandle)
-                logger.vverbose("Sort: ITEM '%s' %s wants to be after %s" % (
-                    bookEntry.itemName, str(itemHandle), str(itemSort)
+                self.parOfItems[itemParent].append(itemHandle)
+                logger.vverbose("Sort: ITEM '%s' %s appended to %s" % (
+                    bookEntry.itemName, str(itemHandle), str(itemParent)
                 ))
                 self.parOfFiles[itemHandle] = []
             else:
                 logger.warning("BUG: itemParent %s not found in itemParent" % itemParent)
         
-        logger.verbose("Updating ITEM sorting")
         for itemParent in self.rootOrder:
             self.itemOrder += self.parOfItems[itemParent]
-            itemSort = itemParent
-            for itemHandle in self.parOfItems[itemParent]:
-                itemIdx = self.treeLookup[itemHandle]
-                self.theTree[itemIdx]["sortafter"] = itemSort
-                logger.vverbose("Sort: ITEM '%s' %s now sorted after %s" % (
-                    self.theTree[itemIdx]["entry"].itemName, str(itemHandle), str(itemSort)
-                ))
-                itemSort = itemHandle
         
-        logger.debug("%d ITEM entries added to index" % len(self.itemOrder))
+        logger.debug("Sort: %d ITEM entries added to index" % len(self.itemOrder))
             
         # Scanning FILE level
-        logger.debug("Sorting FILE entries")
-        for treeItem in self.theTree:
+        logger.verbose("Sort: Sorting FILE entries")
+        for itemHandle in treeOrder:
+            
+            itemIdx    = self.treeLookup[itemHandle]
+            treeItem   = self.theTree[itemIdx]
             
             itemHandle = treeItem["handle"]
             itemParent = treeItem["parent"]
-            itemSort   = treeItem["sortafter"]
             bookEntry  = treeItem["entry"]
-            itemIdx    = self.treeLookup[itemHandle]
             
             if not bookEntry.itemLevel == BookItem.LEV_FILE: continue
             
             if itemParent in self.parOfFiles.keys():
-                nItems = len(self.parOfFiles[itemParent])
-                if itemSort in self.parOfFiles[itemParent]:
-                    insertAt = self.parOfFiles[itemParent].index(itemSort)+1
-                elif itemSort == itemParent:
-                    insertAt = 0
-                else:
-                    insertAt = nItems
-                self.parOfFiles[itemParent].insert(insertAt,itemHandle)
-                logger.vverbose("Sort: FILE '%s' %s wants to be after %s" % (
-                    bookEntry.itemName, str(itemHandle), str(itemSort)
+                self.parOfFiles[itemParent].append(itemHandle)
+                logger.vverbose("Sort: FILE '%s' %s appended to %s" % (
+                    bookEntry.itemName, str(itemHandle), str(itemParent)
                 ))
             else:
                 logger.warning("BUG: itemParent %s not found in fileParent" % itemParent)
         
-        logger.verbose("Updating FILE sorting")
         for itemParent in chain(self.rootOrder,self.itemOrder):
             self.fileOrder += self.parOfFiles[itemParent]
-            itemSort = itemParent
-            for itemHandle in self.parOfFiles[itemParent]:
-                itemIdx = self.treeLookup[itemHandle]
-                self.theTree[itemIdx]["sortafter"] = itemSort
-                logger.vverbose("Sort: FILE '%s' %s now sorted after %s" % (
-                    self.theTree[itemIdx]["entry"].itemName, str(itemHandle), str(itemSort)
-                ))
-                itemSort = itemHandle
         
-        logger.debug("%d FILE entries added to index" % len(self.fileOrder))
+        logger.debug("Sort: %d FILE entries added to index" % len(self.fileOrder))
         
         # Checking Index
         errCount = 0
-        logger.debug("Checking index for consistency")
+        logger.debug("Sort: Assempling index, and checking for consistency")
         self.treeOrder = self.rootOrder + self.itemOrder + self.fileOrder
         for itemHandle in self.treeLookup.keys():
             if itemHandle not in self.treeOrder:
                 logger.warning("BUG: Handle %s not in index" % itemHandle)
                 errCount += 1
         if errCount == 0:
-            logger.debug("Index is consistent")
+            logger.debug("Sort: Index is consistent")
         else:
             logger.warning("BUG: %d errors found in the index" % errCount)
             
         uniqueSet = set(self.treeOrder)
         if len(uniqueSet) == len(self.treeOrder):
-            logger.debug("No duplicates found in index")
+            logger.debug("Sort: No duplicates found in index")
+        
+        self.updateEntryOrder()
+        
+        return
+    
+    def updateEntryOrder(self):
+        
+        logger.debug("Order: Setting order parameter of tree entries")
+        for itemOrder in range(len(self.treeOrder)):
+            itemHandle = self.treeOrder[itemOrder]
+            itemIdx    = self.treeLookup[itemHandle]
+            self.theTree[itemIdx]["order"] = itemOrder
+            logger.vverbose("Order: Setting '%s' %s to order %d" % (
+                str(self.theTree[itemIdx]["entry"].itemName), itemHandle, itemOrder
+            ))
         
         return
     
@@ -472,5 +483,14 @@ class BookTree():
             if checkValue == "None": return None
         if isinstance(checkValue,str): return str(checkValue)
         return defaultValue
+    
+    def checkInt(self,checkValue,defaultValue,allowNone=False):
+        if allowNone:
+            if checkValue == None:   return None
+            if checkValue == "None": return None
+        try:
+            return int(checkValue)
+        except:
+            return defaultValue
     
 # End Class BookTree
