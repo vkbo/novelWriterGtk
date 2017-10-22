@@ -89,7 +89,7 @@ class NovelWriter():
         self.bookPage.treeChapters.rendType.connect("edited",self.onChapterEdit,"type")
         self.bookPage.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
         self.bookPage.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
-        self.bookPage.treeChapters.rendCompile.connect("edited",self.onChapterEdit,"compile")
+        self.bookPage.treeChapters.rendCompile.connect("toggled",self.onChapterToggle,"compile")
         self.bookPage.treeChapters.rendComment.connect("edited",self.onChapterEdit,"comment")
         
         # Characters Page
@@ -392,13 +392,28 @@ class NovelWriter():
         if itemTag == "type":    srcColumn = srcTree.COL_TYPE
         if itemTag == "number":  srcColumn = srcTree.COL_NUMBER
         if itemTag == "name":    srcColumn = srcTree.COL_TITLE
-        if itemTag == "compile": srcColumn = srcTree.COL_COMPILE
         if itemTag == "comment": srcColumn = srcTree.COL_COMMENT
         
         itemHandle = srcTree.listStore[itemPath][handleCol]
         self.theBook.updateItem(itemHandle,itemTag,editText)
         parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
         srcTree.listStore[itemPath][srcColumn] = str(parsedValue)
+        self.winMain.treeLeft.loadContent()
+        
+        return
+    
+    def onChapterToggle(self, guiObject, itemPath, itemTag):
+        
+        srcTree   = self.bookPage.treeChapters
+        handleCol = srcTree.COL_HANDLE
+        
+        if itemTag == "compile": srcColumn = srcTree.COL_COMPILE
+        
+        itemHandle = srcTree.listStore[itemPath][handleCol]
+        currState  = srcTree.listStore[itemPath][srcColumn]
+        self.theBook.updateItem(itemHandle,itemTag,not currState)
+        parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
+        srcTree.listStore[itemPath][srcColumn] = parsedValue
         self.winMain.treeLeft.loadContent()
         
         return

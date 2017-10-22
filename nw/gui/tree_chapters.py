@@ -43,7 +43,7 @@ class GuiChaptersTree(Gtk.TreeView):
         
         # Core Objects
         self.treeSelect = self.get_selection()
-        self.listStore  = Gtk.ListStore(str,str,str,str,str,str)
+        self.listStore  = Gtk.ListStore(str,str,str,bool,str,str)
         self.set_model(self.listStore)
         
         # Type
@@ -70,10 +70,11 @@ class GuiChaptersTree(Gtk.TreeView):
         
         # Compile
         self.colCompile  = Gtk.TreeViewColumn(title="Compile")
-        self.rendCompile = Gtk.CellRendererText()
-        self.rendCompile.set_property("editable",True)
+        self.rendCompile = Gtk.CellRendererToggle()
+        self.rendCompile.set_radio(False)
+        self.rendCompile.set_activatable(True)
         self.colCompile.pack_start(self.rendCompile,False)
-        self.colCompile.add_attribute(self.rendCompile,"text",3)
+        self.colCompile.add_attribute(self.rendCompile,"active",3)
         
         # Comment
         self.colComment  = Gtk.TreeViewColumn(title="Comment")
@@ -118,7 +119,7 @@ class GuiChaptersTree(Gtk.TreeView):
             
             itemSubType = treeItem["entry"].itemSubType
             itemNumber  = str(treeItem["entry"].itemNumber)
-            itemCompile = str(treeItem["entry"].itemCompile)
+            itemCompile = treeItem["entry"].itemCompile
             itemComment = treeItem["entry"].itemComment
             
             tmpIter = self.listStore.append([

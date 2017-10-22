@@ -150,7 +150,7 @@ class BookItem():
             logger.error("itemClass: Wrong type, expected string")
             return
         if newClass.upper() in self.validClasses:
-            self.itemClass = newClass.upper()
+            self.itemClass = newClass.upper().strip()
         else:
             logger.error("itemClass: Invalid class '%s'" % newClass)
         return
@@ -160,7 +160,7 @@ class BookItem():
             logger.error("itemLevel: Wrong type, expected string")
             return
         if newLevel.upper() in self.validLevels:
-            self.itemLevel = newLevel.upper()
+            self.itemLevel = newLevel.upper().strip()
         else:
             logger.error("itemLevel: Invalid level '%s'" % newLevel)
         return
@@ -170,7 +170,7 @@ class BookItem():
             logger.error("itemType: Wrong type, expected string")
             return
         if newType.upper() in self.validTypes:
-            self.itemType = newType.upper()
+            self.itemType = newType.upper().strip()
         else:
             logger.error("itemType: Invalid type '%s'" % newType)
         return
@@ -180,7 +180,7 @@ class BookItem():
             logger.error("itemSubType: Wrong type, expected string")
             return
         if newSubType.upper() in self.validSubTypes:
-            self.itemSubType = newSubType.upper()
+            self.itemSubType = newSubType.upper().strip()
         else:
             logger.error("itemSubType: Invalid subtype '%s'" % newSubType)
         return

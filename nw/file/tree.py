@@ -160,7 +160,7 @@ class BookTree():
     #
     
     def updateItem(self, itemHandle, tTag, tValue):
-        self.theTree[self.treeLookup[itemHandle]]["entry"].setFromTag(tTag,tValue.strip())
+        self.theTree[self.treeLookup[itemHandle]]["entry"].setFromTag(tTag,tValue)
         return
     
     def getItem(self, itemHandle):
