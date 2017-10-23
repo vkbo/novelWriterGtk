@@ -202,19 +202,7 @@
  * TreeViews
  */
 
-#treeLeft.view {
-    background-color: @colMedium;
-    color: @colText;
-}
-
-#treeLeft.view:hover {
-    background-color: rgba(255,255,255,0.1);
-}
-
-#treeLeft.view:selected {
-    background-color: rgba(255,255,255,0.2);
-}
-
+#treeLeft.view,
 #treeChapters.view,
 #treeChars.view,
 #treePlots.view {
@@ -224,18 +212,21 @@
     padding: 1px 2px;
 }
 
+#treeLeft.view:hover,
 #treeChapters.view:hover,
 #treeChars.view:hover,
 #treePlots.view:hover {
     background-color: rgba(255,255,255,0.1);
 }
 
+#treeLeft.view:selected,
 #treeChapters.view:selected,
 #treeChars.view:selected,
 #treePlots.view:selected {
     background-color: rgba(255,255,255,0.2);
 }
 
+#treeLeft.view     > header *,
 #treeChapters.view > header *,
 #treeChars.view    > header *,
 #treePlots.view    > header * {
@@ -247,6 +238,7 @@
     box-shadow: none;
 }
 
+#treeLeft.view     > header > button,
 #treeChapters.view > header > button,
 #treeChars.view    > header > button,
 #treePlots.view    > header > button {
@@ -254,9 +246,10 @@
     padding: 4px 6px;
 }
 
+#treeLeft.view     > row,
 #treeChapters.view > row,
-#treeChars.view > row,
-#treePlots.view > row {
+#treeChars.view    > row,
+#treePlots.view    > row {
     margin: 0px;
     padding: 0px;
 }

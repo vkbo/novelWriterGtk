@@ -115,7 +115,7 @@ class GuiEditor(Gtk.Paned):
         docItem.saveFile()
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
-        tabIcon.set_from_icon_name("gtk-file",Gtk.IconSize.MENU)
+        tabIcon.set_from_icon_name("emblem-ok-symbolic",Gtk.IconSize.MENU)
         
         tabLabel = self.get_parent().get_tab_label(self).get_children()[1]
         tabLabel.set_text(docTitle)
@@ -137,7 +137,7 @@ class GuiEditor(Gtk.Paned):
         self.docChanged = True
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
-        tabIcon.set_from_icon_name("gtk-about",Gtk.IconSize.MENU)
+        tabIcon.set_from_icon_name("emblem-important-symbolic",Gtk.IconSize.MENU)
         
         
         return

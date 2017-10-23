@@ -39,7 +39,7 @@ class GuiMainTree(Gtk.TreeView):
         self.iterMap  = {}
         
         self.set_name("treeLeft")
-        self.set_margin_top(40)
+        self.set_margin_top(0)
         self.set_margin_bottom(4)
         self.set_margin_left(12)
         self.set_margin_right(12)
@@ -60,8 +60,8 @@ class GuiMainTree(Gtk.TreeView):
         self.colTitle.set_attributes(self.rendTitle,markup=0)
         
         # File Number
-        self.colNumber  = Gtk.TreeViewColumn(title="Count")
-        self.rendNumber = Gtk.CellRendererText()
+        # self.colNumber  = Gtk.TreeViewColumn(title="Count")
+        # self.rendNumber = Gtk.CellRendererText()
         # self.colNumber.pack_start(self.rendNumber,False)
         # self.colNumber.add_attribute(self.rendNumber,"text",1)
         
@@ -75,7 +75,7 @@ class GuiMainTree(Gtk.TreeView):
         
         # Add to TreeView
         self.append_column(self.colTitle)
-        self.append_column(self.colNumber)
+        # self.append_column(self.colNumber)
         self.append_column(self.colWords)
         
         #
