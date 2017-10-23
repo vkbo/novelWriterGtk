@@ -1,6 +1,6 @@
 # novelWriter
 
-**Development branch for version 0.4**
+**On master branc: Development for version 0.4**
 
 Latest pre-release: [Version 0.3](https://github.com/vkbo/novelWriter/releases/tag/v0.3)
 (Version 0.4 will not be compatible with 0.3 project files.)
@@ -39,7 +39,31 @@ you undo/redo actual text, and does not record formatting like bold, italics, et
 
 Files are stored as XML, using the lxml package.
 
-### Features
+## Running noverlWriter
+
+### Linux
+
+Runs with latest Python 3. Works for at least 3.4 and up. Requirements:
+
+* PyGObjects with Gtk 3.20+, GtkSource 3.0+
+* Requires the following Python packages
+  * configparser
+  * appdirs
+  * lxml
+  * unidecode (may not be needed any more, must check)
+
+### Windows (only tested with Win7)
+
+Currently does not work properly on Windows as some features from Gtk 3.20 is needed. Windows port
+of PyGObjects is currently only at [version 3.18](https://sourceforge.net/projects/pygobjectwin32/).
+
+The lacking support is for calling native file system dialoges (file open/save). Otherwise
+novelWriter works with Python 3.4, and requires the following packages installed via `pip`:
+
+  * appdirs
+  * lxml
+
+## Features
 
 Currently implemented features or actively being implemented (some are incomplete):
 

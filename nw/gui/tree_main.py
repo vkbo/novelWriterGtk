@@ -148,7 +148,7 @@ class GuiMainTree(Gtk.TreeView):
             self.iterMap[itemHandle] = tmpIter
         
         # Expand all nodes, and reactivate
-        # ToDo: Should restore previous expanded state
+        # TODO: Should restore previous expanded state, or update tree rater than repopulate
         self.expand_all()
         self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
         
