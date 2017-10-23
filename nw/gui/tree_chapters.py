@@ -16,6 +16,7 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
+from nw.file.book  import BookItem
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +49,20 @@ class GuiChaptersTree(Gtk.TreeView):
         
         # Type
         self.colType  = Gtk.TreeViewColumn(title="Type")
-        self.rendType = Gtk.CellRendererText()
+        self.listType = Gtk.ListStore(str,str)
+        self.listType.append([BookItem.SUB_FRONT, "Front Matter"])
+        self.listType.append([BookItem.SUB_PRO,   "Prologue"])
+        self.listType.append([BookItem.SUB_CHAP,  "Chapter"])
+        self.listType.append([BookItem.SUB_EPI,   "Epilogue"])
+        self.listType.append([BookItem.SUB_BACK,  "Back Matter"])
+        self.rendType = Gtk.CellRendererCombo()
+        self.rendType.set_property("model",self.listType)
         self.rendType.set_property("editable",True)
+        self.rendType.set_property("has-entry",False)
+        self.rendType.set_property("text-column",1)
         self.colType.pack_start(self.rendType,True)
         self.colType.add_attribute(self.rendType,"text",0)
-        self.colType.set_attributes(self.rendType,markup=0)
+        # self.colType.set_attributes(self.rendType,markup=0)
         
         # Number
         self.colNumber  = Gtk.TreeViewColumn(title="#")
@@ -96,9 +106,18 @@ class GuiChaptersTree(Gtk.TreeView):
         
         logger.debug("Loading chapter tree content")
         
+        # Store currently selected item
+        selHandle = None
+        listModel, pathList = self.treeSelect.get_selected_rows()
+        for pathItem in pathList:
+            listIter  = listModel.get_iter(pathItem)
+            selHandle = listModel.get_value(listIter,self.COL_HANDLE)
+        
+        # Make unselectable and clear
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.listStore.clear()
         
+        # Populate tree
         for treeHandle in self.theBook.theTree.treeOrder:
             
             treeItem    = self.theBook.getItem(treeHandle)
@@ -132,8 +151,12 @@ class GuiChaptersTree(Gtk.TreeView):
             ])
             self.iterMap[itemHandle] = tmpIter
         
-        self.expand_all()
         self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
+        
+        # Restore selected item state
+        if selHandle is not None:
+            newIter = self.getIter(selHandle)
+            self.treeSelect.select_iter(newIter)
         
         return
     

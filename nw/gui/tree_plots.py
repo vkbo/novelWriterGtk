@@ -77,6 +77,14 @@ class GuiPlotsTree(Gtk.TreeView):
         
         logger.debug("Loading plot tree content")
         
+        # Store currently selected item
+        selHandle = None
+        listModel, pathList = self.treeSelect.get_selected_rows()
+        for pathItem in pathList:
+            listIter  = listModel.get_iter(pathItem)
+            selHandle = listModel.get_value(listIter,self.COL_HANDLE)
+        
+        # Make unselectable and clear
         self.treeSelect.set_mode(Gtk.SelectionMode.NONE)
         self.listStore.clear()
         
@@ -109,8 +117,12 @@ class GuiPlotsTree(Gtk.TreeView):
             ])
             self.iterMap[itemHandle] = tmpIter
         
-        self.expand_all()
         self.treeSelect.set_mode(Gtk.SelectionMode.SINGLE)
+        
+        # Restore selected item state
+        if selHandle is not None:
+            newIter = self.getIter(selHandle)
+            self.treeSelect.select_iter(newIter)
         
         return
     

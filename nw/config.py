@@ -23,14 +23,14 @@ from appdirs       import user_config_dir
 logger = logging.getLogger(__name__)
 
 class Config:
-
+    
     def __init__(self):
-
+        
         # Set Application Variables
         self.appName    = "novelWriter"
         self.appHandle  = "novelwriter"
         self.appURL     = "https://github.com/vkbo/novelWriter"
-
+        
         # Set Paths
         self.confPath   = user_config_dir(self.appHandle)
         self.confFile   = self.appHandle+".conf"
@@ -38,15 +38,16 @@ class Config:
         self.appPath    = path.dirname(__file__)
         self.guiPath    = path.join(self.appPath,"gui")
         self.themePath  = path.join(self.appPath,"themes")
-
+        
         # If config folder does not exist, make it.
         # This assumes that the os config folder itself exists.
+        # TODO: This does not work in Windows
         if not path.isdir(self.confPath):
             mkdir(self.confPath)
-
+            
         # Set default values
         self.confChanged = False
-
+        
         ## General
         self.winWidth    = 1600
         self.winHeight   = 980
@@ -55,7 +56,8 @@ class Config:
         self.editPane    = 900
         self.metaPane    = 240
         self.theTheme    = "default"
-
+        # self.theTheme    = None
+        
         ## Editor
         self.autoSave    = 30   # Seconds
         self.fontSize    = 16   # Pixels
@@ -66,28 +68,28 @@ class Config:
         self.spellCheck  = "en_GB"
         self.spellState  = False
         self.showPara    = False
-
+        
         ## Timer
         self.autoPause   = 60   # Seconds
         self.minTime     = 10   # Seconds
-
+        
         ## Paths
         self.recentBook  = ["","","","","","","","","",""]
-
+        
         # Check if config file exists
         if path.isfile(path.join(self.confPath,self.confFile)):
             self.loadConfig()
-
+            
         # Save a copy of the default config if no file exists
         if not path.isfile(path.join(self.confPath,self.confFile)):
             self.saveConfig()
-
+            
         return
-
+    
     ##
     #  Actions
     ##
-
+    
     def loadConfig(self):
 
         logger.debug("Loading config file")

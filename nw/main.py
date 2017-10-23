@@ -50,13 +50,14 @@ class NovelWriter():
         self.fileFilter.add_pattern("*.nwf")
         
         # Load StyleSheet
-        cssPath = path.join(self.mainConf.themePath,self.mainConf.theTheme,"gtkstyles.css")
-        logger.verbose("Loading stylesheet from %s" % cssPath)
-        self.cssMain = Gtk.CssProvider()
-        self.cssMain.load_from_path(cssPath)
-        Gtk.StyleContext.add_provider_for_screen(
-            Gdk.Screen.get_default(),self.cssMain,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+        if self.mainConf.theTheme is not None:
+            cssPath = path.join(self.mainConf.themePath,self.mainConf.theTheme,"gtkstyles.css")
+            logger.verbose("Loading stylesheet from %s" % cssPath)
+            self.cssMain = Gtk.CssProvider()
+            self.cssMain.load_from_path(cssPath)
+            Gtk.StyleContext.add_provider_for_screen(
+                Gdk.Screen.get_default(),self.cssMain,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            )
         
         #
         # Event Handlers
@@ -178,6 +179,11 @@ class NovelWriter():
         
         self.theBook.closeBook()
         
+        self.winMain.treeLeft.loadContent()
+        self.bookPage.treeChapters.loadContent()
+        self.charPage.treeChars.loadContent()
+        self.plotPage.treePlots.loadContent()
+        
         return
     
     ##                  ##
@@ -190,6 +196,15 @@ class NovelWriter():
     #
     
     def onBookNew(self, guiObject):
+        
+        self.closeBook()
+        self.theBook.createBook()
+        
+        self.winMain.treeLeft.loadContent()
+        self.bookPage.treeChapters.loadContent()
+        self.charPage.treeChars.loadContent()
+        self.plotPage.treePlots.loadContent()
+        
         return
     
     def onBookOpen(self, guiObject):
@@ -312,6 +327,9 @@ class NovelWriter():
         self.theBook.changeOrder(itemHandle,moveIt)
         
         self.winMain.treeLeft.loadContent()
+        self.winMain.bookPage.treeChapters.loadContent()
+        self.winMain.charPage.treeChars.loadContent()
+        self.winMain.plotPage.treePlots.loadContent()
         
         newIter = self.winMain.treeLeft.getIter(itemHandle)
         self.winMain.treeLeft.treeSelect.select_iter(newIter)
@@ -379,8 +397,8 @@ class NovelWriter():
         self.winMain.treeLeft.loadContent()
         self.winMain.bookPage.treeChapters.loadContent()
         
-        newIter = self.winMain.bookPage.treeChapters.getIter(itemHandle)
-        self.winMain.bookPage.treeChapters.treeSelect.select_iter(newIter)
+        # newIter = self.winMain.bookPage.treeChapters.getIter(itemHandle)
+        # self.winMain.bookPage.treeChapters.treeSelect.select_iter(newIter)
         
         return
     
