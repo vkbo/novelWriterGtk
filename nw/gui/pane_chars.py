@@ -79,8 +79,14 @@ class GuiCharsPane(Gtk.Alignment):
         self.boxChars.pack_start(self.tbChars,False,True,0)
         
         # Characters Tree
+        self.scrollChars = Gtk.ScrolledWindow()
+        self.scrollChars.set_name("scrollCharsTree")
+        self.scrollChars.set_hexpand(True)
+        self.scrollChars.set_vexpand(True)
+        self.boxChars.pack_start(self.scrollChars,True,True,0)
+        
         self.treeChars = GuiCharsTree(self.theBook)
-        self.boxChars.pack_start(self.treeChars,True,True,0)
+        self.scrollChars.add(self.treeChars)
         
         return
     

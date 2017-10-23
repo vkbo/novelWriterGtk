@@ -87,7 +87,7 @@ class NovelWriter():
         self.bookPage.btnChaptersDel.connect("clicked",self.onChapterRemove)
         self.bookPage.btnChaptersMvU.connect("clicked",self.onChapterMove,"UP")
         self.bookPage.btnChaptersMvD.connect("clicked",self.onChapterMove,"DOWN")
-        self.bookPage.treeChapters.rendType.connect("edited",self.onChapterEdit,"type")
+        self.bookPage.treeChapters.rendType.connect("edited",self.onChapterEdit,"subtype")
         self.bookPage.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
         self.bookPage.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
         self.bookPage.treeChapters.rendCompile.connect("toggled",self.onChapterToggle,"compile")
@@ -397,9 +397,6 @@ class NovelWriter():
         self.winMain.treeLeft.loadContent()
         self.winMain.bookPage.treeChapters.loadContent()
         
-        # newIter = self.winMain.bookPage.treeChapters.getIter(itemHandle)
-        # self.winMain.bookPage.treeChapters.treeSelect.select_iter(newIter)
-        
         return
     
     def onChapterEdit(self, guiObject, itemPath, editText, itemTag):
@@ -407,7 +404,7 @@ class NovelWriter():
         srcTree   = self.bookPage.treeChapters
         handleCol = srcTree.COL_HANDLE
         
-        if itemTag == "type":    srcColumn = srcTree.COL_TYPE
+        if itemTag == "subtype": srcColumn = srcTree.COL_TYPE
         if itemTag == "number":  srcColumn = srcTree.COL_NUMBER
         if itemTag == "name":    srcColumn = srcTree.COL_TITLE
         if itemTag == "comment": srcColumn = srcTree.COL_COMMENT
@@ -415,7 +412,7 @@ class NovelWriter():
         itemHandle = srcTree.listStore[itemPath][handleCol]
         self.theBook.updateItem(itemHandle,itemTag,editText)
         parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
-        srcTree.listStore[itemPath][srcColumn] = str(parsedValue)
+        srcTree.listStore[itemPath][srcColumn] = parsedValue
         self.winMain.treeLeft.loadContent()
         
         return

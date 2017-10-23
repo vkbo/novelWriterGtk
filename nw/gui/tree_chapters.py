@@ -44,22 +44,19 @@ class GuiChaptersTree(Gtk.TreeView):
         
         # Core Objects
         self.treeSelect = self.get_selection()
-        self.listStore  = Gtk.ListStore(str,str,str,bool,str,str)
+        self.listStore  = Gtk.ListStore(str,int,str,bool,str,str)
         self.set_model(self.listStore)
         
         # Type
         self.colType  = Gtk.TreeViewColumn(title="Type")
-        self.listType = Gtk.ListStore(str,str)
-        self.listType.append([BookItem.SUB_FRONT, "Front Matter"])
-        self.listType.append([BookItem.SUB_PRO,   "Prologue"])
-        self.listType.append([BookItem.SUB_CHAP,  "Chapter"])
-        self.listType.append([BookItem.SUB_EPI,   "Epilogue"])
-        self.listType.append([BookItem.SUB_BACK,  "Back Matter"])
+        self.listType = Gtk.ListStore(str)
+        for subType in BookItem.validSubTypes:
+            self.listType.append([subType])
         self.rendType = Gtk.CellRendererCombo()
         self.rendType.set_property("model",self.listType)
         self.rendType.set_property("editable",True)
         self.rendType.set_property("has-entry",False)
-        self.rendType.set_property("text-column",1)
+        self.rendType.set_property("text-column",0)
         self.colType.pack_start(self.rendType,True)
         self.colType.add_attribute(self.rendType,"text",0)
         # self.colType.set_attributes(self.rendType,markup=0)
@@ -137,7 +134,7 @@ class GuiChaptersTree(Gtk.TreeView):
             logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
             
             itemSubType = treeItem["entry"].itemSubType
-            itemNumber  = str(treeItem["entry"].itemNumber)
+            itemNumber  = treeItem["entry"].itemNumber
             itemCompile = treeItem["entry"].itemCompile
             itemComment = treeItem["entry"].itemComment
             

@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171022-232815">
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171023-220201">
   <book>
     <title>Best Book Title Ever!</title>
     <author>J. Smith</author>
     <author>B. Author</author>
   </book>
-  <content count="21">
+  <content count="27">
     <item handle="b22d358e4a010" order="0" parent="None">
       <class>CONTAINER</class>
       <level>ROOT</level>
@@ -30,7 +30,7 @@
       <type>NOTE</type>
       <name>Notes</name>
     </item>
-    <item handle="d4b96e8e9f3a5" order="7" parent="f8a4b7e84df9c">
+    <item handle="d4b96e8e9f3a5" order="10" parent="f8a4b7e84df9c">
       <class>CONTAINER</class>
       <level>ITEM</level>
       <type>CHAR</type>
@@ -39,7 +39,7 @@
       <role>Role A</role>
       <importance>5</importance>
     </item>
-    <item handle="80d8bd95bdd42" order="8" parent="f8a4b7e84df9c">
+    <item handle="80d8bd95bdd42" order="11" parent="f8a4b7e84df9c">
       <class>CONTAINER</class>
       <level>ITEM</level>
       <type>CHAR</type>
@@ -48,7 +48,7 @@
       <role>Role B</role>
       <importance>4</importance>
     </item>
-    <item handle="b596b382dcb41" order="9" parent="77cfc628332c9">
+    <item handle="b596b382dcb41" order="12" parent="77cfc628332c9">
       <class>CONTAINER</class>
       <level>ITEM</level>
       <type>PLOT</type>
@@ -56,7 +56,7 @@
       <comment>This is the main plot.</comment>
       <importance>5</importance>
     </item>
-    <item handle="3865b4f9da20c" order="4" parent="b22d358e4a010">
+    <item handle="3865b4f9da20c" order="5" parent="b22d358e4a010">
       <class>CONTAINER</class>
       <level>ITEM</level>
       <type>BOOK</type>
@@ -66,7 +66,7 @@
       <number>1</number>
       <compile>True</compile>
     </item>
-    <item handle="e0cefe8669047" order="10" parent="77cfc628332c9">
+    <item handle="e0cefe8669047" order="13" parent="77cfc628332c9">
       <class>CONTAINER</class>
       <level>ITEM</level>
       <type>PLOT</type>
@@ -74,7 +74,7 @@
       <comment>Comment</comment>
       <importance>4</importance>
     </item>
-    <item handle="88bbefd4b4542" order="13" parent="3865b4f9da20c">
+    <item handle="88bbefd4b4542" order="17" parent="3865b4f9da20c">
       <meta parcount="5" sentcount="25" wordcount="228"/>
       <class>SCENE</class>
       <level>FILE</level>
@@ -82,7 +82,7 @@
       <name>Lorem Ipsum w/Commentary</name>
       <compile>True</compile>
     </item>
-    <item handle="3abdd0dda521e" order="14" parent="3865b4f9da20c">
+    <item handle="3abdd0dda521e" order="18" parent="3865b4f9da20c">
       <meta parcount="3" sentcount="21" wordcount="193"/>
       <class>SCENE</class>
       <level>FILE</level>
@@ -90,7 +90,7 @@
       <name>Lorem Ipsum</name>
       <compile>True</compile>
     </item>
-    <item handle="b6386b4ff6271" order="18" parent="d4b96e8e9f3a5">
+    <item handle="b6386b4ff6271" order="24" parent="d4b96e8e9f3a5">
       <meta parcount="1" sentcount="1" wordcount="2"/>
       <class>NOTE</class>
       <level>FILE</level>
@@ -98,7 +98,7 @@
       <name>Details</name>
       <compile>False</compile>
     </item>
-    <item handle="28a3377542eba" order="11" parent="f8a4b7e84df9c">
+    <item handle="28a3377542eba" order="14" parent="f8a4b7e84df9c">
       <meta parcount="2" sentcount="2" wordcount="5"/>
       <class>NOTE</class>
       <level>FILE</level>
@@ -106,7 +106,7 @@
       <name>Overview</name>
       <compile>False</compile>
     </item>
-    <item handle="8b895703fa18a" order="5" parent="b22d358e4a010">
+    <item handle="8b895703fa18a" order="6" parent="b22d358e4a010">
       <class>CONTAINER</class>
       <level>ITEM</level>
       <type>BOOK</type>
@@ -116,7 +116,7 @@
       <number>2</number>
       <compile>True</compile>
     </item>
-    <item handle="e5169c36e77ee" order="15" parent="8b895703fa18a">
+    <item handle="e5169c36e77ee" order="19" parent="8b895703fa18a">
       <meta parcount="2" sentcount="2" wordcount="17"/>
       <class>SCENE</class>
       <level>FILE</level>
@@ -124,7 +124,7 @@
       <name>Random Nonsense</name>
       <compile>True</compile>
     </item>
-    <item handle="5806720981822" order="12" parent="54da9a82b70fc">
+    <item handle="5806720981822" order="15" parent="54da9a82b70fc">
       <meta parcount="1" sentcount="1" wordcount="3"/>
       <class>NOTE</class>
       <level>FILE</level>
@@ -132,7 +132,7 @@
       <name>Random Note</name>
       <compile>False</compile>
     </item>
-    <item handle="1c13376f63dc1" order="16" parent="8b895703fa18a">
+    <item handle="1c13376f63dc1" order="20" parent="8b895703fa18a">
       <meta parcount="2" sentcount="5" wordcount="37"/>
       <class>SCENE</class>
       <level>FILE</level>
@@ -140,7 +140,7 @@
       <name>Some More Text</name>
       <compile>True</compile>
     </item>
-    <item handle="a3f6965c611b4" order="19" parent="b596b382dcb41">
+    <item handle="a3f6965c611b4" order="25" parent="b596b382dcb41">
       <meta parcount="2" sentcount="1" wordcount="5"/>
       <class>NOTE</class>
       <level>FILE</level>
@@ -148,7 +148,7 @@
       <name>Outline</name>
       <compile>False</compile>
     </item>
-    <item handle="6ad49a8486326" order="6" parent="b22d358e4a010">
+    <item handle="6ad49a8486326" order="7" parent="b22d358e4a010">
       <class>CONTAINER</class>
       <level>ITEM</level>
       <type>BOOK</type>
@@ -158,7 +158,7 @@
       <number>3</number>
       <compile>True</compile>
     </item>
-    <item handle="5372122de2a09" order="17" parent="6ad49a8486326">
+    <item handle="5372122de2a09" order="21" parent="6ad49a8486326">
       <meta parcount="1" sentcount="1" wordcount="11"/>
       <class>SCENE</class>
       <level>FILE</level>
@@ -166,13 +166,65 @@
       <name>Not a Scene</name>
       <compile>True</compile>
     </item>
-    <item handle="095a7b63bc481" order="20" parent="e0cefe8669047">
+    <item handle="095a7b63bc481" order="26" parent="e0cefe8669047">
       <meta parcount="1" sentcount="1" wordcount="5"/>
       <class>NOTE</class>
       <level>FILE</level>
       <type>PLOT</type>
       <name>Outline</name>
       <compile>False</compile>
+    </item>
+    <item handle="62a3fb43d4b01" order="4" parent="b22d358e4a010">
+      <class>CONTAINER</class>
+      <level>ITEM</level>
+      <type>BOOK</type>
+      <subtype>PROLOGUE</subtype>
+      <name>Prologue</name>
+      <comment>The stuff before</comment>
+      <number>0</number>
+      <compile>True</compile>
+    </item>
+    <item handle="cd2aa1f8448c7" order="8" parent="b22d358e4a010">
+      <class>CONTAINER</class>
+      <level>ITEM</level>
+      <type>BOOK</type>
+      <subtype>EPILOGUE</subtype>
+      <name>Epilogue</name>
+      <comment>The stuff after</comment>
+      <compile>True</compile>
+    </item>
+    <item handle="ffd1c5fe5d46f" order="16" parent="62a3fb43d4b01">
+      <meta parcount="1" sentcount="1" wordcount="15"/>
+      <class>SCENE</class>
+      <level>FILE</level>
+      <type>BOOK</type>
+      <name>Stuff Before</name>
+      <compile>True</compile>
+    </item>
+    <item handle="471b861546ac1" order="22" parent="cd2aa1f8448c7">
+      <meta parcount="1" sentcount="1" wordcount="21"/>
+      <class>SCENE</class>
+      <level>FILE</level>
+      <type>BOOK</type>
+      <name>Stuff After</name>
+      <compile>True</compile>
+    </item>
+    <item handle="341a99158f417" order="9" parent="b22d358e4a010">
+      <class>CONTAINER</class>
+      <level>ITEM</level>
+      <type>BOOK</type>
+      <subtype>ARCHIVED</subtype>
+      <name>The Rest</name>
+      <comment>Here we put all the stuff we don't really want to be with the rest of the stuff</comment>
+      <compile>False</compile>
+    </item>
+    <item handle="9018ff25f44ac" order="23" parent="341a99158f417">
+      <meta parcount="1" sentcount="1" wordcount="27"/>
+      <class>SCENE</class>
+      <level>FILE</level>
+      <type>BOOK</type>
+      <name>Other Stuff</name>
+      <compile>True</compile>
     </item>
   </content>
 </novelWriterXML>

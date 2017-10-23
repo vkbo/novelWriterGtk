@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171023-220201">
+  <document>
+    <counts parcount="1" sentcount="1" wordcount="27"/>
+    <text>
+      <paragraph idx="0"><![CDATA[This is some of the stuff that we wrote, but that shouldn't be with all the other stuff we wrote, so we left it over here.]]></paragraph>
+    </text>
+    <note>
+      <paragraph idx="0"><![CDATA[]]></paragraph>
+    </note>
+  </document>
+</novelWriterXML>

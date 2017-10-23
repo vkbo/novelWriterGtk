@@ -101,8 +101,14 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedOuter.pack1(self.boxLeft,True,False)
         
         # The Tree
+        self.scrollLeft = Gtk.ScrolledWindow()
+        self.scrollLeft.set_name("scrollLeft")
+        self.scrollLeft.set_hexpand(True)
+        self.scrollLeft.set_vexpand(True)
+        self.boxLeft.pack_start(self.scrollLeft,True,True,0)
+        
         self.treeLeft = GuiMainTree(self.theBook)
-        self.boxLeft.pack_start(self.treeLeft,True,True,0)
+        self.scrollLeft.add(self.treeLeft)
         
         # TreeView toolbar
         self.tbLeft = Gtk.Toolbar()

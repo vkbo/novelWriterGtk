@@ -122,8 +122,14 @@ class GuiBookPane(Gtk.Alignment):
         self.boxBook.pack_start(self.tbChapters,False,True,0)
         
         # Chapters Tree
+        self.scrollChapters = Gtk.ScrolledWindow()
+        self.scrollChapters.set_name("scrollChaptersTree")
+        self.scrollChapters.set_hexpand(True)
+        self.scrollChapters.set_vexpand(True)
+        self.boxBook.pack_start(self.scrollChapters,True,True,0)
+        
         self.treeChapters = GuiChaptersTree(self.theBook)
-        self.boxBook.pack_start(self.treeChapters,True,True,0)
+        self.scrollChapters.add(self.treeChapters)
         
         return
     

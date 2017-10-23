@@ -1,6 +1,6 @@
 # novelWriter
 
-**On master branc: Development for version 0.4**
+**On master branch: Development for version 0.4**
 
 Latest pre-release: [Version 0.3](https://github.com/vkbo/novelWriter/releases/tag/v0.3)
 (Version 0.4 will not be compatible with 0.3 project files.)
@@ -8,8 +8,7 @@ Latest pre-release: [Version 0.3](https://github.com/vkbo/novelWriter/releases/t
 **NB: Major rewrite in progress!**
 
 I am currently rewriting the entire project more or less from scratch using a different approach.
-I wasn't happy with using WebKit as the core text editor. In addition, WebKit1 is also old and
-being replaced by WebKit2.
+I wasn't happy with using WebKit as the core text editor, and will be using Gtk.TextView instead.
 
 *The code is still under initial development*
 

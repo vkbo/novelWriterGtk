@@ -50,11 +50,10 @@ class BookItem():
     TYP_PLOT    = "PLOT"
     TYP_NOTE    = "NOTE"
     
-    SUB_FRONT   = "FRONTMATTER"
     SUB_PRO     = "PROLOGUE"
     SUB_CHAP    = "CHAPTER"
     SUB_EPI     = "EPILOGUE"
-    SUB_BACK    = "BACKMATTER"
+    SUB_APPEND  = "APPENDIX"
     SUB_ARCH    = "ARCHIVED"
     
     validTags = [
@@ -66,7 +65,7 @@ class BookItem():
     validClasses   = [CLS_CONT,CLS_SCENE,CLS_NOTE]
     validLevels    = [LEV_ROOT,LEV_ITEM,LEV_FILE]
     validTypes     = [TYP_BOOK,TYP_CHAR,TYP_PLOT,TYP_NOTE]
-    validSubTypes  = [SUB_FRONT,SUB_PRO,SUB_CHAP,SUB_EPI,SUB_BACK,SUB_ARCH]
+    validSubTypes  = [SUB_PRO,SUB_CHAP,SUB_EPI,SUB_APPEND,SUB_ARCH]
     
     itemClass      = None
     itemLevel      = None

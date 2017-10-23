@@ -79,8 +79,14 @@ class GuiPlotsPane(Gtk.Alignment):
         self.boxPlots.pack_start(self.tbPlots,False,True,0)
         
         # Plots Tree
+        self.scrollPlots = Gtk.ScrolledWindow()
+        self.scrollPlots.set_name("scrollPlotsTree")
+        self.scrollPlots.set_hexpand(True)
+        self.scrollPlots.set_vexpand(True)
+        self.boxPlots.pack_start(self.scrollPlots,True,True,0)
+        
         self.treePlots = GuiPlotsTree(self.theBook)
-        self.boxPlots.pack_start(self.treePlots,True,True,0)
+        self.scrollPlots.add(self.treePlots)
         
         return
     
