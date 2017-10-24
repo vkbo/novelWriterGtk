@@ -31,6 +31,7 @@
     border: 1px solid rgba(255,255,255,0.8);
 }
 
+
 /**
  *  Toolbars
  */
@@ -55,17 +56,20 @@
 
 #tbMain button {
     margin: 2px;
-    padding: 4px;
+    padding: 6px;
+    color: rgba(255,255,255,0.6)
 }
 
 #tbLeft button {
     margin: 0px 0px 0px 6px;
+    padding: 2px;
 }
 
 #tbChapters button,
 #tbChars    button,
 #tbPlots    button {
     margin: 0px 6px 0px 0px;
+    padding: 2px;
 }
 
 #tbDocEdit {
@@ -265,6 +269,7 @@
     border-radius: 6px;
     background: @colMedium;
     color: rgba(255,255,255,0.8);
+    caret-color: rgba(255,255,255,0.8);
     font-size: 22px;
     font-weight: 400;
 }
@@ -274,6 +279,7 @@
     border-radius: 6px;
     background: transparent;
     color: rgba(255,255,255,0.8);
+    caret-color: rgba(255,255,255,0.8);
     font-size: 30px;
     font-weight: bold;
     padding: 0px;
@@ -292,6 +298,7 @@
     padding: 0px;
     margin: 0px;
     color: @colDocs;
+    caret-color: @colDocs;
 }
 
 #textViewNote.view {
@@ -305,6 +312,7 @@
     padding: 0px;
     margin: 0px;
     color: @colDocs;
+    caret-color: @colDocs;
 }
 
 

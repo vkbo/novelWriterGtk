@@ -82,3 +82,11 @@ Features being added before 0.4 release:
   each character and plot appears as a row. These can be connected with marks to show which scenes
   are linked to which plots and characters.
 * Spellchecking with GtkSpell.
+
+## Screenshots
+
+![Screenshot 1](novelWriter1.png)
+The book page of the example project
+
+![Screenshot 2](novelWriter2.png)
+Editing a scene file
