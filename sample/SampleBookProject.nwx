@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171023-234158">
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171024-113844">
   <book>
     <title>Best Book Title Ever!</title>
     <author>J. Smith</author>
@@ -75,7 +75,7 @@
       <importance>4</importance>
     </item>
     <item handle="88bbefd4b4542" order="17" parent="3865b4f9da20c">
-      <meta parcount="5" sentcount="25" wordcount="228"/>
+      <meta parcount="6" sentcount="28" wordcount="246"/>
       <class>SCENE</class>
       <level>FILE</level>
       <type>BOOK</type>
