@@ -292,6 +292,8 @@ class GuiWinMain(Gtk.ApplicationWindow):
         tabIcon.set_from_icon_name("emblem-default-symbolic",Gtk.IconSize.MENU)
         tabImage = Gtk.Image()
         tabImage.set_from_icon_name("window-close-symbolic",Gtk.IconSize.MENU)
+        tabIconCol = Gdk.RGBA(red=0.0,green=0.75,blue=0.2,alpha=1.0).to_color()
+        tabIcon.modify_fg(Gtk.StateType.NORMAL,tabIconCol)
         tabButton = Gtk.Button()
         tabButton.set_image(tabImage)
         tabButton.set_relief(Gtk.ReliefStyle.NONE)

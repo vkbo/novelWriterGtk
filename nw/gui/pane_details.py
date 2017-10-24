@@ -42,6 +42,32 @@ class GuiDocDetails(Gtk.Alignment):
         self.lblTitle.set_margin_bottom(12)
         self.boxOuter.pack_start(self.lblTitle,False,False,0)
         
+        self.scrollGrid = Gtk.ScrolledWindow()
+        self.boxOuter.pack_start(self.scrollGrid,True,True,0)
+        
+        self.gridDetails = Gtk.Grid()
+        self.gridDetails.set_name("gridDetails")
+        self.gridDetails.set_row_spacing(4)
+        self.gridDetails.set_column_spacing(12)
+        
+        rowNum     = 0
+        rowLabels  = ["POV","Characters","Main Plot","Subplots"]
+        rowWidgets = [
+            Gtk.Label("None"),
+            Gtk.Label("None"),
+            Gtk.Label("None"),
+            Gtk.Label("None"),
+        ]
+        for rowLabel, rowWidget in zip(rowLabels,rowWidgets):
+            rowNum += 1
+            tmpLabel = Gtk.Label()
+            tmpLabel.set_markup("<b>%s:</b>" % rowLabel)
+            tmpLabel.set_xalign(0.0)
+            self.gridDetails.attach(tmpLabel,1,rowNum,1,1)
+            self.gridDetails.attach(rowWidget,2,rowNum,1,1)
+        
+        self.scrollGrid.add(self.gridDetails)
+        
         return
     
 # End Class GuiDocDetails

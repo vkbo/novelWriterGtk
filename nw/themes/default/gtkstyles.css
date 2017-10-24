@@ -60,6 +60,10 @@
     color: rgba(255,255,255,0.6)
 }
 
+#tbMain button:hover {
+    color: rgba(255,255,255,0.8)
+}
+
 #tbLeft     button,
 #tbChapters button,
 #tbChars    button,
@@ -76,7 +80,7 @@
     background: rgba(255,255,200,0.5);
 }
 
-#tbDocEdit button,
+#tbDocEdit  button,
 #tbNoteEdit button {
     border-color: rgba(0,0,0,0.2);
     background: rgba(0,0,0,0.1);
@@ -85,16 +89,18 @@
     padding: 2px;
 }
 
-#tbDocEdit button:hover,
+#tbDocEdit  button:hover,
 #tbNoteEdit button:hover {
     border-color: rgba(255,255,255,0.6);
 }
 
-#tbDocEdit separator,
+#tbMain     separator,
+#tbDocEdit  separator,
 #tbNoteEdit separator {
     background: transparent;
     border: 4px solid transparent;
 }
+
 
 /**
  *  Labels
@@ -157,6 +163,10 @@
 #nbContent > header > tabs > tab button {
     margin: 0px;
     padding: 0px;
+    border: none;
+}
+
+#nbContent > header > tabs > tab button:hover {
     border: none;
 }
 
@@ -261,6 +271,14 @@
     padding: 0px;
 }
 
+
+/**
+ *  Grid
+ */
+
+#gridDetails * {
+    color: @colText;
+}
 
 /**
  *  TextBoxes

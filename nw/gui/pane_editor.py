@@ -116,6 +116,8 @@ class GuiEditor(Gtk.Paned):
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
         tabIcon.set_from_icon_name("emblem-default-symbolic",Gtk.IconSize.MENU)
+        tabIconCol = Gdk.RGBA(red=0.0,green=0.75,blue=0.2,alpha=1.0).to_color()
+        tabIcon.modify_fg(Gtk.StateType.NORMAL,tabIconCol)
         
         tabLabel = self.get_parent().get_tab_label(self).get_children()[1]
         tabLabel.set_text(docTitle)
@@ -138,6 +140,8 @@ class GuiEditor(Gtk.Paned):
         
         tabIcon = self.get_parent().get_tab_label(self).get_children()[0]
         tabIcon.set_from_icon_name("emblem-important-symbolic",Gtk.IconSize.MENU)
+        tabIconCol = Gdk.RGBA(red=0.75,green=0.0,blue=0.0,alpha=1.0).to_color()
+        tabIcon.modify_fg(Gtk.StateType.NORMAL,tabIconCol)
         
         
         return
