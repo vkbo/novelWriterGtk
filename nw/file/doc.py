@@ -80,7 +80,7 @@ class DocFile():
             logger.verbose("XML: File version is %s" % fileVersion)
             
         if "timeStamp" in xRoot.attrib.keys():
-            timeStamp = xRoot.attrib["fileVersion"]
+            timeStamp = xRoot.attrib["timeStamp"]
             logger.verbose("XML: File timestamp is %s" % timeStamp)
             self.docText[self.VAL_TIME] = timeStamp
         

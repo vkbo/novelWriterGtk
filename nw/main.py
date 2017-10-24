@@ -282,15 +282,10 @@ class NovelWriter():
             if itemType == BookItem.TYP_BOOK: self.winMain.showTab(self.winMain.TAB_BOOK)
             if itemType == BookItem.TYP_CHAR: self.winMain.showTab(self.winMain.TAB_CHAR)
             if itemType == BookItem.TYP_PLOT: self.winMain.showTab(self.winMain.TAB_PLOT)
-            # if itemType == BookItem.TYP_NOTE: self.winMain.showTab(self.winMain.TAB_BOOK)
-        # elif itemLevel == BookItem.LEV_FILE:
-        #     docItem = itemEntry["doc"]
-        #     if itemClass == BookItem.CLS_SCENE:
-        #         self.winMain.showTab(self.winMain.TAB_EDIT)
-        #         self.sceneEdit.loadContent(docItem)
-        #     elif itemClass == BookItem.CLS_NOTE:
-        #         self.winMain.showTab(self.winMain.TAB_EDIT)
-        #         self.sceneEdit.loadContent(docItem)
+        elif itemLevel == BookItem.LEV_ITEM:
+            if itemType == BookItem.TYP_BOOK: self.winMain.showTab(self.winMain.TAB_VIEW)
+        elif itemLevel == BookItem.LEV_FILE:
+            self.winMain.viewFile(itemHandle)
         
         return
     

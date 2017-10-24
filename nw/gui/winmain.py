@@ -164,6 +164,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.nbContent.set_show_tabs(True)
         self.nbContent.set_show_border(False)
         self.nbContent.set_tab_pos(Gtk.PositionType.TOP)
+        self.nbContent.set_scrollable(True)
         self.panedContent.pack1(self.nbContent,True,False)
         
         #
@@ -206,6 +207,14 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.scrollPlots.add(self.plotPage)
         
         #
+        # Notebook: View Page
+        #
+        
+        self.scrollView = Gtk.ScrolledWindow()
+        self.scrollView.set_name("scrollView")
+        self.nbContent.insert_page(self.scrollView,Gtk.Label("View"),self.TAB_VIEW)
+        
+        #
         #  Timeline
         #
         
@@ -229,7 +238,20 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.nbContent.set_current_page(tabNum)
         return
     
+    def viewFile(self, itemHandle):
+        """Switches to the tab of a file if it's already open, but does not open
+        a tab if it's not."""
+        
+        if itemHandle in self.editPages.keys():
+            logger.verbose("Showing file with handle %s" % itemHandle)
+            tabNum = self.editPages[itemHandle]["index"]
+            self.nbContent.set_current_page(tabNum)
+            return
+        
+        return
+    
     def editFile(self, itemHandle):
+        """Opens an edit window for a file"""
         
         logger.verbose("Editing file with handle %s" % itemHandle)
         
@@ -259,6 +281,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         
         newPage = GuiEditor(self.theBook,itemHandle)
         pageID  = self.nbContent.append_page(newPage,tabBox)
+        self.nbContent.set_tab_reorderable(newPage,True)
         tabBox.show_all()
         newPage.show_all()
         newPage.loadContent()
@@ -268,17 +291,25 @@ class GuiWinMain(Gtk.ApplicationWindow):
             "item"  : newPage,
         }
         
-        tabButton.connect("clicked",self.closeTab,itemHandle)
+        tabButton.connect("clicked",self.onCloseTab,itemHandle)
+        self.nbContent.connect("page-reordered",self.onReorderTab)
         self.nbContent.set_current_page(pageID)
         
         return
     
-    def closeTab(self,guiObject,itemHandle):
+    def onCloseTab(self, guiObject, itemHandle):
         
         pageID = self.nbContent.page_num(self.editPages[itemHandle]["item"])
         
         self.nbContent.remove_page(pageID)
         del self.editPages[itemHandle]
+        
+        return
+    
+    def onReorderTab(self, guiObject, guiChild, newPage):
+        
+        if newPage < self.TAB_EDIT:
+            self.nbContent.reorder_child(guiChild,self.TAB_EDIT)
         
         return
     

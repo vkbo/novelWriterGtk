@@ -322,7 +322,8 @@
 
 #scrollBook,
 #scrollChars,
-#scrollPlots {
+#scrollPlots,
+#scrollView {
     background-color: @colLight;
 }
 
