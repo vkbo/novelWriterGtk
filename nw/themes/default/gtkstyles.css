@@ -60,11 +60,7 @@
     color: rgba(255,255,255,0.6)
 }
 
-#tbLeft button {
-    margin: 0px 0px 0px 6px;
-    padding: 2px;
-}
-
+#tbLeft     button,
 #tbChapters button,
 #tbChars    button,
 #tbPlots    button {
@@ -103,6 +99,13 @@
 /**
  *  Labels
  */
+
+#lblLeft {
+    color: rgba(255,255,255,0.6);
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0px;
+}
 
 #lblBook, #lblChars, #lblPlots {
     color: rgba(255,255,255,0.4);

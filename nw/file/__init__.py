@@ -13,5 +13,10 @@
 import logging
 import nw
 
+from nw.file.book import Book
+from nw.file.item import BookItem
+from nw.file.tree import BookTree
+from nw.file.doc  import DocFile
+
 logger = logging.getLogger(__name__)
 

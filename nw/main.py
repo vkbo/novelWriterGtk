@@ -24,7 +24,7 @@ from nw.gui.tree_main     import GuiMainTree
 from nw.gui.tree_chapters import GuiChaptersTree
 from nw.gui.tree_chars    import GuiCharsTree
 from nw.gui.tree_plots    import GuiPlotsTree
-from nw.file.book         import Book, BookItem
+from nw.file              import Book, BookItem, BookTree
 
 logger = logging.getLogger(__name__)
 
@@ -78,15 +78,17 @@ class NovelWriter():
         self.winMain.treeLeft.treeSelect.connect("changed",self.onLeftTreeSelect)
         self.winMain.treeLeft.connect("row-activated",self.onLeftTreeActivate)
         self.winMain.btnLeftAdd.connect("clicked",self.onLeftAddFile)
-        self.winMain.btnLeftMvU.connect("clicked",self.onLeftMoveFile,"UP")
-        self.winMain.btnLeftMvD.connect("clicked",self.onLeftMoveFile,"DOWN")
+        self.winMain.btnLeftMvU.connect("clicked",self.onLeftMoveFile,BookTree.ORD_UP)
+        self.winMain.btnLeftMvD.connect("clicked",self.onLeftMoveFile,BookTree.ORD_DOWN)
+        self.winMain.btnLeftNdU.connect("clicked",self.onLeftMoveFile,BookTree.ORD_NUP)
+        self.winMain.btnLeftNdD.connect("clicked",self.onLeftMoveFile,BookTree.ORD_NDOWN)
         self.winMain.treeLeft.connect("button-release-event",self.onLeftTreeContextMenu)
         
         # Book Page
         self.bookPage.btnChaptersAdd.connect("clicked",self.onChapterAdd)
         self.bookPage.btnChaptersDel.connect("clicked",self.onChapterRemove)
-        self.bookPage.btnChaptersMvU.connect("clicked",self.onChapterMove,"UP")
-        self.bookPage.btnChaptersMvD.connect("clicked",self.onChapterMove,"DOWN")
+        self.bookPage.btnChaptersMvU.connect("clicked",self.onChapterMove,BookTree.ORD_UP)
+        self.bookPage.btnChaptersMvD.connect("clicked",self.onChapterMove,BookTree.ORD_DOWN)
         self.bookPage.treeChapters.rendType.connect("edited",self.onChapterEdit,"subtype")
         self.bookPage.treeChapters.rendNumber.connect("edited",self.onChapterEdit,"number")
         self.bookPage.treeChapters.rendTitle.connect("edited",self.onChapterEdit,"name")
@@ -96,8 +98,8 @@ class NovelWriter():
         # Characters Page
         self.charPage.btnCharsAdd.connect("clicked",self.onCharAdd)
         self.charPage.btnCharsDel.connect("clicked",self.onCharRemove)
-        self.charPage.btnCharsMvU.connect("clicked",self.onCharMove,"UP")
-        self.charPage.btnCharsMvD.connect("clicked",self.onCharMove,"DOWN")
+        self.charPage.btnCharsMvU.connect("clicked",self.onCharMove,BookTree.ORD_UP)
+        self.charPage.btnCharsMvD.connect("clicked",self.onCharMove,BookTree.ORD_DOWN)
         self.charPage.treeChars.rendName.connect("edited",self.onCharEdit,"name")
         self.charPage.treeChars.rendImport.connect("edited",self.onCharEdit,"importance")
         self.charPage.treeChars.rendRole.connect("edited",self.onCharEdit,"role")
@@ -106,8 +108,8 @@ class NovelWriter():
         # Plots Page
         self.plotPage.btnPlotsAdd.connect("clicked",self.onPlotAdd)
         self.plotPage.btnPlotsDel.connect("clicked",self.onPlotRemove)
-        self.plotPage.btnPlotsMvU.connect("clicked",self.onPlotMove,"UP")
-        self.plotPage.btnPlotsMvD.connect("clicked",self.onPlotMove,"DOWN")
+        self.plotPage.btnPlotsMvU.connect("clicked",self.onPlotMove,BookTree.ORD_UP)
+        self.plotPage.btnPlotsMvD.connect("clicked",self.onPlotMove,BookTree.ORD_DOWN)
         self.plotPage.treePlots.rendName.connect("edited",self.onPlotEdit,"name")
         self.plotPage.treePlots.rendImport.connect("edited",self.onPlotEdit,"importance")
         self.plotPage.treePlots.rendComment.connect("edited",self.onPlotEdit,"comment")

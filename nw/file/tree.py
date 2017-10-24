@@ -24,6 +24,13 @@ logger = logging.getLogger(__name__)
 
 class BookTree():
     
+    ORD_UP    = 0
+    ORD_DOWN  = 1
+    ORD_NUP   = 2
+    ORD_NDOWN = 3
+    
+    validOrder = [ORD_UP,ORD_DOWN,ORD_NUP,ORD_NDOWN]
+    
     def __init__(self):
         
         self.docPath    = None
@@ -180,30 +187,70 @@ class BookTree():
             logger.error("Cannot change order of ROOT elements")
             return
         
+        if moveIt not in self.validOrder:
+            logger.error("BUG: Unknown ordering requested")
+            return
+        
         if itemHandle not in currList:
             logger.error("BUG: Cannot change order of %s, as it is not where it should be" % itemHandle)
             return
         
-        currIndex = currList.index(itemHandle)
-        if moveIt == "UP":
-            newIndex = currIndex - 1
-        elif moveIt == "DOWN":
-            newIndex = currIndex + 1
-        else:
-            logger.error("BUG: Unknown move step %s" % str(moveIt))
+        # If move withing parent, just swap the indices, and refresh the master index
+        if moveIt == self.ORD_UP or moveIt == self.ORD_DOWN:
+            
+            currIndex = currList.index(itemHandle)
+            
+            if moveIt == self.ORD_UP:
+                newIndex = currIndex - 1
+            elif moveIt == self.ORD_DOWN:
+                newIndex = currIndex + 1
+            
+            if newIndex < 0 or newIndex >= len(currList): return
+            
+            currList[currIndex], currList[newIndex] = currList[newIndex], currList[currIndex]
+            
+            if itemEntry.itemLevel == BookItem.LEV_FILE:
+                self.parOfFiles[itemParent] = currList
+            elif itemEntry.itemLevel == BookItem.LEV_ITEM:
+                self.parOfItems[itemParent] = currList
+            
+            self.buildTreeOrder()
+            self.updateEntryOrder()
         
-        if newIndex < 0 or newIndex >= len(currList): return
-        
-        currList[currIndex], currList[newIndex] = currList[newIndex], currList[currIndex]
-        
-        if itemEntry.itemLevel == BookItem.LEV_FILE:
-            self.parOfFiles[itemParent] = currList
-        elif itemEntry.itemLevel == BookItem.LEV_ITEM:
-            self.parOfItems[itemParent] = currList
-        
-        self.buildTreeOrder()
-        self.updateEntryOrder()
-        
+        # If moving to a new node, update parent and set order to None
+        elif moveIt == self.ORD_NUP or moveIt == self.ORD_NDOWN:
+            
+            # This is only allowed for FILE entries
+            if itemEntry.itemLevel == BookItem.LEV_ITEM: return
+            
+            treeParent = self.getItem(itemParent)
+            parParent  = treeParent["parent"]
+            parEntry   = treeParent["entry"]
+            
+            if parParent is not None:
+                # Move to next or previous node
+                parList = self.parOfItems[parParent]
+                if itemParent not in parList:
+                    logger.error("BUG: Something unexpected happened while moving entry")
+                    return
+                parIndex = parList.index(itemParent)
+                if moveIt == self.ORD_NUP:
+                    newIndex = parIndex - 1
+                elif moveIt == self.ORD_NDOWN:
+                    newIndex = parIndex + 1
+                
+                if newIndex < 0 or newIndex >= len(parList):
+                    self.theTree[self.treeLookup[itemHandle]]["parent"] = parParent
+                    self.sortTree()
+                else:
+                    self.theTree[self.treeLookup[itemHandle]]["parent"] = parList[newIndex]
+                    self.sortTree()
+            else:
+                # Move to last child node
+                parList = self.parOfItems[itemParent]
+                self.theTree[self.treeLookup[itemHandle]]["parent"] = parList[len(parList)-1]
+                self.sortTree()
+            
         return
     
     def createRootItem(self, rootType):
