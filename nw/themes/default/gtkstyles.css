@@ -186,7 +186,7 @@
 }
 
 #nbContent > header > tabs > tab:hover {
-    background: @colMedium;
+    background: @colLight;
     color: @colText;
     border-image: none;
 }
