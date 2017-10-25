@@ -113,8 +113,8 @@ def main(sysArgs):
     
     # Defaults
     debugLevel = logging.WARN
-    debugStr   = "{levelname:8s}  {message}"
-    timeStr    = "[{asctime}] "
+    debugStr   = "%(levelname)-8s  %(message)s"
+    timeStr    = "[%(asctime)s] "
     logFile    = ""
     toFile     = False
     toStd      = True
@@ -140,7 +140,7 @@ def main(sysArgs):
                 debugLevel = logging.INFO
             elif inArg == "DEBUG":
                 debugLevel = logging.DEBUG
-                debugStr   = "{lineno:4d}:{name:20s}  {levelname:8s}  {message}"
+                debugStr   = "%(lineno)4d:%(name)-20s  %(levelname)-8s  %(message)s"
             else:
                 print("Invalid debug level")
                 exit(2)
@@ -151,10 +151,10 @@ def main(sysArgs):
             toStd = False
         elif inOpt in ("--verbose"):
             debugLevel = VERBOSE
-            timeStr    = "[{asctime}.{msecs:03.0f}] "
+            timeStr    = "[%(asctime)s.%(msecs)03d] "
         elif inOpt in ("--vverbose"):
             debugLevel = VVERBOSE
-            timeStr    = "[{asctime}.{msecs:03.0f}] "
+            timeStr    = "[%(asctime)s.%(msecs)03d] "
         elif inOpt in ("-t","--time"):
             showTime = True
         elif inOpt in ("-v", "--version"):
@@ -163,7 +163,7 @@ def main(sysArgs):
     
     # Set Logging
     if showTime: debugStr = timeStr+debugStr
-    logFmt = logging.Formatter(fmt=debugStr,datefmt="%Y-%m-%d %H:%M:%S",style="{")
+    logFmt = logging.Formatter(fmt=debugStr,datefmt="%Y-%m-%d %H:%M:%S")
     
     if not logFile == "" and toFile:
         if path.isfile(logFile+".bak"):
