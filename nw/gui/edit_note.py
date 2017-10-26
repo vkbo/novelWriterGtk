@@ -45,7 +45,7 @@ class GuiNoteEditor(Gtk.Alignment):
         self.lblTitle.set_margin_bottom(12)
         self.boxOuter.pack_start(self.lblTitle,False,False,0)
         
-        # Editor toolbar
+        # Editor Toolbar
         self.tbEdit = Gtk.Toolbar()
         self.tbEdit.set_name("tbNoteEdit")
         self.tbEdit.set_icon_size(Gtk.IconSize.MENU)

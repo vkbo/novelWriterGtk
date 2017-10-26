@@ -42,6 +42,16 @@ class GuiDocDetails(Gtk.Alignment):
         self.lblTitle.set_margin_bottom(12)
         self.boxOuter.pack_start(self.lblTitle,False,False,0)
         
+        # Details Toolbar
+        self.tbDetails = Gtk.Toolbar()
+        self.tbDetails.set_name("tbDetails")
+        self.tbDetails.set_icon_size(Gtk.IconSize.MENU)
+        self.tbDetails.set_margin_bottom(8)
+        self.btnEditDetails = Gtk.ToolButton(icon_name="text-editor-symbolic")
+        self.tbDetails.insert(self.btnEditDetails,0)
+        self.tbDetails.insert(Gtk.SeparatorToolItem(),1)
+        self.boxOuter.pack_start(self.tbDetails,False,True,0)
+        
         self.scrollGrid = Gtk.ScrolledWindow()
         self.boxOuter.pack_start(self.scrollGrid,True,True,0)
         

@@ -56,7 +56,7 @@ class GuiDocEditor(Gtk.Alignment):
         self.entryDocTitle.set_text("Document Title")
         self.alignDocTitle.add(self.entryDocTitle)
         
-        # Editor toolbar
+        # Editor Toolbar
         self.tbEdit = Gtk.Toolbar()
         self.tbEdit.set_name("tbDocEdit")
         self.btnEditBold      = Gtk.ToolButton(icon_name="format-text-bold-symbolic")

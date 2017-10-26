@@ -80,6 +80,18 @@
     background: rgba(255,255,200,0.5);
 }
 
+#tbDetails {
+    background: transparent;
+}
+
+#tbDetails  button {
+    border-color: transparent;
+    background: transparent;
+    color: rgba(255,255,200,0.6);
+    margin: 2px;
+    padding: 2px;
+}
+
 #tbDocEdit  button,
 #tbNoteEdit button {
     border-color: rgba(0,0,0,0.2);
@@ -90,13 +102,15 @@
 }
 
 #tbDocEdit  button:hover,
-#tbNoteEdit button:hover {
+#tbNoteEdit button:hover,
+#tbDetails  button:hover {
     border-color: rgba(255,255,255,0.6);
 }
 
 #tbMain     separator,
 #tbDocEdit  separator,
-#tbNoteEdit separator {
+#tbNoteEdit separator,
+#tbDetails  separator {
     background: transparent;
     border: 4px solid transparent;
 }
