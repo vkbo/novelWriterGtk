@@ -55,8 +55,15 @@ class GuiCharsTree(Gtk.TreeView):
         
         # Importance
         self.colImport  = Gtk.TreeViewColumn(title="Importance")
-        self.rendImport = Gtk.CellRendererText()
+        self.listImport = Gtk.ListStore(str)
+        self.listImport.append(["Main"])
+        self.listImport.append(["Major"])
+        self.listImport.append(["Minor"])
+        self.rendImport = Gtk.CellRendererCombo()
+        self.rendImport.set_property("model",self.listImport)
         self.rendImport.set_property("editable",True)
+        self.rendImport.set_property("has-entry",False)
+        self.rendImport.set_property("text-column",0)
         self.colImport.pack_start(self.rendImport,False)
         self.colImport.add_attribute(self.rendImport,"text",1)
         
@@ -115,7 +122,7 @@ class GuiCharsTree(Gtk.TreeView):
             
             logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
             
-            itemImportance = str(treeItem["entry"].itemImportance)
+            itemImportance = treeItem["entry"].itemImportance
             itemRole       = treeItem["entry"].itemRole
             itemComment    = treeItem["entry"].itemComment
             

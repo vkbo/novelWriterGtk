@@ -59,7 +59,6 @@ class GuiChaptersTree(Gtk.TreeView):
         self.rendType.set_property("text-column",0)
         self.colType.pack_start(self.rendType,True)
         self.colType.add_attribute(self.rendType,"text",0)
-        # self.colType.set_attributes(self.rendType,markup=0)
         
         # Number
         self.colNumber  = Gtk.TreeViewColumn(title="#")

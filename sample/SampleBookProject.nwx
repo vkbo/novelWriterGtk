@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171025-145731">
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171029-221938">
   <book>
     <title>Best Book Title Ever!</title>
     <author>J. Smith</author>
@@ -37,7 +37,7 @@
       <name>Sam</name>
       <comment>Something about Sam</comment>
       <role>Role A</role>
-      <importance>5</importance>
+      <importance>Main</importance>
     </item>
     <item handle="80d8bd95bdd42" order="11" parent="f8a4b7e84df9c">
       <class>CONTAINER</class>
@@ -46,7 +46,7 @@
       <name>Michaela</name>
       <comment>Something else about Michaela, and more</comment>
       <role>Role B</role>
-      <importance>4</importance>
+      <importance>Major</importance>
     </item>
     <item handle="b596b382dcb41" order="12" parent="77cfc628332c9">
       <class>CONTAINER</class>
@@ -54,7 +54,7 @@
       <type>PLOT</type>
       <name>Main Plot</name>
       <comment>This is the main plot.</comment>
-      <importance>5</importance>
+      <importance>Main</importance>
     </item>
     <item handle="3865b4f9da20c" order="5" parent="b22d358e4a010">
       <class>CONTAINER</class>
@@ -72,7 +72,7 @@
       <type>PLOT</type>
       <name>The SubPlot</name>
       <comment>Comment</comment>
-      <importance>4</importance>
+      <importance>Major</importance>
     </item>
     <item handle="88bbefd4b4542" order="17" parent="3865b4f9da20c">
       <meta parcount="6" sentcount="28" wordcount="246"/>

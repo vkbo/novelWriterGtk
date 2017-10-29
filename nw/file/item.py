@@ -246,10 +246,7 @@ class BookItem():
             self.itemImportance = None
         else:
             try:
-                intValue = int(newImportance)
-                if intValue < 1: intValue = 1
-                if intValue > 5: intValue = 5
-                self.itemImportance = intValue
+                self.itemImportance = str(newImportance).strip()
             except:
                 logger.error("itemImportance: Failed to set importance")
                 return

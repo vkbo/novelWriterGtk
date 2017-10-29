@@ -172,7 +172,7 @@ class NovelWriter():
         self.charPage.treeChars.loadContent()
         self.plotPage.treePlots.loadContent()
         
-        self.mainConf.setLastBook(bookPath)
+        self.mainConf.setLastBook(self.theBook.bookPath)
         
         return
     
@@ -487,7 +487,7 @@ class NovelWriter():
         itemHandle = srcTree.listStore[itemPath][handleCol]
         self.theBook.updateItem(itemHandle,itemTag,editText)
         parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
-        srcTree.listStore[itemPath][srcColumn] = str(parsedValue)
+        srcTree.listStore[itemPath][srcColumn] = parsedValue
         self.winMain.treeLeft.loadContent()
         
         return

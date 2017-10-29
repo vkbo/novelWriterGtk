@@ -52,10 +52,16 @@ class GuiPlotsTree(Gtk.TreeView):
         self.colName.add_attribute(self.rendName,"text",0)
         self.colName.set_attributes(self.rendName,markup=0)
         
-        # Importance
         self.colImport  = Gtk.TreeViewColumn(title="Importance")
-        self.rendImport = Gtk.CellRendererText()
+        self.listImport = Gtk.ListStore(str)
+        self.listImport.append(["Main"])
+        self.listImport.append(["Major"])
+        self.listImport.append(["Minor"])
+        self.rendImport = Gtk.CellRendererCombo()
+        self.rendImport.set_property("model",self.listImport)
         self.rendImport.set_property("editable",True)
+        self.rendImport.set_property("has-entry",False)
+        self.rendImport.set_property("text-column",0)
         self.colImport.pack_start(self.rendImport,False)
         self.colImport.add_attribute(self.rendImport,"text",1)
         
