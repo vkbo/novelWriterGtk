@@ -3,7 +3,7 @@
   <document>
     <counts parcount="2" sencount="5" wordcount="37"/>
     <text>
-      <paragraph idx="0"><![CDATA[This scene file was actually made from scratch, with no silly <em>Lorem</em> <em>Ipsum</em> nonsense added to it. So I had to write all this <strike>bullshit</strike> myself. So much fun!]]></paragraph>
+      <paragraph idx="0"><![CDATA[This scene file was actually made from scratch, with no silly <em>Lorem</em> <em>Ipsum</em> nonsense added to it. So I had to write all this <del>bullshit</del> myself. So much fun!]]></paragraph>
       <paragraph idx="1"><![CDATA[I even wrote a second <mark>paragraphs</mark>. Much paragraphs.]]></paragraph>
     </text>
   </document>

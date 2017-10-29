@@ -35,14 +35,14 @@ class NWTextBuffer(GtkSource.Buffer):
             "nwBold"   : ["strong", self.tagBold],
             "nwItalic" : ["em",     self.tagItalic],
             "nwMark"   : ["mark",   self.tagMark],
-            "nwStrike" : ["strike", self.tagStrike],
+            "nwStrike" : ["del",    self.tagStrike],
         }
         
         self.mapDec = {
             "strong" : ["nwBold",   self.tagBold],
             "em"     : ["nwItalic", self.tagItalic],
             "mark"   : ["nwMark",   self.tagMark],
-            "strike" : ["nwStrike", self.tagStrike],
+            "del"    : ["nwStrike", self.tagStrike],
         }
         
         return
