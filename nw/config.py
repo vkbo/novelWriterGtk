@@ -24,6 +24,17 @@ logger = logging.getLogger(__name__)
 
 class Config:
     
+    WIN_WIDTH  = 0
+    WIN_HEIGHT = 1
+    
+    PANE_MAIN  = 0
+    PANE_CONT  = 1
+    PANE_EDIT  = 2
+    PANE_META  = 3
+    
+    FILE_SCENE = 0
+    FILE_NOTE  = 1
+    
     def __init__(self):
         
         # Set Application Variables
@@ -41,7 +52,7 @@ class Config:
         
         # If config folder does not exist, make it.
         # This assumes that the os config folder itself exists.
-        # TODO: This does not work in Windows
+        # TODO: This does not work on Windows
         if not path.isdir(self.confPath):
             mkdir(self.confPath)
             
@@ -49,29 +60,18 @@ class Config:
         self.confChanged = False
         
         ## General
-        self.winWidth    = 1600
-        self.winHeight   = 980
-        self.mainPane    = 280
-        self.contPane    = 750
-        self.editPane    = 900
-        self.metaPane    = 240
+        self.winGeometry = [1600, 980]
+        self.paneSize    = [280, 750, 900, 240]
         self.theTheme    = "default"
-        # self.theTheme    = None
         
         ## Editor
-        self.autoSave    = 30   # Seconds
-        self.fontSize    = 16   # Pixels
-        self.lineHeight  = 150  # Percent
-        self.lineIndent  = 400  # Percent
-        self.parMargin   = 4    # Pixels
-        self.pageMargin  = 40   # Pixels
+        self.autoSave    = 300         # Seconds
+        self.editorFont  = "Tinos 15"  # FontName + fontSize
+        self.lineHeight  = [120,120]   # Percent
+        self.textIndent  = [30, 0]     # Pixels
+        self.parMargin   = [4, 12]     # Pixels
         self.spellCheck  = "en_GB"
         self.spellState  = False
-        self.showPara    = False
-        
-        ## Timer
-        self.autoPause   = 60   # Seconds
-        self.minTime     = 10   # Seconds
         
         ## Paths
         self.recentBook  = ["","","","","","","","","",""]
@@ -91,42 +91,47 @@ class Config:
     ##
     
     def loadConfig(self):
-
+        
         logger.debug("Loading config file")
         confParser = configparser.ConfigParser()
         confParser.readfp(open(path.join(self.confPath,self.confFile)))
-
+        
         # Get options
-
+        
         ## Main
         cnfSec = "Main"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"winWidth"):   self.winWidth     = confParser.getint(cnfSec,"winWidth")
-            if confParser.has_option(cnfSec,"winHeight"):  self.winHeight    = confParser.getint(cnfSec,"winHeight")
-            if confParser.has_option(cnfSec,"mainPane"):   self.mainPane     = confParser.getint(cnfSec,"mainPane")
-            if confParser.has_option(cnfSec,"contPane"):   self.contPane     = confParser.getint(cnfSec,"contPane")
-            if confParser.has_option(cnfSec,"editPane"):   self.editPane     = confParser.getint(cnfSec,"editPane")
-            if confParser.has_option(cnfSec,"metaPane"):   self.metaPane     = confParser.getint(cnfSec,"metaPane")
-
+            if confParser.has_option(cnfSec,"winGeometry"):
+                self.winGeometry = self.unpackList(
+                    confParser.get(cnfSec,"winGeometry"), 2, self.winGeometry
+                )
+            if confParser.has_option(cnfSec,"paneSize"):
+                self.paneSize = self.unpackList(
+                    confParser.get(cnfSec,"paneSize"), 4, self.paneSize
+                )
+            if confParser.has_option(cnfSec,"theTheme"):
+                self.theTheme = confParser.get(cnfSec,"theTheme")
+        
         ## Editor
         cnfSec = "Editor"
         if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"autoSave"):   self.autoSave     = confParser.getint(cnfSec,"autoSave")
-            if confParser.has_option(cnfSec,"fontSize"):   self.fontSize     = confParser.getint(cnfSec,"fontSize")
-            if confParser.has_option(cnfSec,"lineHeight"): self.lineHeight   = confParser.getint(cnfSec,"lineHeight")
-            if confParser.has_option(cnfSec,"lineIndent"): self.lineIndent   = confParser.getint(cnfSec,"lineIndent")
-            if confParser.has_option(cnfSec,"parMargin"):  self.parMargin    = confParser.getint(cnfSec,"parMargin")
-            if confParser.has_option(cnfSec,"pageMargin"): self.pageMargin   = confParser.getint(cnfSec,"pageMargin")
-            if confParser.has_option(cnfSec,"spellCheck"): self.spellCheck   = confParser.get(cnfSec,"spellCheck")
-            if confParser.has_option(cnfSec,"spellState"): self.spellState   = confParser.getboolean(cnfSec,"spellState")
-            if confParser.has_option(cnfSec,"showPara"):   self.showPara     = confParser.getboolean(cnfSec,"showPara")
-
-        ## Timer
-        cnfSec = "Timer"
-        if confParser.has_section(cnfSec):
-            if confParser.has_option(cnfSec,"autoPause"):  self.autoPause    = confParser.getint(cnfSec,"autoPause")
-            if confParser.has_option(cnfSec,"minTime"):    self.minTime      = confParser.getint(cnfSec,"minTime")
-
+            if confParser.has_option(cnfSec,"autoSave"):
+                self.autoSave = confParser.getint(cnfSec,"autoSave")
+            if confParser.has_option(cnfSec,"editorFont"):
+                self.editorFont = confParser.get(cnfSec,"editorFont")
+            if confParser.has_option(cnfSec,"lineHeight"):
+                self.lineHeight = self.unpackList(
+                    confParser.get(cnfSec,"lineHeight"), 2, self.lineHeight
+                )
+            if confParser.has_option(cnfSec,"textIndent"):
+                self.textIndent = self.unpackList(
+                    confParser.get(cnfSec,"textIndent"), 2, self.textIndent
+                )
+            if confParser.has_option(cnfSec,"parMargin"):
+                self.parMargin = self.unpackList(
+                    confParser.get(cnfSec,"parMargin"), 2, self.parMargin
+                )
+        
         ## Path
         cnfSec = "Path"
         if confParser.has_section(cnfSec):
@@ -140,45 +145,32 @@ class Config:
             if confParser.has_option(cnfSec,"Recent7"):   self.recentBook[7] = confParser.get(cnfSec,"Recent7")
             if confParser.has_option(cnfSec,"Recent8"):   self.recentBook[8] = confParser.get(cnfSec,"Recent8")
             if confParser.has_option(cnfSec,"Recent9"):   self.recentBook[9] = confParser.get(cnfSec,"Recent9")
-
+        
         return
-
+    
     def saveConfig(self):
-
+        
         logger.debug("Config: Saving")
         confParser = configparser.ConfigParser()
-
+        
         # Set options
-
+        
         ## Main
         cnfSec = "Main"
         confParser.add_section(cnfSec)
-        confParser.set(cnfSec,"winWidth",   str(self.winWidth))
-        confParser.set(cnfSec,"winHeight",  str(self.winHeight))
-        confParser.set(cnfSec,"mainPane",   str(self.mainPane))
-        confParser.set(cnfSec,"contPane",   str(self.contPane))
-        confParser.set(cnfSec,"editPane",   str(self.editPane))
-        confParser.set(cnfSec,"metaPane",   str(self.metaPane))
-
+        confParser.set(cnfSec,"winGeometry", self.packList(self.winGeometry))
+        confParser.set(cnfSec,"paneSize",    self.packList(self.paneSize))
+        confParser.set(cnfSec,"thetheme",    self.theTheme)
+        
         ## Editor
         cnfSec = "Editor"
         confParser.add_section(cnfSec)
         confParser.set(cnfSec,"autoSave",   str(self.autoSave))
-        confParser.set(cnfSec,"fontSize",   str(self.fontSize))
-        confParser.set(cnfSec,"lineHeight", str(self.lineHeight))
-        confParser.set(cnfSec,"lineIndent", str(self.lineIndent))
-        confParser.set(cnfSec,"parMargin",  str(self.parMargin))
-        confParser.set(cnfSec,"pageMargin", str(self.pageMargin))
-        confParser.set(cnfSec,"spellCheck", str(self.spellCheck))
-        confParser.set(cnfSec,"spellState", str(self.spellState))
-        confParser.set(cnfSec,"showPara",   str(self.showPara))
-
-        ## Timer
-        cnfSec = "Timer"
-        confParser.add_section(cnfSec)
-        confParser.set(cnfSec,"autoPause",  str(self.autoPause))
-        confParser.set(cnfSec,"minTime",    str(self.minTime))
-
+        confParser.set(cnfSec,"editorFont", str(self.editorFont))
+        confParser.set(cnfSec,"lineHeight", self.packList(self.lineHeight))
+        confParser.set(cnfSec,"textIndent", self.packList(self.textIndent))
+        confParser.set(cnfSec,"parMargin",  self.packList(self.parMargin))
+        
         ## Path
         cnfSec = "Path"
         confParser.add_section(cnfSec)
@@ -192,53 +184,59 @@ class Config:
         confParser.set(cnfSec,"Recent7",    str(self.recentBook[7]))
         confParser.set(cnfSec,"Recent8",    str(self.recentBook[8]))
         confParser.set(cnfSec,"Recent9",    str(self.recentBook[9]))
-
+        
         # Write config file
         confParser.write(open(path.join(self.confPath,self.confFile),"w"))
         self.confChanged = False
-
+        
         return
-
+    
+    def unpackList(self, inStr, listLen, listDefault, castTo=int):
+        inData  = inStr.split(",")
+        outData = []
+        for i in range(listLen):
+            try:
+                outData.append(castTo(inData[i]))
+            except:
+                outData.append(listDefault[i])
+        return outData
+    
+    def packList(self, inData):
+        return ", ".join(str(inVal) for inVal in inData)
+    
     ##
     #  Events
     ##
-
+    
     def onAutoSave(self):
         if self.confChanged:
             logger.debug("Config: Autosaving")
             self.saveConfig()
         return True
-
+    
     ##
     #  Setters
     ##
-
-    def setWinSize(self, width, height):
-        if width != self.winWidth or height != self.winHeight:
-            self.winWidth    = width
-            self.winHeight   = height
+    
+    def setWinSize(self, newWidth, newHeight):
+        if abs(self.winGeometry[self.WIN_WIDTH] - newWidth) >= 10:
+            self.winGeometry[self.WIN_WIDTH] = newWidth
+            self.confChanged = True
+        if abs(self.winGeometry[self.WIN_HEIGHT] - newHeight) >= 10:
+            self.winGeometry[self.WIN_HEIGHT] = newHeight
             self.confChanged = True
         return
     
-    def setPanes(self, panePos):
-        if panePos[0] != self.mainPane:
-            self.mainPane    = panePos[0]
+    def setPanePosition(self, panePos, whichOne):
+        if panePos != self.paneSize[whichOne]:
+            self.paneSize[whichOne] = panePos
             self.confChanged = True
-        if panePos[1] != self.contPane:
-            self.contPane    = panePos[1]
-            self.confChanged = True
-        # if panePos[2] != self.editPane:
-        #     self.editPane    = panePos[2]
-        #     self.confChanged = True
-        # if panePos[3] != self.metaPane:
-        #     self.metaPane    = panePos[3]
-        #     self.confChanged = True
         return
     
     def setSpellState(self, state):
         self.spellState = state
         return
-
+    
     def setLastBook(self, bookPath):
         if bookPath == "": return
         if bookPath in self.recentBook[0:10]:
@@ -247,18 +245,18 @@ class Config:
         self.confChanged = True
         self.updateRecentList()
         return
-
+    
     ##
     #  Getters
     ##
-
+    
     def getLastBook(self, bookIdx=0):
         return self.recentBook[bookIdx]
-
+    
     ##
     #  Methods
     ##
-
+    
     def updateRecentList(self):
         # for n in range(10):
         #     if self.recentBook[n] == "":
@@ -267,24 +265,24 @@ class Config:
         #         self.getObject("menuFileRecent%d" % n).set_visible(True)
         #         self.getObject("menuFileRecent%d" % n).set_label(self.recentBook[n])
         return
-
+    
     ##
     #  GUI Actions
     ##
-
+    
     def onLoad(self, guiObject=None):
-
+        
         self.dlgBuilder.add_from_file(path.join(self.guiPath,"dlgPreferences.glade"))
-
+        
         dlgPrefs = self.dlgObject("dlgPreferences")
-
+        
         guiHandlers = {
             "onClickConfigSave"   : self.onSave,
             "onClickConfigCancel" : self.onClose,
             "onClickConfigClose"  : self.onClose,
         }
         self.dlgBuilder.connect_signals(guiHandlers)
-
+        
         # Load Current Values
         self.dlgObject("spinFontSIze").set_value(self.fontSize)
         self.dlgObject("spinLineHeight").set_value(self.lineHeight/100.0)
@@ -295,14 +293,14 @@ class Config:
         self.dlgObject("spinAutoSave").set_value(self.autoSave)
         self.dlgObject("spinAutoPause").set_value(self.autoPause)
         self.dlgObject("spinMinTime").set_value(self.minTime)
-
+        
         dlgPrefs.set_transient_for(self.getObject("winMain"))
         dlgPrefs.show_all()
-
+        
         return
-
+    
     def onSave(self, guiObject=None):
-
+        
         self.fontSize   = int(self.dlgObject("spinFontSIze").get_value())
         self.lineHeight = int(self.dlgObject("spinLineHeight").get_value()*100.0)
         self.lineIndent = int(self.dlgObject("spinLineIndent").get_value()*100.0)
@@ -312,14 +310,14 @@ class Config:
         self.autoSave   = int(self.dlgObject("spinAutoSave").get_value())
         self.autoPause  = int(self.dlgObject("spinAutoPause").get_value())
         self.minTime    = int(self.dlgObject("spinMinTime").get_value())
-
+        
         self.saveConfig()
         dlgPrefs = self.dlgObject("dlgPreferences").destroy()
-
+        
         return
-
+    
     def onClose(self, guiObject=None):
         dlgPrefs = self.dlgObject("dlgPreferences").destroy()
         return
-
+    
 # End Class Config

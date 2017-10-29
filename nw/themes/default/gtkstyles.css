@@ -216,16 +216,16 @@
  * Panes
  */
 
-#panedOuter {background-color: @colLight;}
+#panedOuter {background: @colLight;}
 #panedOuter > separator {border-color: @colMedium;}
 
-#panedContent {background-color: @colLight;}
+#panedContent {background: @colLight;}
 #panedContent > separator {border-color: @colMedium;}
 
-#panedEditor {background-color: @colLight;}
+#panedEditor {background: @colLight;}
 #panedEditor > separator {border-color: @colLight;}
 
-#panedMeta {background-color: @colLight;}
+#panedMeta {background: @colLight;}
 #panedMeta > separator {border-color: @colLight;}
 
 
@@ -237,7 +237,7 @@
 #treeChapters.view,
 #treeChars.view,
 #treePlots.view {
-    background-color: @colMedium;
+    background: @colMedium;
     color: @colText;
     margin: 0px;
     padding: 1px 2px;
@@ -247,14 +247,14 @@
 #treeChapters.view:hover,
 #treeChars.view:hover,
 #treePlots.view:hover {
-    background-color: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.1);
 }
 
 #treeLeft.view:selected,
 #treeChapters.view:selected,
 #treeChars.view:selected,
 #treePlots.view:selected {
-    background-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.2);
 }
 
 #treeLeft.view     > header *,
@@ -359,21 +359,21 @@
 #scrollChars,
 #scrollPlots,
 #scrollView {
-    background-color: @colLight;
+    background: @colLight;
 }
 
-#scrollDoc  {background-color: rgba(255,255,255,0.8);}
-#scrollNote {background-color: rgba(255,255,200,0.8);}
+#scrollDoc  {background: rgba(255,255,255,0.8);}
+#scrollNote {background: rgba(255,255,200,0.8);}
 
 #alignDoc,
 #alignNote {
-    background-color: @colLight;
+    background: @colLight;
 }
 
 #alignBook,
 #alignChars,
 #alignPlots {
-    background-color: @colLight;
+    background: @colLight;
 }
 
 #fmeBookTitle,

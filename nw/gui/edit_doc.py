@@ -31,6 +31,7 @@ class GuiDocEditor(Gtk.Alignment):
         Gtk.Alignment.__init__(self)
         
         self.itemClass = itemClass
+        self.mainConf  = nw.CONFIG
         
         self.set_name("alignDocEdit")
         self.set_padding(40,40,40,10)
@@ -116,15 +117,15 @@ class GuiDocEditor(Gtk.Alignment):
         self.btnEditClear.connect("clicked",self.onClearStyle)
         
         self.textView.set_wrap_mode(Gtk.WrapMode.WORD)
-        self.textView.modify_font(Pango.FontDescription("Tinos 15"))
+        self.textView.modify_font(Pango.FontDescription(self.mainConf.editorFont))
         if self.itemClass == BookItem.CLS_SCENE:
-            self.textView.set_indent(30)
+            self.textView.set_indent(self.mainConf.textIndent[self.mainConf.FILE_SCENE])
             self.textView.set_justification(Gtk.Justification.FILL)
-            self.textView.set_pixels_below_lines(4)
+            self.textView.set_pixels_below_lines(self.mainConf.parMargin[self.mainConf.FILE_SCENE])
         else:
-            self.textView.set_indent(0)
+            self.textView.set_indent(self.mainConf.textIndent[self.mainConf.FILE_NOTE])
             self.textView.set_justification(Gtk.Justification.LEFT)
-            self.textView.set_pixels_below_lines(12)
+            self.textView.set_pixels_below_lines(self.mainConf.parMargin[self.mainConf.FILE_NOTE])
         
         return
     

@@ -41,7 +41,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.editPages = {}
         
         self.set_title(self.mainConf.appName)
-        self.resize(self.mainConf.winWidth,self.mainConf.winHeight)
+        self.set_default_size(*self.mainConf.winGeometry)
         self.set_position(Gtk.WindowPosition.CENTER)
         
         self.set_name("winMain")
@@ -96,7 +96,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedOuter = Gtk.Paned()
         self.panedOuter.set_name("panedOuter")
         self.panedOuter.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.panedOuter.set_position(self.mainConf.mainPane)
+        self.panedOuter.set_position(self.mainConf.paneSize[self.mainConf.PANE_MAIN])
         self.panedOuter.set_wide_handle(False)
         self.boxOuter.pack_start(self.panedOuter,True,True,0)
         
@@ -175,7 +175,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.panedContent = Gtk.Paned()
         self.panedContent.set_name("panedContent")
         self.panedContent.set_orientation(Gtk.Orientation.VERTICAL)
-        self.panedContent.set_position(self.mainConf.contPane)
+        self.panedContent.set_position(self.mainConf.paneSize[self.mainConf.PANE_CONT])
         self.panedOuter.pack2(self.panedContent,True,False)
         
         # Notebook Holding the Main Content
@@ -322,6 +322,15 @@ class GuiWinMain(Gtk.ApplicationWindow):
     def onCloseTab(self, guiObject, itemHandle):
         
         pageID = self.nbContent.page_num(self.editPages[itemHandle]["item"])
+        
+        posEdit = self.editPages[itemHandle]["item"].get_position()
+        posMeta = self.editPages[itemHandle]["item"].panedMeta.get_position()
+        
+        logger.vverbose("Edit pane position was %d" % posEdit)
+        logger.vverbose("Meta pane position was %d" % posMeta)
+        
+        self.mainConf.setPanePosition(posEdit,self.mainConf.PANE_EDIT)
+        self.mainConf.setPanePosition(posMeta,self.mainConf.PANE_META)
         
         self.nbContent.remove_page(pageID)
         del self.editPages[itemHandle]

@@ -38,11 +38,10 @@ class NovelWriter():
         
         # Build the GUI
         logger.debug("Assembling the main GUI")
-        self.winMain   = GuiWinMain(self.theBook)
-        self.bookPage  = self.winMain.bookPage
-        self.charPage  = self.winMain.charPage
-        self.plotPage  = self.winMain.plotPage
-        # self.sceneEdit = self.winMain.sceneEdit
+        self.winMain  = GuiWinMain(self.theBook)
+        self.bookPage = self.winMain.bookPage
+        self.charPage = self.winMain.charPage
+        self.plotPage = self.winMain.plotPage
         
         # Set file filter for loading and saving
         self.fileFilter = Gtk.FileFilter()
@@ -153,6 +152,8 @@ class NovelWriter():
         self.bookPage.entryBookTitle.set_text(bookTitle)
         self.bookPage.entryBookAuthor.set_text(bookAuthors)
         
+        self.mainConf.setLastBook(bookPath)
+        
         return
     
     def saveBook(self):
@@ -170,6 +171,8 @@ class NovelWriter():
         self.bookPage.treeChapters.loadContent()
         self.charPage.treeChars.loadContent()
         self.plotPage.treePlots.loadContent()
+        
+        self.mainConf.setLastBook(bookPath)
         
         return
     
@@ -558,12 +561,15 @@ class NovelWriter():
         return
     
     def onMainWinChange(self, guiObject, guiEvent):
-        self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
+        # self.mainConf.setWinSize(guiEvent.width,guiEvent.height)
         return
 
     def onApplicationQuit(self, guiObject, guiEvent):
         
         logger.info("Shutting down")
+        
+        # Save Window Size
+        self.mainConf.setWinSize(*self.winMain.get_size())
         
         # Get Pane Positions
         posOuter   = self.winMain.panedOuter.get_position()
@@ -571,7 +577,8 @@ class NovelWriter():
         # posEditor  = self.sceneEdit.get_position()
         # posMeta    = self.sceneEdit.panedMeta.get_position()
         # self.mainConf.setPanes([posOuter,posContent,posEditor,posMeta])
-        self.mainConf.setPanes([posOuter,posContent])
+        self.mainConf.setPanePosition(posOuter,self.mainConf.PANE_MAIN)
+        self.mainConf.setPanePosition(posContent,self.mainConf.PANE_CONT)
         
         self.mainConf.saveConfig()
         logger.debug("Calling Gtk quit")

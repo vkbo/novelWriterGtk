@@ -46,7 +46,7 @@ class GuiEditor(Gtk.Paned):
         # Pane Between Document and Details/Notes
         self.set_name("panedEditor")
         self.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.set_position(self.mainConf.editPane)
+        self.set_position(self.mainConf.paneSize[self.mainConf.PANE_EDIT])
         
         # Document Editor
         self.editDoc = GuiDocEditor(self.itemClass)
@@ -56,7 +56,7 @@ class GuiEditor(Gtk.Paned):
         self.panedMeta = Gtk.Paned()
         self.panedMeta.set_name("panedMeta")
         self.panedMeta.set_orientation(Gtk.Orientation.VERTICAL)
-        self.panedMeta.set_position(self.mainConf.metaPane)
+        self.panedMeta.set_position(self.mainConf.paneSize[self.mainConf.PANE_META])
         self.pack2(self.panedMeta,True,False)
         
         # Document Details
