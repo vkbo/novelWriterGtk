@@ -33,9 +33,9 @@ class GuiCharsTree(Gtk.TreeView):
         Gtk.TreeView.__init__(self)
         
         # Connect to GUI
-        self.mainConf   = nw.CONFIG
-        self.theBook    = theBook
-        self.iterMap    = {}
+        self.mainConf = nw.CONFIG
+        self.theBook  = theBook
+        self.iterMap  = {}
         
         self.set_name("treeChars")
         self.set_headers_visible(True)

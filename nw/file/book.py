@@ -118,7 +118,7 @@ class Book():
                     if "handle" in xItem.attrib:
                         itemHandle = itemAttrib["handle"]
                     else:
-                        logger.error("BookOpen: Item missing handle, Skipping")
+                        logger.error("BookOpen: Entry missing handle, Skipping")
                         continue
                     if "parent" in xItem.attrib:
                         itemParent = itemAttrib["parent"]
@@ -128,11 +128,17 @@ class Book():
                         itemOrder = itemAttrib["order"]
                     else:
                         itemOrder = None
-                    bookItem   = BookItem()
+                    bookItem = BookItem()
                     for xValue in xItem:
                         if xValue.tag == "meta":
                             for metaTag in xValue.attrib.keys():
                                 bookItem.setFromTag(metaTag,xValue.attrib[metaTag])
+                        elif xValue.tag == "scene":
+                            for xScene in xValue:
+                                if xScene.tag == "character":
+                                    bookItem.addSceneChar(xScene.text)
+                                if xScene.tag == "plot":
+                                    bookItem.addScenePlot(xScene.text)
                         else:
                             bookItem.setFromTag(xValue.tag,xValue.text)
                     self.theTree.appendItem(itemHandle,itemParent,itemOrder,bookItem)
@@ -207,6 +213,16 @@ class Book():
                 if not entryValue is None:
                     xValue = ET.SubElement(xItem,entryTag)
                     xValue.text = str(entryValue)
+            
+            # Set scene items
+            if len(treeItem["entry"].sceneChars) + len(treeItem["entry"].scenePlots) > 0:
+                xValue = ET.SubElement(xItem,"scene")
+                for sceneChar in treeItem["entry"].sceneChars:
+                    xScene = ET.SubElement(xValue,"character")
+                    xScene.text = str(sceneChar)
+                for scenePlot in treeItem["entry"].scenePlots:
+                    xScene = ET.SubElement(xValue,"plot")
+                    xScene.text = str(scenePlot)
             
             itemIdx += 1
         

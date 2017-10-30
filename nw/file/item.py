@@ -31,6 +31,7 @@ class BookItem():
     TAG_NUMBER  = "number"
     TAG_COMPILE = "compile"
     TAG_IMPORT  = "importance"
+    TAG_POV     = "pointofview"
     
     META_PARS   = "parcount"
     META_SENTS  = "sentcount"
@@ -57,34 +58,38 @@ class BookItem():
     SUB_ARCH    = "ARCHIVED"
     
     validTags = [
-        TAG_CLASS, TAG_LEVEL,  TAG_TYPE,    TAG_SUBTYPE,
-        TAG_TITLE, TAG_NAME,   TAG_COMMENT,
-        TAG_ROLE,  TAG_NUMBER, TAG_COMPILE, TAG_IMPORT
+        TAG_CLASS,  TAG_LEVEL,   TAG_TYPE,    TAG_SUBTYPE,
+        TAG_TITLE,  TAG_NAME,    TAG_COMMENT, TAG_ROLE,
+        TAG_NUMBER, TAG_COMPILE, TAG_IMPORT,  TAG_POV,
     ]
     validMeta      = [META_PARS,META_SENTS,META_WORDS,META_CHARS]
     validClasses   = [CLS_CONT,CLS_SCENE,CLS_NOTE]
     validLevels    = [LEV_ROOT,LEV_ITEM,LEV_FILE]
     validTypes     = [TYP_BOOK,TYP_CHAR,TYP_PLOT,TYP_NOTE]
     validSubTypes  = [SUB_PRO,SUB_CHAP,SUB_EPI,SUB_APPEND,SUB_ARCH]
-    
-    itemClass      = None
-    itemLevel      = None
-    itemType       = None
-    itemSubType    = None
-    itemTitle      = None
-    itemName       = None
-    itemComment    = None
-    itemRole       = None
-    itemNumber     = None
-    itemCompile    = None
-    itemImportance = None
-    
-    metaParCount   = None
-    metaSentCount  = None
-    metaWordCount  = None
-    metaCharCount  = None
-    
+        
     def __init__(self):
+        
+        self.itemClass      = None
+        self.itemLevel      = None
+        self.itemType       = None
+        self.itemSubType    = None
+        self.itemTitle      = None
+        self.itemName       = None
+        self.itemComment    = None
+        self.itemRole       = None
+        self.itemNumber     = None
+        self.itemCompile    = None
+        self.itemImportance = None
+        self.itemPOV        = None
+        
+        self.metaParCount   = None
+        self.metaSentCount  = None
+        self.metaWordCount  = None
+        self.metaCharCount  = None
+        
+        self.sceneChars     = []
+        self.scenePlots     = []
         
         self.tagMap = {
             self.TAG_CLASS   : self.setClass,
@@ -98,6 +103,7 @@ class BookItem():
             self.TAG_NUMBER  : self.setNumber,
             self.TAG_COMPILE : self.setCompile,
             self.TAG_IMPORT  : self.setImportance,
+            self.TAG_POV     : self.setPOV,
             self.META_PARS   : self.setParCount,
             self.META_SENTS  : self.setSentCount,
             self.META_WORDS  : self.setWordCount,
@@ -119,6 +125,7 @@ class BookItem():
             if getTag == self.TAG_NUMBER:  return self.itemNumber
             if getTag == self.TAG_COMPILE: return self.itemCompile
             if getTag == self.TAG_IMPORT:  return self.itemImportance
+            if getTag == self.TAG_POV:     return self.itemPOV
         elif getTag in self.validMeta:
             if getTag == self.META_PARS:   return self.metaParCount
             if getTag == self.META_SENTS:  return self.metaSentCount
@@ -252,6 +259,17 @@ class BookItem():
                 return
         return
     
+    def setPOV(self,newPOV):
+        if newPOV is None:
+            self.itemPOV = None
+        else:
+            try:
+                self.itemPOV = str(newPOV).strip()
+            except:
+                logger.error("itemPOV: Failed to set point of view")
+                return
+        return
+    
     def setCompile(self,newCompile):
         if isinstance(newCompile,bool):
             self.itemCompile = newCompile
@@ -304,6 +322,28 @@ class BookItem():
                 self.metaCharCount = int(newCount)
             except:
                 return
+        return
+    
+    def addSceneChar(self,newChar):
+        if isinstance(newChar,str):
+            if len(newChar) == 13 and not newChar in self.sceneChars:
+                self.sceneChars.append(newChar)
+        return
+    
+    def removeSceneChar(self,rmChar):
+        if rmChar in self.sceneChars:
+            self.sceneChars.remove(rmChar)
+        return
+    
+    def addScenePlot(self,newPlot):
+        if isinstance(newPlot,str):
+            if len(newPlot) == 13 and not newPlot in self.scenePlots:
+                self.scenePlots.append(newPlot)
+        return
+    
+    def removeScenePlot(self,rmPlot):
+        if rmPlot in self.scenePlots:
+            self.scenePlots.remove(rmPlot)
         return
     
 # End Class BookItem

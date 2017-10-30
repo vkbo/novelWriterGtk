@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171029-221938">
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171030-185858">
   <book>
     <title>Best Book Title Ever!</title>
     <author>J. Smith</author>
@@ -183,6 +183,9 @@
       <comment>The stuff before</comment>
       <number>0</number>
       <compile>True</compile>
+      <scene>
+        <character>80d8bd95bdd42</character>
+      </scene>
     </item>
     <item handle="cd2aa1f8448c7" order="8" parent="b22d358e4a010">
       <class>CONTAINER</class>
