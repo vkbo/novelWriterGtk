@@ -34,7 +34,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
     
     def __init__(self, theBook):
         Gtk.ApplicationWindow.__init__(self)
-        logger.verbose("Starting building main window")
+        logger.verbose("GUI: Starting to build the main window")
         
         self.mainConf  = nw.CONFIG
         self.theBook   = theBook
@@ -248,11 +248,11 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.scrlTimeLine.add(self.drawTimeLine)
         # self.drawTimeLine.connect("draw", self.onExpose)
         
-        logger.verbose("Finished building main window")
+        logger.verbose("GUI: Finished building the main window")
         if self.mainConf.guiState:
             self.show_all()
         else:
-            logger.info("Running in headless mode, not showing GUI")
+            logger.info("GUI: Running in headless mode, not showing GUI")
         
         return
     
@@ -266,7 +266,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         a tab if it's not."""
         
         if itemHandle in self.editPages.keys():
-            logger.verbose("Showing file with handle %s" % itemHandle)
+            logger.verbose("User: Showing file with handle %s" % itemHandle)
             tabNum = self.editPages[itemHandle]["index"]
             self.nbContent.set_current_page(tabNum)
             return
@@ -276,14 +276,14 @@ class GuiWinMain(Gtk.ApplicationWindow):
     def editFile(self, itemHandle):
         """Opens an edit window for a file"""
         
-        logger.verbose("Editing file with handle %s" % itemHandle)
+        logger.verbose("User: Editing file with handle %s" % itemHandle)
         
         if itemHandle in self.editPages.keys():
             tabNum = self.editPages[itemHandle]["index"]
             self.nbContent.set_current_page(tabNum)
             return
         
-        logger.vverbose("Opening a new tab")
+        logger.vverbose("User: Opening a new tab")
         
         treeEntry = self.theBook.getItem(itemHandle)
         

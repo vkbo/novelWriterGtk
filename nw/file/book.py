@@ -93,8 +93,8 @@ class Book():
         appVersion  = xRoot.attrib["appVersion"]
         fileVersion = xRoot.attrib["fileVersion"]
         
-        logger.verbose("XML: Root is %s" % nwxRoot)
-        logger.verbose("XML: File version is %s" % fileVersion)
+        logger.verbose("BookOpen: XML root is %s" % nwxRoot)
+        logger.verbose("BookOpen: File version is %s" % fileVersion)
         
         if not nwxRoot == "novelWriterXML" or not fileVersion == "1.0":
             logger.error("BookOpen: Project file does not appear to be a novelWriterXML file version 1.0")
@@ -262,6 +262,7 @@ class Book():
         return
     
     def setTitle(self, bookTitle):
+        if bookTitle.strip() == self.bookTitle: return
         logger.debug("Book title changed to '%s'" % bookTitle)
         self.bookTitle = bookTitle.strip()
         return

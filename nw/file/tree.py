@@ -90,7 +90,7 @@ class BookTree():
         parType  = parEntry.itemType
         
         if not parClass == BookItem.CLS_CONT:
-            logger.debug("Item is not a folder, getting its parent")
+            logger.debug("BookTree: Entry is not a container, getting its parent")
             parParent = self.getItem(pHandle)["parent"]
             if not parParent is None:
                 pHandle  = parParent
@@ -98,7 +98,7 @@ class BookTree():
                 parClass = parEntry.itemClass
                 parType  = parEntry.itemType
             else:
-                logger.error("A file must be added to a folder")
+                logger.error("BookTree: A file must be added to a folder")
         
         if parType == BookItem.TYP_BOOK:
             newClass   = BookItem.CLS_SCENE
@@ -184,7 +184,7 @@ class BookTree():
         elif itemEntry.itemLevel == BookItem.LEV_ITEM:
             currList = self.parOfItems[itemParent]
         else:
-            logger.error("Cannot change order of ROOT elements")
+            logger.error("BookTree: Cannot change order of ROOT elements")
             return
         
         if moveIt not in self.validOrder:
@@ -261,11 +261,11 @@ class BookTree():
             if rootType == BookItem.TYP_PLOT: rootName = "Plots"
             if rootType == BookItem.TYP_NOTE: rootName = "Notes"
         else:
-            logger.error("Cannot create root item of type '%s'" % str(rootType))
+            logger.error("BookTree: Cannot create root item of type '%s'" % str(rootType))
             return
         
         if self.fixedItems[rootType] is not None:
-            logger.warning("Root item already exists")
+            logger.warning("BookTree: Root item already exists")
             return
         
         rootHandle = self.makeHandle()
@@ -275,7 +275,7 @@ class BookTree():
         rootItem.setType(rootType)
         rootItem.setName(rootName)
         
-        logger.info("Creating root item '%s' with handle %s" % (rootName, rootHandle))
+        logger.info("BookTree: Creating root item '%s' with handle %s" % (rootName, rootHandle))
         
         self.appendItem(rootHandle,None,None,rootItem)
         self.fixedItems[rootType] = rootHandle
@@ -291,7 +291,7 @@ class BookTree():
         pHandle = self.checkString(pHandle,None,True)
         tOrder  = self.checkInt(tOrder,None,True)
         
-        logger.verbose("Append: Adding item %s with parent %s" % (str(tHandle),str(pHandle)))
+        logger.verbose("BookTree: Adding entry %s with parent %s" % (str(tHandle),str(pHandle)))
         
         if bookItem.itemLevel == BookItem.LEV_FILE:
             docItem = DocFile(self.docPath,tHandle,bookItem.itemClass)
@@ -323,25 +323,25 @@ class BookTree():
             itemIdx    = self.treeLookup[itemHandle]
             
             if not bookEntry.itemLevel == BookItem.LEV_ROOT: continue
-            logger.verbose("Checking ROOT with handle %s" % itemHandle)
+            logger.verbose("BookTree: Checking ROOT with handle %s" % itemHandle)
             
             if itemParent is not None:
                 self.theTree[itemIdx]["parent"] = None
-                logger.warning("Parent was set for ROOT element %s" % itemHandle)
+                logger.warning("BookTree: Parent was set for ROOT element %s" % itemHandle)
                 errCount += 1
             
             for itemType in BookItem.validTypes:
                 if bookEntry.itemType == itemType:
                     if self.fixedItems[itemType] is None:
                         self.fixedItems[itemType] = itemHandle
-                        logger.debug("Root handle for type %s set to %s" % (itemType,itemHandle))
+                        logger.debug("BookTree: Root handle for type %s set to %s" % (itemType,itemHandle))
                     else:
-                        logger.warning("Encountered a second ROOT of type %s with handle %s" % (itemType,itemHandle))
+                        logger.warning("BookTree: Encountered a second ROOT of type %s with handle %s" % (itemType,itemHandle))
                         errCount += 1
         
         for rootType in self.fixedItems.keys():
             if self.fixedItems[rootType] is None:
-                logger.info("Root item missing, creating it")
+                logger.info("BookTree: Root item missing, creating it")
                 self.createRootItem(rootType)
         
         # Checking ITEM level
@@ -354,16 +354,16 @@ class BookTree():
             hasError   = False
             
             if not bookEntry.itemLevel == BookItem.LEV_ITEM: continue
-            logger.verbose("Checking ITEM with handle %s" % itemHandle)
+            logger.verbose("BookTree: Checking ITEM with handle %s" % itemHandle)
             
             for itemType in BookItem.validTypes:
                 if bookEntry.itemType == itemType:
                     if itemParent is None:
-                        logger.warning("Parent was missing for ITEM of type %s with handle %s" % (itemType,itemHandle))
+                        logger.warning("BookTree: Parent was missing for ITEM of type %s with handle %s" % (itemType,itemHandle))
                         self.theTree[itemIdx]["parent"] = self.fixedItems[itemType]
                         errCount += 1
         
-        logger.info("Found %d error(s) while parsing the project tree" % errCount)
+        logger.info("BookTree: Found %d error(s) while parsing the project tree" % errCount)
         
         return
     
@@ -374,7 +374,7 @@ class BookTree():
         self.parOfFiles = {}
         
         treeOrder = []
-        logger.debug("Sort: Reading previous order")
+        logger.debug("TreeSort: Reading previous order")
         tempOrder = [None] * len(self.theTree)
         for treeItem in self.theTree:
             itemHandle = treeItem["handle"]
@@ -383,31 +383,31 @@ class BookTree():
             if itemOrder is not None and isinstance(itemOrder,int):
                 if tempOrder[itemOrder] is None:
                     tempOrder[itemOrder] = itemHandle
-                    logger.vverbose("Sort: Entry '%s' %s has order %s" % (
+                    logger.vverbose("TreeSort: Entry '%s' %s has order %s" % (
                         str(itemName), str(itemHandle), str(itemOrder)
                     ))
                 else:
                     tempOrder.append(itemHandle)
-                    logger.vverbose("Sort: Entry '%s' %s has no order, appending" % (
+                    logger.vverbose("TreeSort: Entry '%s' %s has no order, appending" % (
                         str(itemName), str(itemHandle)
                     ))
             else:
                 tempOrder.append(itemHandle)
-                logger.vverbose("Sort: Entry '%s' %s has no order, appending" % (
+                logger.vverbose("TreeSort: Entry '%s' %s has no order, appending" % (
                     str(itemName), str(itemHandle)
                 ))
         for tempItem in tempOrder:
             if tempItem is not None: treeOrder.append(tempItem)
         
         # Scanning ROOT level
-        logger.debug("Sort: Sorting ROOT entries")
+        logger.debug("TreeSort: Sorting ROOT entries")
         for rootType in self.fixedOrder:
             itemHandle = self.fixedItems[rootType]
             self.parOfItems[itemHandle] = []
             self.parOfFiles[itemHandle] = []
         
         # Scanning ITEM level
-        logger.debug("Sort: Sorting ITEM entries")
+        logger.debug("TreeSort: Sorting ITEM entries")
         for itemHandle in treeOrder:
             
             itemIdx    = self.treeLookup[itemHandle]
@@ -421,7 +421,7 @@ class BookTree():
             
             if itemParent in self.parOfItems.keys():
                 self.parOfItems[itemParent].append(itemHandle)
-                logger.vverbose("Sort: ITEM '%s' %s appended to %s" % (
+                logger.vverbose("TreeSort: ITEM '%s' %s appended to %s" % (
                     bookEntry.itemName, str(itemHandle), str(itemParent)
                 ))
                 self.parOfFiles[itemHandle] = []
@@ -429,7 +429,7 @@ class BookTree():
                 logger.warning("BUG: itemParent %s not found in itemParent" % itemParent)
         
         # Scanning FILE level
-        logger.verbose("Sort: Sorting FILE entries")
+        logger.verbose("TreeSort: Sorting FILE entries")
         for itemHandle in treeOrder:
             
             itemIdx    = self.treeLookup[itemHandle]
@@ -443,7 +443,7 @@ class BookTree():
             
             if itemParent in self.parOfFiles.keys():
                 self.parOfFiles[itemParent].append(itemHandle)
-                logger.vverbose("Sort: FILE '%s' %s appended to %s" % (
+                logger.vverbose("TreeSort: FILE '%s' %s appended to %s" % (
                     bookEntry.itemName, str(itemHandle), str(itemParent)
                 ))
             else:
@@ -467,44 +467,44 @@ class BookTree():
             itemHandle = self.fixedItems[rootType]
             rootOrder.append(itemHandle)
         
-        logger.debug("Order: %d ROOT entries added to index" % len(rootOrder))
+        logger.debug("TreeSort: %d ROOT entries added to index" % len(rootOrder))
         
         for itemParent in rootOrder:
             itemOrder += self.parOfItems[itemParent]
         
-        logger.debug("Order: %d ITEM entries added to index" % len(itemOrder))
+        logger.debug("TreeSort: %d ITEM entries added to index" % len(itemOrder))
         
         for itemParent in chain(rootOrder,itemOrder):
             fileOrder += self.parOfFiles[itemParent]
         
-        logger.debug("Order: %d FILE entries added to index" % len(fileOrder))
+        logger.debug("TreeSort: %d FILE entries added to index" % len(fileOrder))
         
         errCount = 0
-        logger.debug("Order: Assempling index, and checking for consistency")
+        logger.debug("TreeSort: Assempling index, and checking for consistency")
         self.treeOrder = rootOrder + itemOrder + fileOrder
         for itemHandle in self.treeLookup.keys():
             if itemHandle not in self.treeOrder:
                 logger.warning("BUG: Handle %s not in index" % itemHandle)
                 errCount += 1
         if errCount == 0:
-            logger.debug("Order: Index is consistent")
+            logger.debug("TreeSort: Index is consistent")
         else:
             logger.warning("BUG: %d errors found in the index" % errCount)
             
         uniqueSet = set(self.treeOrder)
         if len(uniqueSet) == len(self.treeOrder):
-            logger.debug("Order: No duplicates found in index")
+            logger.debug("TreeSort: No duplicates found in index")
             
         return
     
     def updateEntryOrder(self):
         
-        logger.debug("Order: Setting order parameter of tree entries")
+        logger.debug("TreeSort: Setting order parameter of tree entries")
         for itemOrder in range(len(self.treeOrder)):
             itemHandle = self.treeOrder[itemOrder]
             itemIdx    = self.treeLookup[itemHandle]
             self.theTree[itemIdx]["order"] = itemOrder
-            logger.vverbose("Order: Setting '%s' %s to order %d" % (
+            logger.vverbose("TreeSort: Setting '%s' %s to order %d" % (
                 str(self.theTree[itemIdx]["entry"].itemName), itemHandle, itemOrder
             ))
         
@@ -525,7 +525,7 @@ class BookTree():
     def makeHandle(self,seed=""):
         itemHandle = sha256((str(time())+seed).encode()).hexdigest()[0:13]
         if itemHandle in self.treeLookup.keys():
-            logger.warning("Duplicate handle encountered! Retrying ...")
+            logger.warning("BookTree: Duplicate handle encountered! Retrying ...")
             itemHandle = self.makeHandle(seed+"!")
         return itemHandle
     

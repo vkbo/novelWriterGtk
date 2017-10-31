@@ -33,6 +33,7 @@ class GuiChaptersTree(Gtk.TreeView):
     def __init__(self, theBook):
         
         Gtk.TreeView.__init__(self)
+        logger.verbose("GUI: Building chapter tree")
         
         # Connect to GUI
         self.mainConf = nw.CONFIG
@@ -100,7 +101,7 @@ class GuiChaptersTree(Gtk.TreeView):
     
     def loadContent(self):
         
-        logger.debug("Loading chapter tree content")
+        logger.debug("GUI: Loading chapter tree content")
         
         # Store currently selected item
         selHandle = None
@@ -130,7 +131,7 @@ class GuiChaptersTree(Gtk.TreeView):
             if not itemLevel == "ITEM":      continue
             if not itemType  == "BOOK":      continue
             
-            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
+            logger.vverbose("GUI: Adding %s '%s'" % (itemLevel,itemName))
             
             itemSubType = treeItem["entry"].itemSubType
             itemNumber  = treeItem["entry"].itemNumber

@@ -32,6 +32,7 @@ class GuiMainTree(Gtk.TreeView):
     def __init__(self, theBook):
         
         Gtk.TreeView.__init__(self)
+        logger.verbose("GUI: Building main tree")
         
         # Connect to GUI
         self.mainConf = nw.CONFIG
@@ -93,7 +94,7 @@ class GuiMainTree(Gtk.TreeView):
     
     def loadContent(self):
         
-        logger.debug("Loading main tree content")
+        logger.debug("GUI: Loading main tree content")
         
         # Store currently selected item
         selHandle = None
@@ -117,7 +118,7 @@ class GuiMainTree(Gtk.TreeView):
             itemLevel  = treeItem["entry"].itemLevel
             itemClass  = treeItem["entry"].itemClass
             
-            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
+            logger.vverbose("GUI: Adding %s '%s'" % (itemLevel,itemName))
             
             wordCount  = treeItem["entry"].metaWordCount
             

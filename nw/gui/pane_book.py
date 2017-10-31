@@ -76,6 +76,7 @@ class GuiBookPane(Gtk.Alignment):
         
         self.entryBookTitle = Gtk.Entry()
         self.entryBookTitle.set_name("entryBookTitle")
+        self.entryBookTitle.set_tooltip_text("The book title")
         self.alignBookTitle.add(self.entryBookTitle)
         
         # Book Authors
@@ -92,6 +93,7 @@ class GuiBookPane(Gtk.Alignment):
         
         self.entryBookAuthor = Gtk.Entry()
         self.entryBookAuthor.set_name("entryBookAuthor")
+        self.entryBookAuthor.set_tooltip_text("A comma separated list of authors")
         self.alignBookAuthor.add(self.entryBookAuthor)
         
         # Chapters ToolBar

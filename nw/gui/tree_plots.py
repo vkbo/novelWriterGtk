@@ -30,6 +30,7 @@ class GuiPlotsTree(Gtk.TreeView):
     def __init__(self, theBook):
         
         Gtk.TreeView.__init__(self)
+        logger.verbose("GUI: Building plots tree")
         
         # Connect to GUI
         self.mainConf = nw.CONFIG
@@ -81,7 +82,7 @@ class GuiPlotsTree(Gtk.TreeView):
     
     def loadContent(self):
         
-        logger.debug("Loading plot tree content")
+        logger.debug("GUI: Loading plots tree content")
         
         # Store currently selected item
         selHandle = None
@@ -110,7 +111,7 @@ class GuiPlotsTree(Gtk.TreeView):
             if not itemLevel == "ITEM":      continue
             if not itemType  == "PLOT":      continue
             
-            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
+            logger.vverbose("GUI: Adding %s '%s'" % (itemLevel,itemName))
             
             itemImportance = str(treeItem["entry"].itemImportance)
             itemComment    = treeItem["entry"].itemComment

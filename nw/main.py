@@ -39,7 +39,7 @@ class NovelWriter():
         self.theBook  = Book()
         
         # Build the GUI
-        logger.debug("Assembling the main GUI")
+        logger.debug("GUI: Assembling the main GUI")
         self.winMain  = GuiWinMain(self.theBook)
         self.bookPage = self.winMain.bookPage
         self.charPage = self.winMain.charPage
@@ -53,7 +53,7 @@ class NovelWriter():
         # Load StyleSheet
         if self.mainConf.theTheme is not None:
             cssPath = path.join(self.mainConf.themePath,self.mainConf.theTheme,"gtkstyles.css")
-            logger.verbose("Loading stylesheet from %s" % cssPath)
+            logger.verbose("GUI: Loading stylesheet from %s" % cssPath)
             self.cssMain = Gtk.CssProvider()
             self.cssMain.load_from_path(cssPath)
             Gtk.StyleContext.add_provider_for_screen(
@@ -86,6 +86,8 @@ class NovelWriter():
         self.winMain.treeLeft.connect("button-release-event",self.onLeftTreeContextMenu)
         
         # Book Page
+        self.bookPage.entryBookTitle.connect("focus-out-event",self.onBookDetailsChange,"title")
+        self.bookPage.entryBookAuthor.connect("focus-out-event",self.onBookDetailsChange,"author")
         self.bookPage.btnChaptersAdd.connect("clicked",self.onChapterAdd)
         self.bookPage.btnChaptersDel.connect("clicked",self.onChapterRemove)
         self.bookPage.btnChaptersMvU.connect("clicked",self.onChapterMove,BookTree.ORD_UP)
@@ -127,8 +129,8 @@ class NovelWriter():
     def openBook(self, bookPath, openRecent=False):
         
         if openRecent:
-            logger.info("BookOpen: Opening last book project from %s" % bookPath)
             bookPath = self.mainConf.getLastBook()
+            logger.info("BookOpen: Opening last book project from %s" % bookPath)
             if path.isfile(bookPath):
                 self.theBook.openBook(bookPath)
             else:
@@ -225,7 +227,7 @@ class NovelWriter():
         dlgReturn = dlgOpen.run()
         if dlgReturn == Gtk.ResponseType.ACCEPT:
             bookPath = dlgOpen.get_filename()
-            logger.verbose("BookOpen: Reading %s" % bookPath)
+            logger.verbose("BookOpen: Opening %s" % bookPath)
             self.closeBook()
             self.openBook(bookPath)
         else:
@@ -272,7 +274,7 @@ class NovelWriter():
             listIter   = listModel.get_iter(pathItem)
             itemHandle = listModel.get_value(listIter,GuiMainTree.COL_HANDLE)
             itemName   = listModel.get_value(listIter,GuiMainTree.COL_NAME)
-            logger.vverbose("MainTree: Selected item %s named '%s'" % (itemHandle,itemName))
+            logger.vverbose("Action: Selected item %s named '%s'" % (itemHandle,itemName))
             
         if itemHandle == None: return
         
@@ -282,8 +284,8 @@ class NovelWriter():
         itemLevel = itemEntry["entry"].itemLevel
         itemType  = itemEntry["entry"].itemType
         
-        logger.vverbose("MainTree: The item level is %s" % itemLevel)
-        logger.vverbose("MainTree: The item type is %s" % itemType)
+        logger.vverbose("Check: The item level is %s" % itemLevel)
+        logger.vverbose("Check: The item type is %s" % itemType)
         
         if itemLevel == BookItem.LEV_ROOT:
             if itemType == BookItem.TYP_BOOK: self.winMain.showTab(self.winMain.TAB_BOOK)
@@ -307,7 +309,7 @@ class NovelWriter():
         treeItem   = self.theBook.getItem(itemHandle)
         itemName   = treeItem["entry"].itemName
         itemLevel  = treeItem["entry"].itemLevel
-        logger.vverbose("MainTree: Activated item %s named '%s'" % (itemHandle,itemName))
+        logger.vverbose("Action: Activated item %s named '%s'" % (itemHandle,itemName))
         
         if itemLevel == BookItem.LEV_FILE:
             self.winMain.editFile(itemHandle)
@@ -325,7 +327,7 @@ class NovelWriter():
         
         if itemHandle == None: return
         
-        logger.debug("Moving file %s %s" % (itemHandle,moveIt))
+        logger.debug("Action: Moving file %s %s" % (itemHandle,moveIt))
         self.theBook.changeOrder(itemHandle,moveIt)
         
         self.winMain.treeLeft.loadContent()
@@ -347,7 +349,7 @@ class NovelWriter():
             listIter   = listModel.get_iter(pathItem)
             itemHandle = listModel.get_value(listIter,GuiMainTree.COL_HANDLE)
             itemName   = listModel.get_value(listIter,GuiMainTree.COL_NAME)
-            logger.vverbose("MainTree: Adding file to item %s named '%s'" % (itemHandle,itemName))
+            logger.vverbose("Action: Adding file to item %s named '%s'" % (itemHandle,itemName))
         
         if itemHandle == None: return
         
@@ -367,9 +369,20 @@ class NovelWriter():
     # Book Pane Events
     #
     
+    def onBookDetailsChange(self, guiObject, guiEvent, entryType):
+        
+        if guiEvent.type is not Gdk.EventType.FOCUS_CHANGE: return
+        
+        if entryType == "title":
+            self.theBook.setTitle(guiObject.get_text())
+        elif entryType == "author":
+            self.theBook.setAuthors(guiObject.get_text())
+        
+        return
+    
     def onChapterAdd(self, guiObject):
         
-        logger.vverbose("User clicked add chapter")
+        logger.vverbose("Action: User clicked add chapter")
         self.theBook.addChapter()
         self.winMain.treeLeft.loadContent()
         self.bookPage.treeChapters.loadContent()
@@ -378,7 +391,7 @@ class NovelWriter():
     
     def onChapterRemove(self, guiObject):
         
-        logger.vverbose("User clicked remove chapter")
+        logger.vverbose("Action: User clicked remove chapter")
         
         return
     
@@ -393,7 +406,7 @@ class NovelWriter():
         
         if itemHandle == None: return
         
-        logger.debug("Moving chapter %s %s" % (itemHandle,moveIt))
+        logger.debug("Action: Moving chapter %s %s" % (itemHandle,moveIt))
         self.theBook.changeOrder(itemHandle,moveIt)
         
         self.winMain.treeLeft.loadContent()
@@ -441,7 +454,7 @@ class NovelWriter():
     
     def onCharAdd(self, guiObject):
         
-        logger.vverbose("User clicked add character")
+        logger.vverbose("Event: User clicked add character")
         self.theBook.addCharacter()
         self.winMain.treeLeft.loadContent()
         self.charPage.treeChars.loadContent()
@@ -450,7 +463,7 @@ class NovelWriter():
     
     def onCharRemove(self, guiObject):
         
-        logger.vverbose("User clicked remove character")
+        logger.vverbose("Event: User clicked remove character")
         
         return
     
@@ -465,7 +478,7 @@ class NovelWriter():
         
         if itemHandle == None: return
         
-        logger.debug("Moving character %s %s" % (itemHandle,moveIt))
+        logger.debug("Action: Moving character %s %s" % (itemHandle,moveIt))
         self.theBook.changeOrder(itemHandle,moveIt)
         
         self.winMain.treeLeft.loadContent()
@@ -500,7 +513,7 @@ class NovelWriter():
     
     def onPlotAdd(self, guiObject):
         
-        logger.vverbose("User clicked add plot")
+        logger.vverbose("Event: User clicked add plot")
         self.theBook.addPlot()
         self.winMain.treeLeft.loadContent()
         self.plotPage.treePlots.loadContent()
@@ -509,7 +522,7 @@ class NovelWriter():
     
     def onPlotRemove(self, guiObject):
         
-        logger.vverbose("User clicked remove plot")
+        logger.vverbose("Event: User clicked remove plot")
         
         return
     
@@ -524,7 +537,7 @@ class NovelWriter():
         
         if itemHandle == None: return
         
-        logger.debug("Moving plot %s %s" % (itemHandle,moveIt))
+        logger.debug("Action: Moving plot %s %s" % (itemHandle,moveIt))
         self.theBook.changeOrder(itemHandle,moveIt)
         
         self.winMain.treeLeft.loadContent()
@@ -568,7 +581,7 @@ class NovelWriter():
 
     def onApplicationQuit(self, guiObject, guiEvent):
         
-        logger.info("Shutting down")
+        logger.info("Event: Shutting down")
         
         # Save Window Size
         self.mainConf.setWinSize(*self.winMain.get_size())
@@ -583,7 +596,7 @@ class NovelWriter():
         self.mainConf.setPanePosition(posContent,self.mainConf.PANE_CONT)
         
         self.mainConf.saveConfig()
-        logger.debug("Calling Gtk quit")
+        logger.debug("GUI: Calling Gtk quit")
         Gtk.main_quit()
         
         return

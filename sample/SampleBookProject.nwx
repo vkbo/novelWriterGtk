@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171030-185858">
+<novelWriterXML appVersion="0.4.0" fileVersion="1.0" timeStamp="20171031-102557">
   <book>
     <title>Best Book Title Ever!</title>
     <author>J. Smith</author>
     <author>B. Author</author>
+    <author>C. Other</author>
   </book>
   <content count="27">
     <item handle="b22d358e4a010" order="0" parent="None">

@@ -31,6 +31,7 @@ class GuiCharsTree(Gtk.TreeView):
     def __init__(self, theBook):
         
         Gtk.TreeView.__init__(self)
+        logger.verbose("GUI: Building character tree")
         
         # Connect to GUI
         self.mainConf = nw.CONFIG
@@ -91,7 +92,7 @@ class GuiCharsTree(Gtk.TreeView):
     
     def loadContent(self):
         
-        logger.debug("Loading character tree content")
+        logger.debug("GUI: Loading character tree content")
         
         # Store currently selected item
         selHandle = None
@@ -120,7 +121,7 @@ class GuiCharsTree(Gtk.TreeView):
             if not itemLevel == "ITEM":      continue
             if not itemType  == "CHAR":      continue
             
-            logger.vverbose("Adding %s '%s'" % (itemLevel,itemName))
+            logger.vverbose("GUI: Adding %s '%s'" % (itemLevel,itemName))
             
             itemImportance = treeItem["entry"].itemImportance
             itemRole       = treeItem["entry"].itemRole
