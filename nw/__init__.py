@@ -18,7 +18,7 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
-from os            import path
+from os            import path, remove, rename
 from nw.config     import Config
 from nw.main       import NovelWriter
 
