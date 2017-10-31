@@ -37,6 +37,9 @@ class Config:
     
     def __init__(self):
         
+        # Core Settings
+        self.guiState   = True
+        
         # Set Application Variables
         self.appName    = "novelWriter"
         self.appHandle  = "novelwriter"
@@ -202,6 +205,19 @@ class Config:
     ##
     #  Setters
     ##
+    
+    def setConfPath(self, newPath):
+        if newPath is None: return
+        if not path.isfile(newPath):
+            logger.error("Config: File not found. Using default config path instead.")
+            return
+        self.confPath = path.dirname(newPath)
+        self.confFile = path.basename(newPath)
+        return
+    
+    def setGUIState(self, guiState):
+        self.guiState = guiState
+        return
     
     def setWinSize(self, newWidth, newHeight):
         if abs(self.winGeometry[self.WIN_WIDTH] - newWidth) >= 10:

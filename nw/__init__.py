@@ -90,6 +90,8 @@ def main(sysArgs):
         "time",
         "logfile=",
         "version",
+        "config=",
+        "headless",
     ]
     
     helpMsg = (
@@ -98,13 +100,15 @@ def main(sysArgs):
         "\n"
         "Usage:\n"
         " -h, --help      Print this message.\n"
+        " -v, --version   Print program version and exit.\n"
         " -d, --debug     Debug level. Valid options are DEBUG, INFO, WARN or ERROR.\n"
         "     --verbose   Increase verbosity of debug.\n"
         "     --vverbose  Increase verbosity of debug even more.\n"
         " -q, --quiet     Disable output to command line. Does not affect log file.\n"
         " -t, --time      Shows time stamp in logging output. Adds milliseconds for verbose.\n"
         " -l, --logfile   Specify log file.\n"
-        " -v, --version   Print program version and exit.\n"
+        "     --config    Alternative config file.\n"
+        "     --headless  Do not display GUI. Useful for testing scripts.\n"
     ).format(
         version   = __version__,
         status    = __status__,
@@ -119,6 +123,8 @@ def main(sysArgs):
     toFile     = False
     toStd      = True
     showTime   = False
+    confPath   = None
+    showGUI    = True
     
     # Parse Options
     try:
@@ -130,6 +136,9 @@ def main(sysArgs):
     for inOpt, inArg in inOpts:
         if   inOpt in ("-h","--help"):
             print(helpMsg)
+            exit()
+        elif inOpt in ("-v", "--version"):
+            print("makeNovel %s Version %s" % (__status__,__version__))
             exit()
         elif inOpt in ("-d", "--debug"):
             if   inArg == "ERROR":
@@ -157,9 +166,10 @@ def main(sysArgs):
             timeStr    = "[%(asctime)s.%(msecs)03d] "
         elif inOpt in ("-t","--time"):
             showTime = True
-        elif inOpt in ("-v", "--version"):
-            print("makeNovel %s Version %s" % (__status__,__version__))
-            exit()
+        elif inOpt in ("--config"):
+            confPath = inArg
+        elif inOpt in ("--headless"):
+            showGUI = False
     
     # Set Logging
     if showTime: debugStr = timeStr+debugStr
@@ -184,7 +194,7 @@ def main(sysArgs):
     
     logger.setLevel(debugLevel)
 
-    NovelWriter()
+    NovelWriter(confPath,showGUI)
     Gtk.main()
     
     return

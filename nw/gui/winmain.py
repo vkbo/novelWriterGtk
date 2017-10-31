@@ -249,7 +249,10 @@ class GuiWinMain(Gtk.ApplicationWindow):
         # self.drawTimeLine.connect("draw", self.onExpose)
         
         logger.verbose("Finished building main window")
-        self.show_all()
+        if self.mainConf.guiState:
+            self.show_all()
+        else:
+            logger.info("Running in headless mode, not showing GUI")
         
         return
     

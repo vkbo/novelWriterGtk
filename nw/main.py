@@ -30,10 +30,12 @@ logger = logging.getLogger(__name__)
 
 class NovelWriter():
     
-    def __init__(self):
+    def __init__(self, confPath, showGUI):
         
         # Define Core Objects
         self.mainConf = nw.CONFIG
+        self.mainConf.setConfPath(confPath)
+        self.mainConf.setGUIState(showGUI)
         self.theBook  = Book()
         
         # Build the GUI
