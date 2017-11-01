@@ -16,6 +16,7 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository      import Gtk, Gdk, GLib
+from os                 import path
 from nw.gui.tree_main   import GuiMainTree
 from nw.gui.pane_book   import GuiBookPane
 from nw.gui.pane_chars  import GuiCharsPane
@@ -45,6 +46,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.set_position(Gtk.WindowPosition.CENTER)
         
         self.set_name("winMain")
+        self.set_icon_from_file(path.join(self.mainConf.appPath,"../novelWriter.png"))
         
         #
         # Main Layout Items
