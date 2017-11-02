@@ -34,6 +34,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
     TAB_EDIT = 4
     
     def __init__(self, theBook):
+        
         Gtk.ApplicationWindow.__init__(self)
         logger.verbose("GUI: Starting to build the main window")
         
@@ -46,7 +47,7 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.set_position(Gtk.WindowPosition.CENTER)
         
         self.set_name("winMain")
-        self.set_icon_from_file(path.join(self.mainConf.appPath,"../novelWriter.png"))
+        self.set_icon_from_file(path.join(self.mainConf.appPath,"../novelWriter.svg"))
         
         #
         # Main Layout Items
