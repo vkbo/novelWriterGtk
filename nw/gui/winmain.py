@@ -22,6 +22,7 @@ from nw.gui.pane_book   import GuiBookPane
 from nw.gui.pane_chars  import GuiCharsPane
 from nw.gui.pane_plots  import GuiPlotsPane
 from nw.gui.pane_editor import GuiEditor
+from nw.gui.timeline    import GuiTimeLine
 
 logger = logging.getLogger(__name__)
 
@@ -246,10 +247,8 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.scrlTimeLine.set_name("scrlTimeLine")
         self.panedContent.pack2(self.scrlTimeLine,True,False)
         
-        self.drawTimeLine = Gtk.DrawingArea()
-        self.drawTimeLine.set_name("drawTimeLine")
+        self.drawTimeLine = GuiTimeLine(self.theBook)
         self.scrlTimeLine.add(self.drawTimeLine)
-        # self.drawTimeLine.connect("draw", self.onExpose)
         
         logger.verbose("GUI: Finished building the main window")
         if self.mainConf.guiState:
