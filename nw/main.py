@@ -44,6 +44,7 @@ class NovelWriter():
         self.bookPage = self.winMain.bookPage
         self.charPage = self.winMain.charPage
         self.plotPage = self.winMain.plotPage
+        self.timeLine = self.winMain.timeLine
         
         # Set file filter for loading and saving
         self.fileFilter = Gtk.FileFilter()
@@ -147,6 +148,7 @@ class NovelWriter():
         self.bookPage.treeChapters.loadContent()
         self.charPage.treeChars.loadContent()
         self.plotPage.treePlots.loadContent()
+        self.timeLine.loadContent()
         
         bookTitle   = self.theBook.bookTitle
         bookAuthors = ", ".join(self.theBook.bookAuthors)

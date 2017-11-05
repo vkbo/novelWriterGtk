@@ -20,19 +20,20 @@ from nw.file.book  import BookItem
 
 logger = logging.getLogger(__name__)
 
-class GuiTimeLine(Gtk.Grid):
+class GuiTimeLine(Gtk.DrawingArea):
     
     def __init__(self, theBook):
         
-        Gtk.Grid.__init__(self)
+        Gtk.DrawingArea.__init__(self)
         
         self.theBook = theBook
         self.tblRows = []
         self.tblCols = []
         
-        self.set_name("gridTimeLine")
-        self.set_row_spacing(4)
-        self.set_column_spacing(12)
+        self.loadContent()
+        
+        self.set_name("drawTimeLine")
+        self.connect("draw", self.onExpose)
         
         return
     
@@ -79,51 +80,65 @@ class GuiTimeLine(Gtk.Grid):
                         })
         
         self.tblRows = tmpChars+tmpPlots
-        self.buildGrid()
-        self.show_all()
         
         return
     
-    def buildGrid(self):
+    def onExpose(self, guiObject, guiCtx):
         
-        self.attach(Gtk.Label(""),0,0,1,1)
-        self.attach(Gtk.Label(""),0,1,1,1)
+        self.loadContent()
+        logger.vverbose("TimeLine: Redrawing")
         
-        rowNum = 2
+        xOffset = 10
+        yOffset = 30
+        wScene  = 50
+        hRow    = 20
+        
+        guiCtx.set_line_width(1)
+        
+        xPos = xOffset
+        yPos = yOffset+2*hRow
+        
+        guiCtx.set_font_size(12)
         for rowItem in self.tblRows:
-            tmpLabel = Gtk.Label(rowItem["name"])
-            self.attach(tmpLabel,0,rowNum,1,1)
-            rowNum += 1
+            guiCtx.move_to(xPos,yPos)
+            guiCtx.set_source_rgba(1.0,1.0,1.0,1.0)
+            guiCtx.show_text(rowItem["name"])
+            yPos += hRow
         
-        chapOrder = []
-        chapName  = {}
-        chapCount = {}
-        currChap  = None
-        scnCount  = 0
-        colNum    = 0
+        xPos    += 100
+        yPos     = yOffset
+        currChap = None
+        scnCount = 0
+        totCount = 0
         for colItem in self.tblCols:
             
+            totCount += 1
             scnCount += 1
-            colNum   += 1
-            parHandle = colItem["parhandle"]
             
-            if parHandle not in chapOrder: chapOrder.append(parHandle)
-            if colItem["partype"] == BookItem.SUB_CHAP:
-                chapName[parHandle] = "%s %d" % (colItem["partype"],colItem["parnum"])
-            else:
-                chapName[parHandle] = "%s" % colItem["partype"]
-            chapCount[parHandle] = scnCount
+            guiCtx.move_to(xPos,yPos+hRow)
+            guiCtx.set_source_rgba(1.0,1.0,1.0,1.0)
+            guiCtx.show_text("SCN %d" % scnCount)
+            # guiCtx.rectangle(xPos,yPos+2*hRow,wScene,100)
+            # guiCtx.stroke()
             
-            if not colItem["parhandle"] == currChap:
+            xPos += wScene
+            if currChap is None: currChap = colItem["parhandle"]
+            if not colItem["parhandle"] == currChap or totCount == len(self.tblCols):
+                xChap = xPos-scnCount*wScene
+                yChap = yOffset
+                wChap = xPos-xChap
+                hChap = hRow*(len(self.tblRows)+1)
+                guiCtx.move_to(xChap,yChap)
+                guiCtx.set_source_rgba(1.0,1.0,1.0,1.0)
+                if colItem["partype"] == BookItem.SUB_CHAP:
+                    guiCtx.show_text("%s %d" % (colItem["partype"],colItem["parnum"]))
+                else:
+                    guiCtx.show_text("%s" % colItem["partype"])
+                guiCtx.set_source_rgba(1.0,1.0,1.0,0.5)
+                guiCtx.rectangle(xChap,yChap+5,wChap,hChap)
+                guiCtx.stroke()
                 currChap = colItem["parhandle"]
                 scnCount = 0
-            
-            tmpLabel = Gtk.Label("SCN %d" % scnCount)
-            self.attach(tmpLabel,colNum,1,1,1)
-        
-        print(chapOrder)
-        print(chapName)
-        print(chapCount)
         
         return
     

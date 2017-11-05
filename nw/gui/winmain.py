@@ -247,8 +247,8 @@ class GuiWinMain(Gtk.ApplicationWindow):
         self.scrlTimeLine.set_name("scrlTimeLine")
         self.panedContent.pack2(self.scrlTimeLine,True,False)
         
-        self.drawTimeLine = GuiTimeLine(self.theBook)
-        self.scrlTimeLine.add(self.drawTimeLine)
+        self.timeLine = GuiTimeLine(self.theBook)
+        self.scrlTimeLine.add(self.timeLine)
         
         logger.verbose("GUI: Finished building the main window")
         if self.mainConf.guiState:
