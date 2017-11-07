@@ -34,7 +34,7 @@ class GuiDocEditor(Gtk.Alignment):
         self.mainConf  = nw.CONFIG
         
         self.set_name("alignDocEdit")
-        self.set_padding(40,40,40,10)
+        self.set_padding(40,20,40,10)
         
         self.boxOuter = Gtk.Box()
         self.boxOuter.set_name("boxDocOuter")

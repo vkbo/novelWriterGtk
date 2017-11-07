@@ -30,7 +30,7 @@ class GuiNoteEditor(Gtk.Alignment):
         Gtk.Alignment.__init__(self)
         
         self.set_name("alignNoteEdit")
-        self.set_padding(20,40,10,40)
+        self.set_padding(20,20,10,40)
         
         self.boxOuter = Gtk.Box()
         self.boxOuter.set_name("boxNoteOuter")

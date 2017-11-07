@@ -31,7 +31,7 @@ class GuiCharsPane(Gtk.Alignment):
         
         # Book Alignment
         self.set_name("alignBook")
-        self.set_padding(40,40,40,40)
+        self.set_padding(40,20,40,40)
         
         # Main Vertical Box
         self.boxChars = Gtk.Box()

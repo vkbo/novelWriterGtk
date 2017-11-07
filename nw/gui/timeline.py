@@ -20,19 +20,25 @@ from nw.file.book  import BookItem
 
 logger = logging.getLogger(__name__)
 
-class GuiTimeLine(Gtk.Grid):
+class GuiTimeLine(Gtk.Alignment):
     
     def __init__(self, theBook):
         
-        Gtk.Grid.__init__(self)
+        Gtk.Alignment.__init__(self)
         
         self.theBook = theBook
         self.tblRows = []
         self.tblCols = []
         
-        self.set_name("gridTimeLine")
-        self.set_row_spacing(4)
-        self.set_column_spacing(12)
+        # Book Alignment
+        self.set_name("alignTimeLine")
+        self.set_padding(20,40,40,40)
+        
+        self.gridTL = Gtk.Grid()
+        self.gridTL.set_name("gridTimeLine")
+        self.gridTL.set_row_spacing(4)
+        self.gridTL.set_column_spacing(12)
+        self.add(self.gridTL)
         
         return
     
@@ -86,44 +92,52 @@ class GuiTimeLine(Gtk.Grid):
     
     def buildGrid(self):
         
-        self.attach(Gtk.Label(""),0,0,1,1)
-        self.attach(Gtk.Label(""),0,1,1,1)
+        self.gridTL.attach(Gtk.Label(""),0,0,1,1)
+        self.gridTL.attach(Gtk.Label(""),0,1,1,1)
         
         rowNum = 2
         for rowItem in self.tblRows:
             tmpLabel = Gtk.Label(rowItem["name"])
-            self.attach(tmpLabel,0,rowNum,1,1)
+            tmpLabel.set_xalign(1.0)
+            self.gridTL.attach(tmpLabel,0,rowNum,1,1)
             rowNum += 1
         
         chapOrder = []
         chapName  = {}
         chapCount = {}
         currChap  = None
-        scnCount  = 0
-        colNum    = 0
+        scnCount  = 1
+        colNum    = 1
         for colItem in self.tblCols:
             
-            scnCount += 1
-            colNum   += 1
             parHandle = colItem["parhandle"]
             
-            if parHandle not in chapOrder: chapOrder.append(parHandle)
+            if not colItem["parhandle"] == currChap:
+                currChap = colItem["parhandle"]
+                scnCount = 1
+            else:
+                scnCount += 1
+            
+            tmpLabel = Gtk.Label("SCN %d" % scnCount)
+            tmpLabel.set_xalign(0.5)
+            self.gridTL.attach(tmpLabel,colNum,1,1,1)
+            colNum += 1
+            
+            chapCount[parHandle] = scnCount
+            if parHandle not in chapOrder:
+                chapOrder.append(parHandle)
             if colItem["partype"] == BookItem.SUB_CHAP:
                 chapName[parHandle] = "%s %d" % (colItem["partype"],colItem["parnum"])
             else:
                 chapName[parHandle] = "%s" % colItem["partype"]
-            chapCount[parHandle] = scnCount
-            
-            if not colItem["parhandle"] == currChap:
-                currChap = colItem["parhandle"]
-                scnCount = 0
-            
-            tmpLabel = Gtk.Label("SCN %d" % scnCount)
-            self.attach(tmpLabel,colNum,1,1,1)
         
-        print(chapOrder)
-        print(chapName)
-        print(chapCount)
+        colNum = 1
+        for parHandle in chapOrder:
+            tmpLabel = Gtk.Label()
+            tmpLabel.set_markup("<b>%s</b>" % chapName[parHandle])
+            tmpLabel.set_xalign(0.5)
+            self.gridTL.attach(tmpLabel,colNum,0,chapCount[parHandle],1)
+            colNum += chapCount[parHandle]
         
         return
     

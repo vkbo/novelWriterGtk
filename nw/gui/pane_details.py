@@ -61,9 +61,8 @@ class GuiDocDetails(Gtk.Alignment):
         self.gridDetails.set_column_spacing(12)
         
         rowNum     = 0
-        rowLabels  = ["POV","Characters","Main Plot","Subplots"]
+        rowLabels  = ["POV","Character(s)","Plot(s)"]
         rowWidgets = [
-            Gtk.Label("None"),
             Gtk.Label("None"),
             Gtk.Label("None"),
             Gtk.Label("None"),
