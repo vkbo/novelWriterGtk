@@ -59,7 +59,7 @@ class GuiBookPane(Gtk.Alignment):
         self.boxDetails = Gtk.Box()
         self.boxDetails.set_name("boxBookDetails")
         self.boxDetails.set_orientation(Gtk.Orientation.VERTICAL)
-        self.boxDetails.set_spacing(12)
+        self.boxDetails.set_spacing(8)
         self.boxTop.add(self.boxDetails)
         
         # Book Title
@@ -70,7 +70,7 @@ class GuiBookPane(Gtk.Alignment):
         self.boxDetails.pack_start(self.fmeBookTitle,False,False,0)
         
         self.alignBookTitle = Gtk.Alignment()
-        self.alignBookTitle.set_padding(2,2,12,4)
+        self.alignBookTitle.set_padding(2,2,12,0)
         self.alignBookTitle.set_size_request(600,-1)
         self.fmeBookTitle.add(self.alignBookTitle)
         
@@ -87,7 +87,7 @@ class GuiBookPane(Gtk.Alignment):
         self.boxDetails.pack_start(self.fmeBookAuthor,False,False,0)
         
         self.alignBookAuthor = Gtk.Alignment()
-        self.alignBookAuthor.set_padding(2,2,12,4)
+        self.alignBookAuthor.set_padding(2,2,12,0)
         self.alignBookAuthor.set_size_request(600,-1)
         self.fmeBookAuthor.add(self.alignBookAuthor)
         
