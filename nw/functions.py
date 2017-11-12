@@ -45,3 +45,17 @@ def getIconWidget(iconID, iconSize=None):
     #             iconSize,iconSize,GdkPixbuf.InterpType.BILINEAR))
     
     return gtkImage
+
+def encodeString(encString):
+    
+    if isinstance(encString,str):
+        encString = encString.replace("&","&amp;")
+    
+    return encString
+
+def decodeString(decString):
+    
+    if isinstance(decString,str):
+        decString = decString.replace("&amp;","&")
+    
+    return decString

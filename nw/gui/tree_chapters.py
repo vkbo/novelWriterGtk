@@ -17,6 +17,7 @@ gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
 from nw.file.book  import BookItem
+from nw.functions  import encodeString
 
 logger = logging.getLogger(__name__)
 
@@ -141,9 +142,9 @@ class GuiChaptersTree(Gtk.TreeView):
             tmpIter = self.listStore.append([
                 itemSubType,
                 itemNumber,
-                itemName,
+                encodeString(itemName),
                 itemCompile,
-                itemComment,
+                encodeString(itemComment),
                 itemHandle
             ])
             self.iterMap[itemHandle] = tmpIter

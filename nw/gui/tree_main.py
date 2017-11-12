@@ -17,6 +17,7 @@ gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk, Pango
 from nw.file.item  import BookItem
+from nw.functions  import encodeString
 
 logger = logging.getLogger(__name__)
 
@@ -144,8 +145,13 @@ class GuiMainTree(Gtk.TreeView):
             else:
                 wordCount = None
             
-            treeEntry = [itemTitle,"0",wordCount,itemName,itemHandle]
-            tmpIter   = self.treeStore.append(parIter,treeEntry)
+            tmpIter = self.treeStore.append(parIter,[
+                encodeString(itemTitle),
+                "0",
+                wordCount,
+                encodeString(itemName),
+                itemHandle
+            ])
             self.iterMap[itemHandle] = tmpIter
         
         # Expand all nodes, and reactivate

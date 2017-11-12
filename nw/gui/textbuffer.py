@@ -282,7 +282,11 @@ class NWTextBuffer(GtkSource.Buffer):
         # Enable the undo buffer again, and report the length of
         # the tagStack. It should be 0 if all tags were properly closed.
         self.set_max_undo_levels(100)
-        logger.verbose("Length of tag stack is %d" % len(tagStack))
+        if len(tagStack) == 0:
+            errText = "all good"
+        else:
+            errText = "some tags were not properly closed"
+        logger.verbose("Length of tag stack is %d - %s" % (len(tagStack),errText))
         
         return
     

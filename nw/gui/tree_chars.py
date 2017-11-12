@@ -16,6 +16,7 @@ import gi
 gi.require_version("Gtk","3.0")
 
 from gi.repository import Gtk
+from nw.functions  import encodeString
 
 logger = logging.getLogger(__name__)
 
@@ -128,10 +129,10 @@ class GuiCharsTree(Gtk.TreeView):
             itemComment    = treeItem["entry"].itemComment
             
             tmpIter = self.listStore.append([
-                itemName,
+                encodeString(itemName),
                 itemImportance,
-                itemRole,
-                itemComment,
+                encodeString(itemRole),
+                encodeString(itemComment),
                 itemHandle
             ])
             self.iterMap[itemHandle] = tmpIter

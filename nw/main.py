@@ -25,6 +25,7 @@ from nw.gui.tree_chapters import GuiChaptersTree
 from nw.gui.tree_chars    import GuiCharsTree
 from nw.gui.tree_plots    import GuiPlotsTree
 from nw.file              import Book, BookItem, BookTree
+from nw.functions         import encodeString, decodeString
 
 logger = logging.getLogger(__name__)
 
@@ -155,8 +156,8 @@ class NovelWriter():
         winTitle    = "%s – novelWriter v%s" % (bookTitle,nw.__version__)
         
         self.winMain.set_title(winTitle)
-        self.bookPage.entryBookTitle.set_text(bookTitle)
-        self.bookPage.entryBookAuthor.set_text(bookAuthors)
+        self.bookPage.entryBookTitle.set_text(encodeString(bookTitle))
+        self.bookPage.entryBookAuthor.set_text(encodeString(bookAuthors))
         
         self.mainConf.setLastBook(bookPath)
         
@@ -429,7 +430,7 @@ class NovelWriter():
         itemHandle = srcTree.listStore[itemPath][handleCol]
         self.theBook.updateItem(itemHandle,itemTag,editText)
         parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
-        srcTree.listStore[itemPath][srcColumn] = parsedValue
+        srcTree.listStore[itemPath][srcColumn] = encodeString(parsedValue)
         self.winMain.treeLeft.loadContent()
         
         return
@@ -445,7 +446,7 @@ class NovelWriter():
         currState  = srcTree.listStore[itemPath][srcColumn]
         self.theBook.updateItem(itemHandle,itemTag,not currState)
         parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
-        srcTree.listStore[itemPath][srcColumn] = parsedValue
+        srcTree.listStore[itemPath][srcColumn] = encodeString(parsedValue)
         self.winMain.treeLeft.loadContent()
         
         return
@@ -504,7 +505,7 @@ class NovelWriter():
         itemHandle = srcTree.listStore[itemPath][handleCol]
         self.theBook.updateItem(itemHandle,itemTag,editText)
         parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
-        srcTree.listStore[itemPath][srcColumn] = parsedValue
+        srcTree.listStore[itemPath][srcColumn] = encodeString(parsedValue)
         self.winMain.treeLeft.loadContent()
         
         return
@@ -562,7 +563,7 @@ class NovelWriter():
         itemHandle = srcTree.listStore[itemPath][handleCol]
         self.theBook.updateItem(itemHandle,itemTag,editText)
         parsedValue = self.theBook.getItem(itemHandle)["entry"].getFromTag(itemTag)
-        srcTree.listStore[itemPath][srcColumn] = str(parsedValue)
+        srcTree.listStore[itemPath][srcColumn] = encodeString(parsedValue)
         self.winMain.treeLeft.loadContent()
         
         return
